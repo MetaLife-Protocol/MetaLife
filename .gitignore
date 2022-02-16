@@ -36,6 +36,9 @@ node_modules/
 npm-debug.log
 yarn-error.log
 yarn.lock
+#
+/nodejs-assets/build-native-modules-MacOS-helper-script-node.sh
+/nodejs-assets/build-native-modules-MacOS-helper-script-npm.sh
 
 # BUCK
 buck-out/
