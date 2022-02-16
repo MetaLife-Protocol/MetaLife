@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "yarn&pod": "yarn && npx pod-install",
-    "android-assemble": "cd android && ./gradlew assembleRelease && cd ..",
     "android": "react-native run-android --verbose",
     "install-android-release": "adb install -r android/app/release/app-release.apk",
     "ios": "react-native run-ios",
+    "ios-iPhone": "react-native run-ios --verbose --device \"Lonmee’s iPhone\"",
     "ios-iPhone SE": "react-native run-ios --verbose --device \"Lonmee’s iPhone SE\"",
     "start": "react-native start",
     "test": "jest",
