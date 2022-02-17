@@ -8,7 +8,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import nodejs from 'nodejs-mobile-react-native';
 
 setTimeout(() => {
-  // nodejs.start('loader.js');
+  nodejs.start('loader.js');
 }, 1);
 
 const WrappedApp = () => {

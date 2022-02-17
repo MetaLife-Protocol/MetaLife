@@ -29,14 +29,17 @@ build/
 local.properties
 *.iml
 *.hprof
+/Gemfile.lock
 
 # node.js
 #
 node_modules/
 npm-debug.log
+/package-lock.json
 yarn-error.log
 yarn.lock
 #
+/nodejs-assets/nodejs-project/package-lock.json
 /nodejs-assets/build-native-modules-MacOS-helper-script-node.sh
 /nodejs-assets/build-native-modules-MacOS-helper-script-npm.sh
 
@@ -63,4 +66,4 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 /ios/Podfile.lock
-/Gemfile.lock
+/nodejs-assets/nodejs-project/

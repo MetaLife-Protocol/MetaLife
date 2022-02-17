@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "declaration": false,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "jsx": "react-native",
+    "suppressImplicitAnyIndexErrors": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "noUnusedLocals": true,
+    "allowJs": true,
+    "module": "commonjs",
+    "target": "es2017",
+    "outDir": "./lib/backend",
+    "lib": ["dom", "es5", "scripthost", "es2015", "es2016", "es2017"]
+  },
+  "include": [
+    "src/backend/**/*.ts",
+    "typings/*.d.ts"
+  ],
+  "exclude": ["node_modules"]
+}

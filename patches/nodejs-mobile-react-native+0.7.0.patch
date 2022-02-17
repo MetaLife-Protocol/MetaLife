@@ -1,0 +1,109 @@
+diff --git a/node_modules/nodejs-mobile-react-native/android/src/main/java/com/janeasystems/rn_nodejs_mobile/RNNodeJsMobileModule.java b/node_modules/nodejs-mobile-react-native/android/src/main/java/com/janeasystems/rn_nodejs_mobile/RNNodeJsMobileModule.java
+index e882a0c..824097a 100644
+--- a/node_modules/nodejs-mobile-react-native/android/src/main/java/com/janeasystems/rn_nodejs_mobile/RNNodeJsMobileModule.java
++++ b/node_modules/nodejs-mobile-react-native/android/src/main/java/com/janeasystems/rn_nodejs_mobile/RNNodeJsMobileModule.java
+@@ -45,6 +45,11 @@ public class RNNodeJsMobileModule extends ReactContextBaseJavaModule implements
+   private static String builtinModulesPath;
+   private static String nativeAssetsPath;
+ 
++  public interface Invokable<T> {
++    public void invoke(T param);
++  }
++
++  private static Invokable<String> jsExceptionInvokable;
+   private static long lastUpdateTime = 1;
+   private static long previousLastUpdateTime = 0;
+   private static Semaphore initSemaphore = new Semaphore(1);
+@@ -91,6 +96,10 @@ public class RNNodeJsMobileModule extends ReactContextBaseJavaModule implements
+     asyncInit();
+   }
+ 
++  public void setJsExceptionInvokable(Invokable<String> i) {
++    jsExceptionInvokable = i;
++  }
++
+   private void asyncInit() {
+     if (wasAPKUpdated()) {
+       try {
+@@ -243,6 +252,12 @@ public class RNNodeJsMobileModule extends ReactContextBaseJavaModule implements
+       final RNNodeJsMobileModule _moduleInstance = _instance;
+       final String _channelNameToPass = new String(channelName);
+       final String _msgToPass = new String(msg);
++      if (jsExceptionInvokable != null) {
++        if (_msgToPass.matches("^\\{\"event\":\"exception\",\"payload\":\".*")) {
++          final String _exception = _msgToPass.substring(35, _msgToPass.length() - 5);
++          jsExceptionInvokable.invoke(_exception);
++        }
++      }
+       new Thread(new Runnable() {
+         @Override
+         public void run() {
+diff --git a/node_modules/nodejs-mobile-react-native/scripts/ios-build-native-modules.sh b/node_modules/nodejs-mobile-react-native/scripts/ios-build-native-modules.sh
+index ccd99aa..ca73382 100644
+--- a/node_modules/nodejs-mobile-react-native/scripts/ios-build-native-modules.sh
++++ b/node_modules/nodejs-mobile-react-native/scripts/ios-build-native-modules.sh
+@@ -1,4 +1,10 @@
+ #!/bin/sh
++if [ -f ~/.cargo/env ]; then
++  source ~/.cargo/env;
++fi
++if [ -f ~/.nvm/nvm.sh ]; then
++  source ~/.nvm/nvm.sh;
++fi
+ set -e
+ if [ -z "$NODEJS_MOBILE_BUILD_NATIVE_MODULES" ]; then
+ # If build native modules preference is not set, look for it in the project's
+@@ -51,7 +57,7 @@ NODEJS_HEADERS_DIR="$( cd "$PROJECT_DIR" && cd ../node_modules/nodejs-mobile-rea
+ pushd $CODESIGNING_FOLDER_PATH/nodejs-project/
+ if [ "$PLATFORM_NAME" == "iphoneos" ]
+ then
+-  GYP_DEFINES="OS=ios" CARGO_BUILD_TARGET="aarch64-apple-ios" npm_config_nodedir="$NODEJS_HEADERS_DIR" npm_config_node_gyp="$NODEJS_MOBILE_GYP_BIN_FILE" npm_config_platform="ios" npm_config_format="make-ios" npm_config_node_engine="chakracore" npm_config_arch="arm64" npm --verbose rebuild --build-from-source
++  GYP_DEFINES="OS=ios" CARGO_BUILD_TARGET="aarch64-apple-ios" npm_config_nodedir="$NODEJS_HEADERS_DIR" npm_config_node_gyp="$NODEJS_MOBILE_GYP_BIN_FILE" npm_config_platform="ios" npm_config_format="make-ios" npm_config_node_engine="chakracore" npm_config_arch="arm64" npm_config_target_arch="arm64" npm --verbose rebuild --build-from-source
+ else
+   GYP_DEFINES="OS=ios" CARGO_BUILD_TARGET="x86_64-apple-ios" npm_config_nodedir="$NODEJS_HEADERS_DIR" npm_config_node_gyp="$NODEJS_MOBILE_GYP_BIN_FILE" npm_config_platform="ios" npm_config_format="make-ios" npm_config_node_engine="chakracore" npm_config_arch="x64" npm --verbose rebuild --build-from-source
+ fi
+diff --git a/node_modules/nodejs-mobile-react-native/scripts/ios-copy-nodejs-project.sh b/node_modules/nodejs-mobile-react-native/scripts/ios-copy-nodejs-project.sh
+index 602a151..7b259c4 100644
+--- a/node_modules/nodejs-mobile-react-native/scripts/ios-copy-nodejs-project.sh
++++ b/node_modules/nodejs-mobile-react-native/scripts/ios-copy-nodejs-project.sh
+@@ -1,4 +1,10 @@
+ #!/bin/sh
++if [ -f ~/.cargo/env ]; then
++  source ~/.cargo/env;
++fi
++if [ -f ~/.nvm/nvm.sh ]; then
++  source ~/.nvm/nvm.sh;
++fi
+ set -e
+ NODEJS_ASSETS_DIR="$( cd "$PROJECT_DIR" && cd ../nodejs-assets/ && pwd )"
+ NODEJS_BUILT_IN_MODULES_DIR="$( cd "$PROJECT_DIR" && cd ../node_modules/nodejs-mobile-react-native/install/resources/nodejs-modules/ && pwd )"
+diff --git a/node_modules/nodejs-mobile-react-native/scripts/ios-remove-framework-simulator-strips.sh b/node_modules/nodejs-mobile-react-native/scripts/ios-remove-framework-simulator-strips.sh
+index ebaf689..24c08ed 100644
+--- a/node_modules/nodejs-mobile-react-native/scripts/ios-remove-framework-simulator-strips.sh
++++ b/node_modules/nodejs-mobile-react-native/scripts/ios-remove-framework-simulator-strips.sh
+@@ -1,4 +1,10 @@
+ #!/bin/sh
++if [ -f ~/.cargo/env ]; then
++  source ~/.cargo/env;
++fi
++if [ -f ~/.nvm/nvm.sh ]; then
++  source ~/.nvm/nvm.sh;
++fi
+ set -e
+ FRAMEWORK_BINARY_PATH="$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/NodeMobile.framework/NodeMobile"
+ FRAMEWORK_STRIPPED_PATH="$FRAMEWORK_BINARY_PATH-strip"
+diff --git a/node_modules/nodejs-mobile-react-native/scripts/ios-sign-native-modules.sh b/node_modules/nodejs-mobile-react-native/scripts/ios-sign-native-modules.sh
+index b2cd0fc..a99860c 100644
+--- a/node_modules/nodejs-mobile-react-native/scripts/ios-sign-native-modules.sh
++++ b/node_modules/nodejs-mobile-react-native/scripts/ios-sign-native-modules.sh
+@@ -1,4 +1,10 @@
+ #!/bin/sh
++if [ -f ~/.cargo/env ]; then
++  source ~/.cargo/env;
++fi
++if [ -f ~/.nvm/nvm.sh ]; then
++  source ~/.nvm/nvm.sh;
++fi
+ set -e
+ if [ -z "$NODEJS_MOBILE_BUILD_NATIVE_MODULES" ]; then
+ # If build native modules preference is not set, look for it in the project's
