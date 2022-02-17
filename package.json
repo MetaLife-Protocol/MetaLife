@@ -5,8 +5,8 @@
   "scripts": {
     "postinstall": "patch-package",
     "clean-install": "npm clean-install",
-    "lib": "tsc",
     "npm&pod": "npm install && npx pod-install",
+    "lib": "tsc",
     "android script": "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
     "build-backend-android": "./tools/build-backend.mjs --android",
     "android": "react-native run-android --verbose",
