@@ -36,6 +36,7 @@ export default {
     enable: 'async',
     disable: 'async',
   },
+  // https://github.com/ssbc/ssb-invite
   invite: {
     create: 'async',
     accept: 'async',

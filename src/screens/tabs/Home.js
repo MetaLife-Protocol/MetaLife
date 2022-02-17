@@ -20,6 +20,7 @@ import {
   loadMsg,
   reqStartSSB,
 } from '../../remote/ssbOP';
+import PostItem from './home/PostItem';
 
 const Home = ({
   navigation,
@@ -54,15 +55,8 @@ const Home = ({
       <StatusBar barStyle={barStyle} />
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <ScrollView>
-          {publicMsg.map(({key, value: {author, timestamp, content}}) => (
-            <View key={key}>
-              <Text style={{color: colorsSchema.primary}}>
-                author: {author}
-              </Text>
-              <Text selectable={true} style={{color: colorsBasics.light}}>
-                type: {content.type}
-              </Text>
-            </View>
+          {publicMsg.map(({key, value}) => (
+            <PostItem key={key} value={value} />
           ))}
         </ScrollView>
       </ScrollView>
