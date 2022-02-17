@@ -100,6 +100,9 @@ export const reqBlobsGet = cb =>
 // getMnemonic
 // ssb.keysUtils.getMnemonic((e, v) => setOpLog(v + '\n'));
 
+// invite
+// ssb.invite.accept('106.52.171.12:8008:@eVs235wBX5aRoyUwWyZRbo9r1oZ9a7+V+wEvf+F/MCw=.ed25519~luAn8Yn38OzESHe8ZDhc5ZfRfswi1Ph+1EDuYVEVBgs=',(e,v)=>console.log(v))
+
 /* duplex */
 export const ping = ssb =>
   ssb.conn.ping()(null, (e, v) => (e ? console.error(e) : console.log(v)));
