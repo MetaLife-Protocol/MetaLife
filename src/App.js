@@ -12,6 +12,7 @@ import Setting from './screens/tabs/profiles/Setting';
 import PeersScreen from './screens/tabs/contacts/PeersScreen';
 import PeerDetailsScreen from './screens/tabs/contacts/PeerDetailsScreen';
 import MessageDetailsScreen from './screens/tabs/messages/MessageDetailsScreen';
+import PostMsgEditor from './screens/tabs/home/PostMsgEditor';
 
 const App = () => {
   const {theme} = SchemaStyles();
@@ -39,6 +40,11 @@ const App = () => {
           //fixme: large title causes twinkle unusually
           options={{title: 'Peers' /*, headerLargeTitle: true*/}}
           component={PeersScreen}
+        />
+        <Stack.Screen
+          name="PostMsgEditor"
+          options={{title: 'Post' /*headerLargeTitle: true*/}}
+          component={PostMsgEditor}
         />
         <Stack.Screen
           name="MessageDetailsScreen"

@@ -73,7 +73,7 @@ const Tabs = ({navigation, darkMode}) => {
           headerRight: props => (
             <HeaderRightBtn
               btnIcon={headerBtnIconDic.home_add}
-              btnHandler={goScreen('SubScreen')}
+              btnHandler={goScreen('PostMsgEditor')}
             />
           ),
           headerRightContainerStyle: [{right: 19}],
@@ -134,7 +134,7 @@ const Tabs = ({navigation, darkMode}) => {
         component={Profiles}
         options={{
           title: I18n.t('Profiles'),
-          header: props => <HeaderProfiles props={props} />,
+          header: navigation => <HeaderProfiles props={navigation} />,
         }}
       />
     </Tab.Navigator>

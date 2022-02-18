@@ -171,3 +171,5 @@ export const loadMsg = (msgKey, isPrivate = false, cb = null) => {
     private: isPrivate,
   })(null, (e, v) => (e ? console.warn(e) : cb ? cb(v) : console.log(v)));
 };
+
+export const inviteAccept = (code, cb = null) => ssb.invite.accept(code, cb);

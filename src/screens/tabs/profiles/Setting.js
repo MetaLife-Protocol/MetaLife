@@ -7,7 +7,9 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
+  StyleSheet,
   Switch,
+  TextInput,
   View,
 } from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
@@ -16,7 +18,7 @@ import ControllerItem from '../../../shared/comps/ControllerItem';
 import I18n from '../../../i18n/I18n';
 
 const Setting = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
-  const {barStyle, FG, flex1, marginTop10} = SchemaStyles();
+  const {barStyle, FG, flex1, input, text, marginTop10} = SchemaStyles();
   useEffect(() => {
     // console.log('subscribe');
     return () => {
@@ -26,7 +28,6 @@ const Setting = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
 
   return (
     <SafeAreaView style={[flex1]}>
-      <StatusBar barStyle={barStyle} />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={marginTop10}>

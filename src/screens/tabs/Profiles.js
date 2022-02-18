@@ -1,26 +1,24 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
-  Switch,
+  StyleSheet,
+  TextInput,
   View,
 } from 'react-native';
-import SchemaStyles from '../../shared/SchemaStyles';
+import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import ControllerItem from '../../shared/comps/ControllerItem';
 import I18n from '../../i18n/I18n';
+import Section from '../../shared/comps/Section';
+import {inviteAccept} from '../../remote/ssbOP';
 
 const Profiles = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
-  const {barStyle, FG, flex1, marginTop10} = SchemaStyles();
-  useEffect(() => {
-    // console.log('subscribe');
-    return () => {
-      // console.log('componentDidUpdate');
-    };
-  }, []);
-
+  const {barStyle, FG, flex1, input, text, marginTop10} = SchemaStyles(),
+    {textHolder} = colorsSchema,
+    {invite} = styles;
+  const [code, setCode] = useState('');
   return (
     <SafeAreaView style={[flex1]}>
       <StatusBar barStyle={barStyle} />
@@ -28,28 +26,35 @@ const Profiles = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
         contentInsetAdjustmentBehavior="automatic"
         style={marginTop10}>
         <View style={FG}>
-          <Button
-            title={'SubScreen'}
-            onPress={() => navigation.navigate('SubScreen')}
-          />
-          <Button title={'Logout'} onPress={() => navigation.replace('Guid')} />
-          <ControllerItem title={'Dark mode'}>
-            <Switch
-              value={darkMode}
-              onValueChange={() => setDarkMode(!darkMode)}
+          <Section title={'Invite code'}>
+            <TextInput
+              style={[invite, input, text]}
+              value={code}
+              placeholder={'past invite code here'}
+              placeholderTextColor={textHolder}
+              onChangeText={setCode}
             />
-          </ControllerItem>
-          <ControllerItem title={'En / Zh'}>
-            <Switch
-              value={lang !== 'en'}
-              onValueChange={() => setLang(lang === 'en' ? 'zh' : 'en')}
+            <Button
+              title={'confirm'}
+              onPress={() => {
+                setCode('');
+                inviteAccept(code, (e, v) =>
+                  e ? alert(e.message) : console.log(v ? 'success' : 'failed'),
+                );
+              }}
             />
-          </ControllerItem>
+          </Section>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  invite: {
+    height: 40,
+  },
+});
 
 const msp = s => s.cfg;
 

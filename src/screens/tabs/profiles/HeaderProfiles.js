@@ -15,7 +15,7 @@ const iconDic = {
   photo: require('../../../assets/image/profiles/photo.png'),
 };
 
-const HeaderProfiles = ({navigation, feedId}) => {
+const HeaderProfiles = ({props: {navigation}, feedId}) => {
   const {alignItemsCenter, marginTop10} = SchemaStyles();
   const {container, photo, setting, name, at} = styles;
 

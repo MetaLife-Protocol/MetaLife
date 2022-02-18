@@ -1,5 +1,11 @@
 import React, {useState} from 'react';
-import {SafeAreaView, StatusBar, TextInput, View} from 'react-native';
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import SchemaStyles, {
   colorsBasics,
   colorsSchema,
@@ -12,8 +18,8 @@ const SignUp = ({navigation, name, setName}) => {
   const [pwd, setPwd] = useState('');
   const [confirm, setconfirm] = useState('');
   // style & colors
-  const {barStyle, BG, FG, flex1, input, text, marginTop10} = SchemaStyles();
-  const {textHolder} = colorsSchema;
+  const {barStyle, BG, FG, flex1, input, text, marginTop10} = SchemaStyles(),
+    {textHolder} = colorsSchema;
 
   return (
     <View style={[BG, flex1]}>

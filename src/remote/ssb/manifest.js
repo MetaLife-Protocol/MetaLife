@@ -6,7 +6,7 @@
 // https://github.com/staltz/react-native-ssb-client
 // https://github.com/pull-stream/pull-stream
 export default {
-  // Secure Scuttlebutt
+  // https://github.com/ssb-ngi-pointer/ssb-db2
   auth: 'async',
   address: 'sync',
   manifest: 'sync',
