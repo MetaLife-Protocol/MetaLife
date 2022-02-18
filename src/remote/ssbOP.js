@@ -128,7 +128,7 @@ export const reqStartSSB = setInstance => {
 export const addPublicUpdatesListener = cb => {
   ssb.threads.publicUpdates({
     reverse: true,
-    threadMaxSize: 1,
+    includeSelf: true,
   })(null, (e, v) => {
     if (e) {
       console.log('add public updates listener error:', e);
@@ -169,7 +169,13 @@ export const loadMsg = (msgKey, isPrivate = false, cb = null) => {
   ssb.threads.thread({
     root: msgKey,
     private: isPrivate,
-  })(null, (e, v) => (e ? console.warn(e) : cb ? cb(v) : console.log(v)));
+  })(null, (e, v) =>
+    e
+      ? console.log(e ? "other's private msg?" : "what's msg?")
+      : cb
+      ? cb(v)
+      : console.log(v),
+  );
 };
 
 export const inviteAccept = (code, cb = null) => ssb.invite.accept(code, cb);

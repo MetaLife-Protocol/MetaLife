@@ -3,7 +3,6 @@ import {
   Image,
   SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   View,
@@ -15,9 +14,9 @@ import {
   friendsGraphParse,
   mutualFriend,
 } from '../../../filters/ContactsFilters';
-import useDocumentTitle from '@react-navigation/native/src/useDocumentTitle';
 import RoundBtn from '../../../shared/comps/RoundBtn';
 import {findRootKey} from '../../../filters/MsgFilters';
+import {PeerIcons} from '../../../shared/Icons';
 
 const PeerDetailsScreen = ({
   navigation,
@@ -27,11 +26,6 @@ const PeerDetailsScreen = ({
   peerInfoDic,
   privateMsg,
 }) => {
-  const iconDic = {
-    peerIcon: require('../../../assets/image/contacts/peer_icon.png'),
-    daoIcon: require('../../../assets/image/contacts/dao_icon.png'),
-    nftIcon: require('../../../assets/image/contacts/nft_icon.png'),
-  };
   const {row, flex1, text} = SchemaStyles(),
     {head, textContainer, item, title, desc} = styles,
     {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
@@ -54,7 +48,7 @@ const PeerDetailsScreen = ({
             height={60}
             width={60}
             style={[head]}
-            source={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
+            source={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
           />
           <View style={[textContainer]}>
             <Text numberOfLines={1} style={[title, text]}>

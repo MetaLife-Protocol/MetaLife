@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
@@ -51,7 +51,7 @@ const Contacts = ({navigation, feedId, setFriendsGraph, friendsGraph}) => {
     <ScrollView style={BG}>
       <SearchBar style={[searchBar]} />
       <FlatList
-        keyExtractor={(item, index) => index}
+        keyExtractor={(_, index) => index}
         data={DATA_sn}
         renderItem={snItem}
         horizontal={true}
@@ -59,23 +59,23 @@ const Contacts = ({navigation, feedId, setFriendsGraph, friendsGraph}) => {
         showsHorizontalScrollIndicator={false}
       />
       {relations[0].length > 0 && (
-        <Section title={'friends'}>
+        <Section key={0} title={'friends'}>
           {relations[0].map((key, i) => (
             <FriendItem navigation={navigation} fId={key} key={i} />
           ))}
         </Section>
       )}
       {relations[1].length > 0 && (
-        <Section title={'following'}>
+        <Section key={1} title={'following'}>
           {relations[1].map((key, i) => (
             <FriendItem navigation={navigation} fId={key} key={i} />
           ))}
         </Section>
       )}
       {relations[2].length > 0 && (
-        <Section title={'follower'}>
+        <Section key={2} title={'follower'}>
           {relations[2].map((key, i) => (
-            <FriendItem navigation={navigation} fId={key} />
+            <FriendItem navigation={navigation} fId={key} key={i} />
           ))}
         </Section>
       )}

@@ -5,6 +5,7 @@ import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import * as ssbOP from '../../../../remote/ssbOP';
 import {follow} from '../../../../remote/ssbOP';
+import {PeerIcons} from '../../../../shared/Icons';
 
 const PeerItem = ({
   navigation,
@@ -12,11 +13,6 @@ const PeerItem = ({
   peerInfoDic,
   addPeerInfo,
 }) => {
-  const iconDic = {
-    peerIcon: require('../../../../assets/image/contacts/peer_icon.png'),
-    daoIcon: require('../../../../assets/image/contacts/dao_icon.png'),
-    nftIcon: require('../../../../assets/image/contacts/nft_icon.png'),
-  };
   const {row, flex1, text} = SchemaStyles();
   const {head, textContainer, item, title, desc} = styles;
   // check cached
@@ -59,10 +55,10 @@ const PeerItem = ({
             image
               ? {uri: blobIdToUrl(image)}
               : type == 'lan'
-              ? iconDic.peerIcon
+              ? PeerIcons.peerIcon
               : type == 'pub'
-              ? iconDic.daoIcon
-              : iconDic.nftIcon
+              ? PeerIcons.daoIcon
+              : PeerIcons.nftIcon
           }
         />
         <View style={[textContainer]}>

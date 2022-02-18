@@ -22,7 +22,7 @@ const HeaderProfiles = ({props: {navigation}, feedId}) => {
   return (
     <ImageBackground style={[container, alignItemsCenter]} source={iconDic.BG}>
       <Image style={[photo]} source={iconDic.photo} />
-      <Text style={[name, marginTop10]}>{feedId}</Text>
+      <Text style={[name, marginTop10]}>{feedId.substring(0, 10)}</Text>
       <Text style={[at]}>@jorgecutis</Text>
       <Pressable
         style={[setting]}
