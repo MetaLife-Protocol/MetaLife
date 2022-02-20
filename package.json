@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "RN script": "~~~~~~~~~~~~~~ RN ~~~~~~~~~~~~~~~~~",
+    "webpack script": "~~~~~~~~~~~~~~ webpack ~~~~~~~~~~~~~~~~~",
     "npm&pod": "npm install && npx pod-install",
     "clean-install": "npm clean-install",
     "postinstall": "patch-package",
