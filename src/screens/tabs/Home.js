@@ -1,28 +1,21 @@
 import React, {useEffect} from 'react';
-import {
-  Button,
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  View,
-} from 'react-native';
-import SchemaStyles, {
-  colorsBasics,
-  colorsSchema,
-} from '../../shared/SchemaStyles';
+import {SafeAreaView, ScrollView, StatusBar} from 'react-native';
+import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import * as ssbOP from '../../remote/ssbOP';
 import {
+  about,
   addPrivateUpdatesListener,
   addPublicUpdatesListener,
+  connStart,
   graph,
   loadMsg,
   reqStartSSB,
+  stage,
 } from '../../remote/ssbOP';
 import PostItem from './home/PostItem';
 import {useTimer} from '../../shared/Hooks';
+import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
 
 const Home = ({
   navigation,
@@ -35,25 +28,28 @@ const Home = ({
 }) => {
   const {barStyle, FG, flex1} = SchemaStyles();
   useEffect(() => {
-    // ssb initialize
     window.ssb
       ? (ssbOP.ssb = window.ssb)
       : reqStartSSB(ssb => {
           window.ssb = ssb;
-          // set feedId
           setFeedId(ssb.id);
-          // start & stage self
-          ssb.starter.startAndStage((e, v) =>
-            console.log(v ? 'conn start' : 'conn started yet'),
+          connStart(v => {
+            console.log(v ? 'conn start' : 'conn started yet');
+            stage(v => console.log(v ? 'peer stage' : 'peer staged yet'));
+          });
+          addPublicUpdatesListener(key =>
+            loadMsg(key, false, msg => {
+              checkMarkedMsgCB(msg);
+              refreshFriendsGraph();
+              addPublicMsg(msg);
+            }),
           );
-          // listening for public & private msg
-          addPublicUpdatesListener(key => loadMsg(key, false, addPublicMsg));
-          // addPrivateUpdatesListener(key => loadMsg(key, true, addPrivateMsg));
           addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
+          markMsgCBByType('about', console.log);
         });
   }, []);
 
-  useTimer(refreshFriendsGraph, 3000, null, false);
+  useTimer(refreshFriendsGraph, 5000, [], false);
 
   function refreshFriendsGraph() {
     graph((e, v) => (e ? console.warn(e) : setFriendsGraph(v)));

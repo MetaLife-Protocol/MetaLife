@@ -19,6 +19,8 @@ import RoundBtn from '../../../shared/comps/RoundBtn';
 import {findRootKey} from '../../../filters/MsgFilters';
 import {PeerIcons} from '../../../shared/Icons';
 import {block, follow} from '../../../remote/ssbOP';
+import {setDisabled} from 'react-native/Libraries/LogBox/Data/LogBoxData';
+import {markMsgCB, markMsgCBByKey} from '../../../remote/ssb/MsgCB';
 
 const PeerDetailsScreen = ({
   navigation,
@@ -39,6 +41,9 @@ const PeerDetailsScreen = ({
     isMyFriend = myFriends.includes(feedId),
     isMyFollowing = myFollowing.includes(feedId),
     isMyBlock = myBlock.includes(feedId);
+
+  const [disabledBlock, setDisabledBlock] = useState(false);
+  const [disabledFollow, setDisabledFollow] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({title: name || feedId});
@@ -101,8 +106,12 @@ const PeerDetailsScreen = ({
             <RoundBtn
               style={[btn]}
               title={'block'}
+              disabled={disabledBlock}
               press={() => {
-                block(feedId, {}, console.log);
+                setDisabledBlock(true);
+                block(feedId, {}, v =>
+                  markMsgCBByKey(v.key, () => setDisabledBlock(false)),
+                );
               }}
             />
           )}
@@ -122,7 +131,13 @@ const PeerDetailsScreen = ({
               <RoundBtn
                 style={[btn]}
                 title={'follow'}
-                press={() => follow(feedId, {}, console.log)}
+                disabled={disabledFollow}
+                press={() => {
+                  setDisabledFollow(true);
+                  follow(feedId, {}, v =>
+                    markMsgCBByKey(v.key, () => setDisabledFollow(false)),
+                  );
+                }}
               />
             )
           )}

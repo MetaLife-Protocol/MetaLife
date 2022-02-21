@@ -3,7 +3,7 @@ import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
-import * as ssbOP from '../../../../remote/ssbOP';
+import {about} from '../../../../remote/ssbOP';
 
 const iconDic = {
   peerIcon: require('../../../../assets/image/contacts/peer_icon.png'),
@@ -16,11 +16,8 @@ const FriendItem = ({navigation, fId, peerInfoDic, addPeerInfo}) => {
   const {head, textContainer, item, title, desc} = styles;
   // check cached
   useEffect(() => {
-    console.log('check info');
-    //fixme: won't sync change if cached
-    peerInfoDic.hasOwnProperty(fId) ||
-      ssbOP.ssb.aboutSelf.get(fId, (e, v) => v.name && addPeerInfo([fId, v]));
-  });
+    peerInfoDic.hasOwnProperty(fId) || about(fId, v => addPeerInfo([fId, v]));
+  }, []);
   const {name = '', description = '', image = ''} = peerInfoDic[fId] || {};
   return (
     <Pressable onPress={() => navigation.push('PeerDetailsScreen', fId)}>

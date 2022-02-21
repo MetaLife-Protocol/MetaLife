@@ -1,12 +1,15 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles, {colorsSchema} from '../../../shared/SchemaStyles';
 import {useTimer} from '../../../shared/Hooks';
 import Section from '../../../shared/comps/Section';
 import PeerItem from './item/PeerItem';
-import * as ssbOP from '../../../remote/ssbOP';
-import {pull} from 'pull-stream';
+import {
+  connectedPeers,
+  getConnectedPeers,
+  getStagedPeers,
+} from '../../../remote/ssbOP';
 
 const PeersScreen = ({
   navigation,
@@ -37,12 +40,8 @@ const PeersScreen = ({
   // }
 
   function refreshStagedAndConnected() {
-    ssbOP.ssb.conn.stagedPeers()(null, (e, v) =>
-      e ? console.error(e) : setStagedPeers(v),
-    );
-    ssbOP.ssb.conn.peers()(null, (e, v) =>
-      e ? console.error(e) : setConnectedPeers(v),
-    );
+    getStagedPeers(setStagedPeers);
+    getConnectedPeers(setConnectedPeers);
   }
 
   return (

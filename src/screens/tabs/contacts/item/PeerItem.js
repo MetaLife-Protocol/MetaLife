@@ -4,7 +4,7 @@ import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import * as ssbOP from '../../../../remote/ssbOP';
-import {follow} from '../../../../remote/ssbOP';
+import {connectPeer, follow} from '../../../../remote/ssbOP';
 import {PeerIcons} from '../../../../shared/Icons';
 
 const PeerItem = ({
@@ -23,23 +23,13 @@ const PeerItem = ({
   // });
 
   const {name = '', description = '', image = ''} = peerInfoDic[key] || {};
-  function connectErrorHandler(e) {
-    console.log('conn error: ', e);
-    alert('connect reject');
-  }
 
   function connectHandler(v) {
-    console.log('connected: ', v);
-    alert('follow succeed');
+    alert('connected: ' + v.id.substring(0, 10));
   }
 
-  function fellowErrorHandler(e) {
-    console.log('conn error: ', e);
-    alert(e.value.content.following ? 'followed yet' : 'follow reject');
-  }
-
-  function fellowHandler(v) {
-    alert('Following:', v.key);
+  function followHandler(v) {
+    alert('Following: ' + v.key.substring(0, 10));
   }
 
   return (
@@ -70,20 +60,12 @@ const PeerItem = ({
             {state === 'connected' || (
               <Button
                 title={'connect'}
-                onPress={() =>
-                  ssbOP.ssb.peers.connect2Peer(address, {}, (e, v) =>
-                    e ? connectErrorHandler(e) : connectHandler(v),
-                  )
-                }
+                onPress={() => connectPeer(address, {}, connectHandler)}
               />
             )}
             <Button
               title={'follow'}
-              onPress={() =>
-                follow(key, {}, (e, v) =>
-                  e ? fellowErrorHandler(e) : fellowHandler(v),
-                )
-              }
+              onPress={() => follow(key, {}, followHandler)}
             />
           </View>
         </View>
