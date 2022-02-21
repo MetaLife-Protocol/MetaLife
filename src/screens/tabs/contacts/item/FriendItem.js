@@ -23,7 +23,7 @@ const FriendItem = ({navigation, fId, peerInfoDic, addPeerInfo}) => {
   });
   const {name = '', description = '', image = ''} = peerInfoDic[fId] || {};
   return (
-    <Pressable onPress={() => navigation.navigate('PeerDetailsScreen', fId)}>
+    <Pressable onPress={() => navigation.push('PeerDetailsScreen', fId)}>
       <View style={[item, row, flex1]}>
         <Image
           height={60}

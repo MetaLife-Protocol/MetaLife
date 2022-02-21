@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {
   Image,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -17,6 +18,7 @@ import {
 import RoundBtn from '../../../shared/comps/RoundBtn';
 import {findRootKey} from '../../../filters/MsgFilters';
 import {PeerIcons} from '../../../shared/Icons';
+import {follow} from '../../../remote/ssbOP';
 
 const PeerDetailsScreen = ({
   navigation,
@@ -26,19 +28,28 @@ const PeerDetailsScreen = ({
   peerInfoDic,
   privateMsg,
 }) => {
-  const {row, flex1, text} = SchemaStyles(),
+  const {row, flex1, justifySpaceBetween, text} = SchemaStyles(),
     {head, textContainer, item, title, desc} = styles,
     {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
     [friends, following, follower, block, blocked, other] = friendsGraphParse(
       friendsGraph,
       feedId,
     ),
-    [myFriends] = friendsGraphParse(friendsGraph, selfFeedId),
-    mutual = mutualFriend(friends, myFriends);
+    [myFriends, _, myFollower, myBlock, myBlocked] = friendsGraphParse(
+      friendsGraph,
+      selfFeedId,
+    ),
+    mutual = mutualFriend(friends, myFriends),
+    isFriend = myFriends.includes(feedId),
+    isFollowing = following.includes(selfFeedId);
 
   useEffect(() => {
     navigation.setOptions({title: name || feedId});
   });
+
+  function peerListHandler(title, list) {
+    navigation.push('PeersListScreen', {title, list});
+  }
 
   return (
     <SafeAreaView style={[flex1]}>
@@ -59,18 +70,59 @@ const PeerDetailsScreen = ({
             )}
           </View>
         </View>
-        <Text style={[desc]}>following:{following.length}</Text>
-        <Text style={[desc]}>follower:{follower.length}</Text>
-        <Text style={[desc]}>mutual:{mutual.length}</Text>
-        <RoundBtn
-          title={'chat'}
-          press={() =>
-            navigation.navigate('MessageDetailsScreen', {
-              rootKey: findRootKey(feedId, privateMsg),
-              recp: feedId,
-            })
-          }
-        />
+        <View style={[row, flex1, justifySpaceBetween]}>
+          <Pressable
+            onPress={() =>
+              peerListHandler(
+                'following by ' + selfFeedId.substring(0, 6),
+                following,
+              )
+            }>
+            <Text style={[desc]}>following:{following.length}</Text>
+          </Pressable>
+          <Pressable
+            onPress={() =>
+              peerListHandler(
+                'follower of ' + selfFeedId.substring(0, 6),
+                follower,
+              )
+            }>
+            <Text style={[desc]}>follower:{follower.length}</Text>
+          </Pressable>
+          <Pressable
+            onPress={() =>
+              peerListHandler(
+                'Mutual friends with ' + selfFeedId.substring(0, 6),
+                mutual,
+              )
+            }>
+            <Text style={[desc]}>mutual:{mutual.length}</Text>
+          </Pressable>
+        </View>
+        <View>
+          <RoundBtn
+            title={'block'}
+            press={() => follow(feedId, {}, console.log)}
+          />
+          {isFriend ? (
+            <RoundBtn
+              title={'chat'}
+              press={() =>
+                navigation.navigate('MessageDetailsScreen', {
+                  rootKey: findRootKey(feedId, privateMsg),
+                  recp: feedId,
+                })
+              }
+            />
+          ) : (
+            isFollowing || (
+              <RoundBtn
+                title={'follow'}
+                press={() => follow(feedId, {}, console.log)}
+              />
+            )
+          )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -100,9 +152,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica',
     fontSize: 15,
     color: '#4E586E',
-    width: 400,
+    height: 40,
+    marginHorizontal: 20,
   },
-  searchBar: {marginVertical: 10},
 });
 
 const msp = s => {

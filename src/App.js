@@ -13,6 +13,7 @@ import PeersScreen from './screens/tabs/contacts/PeersScreen';
 import PeerDetailsScreen from './screens/tabs/contacts/PeerDetailsScreen';
 import MessageDetailsScreen from './screens/tabs/messages/MessageDetailsScreen';
 import PostMsgEditor from './screens/tabs/home/PostMsgEditor';
+import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 
 const App = () => {
   const {theme} = SchemaStyles();
@@ -41,6 +42,7 @@ const App = () => {
           options={{title: 'Peers' /*, headerLargeTitle: true*/}}
           component={PeersScreen}
         />
+        <Stack.Screen name="PeersListScreen" component={PeersListScreen} />
         <Stack.Screen
           name="PostMsgEditor"
           options={{title: 'Post' /*headerLargeTitle: true*/}}
