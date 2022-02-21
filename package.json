@@ -15,6 +15,7 @@
     "ios script": "~~~~~~~~~~~~~~~ ios ~~~~~~~~~~~~~~~~",
     "build-backend-ios": "./tools/build-backend.mjs --ios --verbose",
     "ios": "react-native run-ios",
+    "ios-dev": "npm run build-ios-assets && react-native run-ios --device",
     "ios-iPhone": "react-native run-ios --verbose --device \"Lonmee’s iPhone\"",
     "ios-iPhone SE": "react-native run-ios --verbose --device \"Lonmee’s iPhone SE\"",
     "deploy Lonmee’s iPhone": "ios-deploy --id 00008101-0016491834E9003A --bundle /Users/lonmee/Library/Developer/Xcode/DerivedData/MetaLife-dlyusnujjtzhbaadfzjhrbfwfqtv/Build/Products/Debug-iphoneos/MetaLife.app",
