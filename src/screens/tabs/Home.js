@@ -21,6 +21,7 @@ const Home = ({
   navigation,
   feedId,
   setFeedId,
+  addPeerInfo,
   setFriendsGraph,
   publicMsg,
   addPublicMsg,
@@ -45,14 +46,16 @@ const Home = ({
             }),
           );
           addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
-          markMsgCBByType('about', console.log);
+          markMsgCBByType('about', fId =>
+            about(fId, v => addPeerInfo([fId, v])),
+          );
         });
   }, []);
 
   useTimer(refreshFriendsGraph, 5000, [], false);
 
   function refreshFriendsGraph() {
-    graph((e, v) => (e ? console.warn(e) : setFriendsGraph(v)));
+    graph(setFriendsGraph);
   }
 
   return (
@@ -79,6 +82,7 @@ const msp = s => {
 const mdp = d => {
   return {
     setFeedId: v => d({type: 'setFeedId', payload: v}),
+    addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
     setPublicMsg: v => d({type: 'setPublicMsg', payload: v}),
     addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
     setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),

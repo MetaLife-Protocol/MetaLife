@@ -35,23 +35,14 @@ export const getConnectedPeers = cb =>
 export const blobsGetter = cb =>
   ssb.blobs.get()(null, (e, v) => (e ? console.error(e) : cb(v)));
 
-/* about */
+/* profile / about */
 export const about = (fid, cb) =>
   ssb.aboutSelf.get(fid, (e, v) => (e ? console.error(e) : cb(v)));
 export const setAbout = (fid, {name, description, imageUrl}, cb) =>
-  ssb.aboutSelf.stream({
-    id: fid,
-    name,
-    description,
-    imageUrl,
-  })(null, (e, v) => (e ? console.error(e) : cb(v)));
-
-// profile
-/*ssb.publishUtilsBack.publishAbout({type: 'about',
-  about: "@XiFWjglNO9yTW3YPp1M6J6/46T4zBFh3RxeBlagpmAc=.ed25519",
-  name:'.zZ',
-  description:'bio',
-  image: ''},(e,v)=>console.log(v))*/
+  ssb.publishUtilsBack.publishAbout(
+    {type: 'about', about: fid, name, description, image: ''},
+    (e, v) => (e ? console.error(e) : cb(v)),
+  );
 
 // isFollowing
 /*ssb.friends.isFollowing({source:"@XKv0b06yUZ30Va8RZAnijtMl3MdrDgHX677yTE6cFDY=.ed25519",dest:"@azYm7/Ae3TPvpQynRPsc+Wc8TbGOlQoiipfQfM6PIxQ=.ed25519"},(e,v)=>console.log(v))*/
@@ -68,7 +59,8 @@ export const ping = ssb =>
 
 // ???
 // ssb.deweird.source(['threads', 'publicSummary'],{})(null,(e, v)=>console.log(v))
-export const graph = cb => ssb.friends.graph(cb);
+export const graph = cb =>
+  ssb.friends.graph((e, v) => (e ? console.error(e) : cb(v)));
 
 export const reqStartSSB = setInstance => {
   const {channel} = nodejs;

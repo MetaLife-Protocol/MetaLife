@@ -15,15 +15,17 @@ const iconDic = {
   photo: require('../../../assets/image/profiles/photo.png'),
 };
 
-const HeaderProfiles = ({props: {navigation}, feedId}) => {
-  const {alignItemsCenter, marginTop10} = SchemaStyles();
-  const {container, photo, setting, name, at} = styles;
-
+const HeaderProfiles = ({props: {navigation}, feedId, peerInfoDic}) => {
+  const {alignItemsCenter, marginTop10} = SchemaStyles(),
+    {container, photo, setting, nameFont, at} = styles;
+  const {name = '', description = '', image = ''} = peerInfoDic[feedId] || {};
   return (
     <ImageBackground style={[container, alignItemsCenter]} source={iconDic.BG}>
       <Image style={[photo]} source={iconDic.photo} />
-      <Text style={[name, marginTop10]}>{feedId.substring(0, 10)}</Text>
-      <Text style={[at]}>@jorgecutis</Text>
+      <Text style={[nameFont, marginTop10]}>
+        {name || feedId.substring(0, 10)}
+      </Text>
+      <Text style={[at]}>{description || feedId.substring(0, 6)}</Text>
       <Pressable
         style={[setting]}
         onPress={() => {
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
     right: 15,
     top: 56,
   },
-  name: {
+  nameFont: {
     fontSize: 23,
     color: 'white',
     fontWeight: 'bold',
@@ -63,6 +65,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     feedId: s.user.feedId,
+    peerInfoDic: s.contacts.peerInfoDic,
   };
 };
 
