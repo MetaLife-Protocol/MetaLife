@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   Pressable,
@@ -18,7 +18,7 @@ import {
 import RoundBtn from '../../../shared/comps/RoundBtn';
 import {findRootKey} from '../../../filters/MsgFilters';
 import {PeerIcons} from '../../../shared/Icons';
-import {follow} from '../../../remote/ssbOP';
+import {block, follow} from '../../../remote/ssbOP';
 
 const PeerDetailsScreen = ({
   navigation,
@@ -29,19 +29,16 @@ const PeerDetailsScreen = ({
   privateMsg,
 }) => {
   const {row, flex1, justifySpaceBetween, text} = SchemaStyles(),
-    {head, textContainer, item, title, desc} = styles,
+    {head, textContainer, item, title, desc, btn} = styles,
     {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
-    [friends, following, follower, block, blocked, other] = friendsGraphParse(
-      friendsGraph,
-      feedId,
-    ),
-    [myFriends, _, myFollower, myBlock, myBlocked] = friendsGraphParse(
-      friendsGraph,
-      selfFeedId,
-    ),
+    [friends, following, follower, blockList, blocked, other] =
+      friendsGraphParse(friendsGraph, feedId),
+    [myFriends, myFollowing, myFollower, myBlock, myBlocked] =
+      friendsGraphParse(friendsGraph, selfFeedId),
     mutual = mutualFriend(friends, myFriends),
-    isFriend = myFriends.includes(feedId),
-    isFollowing = following.includes(selfFeedId);
+    isMyFriend = myFriends.includes(feedId),
+    isMyFollowing = myFollowing.includes(feedId),
+    isMyBlock = myBlock.includes(feedId);
 
   useEffect(() => {
     navigation.setOptions({title: name || feedId});
@@ -100,12 +97,18 @@ const PeerDetailsScreen = ({
           </Pressable>
         </View>
         <View>
-          <RoundBtn
-            title={'block'}
-            press={() => follow(feedId, {}, console.log)}
-          />
-          {isFriend ? (
+          {isMyBlock || (
             <RoundBtn
+              style={[btn]}
+              title={'block'}
+              press={() => {
+                block(feedId, {}, console.log);
+              }}
+            />
+          )}
+          {isMyFriend ? (
+            <RoundBtn
+              style={[btn]}
               title={'chat'}
               press={() =>
                 navigation.navigate('MessageDetailsScreen', {
@@ -115,8 +118,9 @@ const PeerDetailsScreen = ({
               }
             />
           ) : (
-            isFollowing || (
+            isMyFollowing || (
               <RoundBtn
+                style={[btn]}
                 title={'follow'}
                 press={() => follow(feedId, {}, console.log)}
               />
@@ -154,6 +158,9 @@ const styles = StyleSheet.create({
     color: '#4E586E',
     height: 40,
     marginHorizontal: 20,
+  },
+  btn: {
+    marginVertical: 10,
   },
 });
 

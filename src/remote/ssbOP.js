@@ -15,6 +15,9 @@ export const stage = cb =>
 export const connStart = cb =>
   ssb.conn.start((e, v) => (e ? console.error(e) : cb(v)));
 /* async */
+export const block = (fid, opts, cb) => {
+  ssb.friends.block(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));
+};
 export const follow = (fid, opts, cb) => {
   ssb.friends.follow(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));
 };
@@ -109,6 +112,7 @@ export const ping = ssb =>
 
 // ???
 // ssb.deweird.source(['threads', 'publicSummary'],{})(null,(e, v)=>console.log(v))
+export const graph = cb => ssb.friends.graph(cb);
 
 export const reqStartSSB = setInstance => {
   const {channel} = nodejs;

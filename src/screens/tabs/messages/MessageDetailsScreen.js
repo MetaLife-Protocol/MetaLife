@@ -82,19 +82,24 @@ const MessageDetailsScreen = ({
         onContentSizeChange={scrollToEnd}>
         {privateMsg[rootKeyLocal] &&
           privateMsg[rootKeyLocal].map(
-            ({key, value: {author, content, timestamp}}) => (
-              <View
-                key={key}
-                style={[
-                  itemContainer,
-                  author === feedId ? itemLeft : itemRight,
-                ]}>
-                <View style={[item]}>
-                  <Text style={[title]}>{content.text}</Text>
-                  {/*<Text style={[desc]}>{timestamp}</Text>*/}
+            ({key, value: {author, content, timestamp}}) => {
+              const date = new Date(timestamp),
+                time = date.toLocaleTimeString(),
+                day = date.toLocaleDateString();
+              return (
+                <View
+                  key={key}
+                  style={[
+                    itemContainer,
+                    author === feedId ? itemLeft : itemRight,
+                  ]}>
+                  <View style={[item]}>
+                    <Text style={[title]}>{content.text}</Text>
+                    <Text style={[desc]}>{time + ' ' + day}</Text>
+                  </View>
                 </View>
-              </View>
-            ),
+              );
+            },
           )}
       </ScrollView>
       <MsgInput sendHandler={sendHandler} />

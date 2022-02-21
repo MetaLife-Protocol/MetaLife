@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
-import {connect} from 'react-redux/lib/exports';
 import FriendItem from './item/FriendItem';
+import SchemaStyles from '../../../shared/SchemaStyles';
 
 const PeersListScreen = ({
   navigation,
@@ -9,12 +9,15 @@ const PeersListScreen = ({
     params: {title, list},
   },
 }) => {
+  const {flex1} = SchemaStyles(),
+    {} = styles;
+
   useEffect(() => {
     navigation.setOptions({title});
   });
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={[flex1]}>
       <FlatList
         data={list}
         keyExtractor={item => item}
@@ -32,20 +35,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const msp = s => {
-  return {
-    stagedPeers: s.contacts.stagedPeers,
-    setStagedPeers: s.contacts.setStagedPeers,
-    connectedPeers: s.contacts.connectedPeers,
-    setConnectedPeers: s.contacts.setConnectedPeers,
-  };
-};
-
-const mdp = d => {
-  return {
-    setStagedPeers: v => d({type: 'setStagedPeers', payload: v}),
-    setConnectedPeers: v => d({type: 'setConnectedPeers', payload: v}),
-  };
-};
-
-export default connect(msp, mdp)(PeersListScreen);
+export default PeersListScreen;

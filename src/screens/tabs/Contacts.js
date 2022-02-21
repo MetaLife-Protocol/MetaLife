@@ -3,11 +3,9 @@ import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
-import {useNavigationState} from '@react-navigation/native';
 import {friendsGraphParse} from '../../filters/ContactsFilters';
 import SearchBar from '../../shared/comps/SearchBar';
 import FriendItem from './contacts/item/FriendItem';
-import * as ssbOP from '../../remote/ssbOP';
 
 const iconDic = {
   fb: require('../../assets/image/profiles/Facebook.png'),
@@ -19,25 +17,9 @@ const DATA_sn = [{icon: iconDic.fb}, {icon: iconDic.nf}, {icon: iconDic.tt}];
 
 let intervalId = NaN;
 
-const Contacts = ({navigation, feedId, setFriendsGraph, friendsGraph}) => {
+const Contacts = ({navigation, feedId, friendsGraph}) => {
   const {BG, row, flex1, text} = SchemaStyles();
   const {searchBar, item, key} = styles;
-
-  // refresh peers when tab index is 2 (contacts screen)
-  const index = useNavigationState(state => state.index);
-  if (index === 2 && isNaN(intervalId)) {
-    refreshFriendsGraph();
-    intervalId = setInterval(refreshFriendsGraph, 5000);
-  } else if (index !== 2 && !isNaN(intervalId)) {
-    clearInterval(intervalId);
-    intervalId = NaN;
-  }
-
-  function refreshFriendsGraph() {
-    ssbOP.ssb.friends.graph((e, v) =>
-      e ? console.warn(e) : setFriendsGraph(v),
-    );
-  }
 
   const snItem = ({item: {icon}}) => (
     <View style={item}>
@@ -103,9 +85,7 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {
-    setFriendsGraph: v => d({type: 'setFriendsGraph', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(Contacts);

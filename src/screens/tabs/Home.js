@@ -17,15 +17,18 @@ import * as ssbOP from '../../remote/ssbOP';
 import {
   addPrivateUpdatesListener,
   addPublicUpdatesListener,
+  graph,
   loadMsg,
   reqStartSSB,
 } from '../../remote/ssbOP';
 import PostItem from './home/PostItem';
+import {useTimer} from '../../shared/Hooks';
 
 const Home = ({
   navigation,
   feedId,
   setFeedId,
+  setFriendsGraph,
   publicMsg,
   addPublicMsg,
   setPrivateMsg,
@@ -49,6 +52,12 @@ const Home = ({
           addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
         });
   }, []);
+
+  useTimer(refreshFriendsGraph, 3000, null, false);
+
+  function refreshFriendsGraph() {
+    graph((e, v) => (e ? console.warn(e) : setFriendsGraph(v)));
+  }
 
   return (
     <SafeAreaView style={[flex1]}>
@@ -78,6 +87,7 @@ const mdp = d => {
     addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
     setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),
     addPrivateMsg: v => d({type: 'addPrivateMsg', payload: v}),
+    setFriendsGraph: v => d({type: 'setFriendsGraph', payload: v}),
   };
 };
 
