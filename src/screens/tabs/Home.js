@@ -44,7 +44,7 @@ const Home = ({
           setFeedId(ssb.id);
           // start & stage self
           ssb.starter.startAndStage((e, v) =>
-            console.log(v ? 'start' : 'started yet'),
+            console.log(v ? 'conn start' : 'conn started yet'),
           );
           // listening for public & private msg
           addPublicUpdatesListener(key => loadMsg(key, false, addPublicMsg));

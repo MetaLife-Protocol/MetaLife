@@ -10,7 +10,9 @@ export const starter = {
         ssb.conn.start((e, v) => {
           cb(e, v);
         });
-        ssb.conn.stage((e, v) => console.log(v ? 'stage' : 'staged yet'));
+        ssb.conn.stage((e, v) =>
+          console.log(v ? 'peer stage' : 'peer staged yet'),
+        );
       },
     };
   },
