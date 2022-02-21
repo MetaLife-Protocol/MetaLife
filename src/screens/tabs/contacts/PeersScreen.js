@@ -45,8 +45,8 @@ const PeersScreen = ({
   }
 
   return (
-    <SafeAreaView>
-      <ScrollView style={[BG]}>
+    <SafeAreaView style={[flex1]}>
+      <ScrollView style={[flex1, BG]}>
         {stagedPeers.length > 0 && (
           <Section title={'Staged Peers'}>
             {stagedPeers.map((pObj, i) => (
