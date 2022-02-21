@@ -21,9 +21,6 @@ export const block = (fid, opts, cb) => {
 export const follow = (fid, opts, cb) => {
   ssb.friends.follow(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));
 };
-export const isFollowing = (source, dest, cb) => {
-  ssb.friends.isFollowing({source, dest}, cb);
-};
 export const connectPeer = (address, data, cb) =>
   ssb.conn.connect(address, data, (e, v) => (e ? console.error(e) : cb(v)));
 
@@ -45,13 +42,21 @@ export const setAbout = (fid, {name, description, imageUrl}, cb) =>
   );
 
 // isFollowing
-/*ssb.friends.isFollowing({source:"@XKv0b06yUZ30Va8RZAnijtMl3MdrDgHX677yTE6cFDY=.ed25519",dest:"@azYm7/Ae3TPvpQynRPsc+Wc8TbGOlQoiipfQfM6PIxQ=.ed25519"},(e,v)=>console.log(v))*/
+export const isFollowing = (source, dest, cb = null) =>
+  ssb.friends.isFollowing(
+    {
+      source,
+      dest,
+    },
+    (e, v) => (e ? console.warn(e) : cb && cb(v)),
+  );
 
 // getMnemonic
-// ssb.keysUtils.getMnemonic((e, v) => setOpLog(v + '\n'));
+export const getMnemonic = cb =>
+  ssb.keysUtils.getMnemonic((e, v) => (e ? console.warn(e) : cb(v)));
 
 // invite
-// ssb.invite.accept('106.52.171.12:8008:@eVs235wBX5aRoyUwWyZRbo9r1oZ9a7+V+wEvf+F/MCw=.ed25519~luAn8Yn38OzESHe8ZDhc5ZfRfswi1Ph+1EDuYVEVBgs=',(e,v)=>console.log(v))
+export const inviteAccept = (code, cb = null) => ssb.invite.accept(code, cb);
 
 /* duplex */
 export const ping = ssb =>
@@ -129,5 +134,3 @@ export const loadMsg = (msgKey, isPrivate = false, cb = null) => {
       : console.log(v),
   );
 };
-
-export const inviteAccept = (code, cb = null) => ssb.invite.accept(code, cb);
