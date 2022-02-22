@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
+    cfg: s.cfg,
     feedId: s.user.feedId,
     peerInfoDic: s.contacts.peerInfoDic,
   };

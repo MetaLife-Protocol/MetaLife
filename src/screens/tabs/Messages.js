@@ -3,7 +3,7 @@ import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import SearchBar from '../../shared/comps/SearchBar';
-import RootMessageItem from './messages/item/MessageItem';
+import MessageItem from './messages/item/MessageItem';
 
 const iconDic = {
   photo: require('../../assets/image/profiles/photo.png'),
@@ -44,7 +44,7 @@ const Messages = ({navigation, privateMsg}) => {
     <ScrollView style={FG}>
       <SearchBar style={[searchBar]} />
       {Object.keys(privateMsg).map(key => (
-        <RootMessageItem
+        <MessageItem
           key={key}
           rootKey={key}
           navigation={navigation}
@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
+    cfg: s.cfg,
     feedId: s.user.feedId,
     privateMsg: s.msg.privateMsg,
   };

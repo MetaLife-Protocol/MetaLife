@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
+    cfg: s.cfg,
     feedId: s.user.feedId,
     friendsGraph: s.contacts.friendsGraph,
   };

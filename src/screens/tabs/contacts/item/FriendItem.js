@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
+    cfg: s.cfg,
     peerInfoDic: s.contacts.peerInfoDic,
   };
 };

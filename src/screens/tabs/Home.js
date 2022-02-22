@@ -69,6 +69,7 @@ const Home = ({
 
 const msp = s => {
   return {
+    cfg: s.cfg,
     feedId: s.user.feedId,
     publicMsg: s.msg.publicMsg,
   };

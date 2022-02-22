@@ -31,7 +31,9 @@ const PostItem = ({
       <View style={[textContainer]}>
         <Text>
           <Text style={[text]}>{name}</Text>
-          <Text style={[placeholderTextColor]}>{localDate(timestamp)}</Text>
+          <Text style={[placeholderTextColor]}>
+            {'   ' + localDate(timestamp)}
+          </Text>
         </Text>
         <Text style={[text, contentContainer]}>{content.text}</Text>
         <PostMsgPanel style={[row, flex1, justifySpaceBetween, panel]} />
@@ -43,6 +45,7 @@ const PostItem = ({
 const styles = StyleSheet.create({
   container: {
     marginVertical: 10,
+    marginLeft: 10,
   },
   textContainer: {
     flex: 1,
@@ -59,6 +62,7 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
+    cfg: s.cfg,
     peerInfoDic: s.contacts.peerInfoDic,
   };
 };
