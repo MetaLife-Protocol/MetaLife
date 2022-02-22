@@ -3,9 +3,8 @@
 import nodejs from 'nodejs-mobile-react-native';
 import {makeClient} from './ssb/Client';
 
-export let ssb = null;
-
-const defaultCallBack = (e, v) => (e ? console.warn(e) : console.log(v));
+console.log('refresh @ ssbOP with window.ssb: ', window.ssb, ssb);
+export let ssb = window.ssb;
 
 export const status = cb =>
   ssb.status((e, v) => (e ? console.error(e) : cb(v)));
@@ -59,8 +58,8 @@ export const getMnemonic = cb =>
 export const inviteAccept = (code, cb = null) => ssb.invite.accept(code, cb);
 
 /* duplex */
-export const ping = ssb =>
-  ssb.conn.ping()(null, (e, v) => (e ? console.error(e) : console.log(v)));
+export const ping = cb =>
+  ssb.conn.ping()(null, (e, v) => (e ? console.error(e) : cb && cb(v)));
 
 // ???
 // ssb.deweird.source(['threads', 'publicSummary'],{})(null,(e, v)=>console.log(v))

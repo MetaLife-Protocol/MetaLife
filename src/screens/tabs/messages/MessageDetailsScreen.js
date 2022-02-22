@@ -13,6 +13,7 @@ import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import MsgInput from './MsgInput';
 import {sendMsg} from '../../../remote/ssbOP';
+import {localDate} from '../../../utils';
 
 const iconDic = {
   peerIcon: require('../../../assets/image/contacts/peer_icon.png'),
@@ -83,9 +84,6 @@ const MessageDetailsScreen = ({
         {privateMsg[rootKeyLocal] &&
           privateMsg[rootKeyLocal].map(
             ({key, value: {author, content, timestamp}}) => {
-              const date = new Date(timestamp),
-                time = date.toLocaleTimeString(),
-                day = date.toLocaleDateString();
               return (
                 <View
                   key={key}
@@ -95,7 +93,7 @@ const MessageDetailsScreen = ({
                   ]}>
                   <View style={[item]}>
                     <Text style={[title]}>{content.text}</Text>
-                    <Text style={[desc]}>{time + ' ' + day}</Text>
+                    <Text style={[desc]}>{localDate(timestamp)}</Text>
                   </View>
                 </View>
               );

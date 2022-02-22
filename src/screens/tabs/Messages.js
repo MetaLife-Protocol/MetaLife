@@ -3,7 +3,7 @@ import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import SearchBar from '../../shared/comps/SearchBar';
-import RootMessageItem from './messages/item/RootMessageItem';
+import RootMessageItem from './messages/item/MessageItem';
 
 const iconDic = {
   photo: require('../../assets/image/profiles/photo.png'),

@@ -3,20 +3,9 @@ import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
+import {PeerIcons} from '../../../../shared/Icons';
 
-const iconDic = {
-  peerIcon: require('../../../../assets/image/contacts/peer_icon.png'),
-  daoIcon: require('../../../../assets/image/contacts/dao_icon.png'),
-  nftIcon: require('../../../../assets/image/contacts/nft_icon.png'),
-};
-
-const RootMessageItem = ({
-  rootKey,
-  navigation,
-  feedId,
-  peerInfoDic,
-  msgArr,
-}) => {
+const MessageItem = ({rootKey, navigation, feedId, peerInfoDic, msgArr}) => {
   const {
       value: {
         author,
@@ -26,8 +15,8 @@ const RootMessageItem = ({
     recp = recps.filter(value => value !== feedId)[0],
     lastMsg = msgArr[msgArr.length - 1];
 
-  const {row, flex1, text} = SchemaStyles();
-  const {head, textContainer, item, title, desc} = styles;
+  const {row, flex1, text} = SchemaStyles(),
+    {head, textContainer, item, title, desc} = styles;
   const {name = '', description = '', image = ''} = peerInfoDic[recp] || {};
   return (
     <Pressable
@@ -39,7 +28,7 @@ const RootMessageItem = ({
           height={60}
           width={60}
           style={[head]}
-          source={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
+          source={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
         />
         <View style={[textContainer]}>
           <Text numberOfLines={1} style={[title, text]}>
@@ -94,4 +83,4 @@ const mdp = d => {
   };
 };
 
-export default connect(msp, mdp)(RootMessageItem);
+export default connect(msp, mdp)(MessageItem);

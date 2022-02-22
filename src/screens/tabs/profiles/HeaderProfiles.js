@@ -1,13 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   ImageBackground,
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
 } from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
+import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 
 const iconDic = {
   BG: require('../../../assets/image/profiles/Profiles_backgroud.png'),
@@ -18,23 +20,45 @@ const iconDic = {
 const HeaderProfiles = ({props: {navigation}, feedId, peerInfoDic}) => {
   const {alignItemsCenter, marginTop10} = SchemaStyles(),
     {container, photo, setting, nameFont, at} = styles;
-  const {name = '', description = '', image = ''} = peerInfoDic[feedId] || {};
+  const [editMode, setEditMode] = useState(false),
+    [name, setName] = useState(
+      peerInfoDic[feedId].name || feedId.substring(0, 10),
+    ),
+    [description, setDescription] = useState(
+      peerInfoDic[feedId].description || '',
+    ),
+    [headImage, setHeadImage] = useState(
+      {uri: blobIdToUrl(peerInfoDic[feedId].image)} || iconDic.icon_setting,
+    );
+
   return (
-    <ImageBackground style={[container, alignItemsCenter]} source={iconDic.BG}>
-      <Image style={[photo]} source={iconDic.photo} />
-      <Text style={[nameFont, marginTop10]}>
-        {name || feedId.substring(0, 10)}
-      </Text>
-      <Text style={[at]}>{description || feedId.substring(0, 6)}</Text>
-      <Pressable
-        style={[setting]}
-        onPress={() => {
-          console.log('pressed');
-          navigation.navigate('Setting');
-        }}>
-        <Image source={iconDic.icon_setting} />
-      </Pressable>
-    </ImageBackground>
+    <Pressable onLongPress={event => setEditMode(!editMode)}>
+      <ImageBackground
+        style={[container, alignItemsCenter]}
+        source={iconDic.BG}>
+        <Image style={[photo]} source={iconDic.photo} />
+        <TextInput
+          style={[nameFont, marginTop10]}
+          editable={editMode}
+          value={name}
+          onChangeText={setName}
+        />
+        <TextInput
+          style={[at]}
+          editable={editMode}
+          onChangeText={setDescription}>
+          {description}
+        </TextInput>
+        <Pressable
+          style={[setting]}
+          onPress={() => {
+            console.log('pressed');
+            navigation.navigate('Setting');
+          }}>
+          <Image source={iconDic.icon_setting} />
+        </Pressable>
+      </ImageBackground>
+    </Pressable>
   );
 };
 
