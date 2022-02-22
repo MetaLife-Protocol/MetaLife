@@ -5,6 +5,7 @@ import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
+import {localDate} from '../../../../utils';
 
 const MessageItem = ({rootKey, navigation, feedId, peerInfoDic, msgArr}) => {
   const {
@@ -32,7 +33,7 @@ const MessageItem = ({rootKey, navigation, feedId, peerInfoDic, msgArr}) => {
           <Text numberOfLines={1} style={[title, text]}>
             {lastMsg.value.content.text}
           </Text>
-          <Text style={[desc]}>{lastMsg.timestamp}</Text>
+          <Text style={[desc]}>{localDate(lastMsg.timestamp)}</Text>
         </View>
       </View>
     </Pressable>
