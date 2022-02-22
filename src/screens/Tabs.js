@@ -90,7 +90,7 @@ const Tabs = ({navigation, darkMode}) => {
           headerRight: props => (
             <HeaderRightBtn
               btnIcon={headerBtnIconDic.messageAdd}
-              btnHandler={goScreen('SubScreen')}
+              btnHandler={goScreen('FriendList')}
             />
           ),
           headerRightContainerStyle: [{right: 19}],

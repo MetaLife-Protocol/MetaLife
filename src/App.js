@@ -14,6 +14,7 @@ import PeerDetailsScreen from './screens/tabs/contacts/PeerDetailsScreen';
 import MessageDetailsScreen from './screens/tabs/messages/MessageDetailsScreen';
 import PostMsgEditor from './screens/tabs/home/PostMsgEditor';
 import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
+import FriendList from './screens/tabs/messages/FriendList';
 
 const App = () => {
   const {theme} = SchemaStyles();
@@ -34,8 +35,9 @@ const App = () => {
           options={{headerShown: false}}
           component={Tabs}
         />
-        <Stack.Screen name="Setting" component={Setting} />
-        {/*Contacts*/}
+        {/* Messages */}
+        <Stack.Screen name="FriendList" component={FriendList} />
+        {/* Contacts */}
         <Stack.Screen
           name="PeersScreen"
           //fixme: large title causes twinkle unusually
@@ -58,6 +60,9 @@ const App = () => {
           options={{title: 'Peers' /*headerLargeTitle: true*/}}
           component={PeerDetailsScreen}
         />
+        {/* Profiles */}
+        <Stack.Screen name="Setting" component={Setting} />
+        {/* Screen holder */}
         <Stack.Screen name="SubScreen" options={{}} component={SubScreen} />
       </Stack.Navigator>
     </NavigationContainer>
