@@ -18,7 +18,7 @@ const PostItem = ({
 }) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
-    {container, textContainer, contentContainer, panel} = styles;
+    {container, head, textContainer, contentContainer, panel} = styles;
 
   const {
     name = author.substring(0, 10),
@@ -27,7 +27,12 @@ const PostItem = ({
   } = peerInfoDic[author] || {};
   return (
     <View style={[row, container]}>
-      <Image source={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon} />
+      <Image
+        height={60}
+        width={60}
+        style={[head]}
+        source={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+      />
       <View style={[textContainer]}>
         <Text>
           <Text style={[text]}>{name}</Text>
@@ -46,6 +51,10 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 10,
     marginLeft: 10,
+  },
+  head: {
+    width: 60,
+    height: 60,
   },
   textContainer: {
     flex: 1,

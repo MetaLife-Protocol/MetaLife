@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {FlatList, SafeAreaView, ScrollView, StatusBar} from 'react-native';
+import {FlatList, SafeAreaView} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import * as ssbOP from '../../remote/ssbOP';
@@ -13,7 +13,6 @@ import {
   reqStartSSB,
   stage,
 } from '../../remote/ssbOP';
-import PostItem from './home/items/PostItem';
 import {useTimer} from '../../shared/Hooks';
 import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
 import ItemAgent from './home/ItemAgent';
@@ -30,24 +29,24 @@ const Home = ({
 }) => {
   const {barStyle, FG, flex1} = SchemaStyles();
   useEffect(() => {
-    console.log('refresh @ Home');
-    reqStartSSB(ssb => {
-      ssbOP.ssb = window.ssb = ssb;
-      setFeedId(ssb.id);
-      connStart(v => {
-        console.log(v ? 'conn start' : 'conn started yet');
-        stage(v => console.log(v ? 'peer stage' : 'peer staged yet'));
+    window.ssb ||
+      reqStartSSB(ssb => {
+        ssbOP.ssb = window.ssb = ssb;
+        setFeedId(ssb.id);
+        connStart(v => {
+          console.log(v ? 'conn start' : 'conn started yet');
+          stage(v => console.log(v ? 'peer stage' : 'peer staged yet'));
+        });
+        addPublicUpdatesListener(key =>
+          loadMsg(key, false, msg => {
+            checkMarkedMsgCB(msg);
+            refreshFriendsGraph();
+            addPublicMsg(msg);
+          }),
+        );
+        addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
+        markMsgCBByType('about', fId => about(fId, v => addPeerInfo([fId, v])));
       });
-      addPublicUpdatesListener(key =>
-        loadMsg(key, false, msg => {
-          checkMarkedMsgCB(msg);
-          refreshFriendsGraph();
-          addPublicMsg(msg);
-        }),
-      );
-      addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
-      markMsgCBByType('about', fId => about(fId, v => addPeerInfo([fId, v])));
-    });
   }, []);
 
   useTimer(refreshFriendsGraph, 5000, [], false);
@@ -59,7 +58,7 @@ const Home = ({
   return (
     <SafeAreaView style={[flex1]}>
       <FlatList
-        data={publicMsg}
+        data={publicMsg.concat().reverse()}
         keyExtractor={item => item.key}
         renderItem={ItemAgent}
       />
