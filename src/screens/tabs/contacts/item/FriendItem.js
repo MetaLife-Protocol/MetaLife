@@ -4,6 +4,7 @@ import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {about} from '../../../../remote/ssbOP';
+import HeadIcon from '../../../../shared/comps/HeadIcon';
 
 const iconDic = {
   peerIcon: require('../../../../assets/image/contacts/peer_icon.png'),
@@ -13,7 +14,7 @@ const iconDic = {
 
 const FriendItem = ({navigation, fId, peerInfoDic, addPeerInfo}) => {
   const {row, flex1, text} = SchemaStyles();
-  const {head, textContainer, item, title, desc} = styles;
+  const {textContainer, item, title, desc} = styles;
   // check cached
   useEffect(() => {
     peerInfoDic.hasOwnProperty(fId) || about(fId, v => addPeerInfo([fId, v]));
@@ -22,11 +23,8 @@ const FriendItem = ({navigation, fId, peerInfoDic, addPeerInfo}) => {
   return (
     <Pressable onPress={() => navigation.push('PeerDetailsScreen', fId)}>
       <View style={[item, row, flex1]}>
-        <Image
-          height={60}
-          width={60}
-          style={[head]}
-          source={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
+        <HeadIcon
+          image={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
         />
         <View style={[textContainer]}>
           <Text numberOfLines={1} style={[title, text]}>
@@ -40,10 +38,6 @@ const FriendItem = ({navigation, fId, peerInfoDic, addPeerInfo}) => {
 };
 
 const styles = StyleSheet.create({
-  head: {
-    width: 60,
-    height: 60,
-  },
   item: {
     height: 80,
     marginVertical: 8,

@@ -4,6 +4,7 @@ import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
+import HeadIcon from '../../../../shared/comps/HeadIcon';
 
 const MessageItem = ({rootKey, navigation, feedId, peerInfoDic, msgArr}) => {
   const {
@@ -16,7 +17,7 @@ const MessageItem = ({rootKey, navigation, feedId, peerInfoDic, msgArr}) => {
     lastMsg = msgArr[msgArr.length - 1];
 
   const {row, flex1, text} = SchemaStyles(),
-    {head, textContainer, item, title, desc} = styles;
+    {textContainer, item, title, desc} = styles;
   const {name = '', description = '', image = ''} = peerInfoDic[recp] || {};
   return (
     <Pressable
@@ -24,11 +25,8 @@ const MessageItem = ({rootKey, navigation, feedId, peerInfoDic, msgArr}) => {
         navigation.navigate('MessageDetailsScreen', {rootKey, recp})
       }>
       <View style={[item, row, flex1]}>
-        <Image
-          height={60}
-          width={60}
-          style={[head]}
-          source={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+        <HeadIcon
+          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
         />
         <View style={[textContainer]}>
           <Text numberOfLines={1} style={[title, text]}>
@@ -42,10 +40,6 @@ const MessageItem = ({rootKey, navigation, feedId, peerInfoDic, msgArr}) => {
 };
 
 const styles = StyleSheet.create({
-  head: {
-    width: 60,
-    height: 60,
-  },
   item: {
     height: 80,
     marginVertical: 8,

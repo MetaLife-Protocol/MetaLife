@@ -21,6 +21,7 @@ import {PeerIcons} from '../../../shared/Icons';
 import {block, follow} from '../../../remote/ssbOP';
 import {setDisabled} from 'react-native/Libraries/LogBox/Data/LogBoxData';
 import {markMsgCB, markMsgCBByKey} from '../../../remote/ssb/MsgCB';
+import HeadIcon from '../../../shared/comps/HeadIcon';
 
 const PeerDetailsScreen = ({
   navigation,
@@ -31,7 +32,7 @@ const PeerDetailsScreen = ({
   privateMsg,
 }) => {
   const {row, flex1, justifySpaceBetween, text} = SchemaStyles(),
-    {head, textContainer, item, title, desc, btn} = styles,
+    {textContainer, item, title, desc, btn} = styles,
     {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
     [friends, following, follower, blockList, blocked, other] =
       friendsGraphParse(friendsGraph, feedId),
@@ -57,11 +58,8 @@ const PeerDetailsScreen = ({
     <SafeAreaView style={[flex1]}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={[item, row, flex1]}>
-          <Image
-            height={60}
-            width={60}
-            style={[head]}
-            source={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+          <HeadIcon
+            image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
           />
           <View style={[textContainer]}>
             <Text numberOfLines={1} style={[title, text]}>
@@ -148,10 +146,6 @@ const PeerDetailsScreen = ({
 };
 
 const styles = StyleSheet.create({
-  head: {
-    width: 60,
-    height: 60,
-  },
   item: {
     height: 80,
     marginVertical: 8,

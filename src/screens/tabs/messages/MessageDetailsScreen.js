@@ -14,6 +14,7 @@ import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import MsgInput from './MsgInput';
 import {sendMsg} from '../../../remote/ssbOP';
 import {localDate} from '../../../utils';
+import HeadIcon from '../../../shared/comps/HeadIcon';
 
 const iconDic = {
   peerIcon: require('../../../assets/image/contacts/peer_icon.png'),
@@ -30,15 +31,14 @@ const MessageDetailsScreen = ({
   privateMsg,
 }) => {
   const {BG, FG, row, flex1} = SchemaStyles(),
-    {head, itemContainer, item, itemLeft, itemRight, title, desc} = styles,
+    {itemContainer, item, itemLeft, itemRight, title, desc} = styles,
     {name = '', description = '', image = ''} = peerInfoDic[recp] || {};
 
   const headerRight = () => (
-    <Image
+    <HeadIcon
       height={30}
       width={30}
-      style={[head]}
-      source={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
+      image={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
     />
   );
 
@@ -106,10 +106,6 @@ const MessageDetailsScreen = ({
 };
 
 const styles = StyleSheet.create({
-  head: {
-    width: 30,
-    height: 30,
-  },
   itemContainer: {
     marginHorizontal: 15,
     marginVertical: 12,

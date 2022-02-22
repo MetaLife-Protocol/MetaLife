@@ -2,13 +2,14 @@
  * Created on 17 Feb 2022 by lonmee
  */
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../../../shared/SchemaStyles';
-import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
-import {PeerIcons} from '../../../../shared/Icons';
+import {StyleSheet, Text, View} from 'react-native';
+import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {localDate} from '../../../../utils';
 import PostMsgPanel from './PostMsgPannel';
+import HeadIcon from '../../../../shared/comps/HeadIcon';
+import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
+import {PeerIcons} from '../../../../shared/Icons';
 
 const PostItem = ({
   item: {
@@ -18,7 +19,7 @@ const PostItem = ({
 }) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
-    {container, head, textContainer, contentContainer, panel} = styles;
+    {container, textContainer, contentContainer, panel} = styles;
 
   const {
     name = author.substring(0, 10),
@@ -27,11 +28,8 @@ const PostItem = ({
   } = peerInfoDic[author] || {};
   return (
     <View style={[row, container]}>
-      <Image
-        height={60}
-        width={60}
-        style={[head]}
-        source={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+      <HeadIcon
+        image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
       />
       <View style={[textContainer]}>
         <Text>
@@ -51,10 +49,6 @@ const styles = StyleSheet.create({
   container: {
     marginVertical: 10,
     marginLeft: 10,
-  },
-  head: {
-    width: 60,
-    height: 60,
   },
   textContainer: {
     flex: 1,

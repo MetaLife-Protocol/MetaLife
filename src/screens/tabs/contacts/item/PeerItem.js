@@ -6,6 +6,7 @@ import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import * as ssbOP from '../../../../remote/ssbOP';
 import {connectPeer, follow} from '../../../../remote/ssbOP';
 import {PeerIcons} from '../../../../shared/Icons';
+import HeadIcon from '../../../../shared/comps/HeadIcon';
 
 const PeerItem = ({
   navigation,
@@ -37,11 +38,8 @@ const PeerItem = ({
       key={key}
       onPress={() => navigation.navigate('PeerDetailsScreen')}>
       <View style={[item, row, flex1]}>
-        <Image
-          height={60}
-          width={60}
-          style={[head]}
-          source={
+        <HeadIcon
+          image={
             image
               ? {uri: blobIdToUrl(image)}
               : type == 'lan'
@@ -75,10 +73,6 @@ const PeerItem = ({
 };
 
 const styles = StyleSheet.create({
-  head: {
-    width: 60,
-    height: 60,
-  },
   item: {
     height: 80,
     marginVertical: 8,

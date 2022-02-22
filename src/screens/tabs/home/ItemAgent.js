@@ -2,7 +2,6 @@
  * Created on 17 Feb 2022 by lonmee
  */
 import React from 'react';
-import {StyleSheet} from 'react-native';
 import PostItem from './items/PostItem';
 
 const ItemAgent = ({item}) => {
@@ -32,12 +31,5 @@ const ItemAgent = ({item}) => {
       return null;
   }
 };
-
-const styles = StyleSheet.create({
-  head: {
-    width: 60,
-    height: 60,
-  },
-});
 
 export default ItemAgent;
