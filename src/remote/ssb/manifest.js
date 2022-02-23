@@ -67,6 +67,10 @@ export default {
     graph: 'async',
     graphStream: 'source',
   },
+  replicationScheduler: {
+    start: 'sync',
+    reconfigure: 'sync',
+  },
   //read: no reference https://github.com/ssbc/ssb-server/tree/99fad7c5f6e436cbd670346b4da20c57222a1419/plugins/blobs
   blobs: {
     get: 'source',

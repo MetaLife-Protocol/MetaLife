@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2018-2021 The Manyverse Authors
+// SPDX-FileCopyrightText: 2018-2022 The Manyverse Authors
 //
 // SPDX-License-Identifier: MPL-2.0
 
@@ -17,7 +17,9 @@ import oneTimeFixes = require('./one-time-fixes');
 if (!process.env.APP_DATA_DIR || !process.env.SSB_DIR) {
   throw new Error('misconfigured default paths for the backend');
 }
-if (!fs.existsSync(process.env.SSB_DIR)) mkdirp.sync(process.env.SSB_DIR);
+if (!fs.existsSync(process.env.SSB_DIR)) {
+  mkdirp.sync(process.env.SSB_DIR);
+}
 
 oneTimeFixes().then(() => {
   const KEYS_PATH = path.join(process.env.SSB_DIR!, 'secret');
@@ -50,6 +52,10 @@ oneTimeFixes().then(() => {
     friends: {
       hops: settingsUtils.readSync().hops ?? 2,
       hookAuth: false, // because we use ssb-conn-firewall
+    },
+    replicationScheduler: {
+      autostart: false,
+      partialReplication: null,
     },
     suggest: {
       autostart: false,
