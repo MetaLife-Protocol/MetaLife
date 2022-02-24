@@ -3,7 +3,6 @@
 import nodejs from 'nodejs-mobile-react-native';
 import {makeClient} from './ssb/Client';
 
-console.log('refresh @ ssbOP with window.ssb: ', window.ssb, ssb);
 export let ssb = window.ssb;
 
 export const status = cb =>
