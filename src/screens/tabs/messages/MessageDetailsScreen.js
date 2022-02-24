@@ -50,7 +50,7 @@ const MessageDetailsScreen = ({
     });
     Keyboard.addListener('keyboardWillShow', scrollToEnd);
     return () => Keyboard.removeAllListeners('keyboardWillShow');
-  });
+  }, []);
 
   function sendHandler(content) {
     sendMsg(
