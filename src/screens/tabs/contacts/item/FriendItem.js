@@ -20,6 +20,7 @@ const FriendItem = ({navigation, fId, peerInfoDic, addPeerInfo}) => {
     peerInfoDic.hasOwnProperty(fId) || about(fId, v => addPeerInfo([fId, v]));
   }, []);
   const {name = '', description = '', image = ''} = peerInfoDic[fId] || {};
+  console.log(blobIdToUrl(image));
   return (
     <Pressable onPress={() => navigation.push('PeerDetailsScreen', fId)}>
       <View style={[item, row, flex1]}>

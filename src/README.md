@@ -7,8 +7,11 @@ mode_modules/pull-reader/state.js
 
 * patch-package needed *
 
+> change port on serve-blob  
 > add  
 > serveBlobs: {
   port: 26834, //26835 / 3921
   },  
-> to [`ssb.ts:45`](backend/ssb.ts)
+> to [`ssb.ts:45`](backend/ssb.ts)  
+> fix 26835 to 26834  
+> at [`port.js:1`](node_modules/ssb-serve-blobs/port.js)

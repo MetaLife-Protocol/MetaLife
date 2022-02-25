@@ -42,9 +42,9 @@ oneTimeFixes().then(() => {
     blobsPurge: {
       cpuMax: 90, // %
     },
-    // serveBlobs: {
-    //   port: 26834, //26835 / 3921
-    // },
+    serveBlobs: {
+      port: 26834, //26835 / 3921
+    },
     conn: {
       autostart: false,
       firewall: {

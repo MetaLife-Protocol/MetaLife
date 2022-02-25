@@ -40,15 +40,9 @@ const Home = ({
           stage(v => console.log(v ? 'peer stage' : 'peer staged yet'));
 
           replicationSchedulerStart(v =>
-            console.log(
-              v
-                ? 'replicationSchedulerStart'
-                : 'replicationSchedulerStart fail',
-            ),
+            console.log('replicationSchedulerStart: ', v),
           );
-          suggestStart(v =>
-            console.log(v ? 'suggestStart' : 'suggestStart fail'),
-          );
+          suggestStart(v => console.log('suggestStart: ', v));
           addPublicUpdatesListener(key =>
             loadMsg(key, false, msg => {
               checkMarkedMsgCB(msg);

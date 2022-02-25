@@ -20,7 +20,7 @@ const iconDic = {
 
 const HeaderProfiles = ({props: {navigation}, feedId, peerInfoDic}) => {
   const {alignItemsCenter, marginTop10} = SchemaStyles(),
-    {container, photo, setting, nameFont, at} = styles;
+    {container, photo, setting, nameFont, desc, at} = styles;
   const {name = '', description = '', image = ''} = peerInfoDic[feedId] || {};
   return (
     <ImageBackground style={[container, alignItemsCenter]} source={iconDic.BG}>
@@ -28,7 +28,8 @@ const HeaderProfiles = ({props: {navigation}, feedId, peerInfoDic}) => {
       <Text style={[nameFont, marginTop10]}>
         {name || feedId.substring(0, 10)}
       </Text>
-      <Text style={[at]}>@jorgecutis</Text>
+      <Text style={[desc]}>{description}</Text>
+      <Text style={[at]}>{feedId.substring(0, 8)}</Text>
       <Pressable
         style={[setting]}
         onPress={() => {
@@ -61,6 +62,11 @@ const styles = StyleSheet.create({
   at: {
     marginTop: 4,
     fontSize: 13,
+    color: 'white',
+  },
+  desc: {
+    marginTop: 6,
+    fontSize: 16,
     color: 'white',
   },
 });

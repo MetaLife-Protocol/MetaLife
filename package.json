@@ -7,7 +7,6 @@
     "npm&pod": "npm install && npx pod-install",
     "postinstall": "patch-package",
     "lib": "tsc",
-
     "clean script": "~~~~~~~~~~~~~~ cleaners ~~~~~~~~~~~~~~~~~",
     "clean-install": "npm clean-install",
     "clean-bundler": "watchman watch-del-all && rm -rf $TMPDIR/react-*",
@@ -15,12 +14,10 @@
     "clean-ios": "cd ios && xcodebuild -workspace MetaLife.xcworkspace -scheme MetaLife clean && cd ..",
     "clean-lib": "rm -rf lib",
     "full-clean": "npm run clean-android && npm run clean-bundler && rm -rf node_modules && rm -rf lib",
-
     "android script": "~~~~~~~~~~~~~~ android ~~~~~~~~~~~~~~~~~",
     "build-backend-android": "./tools/build-backend.mjs --android",
     "android": "react-native run-android --verbose",
     "install-android-release": "adb install -r android/app/release/app-release.apk",
-
     "ios script": "~~~~~~~~~~~~~~~ ios ~~~~~~~~~~~~~~~~",
     "build-backend-ios": "./tools/build-backend.mjs --ios --verbose",
     "ios": "react-native run-ios",
