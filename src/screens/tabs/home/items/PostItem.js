@@ -2,7 +2,13 @@
  * Created on 17 Feb 2022 by lonmee
  */
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  ImageResizeModeStatic,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {localDate} from '../../../../utils';
@@ -22,10 +28,23 @@ const PostItem = ({
     {container, textContainer, contentContainer, panel} = styles;
 
   const {
-    name = author.substring(0, 10),
-    description = '',
-    image = '',
-  } = peerInfoDic[author] || {};
+      name = author.substring(0, 10),
+      description = '',
+      image = '',
+    } = peerInfoDic[author] || {},
+    {text: cText, mentions = null} = content;
+  if (mentions && mentions.length) {
+    const cache = [];
+    for (const {link, name} of mentions) {
+      cache.push(blobIdToUrl(link));
+      // Image.getSize(
+      //   blobIdToUrl(link),
+      //   (w, h) => console.log(w, h),
+      //   console.warn,
+      // );
+    }
+    Image.queryCache(cache).then(console.log).catch(console.warn);
+  }
   return (
     <View style={[row, container]}>
       <HeadIcon
@@ -35,10 +54,27 @@ const PostItem = ({
         <Text>
           <Text style={[text]}>{name}</Text>
           <Text style={[placeholderTextColor]}>
-            {'   ' + localDate(timestamp)}
+            {'\n' + localDate(timestamp)}
           </Text>
         </Text>
-        <Text style={[text, contentContainer]}>{content.text}</Text>
+        <Text style={[text, contentContainer]}>{cText}</Text>
+        {mentions &&
+          mentions.map(({link, name}, i) => (
+            <Image
+              style={{
+                width: '100%',
+                height: '100%',
+                borderRadius: 10,
+                alignSelf: i % 2 ? 'flex-end' : 'flex-start',
+              }}
+              // resizeMethod={'scale'}
+              // resizeMode={'center'}
+              height={200}
+              width={200}
+              key={name}
+              source={{uri: blobIdToUrl(link)}}
+            />
+          ))}
         <PostMsgPanel style={[row, flex1, justifySpaceBetween, panel]} />
       </View>
     </View>
