@@ -10,8 +10,10 @@ import {
   connStart,
   graph,
   loadMsg,
+  replicationSchedulerStart,
   reqStartSSB,
   stage,
+  suggestStart,
 } from '../../remote/ssbOP';
 import {useTimer} from '../../shared/Hooks';
 import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
@@ -36,14 +38,25 @@ const Home = ({
         connStart(v => {
           console.log(v ? 'conn start' : 'conn started yet');
           stage(v => console.log(v ? 'peer stage' : 'peer staged yet'));
+
+          replicationSchedulerStart(v =>
+            console.log(
+              v
+                ? 'replicationSchedulerStart'
+                : 'replicationSchedulerStart fail',
+            ),
+          );
+          suggestStart(v =>
+            console.log(v ? 'suggestStart' : 'suggestStart fail'),
+          );
+          addPublicUpdatesListener(key =>
+            loadMsg(key, false, msg => {
+              checkMarkedMsgCB(msg);
+              refreshFriendsGraph();
+              addPublicMsg(msg);
+            }),
+          );
         });
-        addPublicUpdatesListener(key =>
-          loadMsg(key, false, msg => {
-            checkMarkedMsgCB(msg);
-            refreshFriendsGraph();
-            addPublicMsg(msg);
-          }),
-        );
         addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
         markMsgCBByType('about', fId => about(fId, v => addPeerInfo([fId, v])));
       });

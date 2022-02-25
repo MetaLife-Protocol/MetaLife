@@ -12,6 +12,11 @@ export const stage = cb =>
   ssb.conn.stage((e, v) => (e ? console.error(e) : cb(v)));
 export const connStart = cb =>
   ssb.conn.start((e, v) => (e ? console.error(e) : cb(v)));
+//
+export const replicationSchedulerStart = cb =>
+  ssb.replicationScheduler.start((e, v) => (e ? console.error(e) : cb(v)));
+export const suggestStart = cb =>
+  ssb.suggest.start((e, v) => (e ? console.error(e) : cb(v)));
 /* async */
 export const block = (fid, opts, cb) => {
   ssb.friends.block(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));

@@ -38,13 +38,13 @@ export const friendsGraphParse = (graph, id, includeFriend = true) => {
       }
     });
   });
-  friends = following.filter(v => follower.indexOf(v) > -1);
+  friends = following.filter(v => follower.includes(v));
   // kick out friend element(s)
   if (!includeFriend) {
-    following = following.filter(v => friends.indexOf(v) === -1);
-    follower = follower.filter(v => friends.indexOf(v) === -1);
+    following = following.filter(v => !friends.includes(v));
+    follower = follower.filter(v => !friends.includes(v));
   }
   return [friends, following, follower, block, blocked, other];
 };
 
-export const mutualFriend = (fA, fB) => fA.filter(v => fB.indexOf(v) > -1);
+export const mutualFriend = (fA, fB) => fA.filter(v => fB.includes(v));
