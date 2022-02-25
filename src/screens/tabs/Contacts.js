@@ -15,8 +15,6 @@ const iconDic = {
 
 const DATA_sn = [{icon: iconDic.fb}, {icon: iconDic.nf}, {icon: iconDic.tt}];
 
-let intervalId = NaN;
-
 const Contacts = ({navigation, feedId, friendsGraph}) => {
   const {BG, row, flex1, text} = SchemaStyles();
   const {searchBar, item, key} = styles;
