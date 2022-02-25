@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "webpack script": "~~~~~~~~~~~~~~ webpack ~~~~~~~~~~~~~~~~~",
-    "npm&pod": "npm install && npx pod-install",
     "clean-install": "npm clean-install",
+    "npm&pod": "npm install && npx pod-install",
     "postinstall": "patch-package",
     "lib": "tsc",
     "clean script": "~~~~~~~~~~~~~~ cleaners ~~~~~~~~~~~~~~~~~",
