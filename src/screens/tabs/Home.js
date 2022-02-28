@@ -10,6 +10,7 @@ import {
   connStart,
   graph,
   loadMsg,
+  persistentConnectPeer,
   replicationSchedulerStart,
   reqStartSSB,
   stage,
@@ -18,10 +19,12 @@ import {
 import {useTimer} from '../../shared/Hooks';
 import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
 import ItemAgent from './home/ItemAgent';
+import {getAddressForFid} from '../../filters/PeerFilters';
 
 const Home = ({
   navigation,
   feedId,
+  stagedPeers,
   setFeedId,
   addPeerInfo,
   setFriendsGraph,
@@ -52,7 +55,21 @@ const Home = ({
           );
         });
         addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
-        markMsgCBByType('about', fId => about(fId, v => addPeerInfo([fId, v])));
+        // about update
+        markMsgCBByType('about', (_, {about}) =>
+          about(about, v => addPeerInfo([about, v])),
+        );
+        // connect pub
+        markMsgCBByType(
+          'contact',
+          (author, {following, autofollow, contact}) => {
+            let addr;
+            following &&
+              autofollow &&
+              (addr = getAddressForFid(contact, stagedPeers)) &&
+              persistentConnectPeer(addr, {}, console.log);
+          },
+        );
       });
   }, []);
 
@@ -78,6 +95,7 @@ const msp = s => {
     cfg: s.cfg,
     feedId: s.user.feedId,
     publicMsg: s.msg.publicMsg,
+    stagedPeers: s.contacts.stagedPeers,
   };
 };
 

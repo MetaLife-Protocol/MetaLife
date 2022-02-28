@@ -43,7 +43,7 @@ const PostItem = ({
       //   console.warn,
       // );
     }
-    Image.queryCache(cache).then(console.log).catch(console.warn);
+    // Image.queryCache(cache).then(console.log).catch(console.warn);
   }
   return (
     <View style={[row, container]}>

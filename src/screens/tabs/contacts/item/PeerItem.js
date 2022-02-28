@@ -1,10 +1,14 @@
 import React from 'react';
-import {Button, Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Button, Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
-import * as ssbOP from '../../../../remote/ssbOP';
-import {connectPeer, follow} from '../../../../remote/ssbOP';
+import {
+  connectPeer,
+  follow,
+  persistentConnectPeer,
+  rememberPeer,
+} from '../../../../remote/ssbOP';
 import {PeerIcons} from '../../../../shared/Icons';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 
@@ -15,13 +19,7 @@ const PeerItem = ({
   addPeerInfo,
 }) => {
   const {row, flex1, text} = SchemaStyles();
-  const {head, textContainer, item, title, desc} = styles;
-  // check cached
-  // useEffect(() => {
-  //   console.log('check info');
-  //   peerInfoDic.hasOwnProperty(key) ||
-  //     ssb.aboutSelf.get(key, (e, v) => v.name && addPeerInfo([key, v]));
-  // });
+  const {textContainer, item, title, desc} = styles;
 
   const {name = '', description = '', image = ''} = peerInfoDic[key] || {};
 
@@ -59,6 +57,18 @@ const PeerItem = ({
               <Button
                 title={'connect'}
                 onPress={() => connectPeer(address, {}, connectHandler)}
+              />
+            )}
+            {state === 'connected' || (
+              <Button
+                title={'remember'}
+                onPress={() => rememberPeer(address, {}, console.log)}
+              />
+            )}
+            {state === 'connected' || (
+              <Button
+                title={'pConnect'}
+                onPress={() => persistentConnectPeer(address, {}, console.log)}
               />
             )}
             <Button

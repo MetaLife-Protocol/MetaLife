@@ -27,6 +27,17 @@ export const follow = (fid, opts, cb) => {
 export const connectPeer = (address, data, cb) =>
   ssb.conn.connect(address, data, (e, v) => (e ? console.error(e) : cb(v)));
 
+export const rememberPeer = (address, data, cb) =>
+  ssb.conn.remember(address, data, (e, v) => (e ? console.error(e) : cb(v)));
+
+export const forgetPeer = (address, cb) =>
+  ssb.conn.forget(address, (e, v) => (e ? console.error(e) : cb(v)));
+
+export const persistentConnectPeer = (address, data, cb) =>
+  ssb.connUtils.persistentConnect(address, data, (e, v) =>
+    e ? console.error(e) : cb(v),
+  );
+
 /* source */
 export const getStagedPeers = cb =>
   ssb.conn.stagedPeers()(null, (e, v) => (e ? console.error(e) : cb(v)));

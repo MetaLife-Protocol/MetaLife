@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Button,
   SafeAreaView,
@@ -12,7 +12,7 @@ import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import I18n from '../../i18n/I18n';
 import Section from '../../shared/comps/Section';
-import {inviteAccept} from '../../remote/ssbOP';
+import {inviteAccept, persistentConnectPeer} from '../../remote/ssbOP';
 
 const Profiles = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
   const {barStyle, FG, flex1, input, text, marginTop10} = SchemaStyles(),
@@ -37,10 +37,10 @@ const Profiles = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
             <Button
               title={'confirm'}
               onPress={() => {
+                inviteAccept(code, (e, v) => {
+                  e ? alert(e.message) : console.log('invite accept: ', v);
+                });
                 setCode('');
-                inviteAccept(code, (e, v) =>
-                  e ? alert(e.message) : console.log(v ? 'success' : 'failed'),
-                );
               }}
             />
           </Section>

@@ -5,11 +5,7 @@ import SchemaStyles, {colorsSchema} from '../../../shared/SchemaStyles';
 import {useTimer} from '../../../shared/Hooks';
 import Section from '../../../shared/comps/Section';
 import PeerItem from './item/PeerItem';
-import {
-  connectedPeers,
-  getConnectedPeers,
-  getStagedPeers,
-} from '../../../remote/ssbOP';
+import {getConnectedPeers, getStagedPeers} from '../../../remote/ssbOP';
 
 const PeersScreen = ({
   navigation,
@@ -24,21 +20,6 @@ const PeersScreen = ({
     {contactItemContainer, textView, nameTF, descTF} = styles;
   useTimer(refreshStagedAndConnected, 3000);
 
-  // option: call in pull mode
-  // useEffect(() => {
-  //   console.log('pull staged peers');
-  //   pull(ssbOP.ssb.conn.stagedPeers(), pull.map(throughFun), pull.map(sinkFun));
-  // }, []);
-  //
-  // function throughFun(value) {
-  //   console.log('through:', value);
-  //   return value;
-  // }
-  //
-  // function sinkFun(value) {
-  //   console.log('sink:', value);
-  // }
-
   function refreshStagedAndConnected() {
     getStagedPeers(setStagedPeers);
     getConnectedPeers(setConnectedPeers);
@@ -49,9 +30,12 @@ const PeersScreen = ({
       <ScrollView style={[flex1, BG]}>
         {stagedPeers.length > 0 && (
           <Section title={'Staged Peers'}>
-            {stagedPeers.map((pObj, i) => (
-              <PeerItem navigation={navigation} pObj={pObj} key={i} />
-            ))}
+            {stagedPeers.map(
+              (pObj, i) =>
+                pObj[0] && (
+                  <PeerItem navigation={navigation} pObj={pObj} key={i} />
+                ),
+            )}
           </Section>
         )}
         {connectedPeers.length > 0 && (

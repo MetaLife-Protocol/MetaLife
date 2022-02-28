@@ -11,10 +11,10 @@ export const markMsgCBByType = (type, handler) => {
   typeHandlers[type] = handler;
 };
 export const checkMarkedMsgCB = msg => {
-  msg.messages.map(({key, value: {content}}) => {
+  msg.messages.map(({key, value: {author, content}}) => {
     keyHandlers[key] && keyHandlers[key]();
     delete keyHandlers[key];
     typeHandlers.hasOwnProperty(content.type) &&
-      typeHandlers[content.type](content.about);
+      typeHandlers[content.type](author, content);
   });
 };
