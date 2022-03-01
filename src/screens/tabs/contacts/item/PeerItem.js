@@ -5,6 +5,7 @@ import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {
   connectPeer,
+  disconnectPeer,
   follow,
   persistentConnectPeer,
   rememberPeer,
@@ -24,6 +25,10 @@ const PeerItem = ({
   const {name = '', description = '', image = ''} = peerInfoDic[key] || {};
 
   function connectHandler(v) {
+    alert('connected: ' + v.id.substring(0, 10));
+  }
+
+  function disconnectHandler(v) {
     alert('connected: ' + v.id.substring(0, 10));
   }
 
@@ -53,7 +58,12 @@ const PeerItem = ({
           </Text>
           {description !== '' && <Text style={[desc]}>bio: {description}</Text>}
           <View style={[row]}>
-            {state === 'connected' || (
+            {state === 'connected' ? (
+              <Button
+                title={'disconnect'}
+                onPress={() => disconnectPeer(address, disconnectHandler)}
+              />
+            ) : (
               <Button
                 title={'connect'}
                 onPress={() => connectPeer(address, {type}, connectHandler)}
