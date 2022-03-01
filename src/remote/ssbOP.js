@@ -77,6 +77,13 @@ export const getMnemonic = cb =>
   ssb.keysUtils.getMnemonic((e, v) => (e ? console.warn(e) : cb(v)));
 
 // invite
+/**
+ * 106.52.171.12:8008:@eVs235wBX5aRoyUwWyZRbo9r1oZ9a7+V+wEvf+F/MCw=.ed25519~XOpv/D1TnStp6uLgVvOY2qsmuc9TUyrpuq/C0v3V4kw=
+ * 18.136.101.14:8008:@zDQg3H5QxUNnfPv2dDH03jCl6Az7A9iNBi57zOIP9R4=.ed25519~CLz9rH2fGe0lCR3O0IICUbtFO9BPUHnX+HkTY0Dv9Uc=
+ * @param code
+ * @param cb
+ * @returns {*}
+ */
 export const inviteAccept = (code, cb = null) =>
   ssb.invite.accept({invite: code, shouldPublish: false}, cb);
 
