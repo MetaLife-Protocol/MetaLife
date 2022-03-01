@@ -24,8 +24,15 @@ export const block = (fid, opts, cb) => {
 export const follow = (fid, opts, cb) => {
   ssb.friends.follow(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));
 };
-export const connectPeer = (address, data, cb) =>
-  ssb.conn.connect(address, data, (e, v) => (e ? console.error(e) : cb(v)));
+export const connectPeer = (address, data = {}, cb = null) =>
+  ssb.connUtils.persistentConnect(address, data, (e, v) =>
+    e ? console.error(e) : cb(v),
+  );
+
+export const disconnectPeer = (address, data, cb) =>
+  ssb.connUtils.persistentDisconnect(address, (e, v) =>
+    e ? console.error(e) : cb(v),
+  );
 
 export const rememberPeer = (address, data, cb) =>
   ssb.conn.remember(address, data, (e, v) => (e ? console.error(e) : cb(v)));
@@ -47,7 +54,7 @@ export const blobsGetter = cb =>
   ssb.blobs.get()(null, (e, v) => (e ? console.error(e) : cb(v)));
 
 /* profile / about */
-export const about = (fid, cb) =>
+export const getProfile = (fid, cb) =>
   ssb.aboutSelf.get(fid, (e, v) => (e ? console.error(e) : cb(v)));
 export const setAbout = (fid, {name, description, imageUrl}, cb) =>
   ssb.publishUtilsBack.publishAbout(
@@ -70,7 +77,8 @@ export const getMnemonic = cb =>
   ssb.keysUtils.getMnemonic((e, v) => (e ? console.warn(e) : cb(v)));
 
 // invite
-export const inviteAccept = (code, cb = null) => ssb.invite.accept(code, cb);
+export const inviteAccept = (code, cb = null) =>
+  ssb.invite.accept({invite: code, shouldPublish: false}, cb);
 
 /* duplex */
 export const ping = cb =>

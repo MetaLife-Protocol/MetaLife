@@ -81,9 +81,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     stagedPeers: s.contacts.stagedPeers,
-    setStagedPeers: s.contacts.setStagedPeers,
     connectedPeers: s.contacts.connectedPeers,
-    setConnectedPeers: s.contacts.setConnectedPeers,
   };
 };
 

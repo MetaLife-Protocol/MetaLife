@@ -12,7 +12,7 @@ import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import I18n from '../../i18n/I18n';
 import Section from '../../shared/comps/Section';
-import {inviteAccept, persistentConnectPeer} from '../../remote/ssbOP';
+import {inviteAccept} from '../../remote/ssbOP';
 
 const Profiles = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
   const {barStyle, FG, flex1, input, text, marginTop10} = SchemaStyles(),

@@ -4,13 +4,12 @@ import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import * as ssbOP from '../../remote/ssbOP';
 import {
-  about,
   addPrivateUpdatesListener,
   addPublicUpdatesListener,
   connStart,
+  getProfile,
   graph,
   loadMsg,
-  persistentConnectPeer,
   replicationSchedulerStart,
   reqStartSSB,
   stage,
@@ -19,7 +18,6 @@ import {
 import {useTimer} from '../../shared/Hooks';
 import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
 import ItemAgent from './home/ItemAgent';
-import {getAddressForFid} from '../../filters/PeerFilters';
 
 const Home = ({
   navigation,
@@ -57,18 +55,7 @@ const Home = ({
         addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
         // about update
         markMsgCBByType('about', (_, {about}) =>
-          about(about, v => addPeerInfo([about, v])),
-        );
-        // connect pub
-        markMsgCBByType(
-          'contact',
-          (author, {following, autofollow, contact}) => {
-            let addr;
-            following &&
-              autofollow &&
-              (addr = getAddressForFid(contact, stagedPeers)) &&
-              persistentConnectPeer(addr, {}, console.log);
-          },
+          getProfile(about, v => addPeerInfo([about, v])),
         );
       });
   }, []);

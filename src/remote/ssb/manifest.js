@@ -67,6 +67,14 @@ export default {
     graph: 'async',
     graphStream: 'source',
   },
+  ebt: {
+    replicate: 'duplex',
+    replicateFormat: 'duplex',
+    request: 'sync',
+    block: 'sync',
+    peerStatus: 'sync',
+    clock: 'async',
+  },
   replicationScheduler: {
     start: 'sync',
     reconfigure: 'sync',
@@ -210,6 +218,10 @@ export default {
     updateShowFollows: 'sync',
     updateDetailedLogs: 'sync',
     updateAllowCheckingNewVersion: 'sync',
+  },
+  resyncUtils: {
+    progress: 'source',
+    enableFirewall: 'sync',
   },
   syncing: {
     migrating: 'source',

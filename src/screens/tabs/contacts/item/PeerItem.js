@@ -56,7 +56,7 @@ const PeerItem = ({
             {state === 'connected' || (
               <Button
                 title={'connect'}
-                onPress={() => connectPeer(address, {}, connectHandler)}
+                onPress={() => connectPeer(address, {type}, connectHandler)}
               />
             )}
             {state === 'connected' || (

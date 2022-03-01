@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
-import {about} from '../../../../remote/ssbOP';
+import {getProfile} from '../../../../remote/ssbOP';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 
 const iconDic = {
@@ -17,7 +17,9 @@ const FriendItem = ({navigation, fId, peerInfoDic, addPeerInfo}) => {
   const {textContainer, item, title, desc} = styles;
   // check cached
   useEffect(() => {
-    peerInfoDic.hasOwnProperty(fId) || about(fId, v => addPeerInfo([fId, v]));
+    peerInfoDic.hasOwnProperty(fId) || console.log('cache profile: ', fId);
+    peerInfoDic.hasOwnProperty(fId) ||
+      getProfile(fId, v => addPeerInfo([fId, v]));
   }, []);
   const {name = '', description = '', image = ''} = peerInfoDic[fId] || {};
   return (
