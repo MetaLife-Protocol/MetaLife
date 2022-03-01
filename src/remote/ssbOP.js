@@ -31,7 +31,7 @@ export const connectPeer = (address, data = {}, cb = null) =>
 
 export const disconnectPeer = (address, data, cb) =>
   ssb.connUtils.persistentDisconnect(address, (e, v) =>
-    e ? console.error(e) : cb(v),
+    e ? console.error(e) : cb && cb(v),
   );
 
 export const rememberPeer = (address, data, cb) =>
@@ -84,8 +84,7 @@ export const getMnemonic = cb =>
  * @param cb
  * @returns {*}
  */
-export const inviteAccept = (code, cb = null) =>
-  ssb.invite.accept({invite: code, shouldPublish: false}, cb);
+export const inviteAccept = (code, cb = null) => ssb.invite.accept(code, cb);
 
 /* duplex */
 export const ping = cb =>
