@@ -25,9 +25,7 @@ export const follow = (fid, opts, cb) => {
   ssb.friends.follow(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));
 };
 export const connectPeer = (address, data = {}, cb = null) =>
-  ssb.connUtils.persistentConnect(address, data, (e, v) =>
-    e ? console.error(e) : cb(v),
-  );
+  ssb.conn.connect(address, data, (e, v) => (e ? console.error(e) : cb(v)));
 
 export const persistentConnectPeer = (address, data, cb) =>
   ssb.connUtils.persistentConnect(address, data, (e, v) =>

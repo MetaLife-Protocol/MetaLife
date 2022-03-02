@@ -70,7 +70,9 @@ const PeerItem = ({
                 title={state === 'connecting' ? 'connecting' : 'connect'}
                 disabled={state === 'connecting'}
                 onPress={() =>
-                  persistentConnectPeer(address, {type}, connectHandler)
+                  type === 'pub'
+                    ? persistentConnectPeer(address, {type}, connectHandler)
+                    : connectPeer(address, {type}, connectHandler)
                 }
               />
             )}
