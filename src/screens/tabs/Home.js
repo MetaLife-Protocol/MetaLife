@@ -7,9 +7,11 @@ import {
   addPrivateUpdatesListener,
   addPublicUpdatesListener,
   connStart,
+  getConnectedPeers,
   getProfile,
   graph,
   loadMsg,
+  persistentConnectPeer,
   replicationSchedulerStart,
   reqStartSSB,
   stage,
@@ -18,6 +20,7 @@ import {
 import {useTimer} from '../../shared/Hooks';
 import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
 import ItemAgent from './home/ItemAgent';
+import {getAddressForFid} from '../../filters/PeerFilters';
 
 const Home = ({
   navigation,
@@ -47,20 +50,19 @@ const Home = ({
           addPublicUpdatesListener(key =>
             loadMsg(key, false, msg => {
               checkMarkedMsgCB(msg);
-              refreshFriendsGraph();
               addPublicMsg(msg);
             }),
           );
         });
         addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
+        // contact update
+        markMsgCBByType('contact', refreshFriendsGraph);
         // about update
         markMsgCBByType('about', (_, {about}) =>
           getProfile(about, v => addPeerInfo([about, v])),
         );
       });
   }, []);
-
-  useTimer(refreshFriendsGraph, 5000, [], false);
 
   function refreshFriendsGraph() {
     graph(setFriendsGraph);

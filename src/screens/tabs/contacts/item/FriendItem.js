@@ -15,12 +15,6 @@ const iconDic = {
 const FriendItem = ({navigation, fId, peerInfoDic, addPeerInfo}) => {
   const {row, flex1, text} = SchemaStyles();
   const {textContainer, item, title, desc} = styles;
-  // check cached
-  useEffect(() => {
-    peerInfoDic.hasOwnProperty(fId) || console.log('cache profile: ', fId);
-    peerInfoDic.hasOwnProperty(fId) ||
-      getProfile(fId, v => addPeerInfo([fId, v]));
-  }, []);
   const {name = '', description = '', image = ''} = peerInfoDic[fId] || {};
   return (
     <Pressable onPress={() => navigation.push('PeerDetailsScreen', fId)}>

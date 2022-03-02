@@ -29,6 +29,11 @@ export const connectPeer = (address, data = {}, cb = null) =>
     e ? console.error(e) : cb(v),
   );
 
+export const persistentConnectPeer = (address, data, cb) =>
+  ssb.connUtils.persistentConnect(address, data, (e, v) =>
+    e ? console.error(e) : cb && cb(v),
+  );
+
 export const disconnectPeer = (address, data, cb) =>
   ssb.connUtils.persistentDisconnect(address, (e, v) =>
     e ? console.error(e) : cb && cb(v),
@@ -39,11 +44,6 @@ export const rememberPeer = (address, data, cb) =>
 
 export const forgetPeer = (address, cb) =>
   ssb.conn.forget(address, (e, v) => (e ? console.error(e) : cb(v)));
-
-export const persistentConnectPeer = (address, data, cb) =>
-  ssb.connUtils.persistentConnect(address, data, (e, v) =>
-    e ? console.error(e) : cb(v),
-  );
 
 /* source */
 export const getStagedPeers = cb =>
