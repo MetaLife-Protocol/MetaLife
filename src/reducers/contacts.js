@@ -9,6 +9,7 @@ const contactsInitState = {
   friendsGraph: {},
   peerInfoDic: {},
   relations: [[], [], [], [], [], []],
+  // [friends, following, follower, block, blocked, other]
 };
 
 export const contactsReducer = (state = contactsInitState, {type, payload}) => {

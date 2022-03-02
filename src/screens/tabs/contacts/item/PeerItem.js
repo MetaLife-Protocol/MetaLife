@@ -20,7 +20,7 @@ const PeerItem = ({
   addPeerInfo,
   relations,
 }) => {
-  const isFollowing = relations[0].includes(key);
+  const isFollowing = relations[0].includes(key) || relations[1].includes(key);
   const {row, flex1, text} = SchemaStyles();
   const {textContainer, item, title, desc} = styles;
 
@@ -41,7 +41,7 @@ const PeerItem = ({
   return (
     <Pressable
       key={key}
-      onPress={() => navigation.navigate('PeerDetailsScreen')}>
+      onPress={() => navigation.navigate('PeerDetailsScreen', key)}>
       <View style={[item, row, flex1]}>
         <HeadIcon
           image={
@@ -67,7 +67,8 @@ const PeerItem = ({
               />
             ) : (
               <Button
-                title={'connect'}
+                title={state === 'connecting' ? 'connecting' : 'connect'}
+                disabled={state === 'connecting'}
                 onPress={() =>
                   persistentConnectPeer(address, {type}, connectHandler)
                 }
