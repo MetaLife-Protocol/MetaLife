@@ -18,7 +18,9 @@ const PeerItem = ({
   pObj: [address, {type, key, state = ''}],
   peerInfoDic,
   addPeerInfo,
+  relations,
 }) => {
+  const isFollowing = relations[0].includes(key);
   const {row, flex1, text} = SchemaStyles();
   const {textContainer, item, title, desc} = styles;
 
@@ -66,25 +68,17 @@ const PeerItem = ({
             ) : (
               <Button
                 title={'connect'}
-                onPress={() => connectPeer(address, {type}, connectHandler)}
+                onPress={() =>
+                  persistentConnectPeer(address, {type}, connectHandler)
+                }
               />
             )}
-            {state === 'connected' || (
+            {isFollowing || (
               <Button
-                title={'remember'}
-                onPress={() => rememberPeer(address, {}, console.log)}
+                title={'follow'}
+                onPress={() => follow(key, {}, followHandler)}
               />
             )}
-            {state === 'connected' || (
-              <Button
-                title={'pConnect'}
-                onPress={() => persistentConnectPeer(address, {}, console.log)}
-              />
-            )}
-            <Button
-              title={'follow'}
-              onPress={() => follow(key, {}, followHandler)}
-            />
           </View>
         </View>
       </View>
@@ -120,6 +114,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     peerInfoDic: s.contacts.peerInfoDic,
+    relations: s.contacts.relations,
   };
 };
 

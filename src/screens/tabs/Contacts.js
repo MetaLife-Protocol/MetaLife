@@ -3,7 +3,6 @@ import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
-import {friendsGraphParse} from '../../filters/ContactsFilters';
 import SearchBar from '../../shared/comps/SearchBar';
 import FriendItem from './contacts/item/FriendItem';
 
@@ -15,7 +14,7 @@ const iconDic = {
 
 const DATA_sn = [{icon: iconDic.fb}, {icon: iconDic.nf}, {icon: iconDic.tt}];
 
-const Contacts = ({navigation, feedId, friendsGraph}) => {
+const Contacts = ({navigation, relations}) => {
   const {BG, row, flex1, text} = SchemaStyles();
   const {searchBar, item, key} = styles;
 
@@ -24,8 +23,6 @@ const Contacts = ({navigation, feedId, friendsGraph}) => {
       <Image source={icon} />
     </View>
   );
-
-  const relations = friendsGraphParse(friendsGraph, feedId, false);
 
   return (
     <ScrollView style={BG}>
@@ -79,7 +76,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     feedId: s.user.feedId,
-    friendsGraph: s.contacts.friendsGraph,
+    relations: s.contacts.relations,
   };
 };
 

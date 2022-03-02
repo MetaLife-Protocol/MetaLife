@@ -65,7 +65,7 @@ const Home = ({
   }, []);
 
   function refreshFriendsGraph() {
-    graph(setFriendsGraph);
+    graph(v => setFriendsGraph({graph: v, fId: feedId}));
   }
 
   return (

@@ -28,6 +28,7 @@ const PeerDetailsScreen = ({
   route: {params: feedId},
   selfFeedId,
   friendsGraph,
+  relations,
   peerInfoDic,
   privateMsg,
 }) => {
@@ -36,8 +37,7 @@ const PeerDetailsScreen = ({
     {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
     [friends, following, follower, blockList, blocked, other] =
       friendsGraphParse(friendsGraph, feedId),
-    [myFriends, myFollowing, myFollower, myBlock, myBlocked] =
-      friendsGraphParse(friendsGraph, selfFeedId),
+    [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations,
     mutual = mutualFriend(friends, myFriends),
     isMyFriend = myFriends.includes(feedId),
     isMyFollowing = myFollowing.includes(feedId),
@@ -177,6 +177,7 @@ const msp = s => {
   return {
     selfFeedId: s.user.feedId,
     friendsGraph: s.contacts.friendsGraph,
+    relations: s.contacts.relations,
     peerInfoDic: s.contacts.peerInfoDic,
     privateMsg: s.msg.privateMsg,
   };
