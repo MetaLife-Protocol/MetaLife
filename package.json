@@ -44,6 +44,8 @@
     "nodejs-mobile-react-native": "^0.7.0",
     "react": "17.0.2",
     "react-native": "0.67.3",
+    "react-native-ble-manager": "^8.0.2",
+    "react-native-ble-peripheral": "github:heroims/react-native-ble-peripheral",
     "react-native-i18n": "^2.0.15",
     "react-native-image-picker": "^4.7.3",
     "react-native-safe-area-context": "^3.3.2",
