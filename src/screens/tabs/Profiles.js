@@ -38,7 +38,7 @@ const Profiles = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
               title={'confirm'}
               onPress={() => {
                 inviteAccept(code, (e, v) => {
-                  e ? alert(e.message) : console.log('invite accept: ', v);
+                  e ? alert(e.message) : alert('invite accept: ', v);
                 });
                 setCode('');
               }}

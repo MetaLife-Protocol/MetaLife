@@ -33,11 +33,13 @@ const PeerDetailsScreen = ({
   privateMsg,
 }) => {
   const {row, flex1, justifySpaceBetween, text} = SchemaStyles(),
-    {textContainer, item, title, desc, btn} = styles,
+    {textContainer, item, title, desc, btn} = styles;
+
+  const isMyself = selfFeedId === feedId,
     {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
+    [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations,
     [friends, following, follower, blockList, blocked, other] =
       friendsGraphParse(friendsGraph, feedId),
-    [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations,
     mutual = mutualFriend(friends, myFriends),
     isMyFriend = myFriends.includes(feedId),
     isMyFollowing = myFollowing.includes(feedId),
@@ -99,47 +101,49 @@ const PeerDetailsScreen = ({
             <Text style={[desc]}>mutual:{mutual.length}</Text>
           </Pressable>
         </View>
-        <View>
-          {isMyBlock || (
-            <RoundBtn
-              style={[btn]}
-              title={'block'}
-              disabled={disabledBlock}
-              press={() => {
-                setDisabledBlock(true);
-                block(feedId, {}, v =>
-                  markMsgCBByKey(v.key, () => setDisabledBlock(false)),
-                );
-              }}
-            />
-          )}
-          {isMyFriend ? (
-            <RoundBtn
-              style={[btn]}
-              title={'chat'}
-              press={() =>
-                navigation.navigate('MessageDetailsScreen', {
-                  rootKey: findRootKey(feedId, privateMsg),
-                  recp: feedId,
-                })
-              }
-            />
-          ) : (
-            isMyFollowing || (
+        {isMyself || (
+          <View>
+            {isMyBlock || (
               <RoundBtn
                 style={[btn]}
-                title={'follow'}
-                disabled={disabledFollow}
+                title={'block'}
+                disabled={disabledBlock}
                 press={() => {
-                  setDisabledFollow(true);
-                  follow(feedId, {}, v =>
-                    markMsgCBByKey(v.key, () => setDisabledFollow(false)),
+                  setDisabledBlock(true);
+                  block(feedId, {}, v =>
+                    markMsgCBByKey(v.key, () => setDisabledBlock(false)),
                   );
                 }}
               />
-            )
-          )}
-        </View>
+            )}
+            {isMyFriend ? (
+              <RoundBtn
+                style={[btn]}
+                title={'chat'}
+                press={() =>
+                  navigation.navigate('MessageDetailsScreen', {
+                    rootKey: findRootKey(feedId, privateMsg),
+                    recp: feedId,
+                  })
+                }
+              />
+            ) : (
+              isMyFollowing || (
+                <RoundBtn
+                  style={[btn]}
+                  title={'follow'}
+                  disabled={disabledFollow}
+                  press={() => {
+                    setDisabledFollow(true);
+                    follow(feedId, {}, v =>
+                      markMsgCBByKey(v.key, () => setDisabledFollow(false)),
+                    );
+                  }}
+                />
+              )
+            )}
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

@@ -5,6 +5,7 @@ import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
 import SearchBar from '../../shared/comps/SearchBar';
 import FriendItem from './contacts/item/FriendItem';
+import {friendsGraphParse} from '../../filters/ContactsFilters';
 
 const iconDic = {
   fb: require('../../assets/image/profiles/Facebook.png'),
@@ -14,7 +15,7 @@ const iconDic = {
 
 const DATA_sn = [{icon: iconDic.fb}, {icon: iconDic.nf}, {icon: iconDic.tt}];
 
-const Contacts = ({navigation, relations}) => {
+const Contacts = ({navigation, feedId, friendsGraph, relations}) => {
   const {BG, row, flex1, text} = SchemaStyles();
   const {searchBar, item, key} = styles;
 
@@ -76,6 +77,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     feedId: s.user.feedId,
+    friendsGraph: s.contacts.friendsGraph,
     relations: s.contacts.relations,
   };
 };

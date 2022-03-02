@@ -92,7 +92,9 @@ const MessageDetailsScreen = ({
                     author === feedId ? itemLeft : itemRight,
                   ]}>
                   <View style={[item]}>
-                    <Text style={[title]}>{content.text}</Text>
+                    <Text selectable={true} style={[title]}>
+                      {content.text}
+                    </Text>
                     <Text style={[desc]}>{localDate(timestamp)}</Text>
                   </View>
                 </View>

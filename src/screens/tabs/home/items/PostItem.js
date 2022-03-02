@@ -5,6 +5,7 @@ import React from 'react';
 import {
   Image,
   ImageResizeModeStatic,
+  Pressable,
   StyleSheet,
   Text,
   View,
@@ -22,6 +23,7 @@ const PostItem = ({
     value: {author, timestamp, content},
   },
   peerInfoDic,
+  navigation,
 }) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
@@ -33,23 +35,26 @@ const PostItem = ({
       image = '',
     } = peerInfoDic[author] || {},
     {text: cText, mentions = null} = content;
-  if (mentions && mentions.length) {
-    const cache = [];
-    for (const {link, name} of mentions) {
-      cache.push(blobIdToUrl(link));
-      // Image.getSize(
-      //   blobIdToUrl(link),
-      //   (w, h) => console.log(w, h),
-      //   console.warn,
-      // );
-    }
-    // Image.queryCache(cache).then(console.log).catch(console.warn);
-  }
+  // if (mentions && mentions.length) {
+  //   const cache = [];
+  //   for (const {link, name} of mentions) {
+  //     cache.push(blobIdToUrl(link));
+  //     // Image.getSize(
+  //     //   blobIdToUrl(link),
+  //     //   (w, h) => console.log(w, h),
+  //     //   console.warn,
+  //     // );
+  //   }
+  //   // Image.queryCache(cache).then(console.log).catch(console.warn);
+  // }
   return (
     <View style={[row, container]}>
-      <HeadIcon
-        image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
-      />
+      <Pressable
+        onPress={() => navigation.navigate('PeerDetailsScreen', author)}>
+        <HeadIcon
+          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+        />
+      </Pressable>
       <View style={[textContainer]}>
         <Text>
           <Text style={[text]}>{name}</Text>

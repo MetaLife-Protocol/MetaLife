@@ -6,7 +6,7 @@ import PostItem from './items/PostItem';
 import {colorsSchema} from '../../../shared/SchemaStyles';
 import {Text} from 'react-native';
 
-const ItemAgent = ({item}) => {
+const ItemAgent = ({info: {item}, navigation}) => {
   const {
     value: {author, timestamp, content},
   } = item;
@@ -28,7 +28,7 @@ const ItemAgent = ({item}) => {
         </Text>
       );
     case 'post':
-      return <PostItem item={item} />;
+      return <PostItem item={item} navigation={navigation} />;
     default:
       return null;
   }

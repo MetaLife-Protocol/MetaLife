@@ -35,7 +35,7 @@ const PeerItem = ({
   }
 
   function followHandler(v) {
-    alert('Following: ' + v.value.author.substring(0, 10));
+    alert('Following: ' + v.value.content.contact.substring(0, 10));
   }
 
   return (
