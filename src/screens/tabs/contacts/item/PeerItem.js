@@ -15,7 +15,7 @@ import HeadIcon from '../../../../shared/comps/HeadIcon';
 
 const PeerItem = ({
   navigation,
-  pObj: [address, {type, key, state = ''}],
+  pObj: [address, {type, key, verified = false, state = ''}],
   peerInfoDic,
   addPeerInfo,
   relations,
@@ -60,12 +60,13 @@ const PeerItem = ({
           </Text>
           {description !== '' && <Text style={[desc]}>bio: {description}</Text>}
           <View style={[row]}>
-            {state === 'connected' ? (
+            {state === 'connected' && (
               <Button
                 title={'disconnect'}
                 onPress={() => disconnectPeer(address, disconnectHandler)}
               />
-            ) : (
+            )}
+            {state !== 'connected' && verified && (
               <Button
                 title={state === 'connecting' ? 'connecting' : 'connect'}
                 disabled={state === 'connecting'}
