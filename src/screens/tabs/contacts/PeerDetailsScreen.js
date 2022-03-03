@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  ToastAndroid,
   View,
 } from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
@@ -22,6 +23,8 @@ import {block, follow} from '../../../remote/ssbOP';
 import {setDisabled} from 'react-native/Libraries/LogBox/Data/LogBoxData';
 import {markMsgCB, markMsgCBByKey} from '../../../remote/ssb/MsgCB';
 import HeadIcon from '../../../shared/comps/HeadIcon';
+import Clipboard from '@react-native-clipboard/clipboard';
+import Toast from 'react-native-tiny-toast';
 
 const PeerDetailsScreen = ({
   navigation,
@@ -63,14 +66,20 @@ const PeerDetailsScreen = ({
           <HeadIcon
             image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
           />
-          <View style={[textContainer]}>
-            <Text numberOfLines={1} style={[title, text]}>
-              {name || feedId}
-            </Text>
-            {description !== '' && (
-              <Text style={[desc]}>bio: {description}</Text>
-            )}
-          </View>
+          <Pressable
+            onPress={event => {
+              Clipboard.setString(feedId);
+              Toast.showSuccess('ID copied');
+            }}>
+            <View style={[textContainer]}>
+              <Text numberOfLines={1} style={[title, text]}>
+                {name || feedId}
+              </Text>
+              {description !== '' && (
+                <Text style={[desc]}>bio: {description}</Text>
+              )}
+            </View>
+          </Pressable>
         </View>
         <View style={[row, flex1, justifySpaceBetween]}>
           <Pressable

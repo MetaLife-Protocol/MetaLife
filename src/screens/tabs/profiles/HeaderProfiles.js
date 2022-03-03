@@ -1,15 +1,20 @@
 import React from 'react';
 import {
+  ActionSheetIOS,
   Image,
   ImageBackground,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
+  ToastAndroid,
   View,
 } from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import HeadIcon from '../../../shared/comps/HeadIcon';
+import Clipboard from '@react-native-clipboard/clipboard';
+import Toast from 'react-native-tiny-toast';
 
 const iconDic = {
   BG: require('../../../assets/image/profiles/Profiles_backgroud.png'),
@@ -37,9 +42,15 @@ const HeaderProfiles = ({
   return (
     <ImageBackground style={[container, alignItemsCenter]} source={iconDic.BG}>
       <HeadIcon style={[photo]} width={90} height={90} image={iconDic.photo} />
-      <Text style={[nameFont, marginTop10]}>
-        {name || feedId.substring(0, 10)}
-      </Text>
+      <Pressable
+        onPress={event => {
+          Clipboard.setString(feedId);
+          Toast.showSuccess('ID copied');
+        }}>
+        <Text style={[nameFont, marginTop10]}>
+          {name || feedId.substring(0, 10)}
+        </Text>
+      </Pressable>
       <Text style={[desc]}>{description}</Text>
       <Text style={[at]}>{feedId.substring(0, 8)}</Text>
       <View
