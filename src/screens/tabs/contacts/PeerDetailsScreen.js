@@ -102,7 +102,7 @@ const PeerDetailsScreen = ({
           </Pressable>
         </View>
         {isMyself || (
-          <View>
+          <View style={[row]}>
             {isMyBlock || (
               <RoundBtn
                 style={[btn]}
@@ -174,6 +174,8 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginVertical: 10,
+    width: 120,
+    height: 30,
   },
 });
 

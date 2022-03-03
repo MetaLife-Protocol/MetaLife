@@ -19,8 +19,8 @@ const RoundBtn = ({title, press, disabled = false, style = null}) => {
     <TouchableNativeFeedback onPress={disabled ? null : press}>
       <View
         style={[
-          style,
           styles.border,
+          style,
           disabled ? btnDisabledBG : active ? btnActiveBG : btnInactiveBG,
         ]}
         onTouchStart={() => setActive(true)}
