@@ -8,16 +8,14 @@ import {
   disconnectPeer,
   follow,
   persistentConnectPeer,
-  rememberPeer,
 } from '../../../../remote/ssbOP';
 import {PeerIcons} from '../../../../shared/Icons';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 
 const PeerItem = ({
   navigation,
-  pObj: [address, {type, key, verified = false, state = ''}],
+  pObj: [address, {type, key, state = ''}],
   peerInfoDic,
-  addPeerInfo,
   relations,
 }) => {
   const isFollowing = relations[0].includes(key) || relations[1].includes(key);
@@ -66,7 +64,7 @@ const PeerItem = ({
                 onPress={() => disconnectPeer(address, disconnectHandler)}
               />
             )}
-            {state !== 'connected' && verified && (
+            {state !== 'connected' && (
               <Button
                 title={state === 'connecting' ? 'connecting' : 'connect'}
                 disabled={state === 'connecting'}

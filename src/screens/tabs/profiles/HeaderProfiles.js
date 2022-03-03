@@ -1,15 +1,14 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Image,
   ImageBackground,
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
+  View,
 } from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 
 const iconDic = {
@@ -18,10 +17,23 @@ const iconDic = {
   photo: require('../../../assets/image/profiles/photo.png'),
 };
 
-const HeaderProfiles = ({props: {navigation}, feedId, peerInfoDic}) => {
-  const {alignItemsCenter, marginTop10} = SchemaStyles(),
+const HeaderProfiles = ({
+  props: {navigation},
+  feedId,
+  relations,
+  peerInfoDic,
+}) => {
+  const {row, flex1, justifySpaceBetween, text, alignItemsCenter, marginTop10} =
+      SchemaStyles(),
     {container, photo, setting, nameFont, desc, at} = styles;
-  const {name = '', description = '', image = ''} = peerInfoDic[feedId] || {};
+
+  const {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
+    [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
+
+  function peerListHandler(title, list) {
+    navigation.push('PeersListScreen', {title, list});
+  }
+
   return (
     <ImageBackground style={[container, alignItemsCenter]} source={iconDic.BG}>
       <HeadIcon style={[photo]} width={90} height={90} image={iconDic.photo} />
@@ -30,6 +42,33 @@ const HeaderProfiles = ({props: {navigation}, feedId, peerInfoDic}) => {
       </Text>
       <Text style={[desc]}>{description}</Text>
       <Text style={[at]}>{feedId.substring(0, 8)}</Text>
+      <View
+        style={[row, flex1, justifySpaceBetween, marginTop10, {width: '80%'}]}>
+        <Pressable
+          onPress={() =>
+            peerListHandler(
+              'following by ' + feedId.substring(0, 6),
+              myFollowing,
+            )
+          }>
+          <Text style={[desc]}>following:{myFollowing.length}</Text>
+        </Pressable>
+        <Pressable
+          onPress={() =>
+            peerListHandler('follower of ' + feedId.substring(0, 6), myFollower)
+          }>
+          <Text style={[desc]}>follower:{myFollower.length}</Text>
+        </Pressable>
+        <Pressable
+          onPress={() =>
+            peerListHandler(
+              'Mutual friends with ' + feedId.substring(0, 6),
+              myFriends,
+            )
+          }>
+          <Text style={[desc]}>friend:{myFriends.length}</Text>
+        </Pressable>
+      </View>
       <Pressable
         style={[setting]}
         onPress={() => {
@@ -74,6 +113,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     feedId: s.user.feedId,
+    relations: s.contacts.relations,
     peerInfoDic: s.contacts.peerInfoDic,
   };
 };
