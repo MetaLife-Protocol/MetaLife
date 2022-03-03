@@ -9,6 +9,8 @@ import nodejs from 'nodejs-mobile-react-native';
 
 setTimeout(() => {
   nodejs.start('loader.js');
+  nodejs.channel.addListener('exception', console.warn);
+  nodejs.channel.addListener('log4RN', console.warn);
 }, 1);
 
 const WrappedApp = () => {
