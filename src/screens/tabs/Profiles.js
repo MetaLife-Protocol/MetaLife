@@ -13,6 +13,7 @@ import {connect} from 'react-redux/lib/exports';
 import I18n from '../../i18n/I18n';
 import Section from '../../shared/comps/Section';
 import {inviteAccept} from '../../remote/ssbOP';
+import Toast from 'react-native-tiny-toast';
 
 const Profiles = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
   const {barStyle, FG, flex1, input, text, marginTop10} = SchemaStyles(),
@@ -38,7 +39,7 @@ const Profiles = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
               title={'confirm'}
               onPress={() => {
                 inviteAccept(code, (e, v) => {
-                  e ? alert(e.message) : alert('invite accepted');
+                  e ? Toast.show(e.message) : Toast.show('invite accepted');
                 });
                 setCode('');
               }}

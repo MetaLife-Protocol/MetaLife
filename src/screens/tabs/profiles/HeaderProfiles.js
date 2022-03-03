@@ -1,13 +1,10 @@
 import React from 'react';
 import {
-  ActionSheetIOS,
   Image,
   ImageBackground,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
-  ToastAndroid,
   View,
 } from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
@@ -45,7 +42,7 @@ const HeaderProfiles = ({
       <Pressable
         onPress={event => {
           Clipboard.setString(feedId);
-          Toast.showSuccess('ID copied');
+          Toast.show('ID copied');
         }}>
         <Text style={[nameFont, marginTop10]}>
           {name || feedId.substring(0, 10)}

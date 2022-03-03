@@ -11,6 +11,7 @@ import {
 } from '../../../../remote/ssbOP';
 import {PeerIcons} from '../../../../shared/Icons';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
+import Toast from 'react-native-tiny-toast';
 
 const PeerItem = ({
   navigation,
@@ -25,15 +26,15 @@ const PeerItem = ({
   const {name = '', description = '', image = ''} = peerInfoDic[key] || {};
 
   function connectHandler(v) {
-    alert('connected: ' + v.id.substring(0, 10));
+    Toast.show('connected: ' + v.id.substring(0, 10));
   }
 
   function disconnectHandler(v) {
-    alert('connected: ' + v.id.substring(0, 10));
+    Toast.show('connected: ' + v.id.substring(0, 10));
   }
 
   function followHandler(v) {
-    alert('Following: ' + v.value.content.contact.substring(0, 10));
+    Toast.show('Following: ' + v.value.content.contact.substring(0, 10));
   }
 
   return (
