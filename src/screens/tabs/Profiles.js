@@ -39,7 +39,7 @@ const Profiles = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
               title={'confirm'}
               onPress={() => {
                 inviteAccept(code, (e, v) => {
-                  e ? Toast.show(e.message) : Toast.show('invite accepted');
+                  Toast.showSuccess(e ? e.message : 'invite accepted');
                 });
                 setCode('');
               }}
