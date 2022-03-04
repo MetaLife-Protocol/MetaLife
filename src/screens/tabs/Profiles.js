@@ -12,6 +12,7 @@ import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
 import {
+  disconnectPeer,
   forgetPeer,
   getConnectedPeers,
   getStagedPeers,
@@ -20,33 +21,32 @@ import {
 } from '../../remote/ssbOP';
 import Toast from 'react-native-tiny-toast';
 
-const Profiles = ({setStagedPeers, setConnectedPeers}) => {
+const Profiles = ({setConnectedPeers}) => {
   const {barStyle, FG, flex1, input, text, marginTop10} = SchemaStyles(),
     {textHolder} = colorsSchema,
     {invite} = styles;
   const [code, setCode] = useState('');
 
   function reconnect2pub() {
-    getStagedPeers(peers => {
+    getConnectedPeers(peers => {
       // fix pub bug
-      peers.map(([addr, {type, autoconnct, state}]) => {
+      peers.map(([addr, {type, autoconnect, state}]) => {
         const tAddr = addr && addr.split(':');
         if (
           tAddr &&
           tAddr.length === 5 &&
-          type === 'pug' &&
-          autoconnct &&
+          type === 'pub' &&
+          autoconnect &&
           state === 'connected'
         ) {
           tAddr.pop();
-          tAddr.json('');
-          forgetPeer(tAddr);
-          persistentConnectPeer(tAddr, {type});
+          persistentConnectPeer(tAddr.join(':'), {type});
+        } else {
+          setTimeout(reconnect2pub, 1000);
         }
       });
-      setStagedPeers(peers);
+      setConnectedPeers(peers);
     });
-    getConnectedPeers(setConnectedPeers);
   }
 
   return (
@@ -91,7 +91,6 @@ const msp = s => s.cfg;
 
 const mdp = d => {
   return {
-    setStagedPeers: v => d({type: 'setStagedPeers', payload: v}),
     setConnectedPeers: v => d({type: 'setConnectedPeers', payload: v}),
   };
 };
