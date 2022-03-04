@@ -5,7 +5,11 @@ import SchemaStyles, {colorsSchema} from '../../../shared/SchemaStyles';
 import {useTimer} from '../../../shared/Hooks';
 import Section from '../../../shared/comps/Section';
 import PeerItem from './item/PeerItem';
-import {getConnectedPeers, getStagedPeers} from '../../../remote/ssbOP';
+import {
+  getConnectedPeers,
+  getStagedPeers,
+  persistentConnectPeer,
+} from '../../../remote/ssbOP';
 
 const PeersScreen = ({
   navigation,
@@ -21,7 +25,24 @@ const PeersScreen = ({
   useTimer(refreshStagedAndConnected, 3000);
 
   function refreshStagedAndConnected() {
-    getStagedPeers(setStagedPeers);
+    getStagedPeers(peers => {
+      // fix pub bug
+      peers.map(([addr, {type, autoconnct, state}]) => {
+        const tAddr = addr && addr.split(':');
+        if (
+          tAddr &&
+          tAddr.length === 5 &&
+          type === 'pug' &&
+          autoconnct &&
+          state === 'connected'
+        ) {
+          tAddr.pop();
+          tAddr.json().replace(',', '');
+          persistentConnectPeer(tAddr, {type});
+        }
+      });
+      setStagedPeers(peers);
+    });
     getConnectedPeers(setConnectedPeers);
   }
 
