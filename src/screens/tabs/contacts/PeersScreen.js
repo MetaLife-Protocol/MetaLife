@@ -37,7 +37,7 @@ const PeersScreen = ({
           state === 'connected'
         ) {
           tAddr.pop();
-          tAddr.json().replace(',', '');
+          tAddr.json('');
           persistentConnectPeer(tAddr, {type});
         }
       });
