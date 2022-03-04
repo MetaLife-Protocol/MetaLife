@@ -12,6 +12,7 @@ process.env ??= {};
 
 // Set default directories
 const appDataDir = (process.env.APP_DATA_DIR = rnBridge.app.datadir());
+rnBridge.channel.post('log4RN', appDataDir);
 process.env.SSB_DIR = path.resolve(appDataDir, '.ssb');
 const nodejsProjectDir = path.resolve(appDataDir, 'nodejs-project');
 os.homedir = () => nodejsProjectDir;
@@ -25,7 +26,7 @@ if (fs.existsSync(path.join(process.env.SSB_DIR, 'DETAILED_LOGS'))) {
 }
 
 // Report JS backend crashes to Java, and in turn, to ACRA
-process.on('unhandledRejection', (reason) => {
+process.on('unhandledRejection', reason => {
   console.error(reason);
   rnBridge.channel.post('exception', reason);
   setTimeout(() => {

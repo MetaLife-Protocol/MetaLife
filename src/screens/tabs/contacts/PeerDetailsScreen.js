@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Image,
   Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
-  ToastAndroid,
   View,
 } from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
@@ -20,8 +18,7 @@ import RoundBtn from '../../../shared/comps/RoundBtn';
 import {findRootKey} from '../../../filters/MsgFilters';
 import {PeerIcons} from '../../../shared/Icons';
 import {block, follow} from '../../../remote/ssbOP';
-import {setDisabled} from 'react-native/Libraries/LogBox/Data/LogBoxData';
-import {markMsgCB, markMsgCBByKey} from '../../../remote/ssb/MsgCB';
+import {markMsgCBByKey} from '../../../remote/ssb/MsgCB';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-tiny-toast';
