@@ -23,7 +23,7 @@ export const contactsReducer = (state = contactsInitState, {type, payload}) => {
       return {...state, connectedPeers: payload};
     case 'setFriendsGraph':
       const {graph, fId} = payload;
-      const relations = friendsGraphParse(graph, fId, false);
+      const relations = friendsGraphParse(graph, fId, false).concat();
       return {
         ...state,
         friendsGraph: graph,

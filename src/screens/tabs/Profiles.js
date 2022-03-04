@@ -13,9 +13,7 @@ import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
 import {
   disconnectPeer,
-  forgetPeer,
   getConnectedPeers,
-  getStagedPeers,
   inviteAccept,
   persistentConnectPeer,
 } from '../../remote/ssbOP';

@@ -12,6 +12,7 @@ import {connect} from 'react-redux/lib/exports';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-tiny-toast';
+import {friendsGraphParse} from '../../../filters/ContactsFilters';
 
 const iconDic = {
   BG: require('../../../assets/image/profiles/Profiles_backgroud.png'),
@@ -22,6 +23,7 @@ const iconDic = {
 const HeaderProfiles = ({
   props: {navigation},
   feedId,
+  friendsGraph,
   relations,
   peerInfoDic,
 }) => {
@@ -31,6 +33,8 @@ const HeaderProfiles = ({
 
   const {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
+  // [myFriends, myFollowing, myFollower, myBlock, myBlocked] =
+  //   friendsGraphParse(friendsGraph, feedId, false);
 
   function peerListHandler(title, list) {
     navigation.push('PeersListScreen', {title, list});
@@ -121,6 +125,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     feedId: s.user.feedId,
+    friendsGraph: s.contacts.friendsGraph,
     relations: s.contacts.relations,
     peerInfoDic: s.contacts.peerInfoDic,
   };
