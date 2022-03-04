@@ -10,16 +10,45 @@ import {
 } from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import I18n from '../../i18n/I18n';
 import Section from '../../shared/comps/Section';
-import {inviteAccept} from '../../remote/ssbOP';
+import {
+  forgetPeer,
+  getConnectedPeers,
+  getStagedPeers,
+  inviteAccept,
+  persistentConnectPeer,
+} from '../../remote/ssbOP';
 import Toast from 'react-native-tiny-toast';
 
-const Profiles = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
+const Profiles = ({setStagedPeers, setConnectedPeers}) => {
   const {barStyle, FG, flex1, input, text, marginTop10} = SchemaStyles(),
     {textHolder} = colorsSchema,
     {invite} = styles;
   const [code, setCode] = useState('');
+
+  function reconnect2pub() {
+    getStagedPeers(peers => {
+      // fix pub bug
+      peers.map(([addr, {type, autoconnct, state}]) => {
+        const tAddr = addr && addr.split(':');
+        if (
+          tAddr &&
+          tAddr.length === 5 &&
+          type === 'pug' &&
+          autoconnct &&
+          state === 'connected'
+        ) {
+          tAddr.pop();
+          tAddr.json('');
+          forgetPeer(tAddr);
+          persistentConnectPeer(tAddr, {type});
+        }
+      });
+      setStagedPeers(peers);
+    });
+    getConnectedPeers(setConnectedPeers);
+  }
+
   return (
     <SafeAreaView style={[flex1]}>
       <StatusBar barStyle={barStyle} />
@@ -40,6 +69,7 @@ const Profiles = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
               onPress={() => {
                 inviteAccept(code, (e, v) => {
                   Toast.showSuccess(e ? e.message : 'invite accepted');
+                  e || reconnect2pub();
                 });
                 setCode('');
               }}
@@ -61,11 +91,8 @@ const msp = s => s.cfg;
 
 const mdp = d => {
   return {
-    setDarkMode: darkMode => d({type: 'setDarkMode', payload: darkMode}),
-    setLang: lang => {
-      d({type: 'setLang', payload: lang});
-      I18n.locale = lang;
-    },
+    setStagedPeers: v => d({type: 'setStagedPeers', payload: v}),
+    setConnectedPeers: v => d({type: 'setConnectedPeers', payload: v}),
   };
 };
 
