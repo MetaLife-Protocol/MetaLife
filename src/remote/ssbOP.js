@@ -32,7 +32,7 @@ export const persistentConnectPeer = (address, data, cb) =>
     e ? console.error(e) : cb && cb(v),
   );
 
-export const disconnectPeer = (address, data, cb) =>
+export const disconnectPeer = (address, cb) =>
   ssb.connUtils.persistentDisconnect(address, (e, v) =>
     e ? console.error(e) : cb && cb(v),
   );

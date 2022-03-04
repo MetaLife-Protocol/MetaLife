@@ -40,7 +40,8 @@ const Profiles = ({setConnectedPeers}) => {
           state === 'connected'
         ) {
           tAddr.pop();
-          persistentConnectPeer(tAddr.join(':'), {type});
+          const tarAddr = tAddr.join(':');
+          disconnectPeer(addr, () => persistentConnectPeer(tarAddr, {type}));
         } else {
           setTimeout(reconnect2pub, 1000);
         }
