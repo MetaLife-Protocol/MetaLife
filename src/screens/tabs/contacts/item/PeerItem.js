@@ -17,9 +17,9 @@ const PeerItem = ({
   navigation,
   pObj: [address, {type, key, state = ''}],
   peerInfoDic,
-  relations,
+  relations: [friends, following],
 }) => {
-  const isFollowing = relations[0].includes(key) || relations[1].includes(key);
+  const isFollowing = friends.includes(key) || following.includes(key);
   const {row, flex1, text} = SchemaStyles();
   const {textContainer, item, title, desc} = styles;
 
