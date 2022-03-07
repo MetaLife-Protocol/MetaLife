@@ -13,7 +13,7 @@ const FriendList = ({navigation, feedId, friendsGraph}) => {
   const relations = friendsGraphParse(friendsGraph, feedId, false);
   return (
     <SafeAreaView style={[BG]}>
-      {/*<FlatList data={relations[0]} renderItem={FriendItem} />*/}
+      <FlatList data={relations[0]} renderItem={FriendItem} />
     </SafeAreaView>
   );
 };

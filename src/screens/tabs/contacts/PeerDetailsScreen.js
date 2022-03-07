@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {
   Pressable,
   SafeAreaView,
@@ -38,6 +38,8 @@ const PeerDetailsScreen = ({
   const isMyself = selfFeedId === feedId,
     {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations,
+    // [myFriends, myFollowing, myFollower, myBlock, myBlocked] =
+    //   friendsGraphParse(friendsGraph, selfFeedId, false),
     [friends, following, follower, blockList, blocked, other] =
       friendsGraphParse(friendsGraph, feedId),
     mutual = mutualFriend(friends, myFriends),
@@ -48,7 +50,7 @@ const PeerDetailsScreen = ({
   const [disabledBlock, setDisabledBlock] = useState(false);
   const [disabledFollow, setDisabledFollow] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({title: name || feedId});
   });
 

@@ -5,15 +5,29 @@ import SchemaStyles from '../SchemaStyles';
 /**
  * Created on 05 Nov 2021 by lonmee
  */
-const Section = ({children, title}) => {
-  const {FG, text} = SchemaStyles();
+const Section = ({children, title, separator, style}) => {
+  const {FG, BG, text} = SchemaStyles();
   const {titleContainer, ti} = styles;
+  children && !Array.isArray(children) && (children = [children]);
   return (
-    <View style={[FG]}>
-      <View style={[titleContainer]}>
-        <Text style={[text, ti]}>{title}</Text>
-      </View>
-      <View>{children}</View>
+    <View style={[FG, style]}>
+      {title && (
+        <View style={[titleContainer]}>
+          <Text style={[text, ti]}>{title}</Text>
+        </View>
+      )}
+      {children &&
+        children.map((child, index, arr) => (
+          <View
+            key={index}
+            style={[
+              index === 0 && {marginTop: 14},
+              index === arr.length - 1 && {marginBottom: 14},
+            ]}>
+            {separator && index > 0 && separator(BG)}
+            {child}
+          </View>
+        ))}
     </View>
   );
 };

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useLayoutEffect} from 'react';
 import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import FriendItem from './item/FriendItem';
 import SchemaStyles from '../../../shared/SchemaStyles';
@@ -12,9 +12,9 @@ const PeersListScreen = ({
   const {flex1} = SchemaStyles(),
     {} = styles;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({title});
-  });
+  }, [navigation]);
 
   return (
     <SafeAreaView style={[flex1]}>

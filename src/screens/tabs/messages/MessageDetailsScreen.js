@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {
-  Image,
   Keyboard,
   SafeAreaView,
   ScrollView,
@@ -19,7 +18,7 @@ import HeadIcon from '../../../shared/comps/HeadIcon';
 const iconDic = {
   peerIcon: require('../../../assets/image/contacts/peer_icon.png'),
 };
-let scrollView;
+// let scrollView;
 
 const MessageDetailsScreen = ({
   navigation,
@@ -43,11 +42,20 @@ const MessageDetailsScreen = ({
   );
 
   const [rootKeyLocal, setRootKeyLocal] = useState(rootKey);
+
+  const scrollView = useRef();
+
+  useLayoutEffect(() => {
+    navigation.setOptions(
+      {
+        title: name || recp,
+        headerRight,
+      },
+      [navigation],
+    );
+  }, [navigation]);
+
   useEffect(() => {
-    navigation.setOptions({
-      title: name || recp,
-      headerRight,
-    });
     Keyboard.addListener('keyboardWillShow', scrollToEnd);
     return () => Keyboard.removeAllListeners('keyboardWillShow');
   }, []);
@@ -68,16 +76,14 @@ const MessageDetailsScreen = ({
   }
 
   function scrollToEnd() {
-    scrollView.scrollToEnd({animated: true});
-    scrollView.flashScrollIndicators();
+    scrollView.current.scrollToEnd({animated: true});
+    scrollView.current.flashScrollIndicators();
   }
 
   return (
     <SafeAreaView style={[flex1, FG]}>
       <ScrollView
-        ref={ref => {
-          scrollView = ref;
-        }}
+        ref={scrollView}
         style={[flex1, BG]}
         showsVerticalScrollIndicator={false}
         onContentSizeChange={scrollToEnd}>

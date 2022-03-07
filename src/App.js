@@ -15,6 +15,7 @@ import MessageDetailsScreen from './screens/tabs/messages/MessageDetailsScreen';
 import PostMsgEditor from './screens/tabs/home/PostMsgEditor';
 import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
+import TextEditor from './shared/screens/TextEditor';
 
 const App = () => {
   const {theme} = SchemaStyles();
@@ -62,6 +63,11 @@ const App = () => {
         />
         {/* Profiles */}
         <Stack.Screen name="Setting" component={Setting} />
+        <Stack.Screen
+          name="TextEditor"
+          options={{title: ''}}
+          component={TextEditor}
+        />
         {/* Screen holder */}
         <Stack.Screen name="SubScreen" options={{}} component={SubScreen} />
       </Stack.Navigator>

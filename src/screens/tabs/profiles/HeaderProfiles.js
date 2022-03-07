@@ -32,9 +32,9 @@ const HeaderProfiles = ({
     {container, photo, setting, nameFont, desc, at} = styles;
 
   const {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
-    [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
-  // [myFriends, myFollowing, myFollower, myBlock, myBlocked] =
-  //   friendsGraphParse(friendsGraph, feedId, false);
+    // [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
+    [myFriends, myFollowing, myFollower, myBlock, myBlocked] =
+      friendsGraphParse(friendsGraph, feedId, false);
 
   function peerListHandler(title, list) {
     navigation.push('PeersListScreen', {title, list});
@@ -83,10 +83,7 @@ const HeaderProfiles = ({
       </View>
       <Pressable
         style={[setting]}
-        onPress={() => {
-          console.log('pressed');
-          navigation.navigate('Setting');
-        }}>
+        onPress={() => navigation.navigate('Setting')}>
         <Image source={iconDic.icon_setting} />
       </Pressable>
     </ImageBackground>

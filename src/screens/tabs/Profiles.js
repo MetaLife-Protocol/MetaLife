@@ -54,27 +54,25 @@ const Profiles = ({setConnectedPeers}) => {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={marginTop10}>
-        <View style={FG}>
-          <Section title={'Invite code'}>
-            <TextInput
-              style={[invite, input, text]}
-              value={code}
-              placeholder={'past invite code here'}
-              placeholderTextColor={textHolder}
-              onChangeText={setCode}
-            />
-            <Button
-              title={'confirm'}
-              onPress={() => {
-                inviteAccept(code, (e, v) => {
-                  Toast.showSuccess(e ? e.message : 'invite accepted');
-                  e || reconnect2pub();
-                });
-                setCode('');
-              }}
-            />
-          </Section>
-        </View>
+        <Section style={[marginTop10]} title={'Invite code'}>
+          <TextInput
+            style={[invite, input, text]}
+            value={code}
+            placeholder={'past invite code here'}
+            placeholderTextColor={textHolder}
+            onChangeText={setCode}
+          />
+          <Button
+            title={'confirm'}
+            onPress={() => {
+              inviteAccept(code, (e, v) => {
+                Toast.showSuccess(e ? e.message : 'invite accepted');
+                e || reconnect2pub();
+              });
+              setCode('');
+            }}
+          />
+        </Section>
       </ScrollView>
     </SafeAreaView>
   );

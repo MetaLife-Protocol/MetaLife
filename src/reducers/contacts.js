@@ -8,8 +8,6 @@ const contactsInitState = {
   connectedPeers: [],
   friendsGraph: {},
   peerInfoDic: {},
-  relations: [[], [], [], [], [], []],
-  // [friends, following, follower, block, blocked, other]
 };
 
 export const contactsReducer = (state = contactsInitState, {type, payload}) => {
@@ -22,12 +20,9 @@ export const contactsReducer = (state = contactsInitState, {type, payload}) => {
     case 'setConnectedPeers':
       return {...state, connectedPeers: payload};
     case 'setFriendsGraph':
-      const {graph, fId} = payload;
-      const relations = friendsGraphParse(graph, fId, false).concat();
       return {
         ...state,
-        friendsGraph: graph,
-        relations,
+        friendsGraph: payload,
       };
     case 'addPeerInfo':
       let o = {...state.peerInfoDic};

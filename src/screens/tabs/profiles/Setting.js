@@ -4,11 +4,15 @@
 import React, {useEffect} from 'react';
 import {
   Button,
+  Image,
+  Pressable,
+  RotateZTransform,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Switch,
+  Text,
   TextInput,
   View,
 } from 'react-native';
@@ -16,9 +20,14 @@ import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ControllerItem from '../../../shared/comps/ControllerItem';
 import I18n from '../../../i18n/I18n';
+import Section from '../../../shared/comps/Section';
+import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
+import {ArrowImage} from '../../../shared/Icons';
+
+const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
 
 const Setting = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
-  const {barStyle, FG, flex1, input, text, marginTop10} = SchemaStyles();
+  const {flex1, alignItemsCenter, marginTop10} = SchemaStyles();
   useEffect(() => {
     // console.log('subscribe');
     return () => {
@@ -28,15 +37,35 @@ const Setting = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
 
   return (
     <SafeAreaView style={[flex1]}>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={marginTop10}>
-        <View style={FG}>
-          <Button
-            title={'SubScreen'}
-            onPress={() => navigation.navigate('SubScreen')}
-          />
-          <Button title={'Logout'} onPress={() => navigation.replace('Guid')} />
+      <ScrollView>
+        <Section style={[marginTop10, alignItemsCenter, {marginBottom: -10}]}>
+          <Image source={HolderIcon} />
+        </Section>
+        <Section separator={NormalSeparator}>
+          <Pressable
+            onPress={() =>
+              navigation.navigate('TextEditor', {navigation, title: 'Nickname'})
+            }>
+            <ControllerItem title={'Nickname'}>
+              <Image source={ArrowImage} />
+            </ControllerItem>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              navigation.navigate('TextEditor', {
+                navigation,
+                title: 'Introduction',
+              });
+            }}>
+            <ControllerItem title={'Introduction'}>
+              <Image source={ArrowImage} />
+            </ControllerItem>
+          </Pressable>
+        </Section>
+        <Section
+          style={[marginTop10]}
+          title={'Settings'}
+          separator={NormalSeparator}>
           <ControllerItem title={'Dark mode'}>
             <Switch
               value={darkMode}
@@ -49,7 +78,30 @@ const Setting = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
               onValueChange={() => setLang(lang === 'en' ? 'zh' : 'en')}
             />
           </ControllerItem>
-        </View>
+        </Section>
+        <Section
+          style={[marginTop10]}
+          title={'Privacy'}
+          separator={NormalSeparator}>
+          <ControllerItem title={'Not allowed to view my DAO'}>
+            <Switch
+              value={lang === 'en'}
+              onValueChange={() => setLang(lang === 'en' ? 'zh' : 'en')}
+            />
+          </ControllerItem>
+          <ControllerItem title={'Not allowed to view my NFT'}>
+            <Switch
+              value={lang === 'en'}
+              onValueChange={() => setLang(lang === 'en' ? 'zh' : 'en')}
+            />
+          </ControllerItem>
+          <ControllerItem title={"Don't allow strangers to send me messages"}>
+            <Switch
+              value={lang === 'en'}
+              onValueChange={() => setLang(lang === 'en' ? 'zh' : 'en')}
+            />
+          </ControllerItem>
+        </Section>
       </ScrollView>
     </SafeAreaView>
   );

@@ -30,7 +30,7 @@ const PeerItem = ({
   }
 
   function disconnectHandler(v) {
-    Toast.show('connected: ' + v.id.substring(0, 10));
+    Toast.show('disconnected');
   }
 
   function followHandler(v) {
