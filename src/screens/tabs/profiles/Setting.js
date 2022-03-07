@@ -46,7 +46,7 @@ const Setting = ({
       setAbout(feedId, {...peerInfoDic[feedId], [type]: value}, () =>
         Toast.show(type + ' submitted'),
       ),
-    [],
+    [peerInfoDic],
   );
 
   const checkCamera2Launch = useCallback(
