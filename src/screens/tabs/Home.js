@@ -7,25 +7,20 @@ import {
   addPrivateUpdatesListener,
   addPublicUpdatesListener,
   connStart,
-  getConnectedPeers,
   getProfile,
   graph,
   loadMsg,
-  persistentConnectPeer,
   replicationSchedulerStart,
   reqStartSSB,
   stage,
   suggestStart,
 } from '../../remote/ssbOP';
-import {useTimer} from '../../shared/Hooks';
 import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
 import ItemAgent from './home/ItemAgent';
-import {getAddressForFid} from '../../filters/PeerFilters';
 
 const Home = ({
   navigation,
   feedId,
-  stagedPeers,
   setFeedId,
   addPeerInfo,
   setFriendsGraph,
@@ -62,10 +57,10 @@ const Home = ({
           getProfile(about, v => addPeerInfo([about, v])),
         );
       });
-  }, []);
+  }, [feedId]);
 
   function refreshFriendsGraph() {
-    graph(setFriendsGraph);
+    graph(v => setFriendsGraph({graph: v, fid: feedId}));
   }
 
   return (
@@ -84,7 +79,6 @@ const msp = s => {
     cfg: s.cfg,
     feedId: s.user.feedId,
     publicMsg: s.msg.publicMsg,
-    stagedPeers: s.contacts.stagedPeers,
   };
 };
 

@@ -38,8 +38,6 @@ const PeerDetailsScreen = ({
   const isMyself = selfFeedId === feedId,
     {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations,
-    // [myFriends, myFollowing, myFollower, myBlock, myBlocked] =
-    //   friendsGraphParse(friendsGraph, selfFeedId, false),
     [friends, following, follower, blockList, blocked, other] =
       friendsGraphParse(friendsGraph, feedId),
     mutual = mutualFriend(friends, myFriends),

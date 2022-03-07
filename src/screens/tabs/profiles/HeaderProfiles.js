@@ -32,9 +32,7 @@ const HeaderProfiles = ({
     {container, photo, setting, nameFont, desc, at} = styles;
 
   const {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
-    // [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
-    [myFriends, myFollowing, myFollower, myBlock, myBlocked] =
-      friendsGraphParse(friendsGraph, feedId, false);
+    [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
 
   function peerListHandler(title, list) {
     navigation.push('PeersListScreen', {title, list});

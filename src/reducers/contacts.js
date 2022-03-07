@@ -8,6 +8,7 @@ const contactsInitState = {
   connectedPeers: [],
   friendsGraph: {},
   peerInfoDic: {},
+  relations: [[], [], [], [], [], []],
 };
 
 export const contactsReducer = (state = contactsInitState, {type, payload}) => {
@@ -15,14 +16,16 @@ export const contactsReducer = (state = contactsInitState, {type, payload}) => {
     case 'setStagedPeers':
       return {
         ...state,
-        stagedPeers: payload.filter(([addr, {key}]) => addr && key),
+        stagedPeers: payload.filter(([address, {key}]) => address && key),
       };
     case 'setConnectedPeers':
       return {...state, connectedPeers: payload};
     case 'setFriendsGraph':
+      const {graph, fid} = payload;
       return {
         ...state,
-        friendsGraph: payload,
+        friendsGraph: graph,
+        relations: friendsGraphParse(graph, fid, false),
       };
     case 'addPeerInfo':
       let o = {...state.peerInfoDic};

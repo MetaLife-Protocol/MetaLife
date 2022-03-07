@@ -44,7 +44,7 @@ const Setting = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
         <Section separator={NormalSeparator}>
           <Pressable
             onPress={() =>
-              navigation.navigate('TextEditor', {navigation, title: 'Nickname'})
+              navigation.navigate('TextEditor', {title: 'Nickname'})
             }>
             <ControllerItem title={'Nickname'}>
               <Image source={ArrowImage} />
@@ -53,7 +53,6 @@ const Setting = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
           <Pressable
             onPress={() => {
               navigation.navigate('TextEditor', {
-                navigation,
                 title: 'Introduction',
               });
             }}>

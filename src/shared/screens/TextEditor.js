@@ -15,8 +15,9 @@ const TextEditor = ({
   const {FG, flex1} = SchemaStyles();
 
   useLayoutEffect(() => {
+    console.log('effect');
     navigation.setOptions({title});
-  }, [navigation]);
+  });
 
   return (
     <SafeAreaView style={[flex1]}>
