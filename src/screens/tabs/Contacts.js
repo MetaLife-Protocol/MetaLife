@@ -5,7 +5,6 @@ import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
 import SearchBar from '../../shared/comps/SearchBar';
 import FriendItem from './contacts/item/FriendItem';
-import {friendsGraphParse} from '../../filters/ContactsFilters';
 
 const iconDic = {
   fb: require('../../assets/image/profiles/Facebook.png'),
@@ -15,9 +14,9 @@ const iconDic = {
 
 const DATA_sn = [{icon: iconDic.fb}, {icon: iconDic.nf}, {icon: iconDic.tt}];
 
-const Contacts = ({navigation, feedId, friendsGraph, relations}) => {
-  const {BG, row, flex1, text} = SchemaStyles();
-  const {searchBar, item, key} = styles;
+const Contacts = ({navigation, relations: [friends, following, follower]}) => {
+  const {BG} = SchemaStyles();
+  const {searchBar, item} = styles;
 
   const snItem = ({item: {icon}}) => (
     <View style={item}>
@@ -36,23 +35,23 @@ const Contacts = ({navigation, feedId, friendsGraph, relations}) => {
         ItemSeparatorComponent={null}
         showsHorizontalScrollIndicator={false}
       />
-      {relations[0].length > 0 && (
+      {friends.length > 0 && (
         <Section key={0} title={'friends'}>
-          {relations[0].map((key, i) => (
+          {friends.map((key, i) => (
             <FriendItem navigation={navigation} fId={key} key={i} />
           ))}
         </Section>
       )}
-      {relations[1].length > 0 && (
+      {following.length > 0 && (
         <Section key={1} title={'following'}>
-          {relations[1].map((key, i) => (
+          {following.map((key, i) => (
             <FriendItem navigation={navigation} fId={key} key={i} />
           ))}
         </Section>
       )}
-      {relations[2].length > 0 && (
+      {follower.length > 0 && (
         <Section key={2} title={'follower'}>
-          {relations[2].map((key, i) => (
+          {follower.map((key, i) => (
             <FriendItem navigation={navigation} fId={key} key={i} />
           ))}
         </Section>
@@ -67,9 +66,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
   },
-  key: {
-    width: '70%',
-  },
   searchBar: {marginVertical: 10},
 });
 
@@ -77,7 +73,6 @@ const msp = s => {
   return {
     cfg: s.cfg,
     feedId: s.user.feedId,
-    friendsGraph: s.contacts.friendsGraph,
     relations: s.contacts.relations,
   };
 };
