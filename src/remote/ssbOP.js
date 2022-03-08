@@ -90,6 +90,7 @@ export const ping = cb =>
 
 // ???
 // ssb.deweird.source(['threads', 'publicSummary'],{})(null,(e, v)=>console.log(v))
+// ssb.friends.graphStream({ old: true, live: true })(null,console.log)
 export const graph = cb =>
   ssb.friends.graph((e, v) => (e ? console.error(e) : cb(v)));
 export const getHops = (hop = 1, cb = null) =>

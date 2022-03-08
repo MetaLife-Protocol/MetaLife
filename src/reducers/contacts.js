@@ -22,6 +22,12 @@ export const contactsReducer = (state = contactsInitState, {type, payload}) => {
       return {...state, connectedPeers: payload};
     case 'setFriendsGraph':
       const {graph, fid} = payload;
+      console.log(
+        'refresh graph with: ',
+        fid,
+        'current relations: ',
+        state.relations,
+      );
       return {
         ...state,
         friendsGraph: graph,

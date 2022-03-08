@@ -28,7 +28,7 @@ const Home = ({
   addPublicMsg,
   setPrivateMsg,
 }) => {
-  const {barStyle, FG, flex1} = SchemaStyles();
+  const {flex1} = SchemaStyles();
   useEffect(() => {
     window.ssb ||
       reqStartSSB(ssb => {
@@ -57,7 +57,7 @@ const Home = ({
           getProfile(about, v => addPeerInfo([about, v])),
         );
       });
-  }, [feedId]);
+  }, []);
 
   function refreshFriendsGraph() {
     graph(v => setFriendsGraph({graph: v, fid: feedId}));

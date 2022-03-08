@@ -31,9 +31,9 @@ do
     -name "obj.target" \
     -print0 | xargs -0 rm -rf
   # Update dir.list file
-  sed -i '/obj\.target/d' dir.list
+  sed -i '' '/obj\.target/d' dir.list
   # Update file.list file
-  sed -i '/obj\.target/d' file.list
+  sed -i '' '/obj\.target/d' file.list
 
   # Remove native/target (neon modules) directories
   find . \
@@ -41,9 +41,9 @@ do
     -name "target" \
     -print0 | xargs -0 rm -rf
   # Update dir.list file
-  sed -i '/native\/target/d' dir.list
+  sed -i '' '/native\/target/d' dir.list
   # Update file.list file
-  sed -i '/native\/target/d' file.list
+  sed -i '' '/native\/target/d' file.list
 
   popd
 done
