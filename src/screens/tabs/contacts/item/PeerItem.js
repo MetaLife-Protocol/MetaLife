@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     peerInfoDic: s.contacts.peerInfoDic,
-    relations: s.contacts.relations,
+    relations: s.user.relations,
   };
 };
 

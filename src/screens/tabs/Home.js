@@ -51,7 +51,7 @@ const Home = ({
         });
         addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
         // contact update
-        markMsgCBByType('contact', refreshFriendsGraph);
+        markMsgCBByType('contact', refreshGraph);
         // about update
         markMsgCBByType('about', (_, {about}) =>
           getProfile(about, v => addPeerInfo([about, v])),
@@ -59,8 +59,8 @@ const Home = ({
       });
   }, []);
 
-  function refreshFriendsGraph() {
-    graph(v => setFriendsGraph({graph: v, fid: feedId}));
+  function refreshGraph() {
+    graph(setFriendsGraph);
   }
 
   return (

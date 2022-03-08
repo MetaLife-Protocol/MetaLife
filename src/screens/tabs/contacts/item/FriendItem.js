@@ -1,9 +1,8 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
-import {getProfile} from '../../../../remote/ssbOP';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 
 const iconDic = {

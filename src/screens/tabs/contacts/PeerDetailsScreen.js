@@ -188,8 +188,8 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     selfFeedId: s.user.feedId,
+    relations: s.user.relations,
     friendsGraph: s.contacts.friendsGraph,
-    relations: s.contacts.relations,
     peerInfoDic: s.contacts.peerInfoDic,
     privateMsg: s.msg.privateMsg,
   };

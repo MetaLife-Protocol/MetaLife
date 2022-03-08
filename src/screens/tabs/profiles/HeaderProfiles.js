@@ -12,7 +12,6 @@ import {connect} from 'react-redux/lib/exports';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-tiny-toast';
-import {friendsGraphParse} from '../../../filters/ContactsFilters';
 
 const iconDic = {
   BG: require('../../../assets/image/profiles/Profiles_backgroud.png'),
@@ -23,11 +22,10 @@ const iconDic = {
 const HeaderProfiles = ({
   props: {navigation},
   feedId,
-  friendsGraph,
   relations,
   peerInfoDic,
 }) => {
-  const {row, flex1, justifySpaceBetween, text, alignItemsCenter, marginTop10} =
+  const {row, flex1, justifySpaceBetween, alignItemsCenter, marginTop10} =
       SchemaStyles(),
     {container, photo, setting, nameFont, desc, at} = styles;
 
@@ -120,8 +118,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     feedId: s.user.feedId,
-    friendsGraph: s.contacts.friendsGraph,
-    relations: s.contacts.relations,
+    relations: s.user.relations,
     peerInfoDic: s.contacts.peerInfoDic,
   };
 };
