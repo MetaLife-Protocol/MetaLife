@@ -46,8 +46,13 @@ export default {
     isBlocked: 'sync',
   },
 
+  db: {
+    indexingProgress: 'source',
+  },
   db2migrate: {
     start: 'sync',
+    stop: 'sync',
+    progress: 'source',
   },
 
   // Third-party
