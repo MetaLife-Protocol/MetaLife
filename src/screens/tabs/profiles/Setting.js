@@ -2,7 +2,14 @@
  * Created on 08 Nov 2021 by lonmee
  */
 import React from 'react';
-import {Image, Pressable, SafeAreaView, ScrollView, Switch} from 'react-native';
+import {
+  Image,
+  PermissionsAndroid,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  Switch,
+} from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ControllerItem from '../../../shared/comps/ControllerItem';
@@ -11,6 +18,7 @@ import Section from '../../../shared/comps/Section';
 import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
 import {ArrowImage} from '../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
+import {launchCamera} from 'react-native-image-picker';
 
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
 
@@ -18,13 +26,18 @@ const Setting = ({darkMode, setDarkMode, lang, setLang}) => {
   const {flex1, alignItemsCenter, marginTop10} = SchemaStyles();
 
   const {navigate} = useNavigation();
-
+  function cameraHandler({didCancel, errorCode, errorMessage, assets}) {
+    console.log(didCancel, errorCode, errorMessage, assets);
+  }
   return (
     <SafeAreaView style={[flex1]}>
       <ScrollView>
-        <Section style={[marginTop10, alignItemsCenter, {marginBottom: -10}]}>
-          <Image source={HolderIcon} />
-        </Section>
+        <Pressable
+          onPress={() => launchCamera({cameraType: 'front', cameraHandler})}>
+          <Section style={[marginTop10, alignItemsCenter, {marginBottom: -10}]}>
+            <Image source={HolderIcon} />
+          </Section>
+        </Pressable>
         <Section separator={NormalSeparator}>
           <Pressable
             onPress={() => navigate('TextEditor', {title: 'Nickname'})}>
