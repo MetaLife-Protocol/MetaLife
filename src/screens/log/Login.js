@@ -1,15 +1,17 @@
 import React, {useState} from 'react';
-import {SafeAreaView, StatusBar, TextInput, View} from 'react-native';
+import {StatusBar, TextInput, View} from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import RoundBtn from '../../shared/comps/RoundBtn';
+import {useNavigation} from '@react-navigation/native';
 
-const Login = ({navigation, name, setName}) => {
+const Login = ({name, setName}) => {
+  const {barStyle, BG, FG, flex1, inputBG, text, marginTop10} = SchemaStyles(),
+    {textHolder} = colorsSchema;
+
   const [nick, setNick] = useState('');
   const [pwd, setPwd] = useState('');
-  // style & colors
-  const {barStyle, BG, FG, flex1, inputBG, text, marginTop10} = SchemaStyles();
-  const {textHolder} = colorsSchema;
+  const {replace} = useNavigation();
 
   return (
     <View style={[BG, flex1]}>
@@ -35,7 +37,7 @@ const Login = ({navigation, name, setName}) => {
           style={{marginBottom: 50}}
           title={'Login'}
           disabled={!(nick && pwd)}
-          press={() => navigation.replace('Tabs')}
+          press={() => replace('Tabs')}
         />
       </View>
     </View>

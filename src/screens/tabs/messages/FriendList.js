@@ -7,16 +7,14 @@ import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import FriendItem from '../contacts/item/FriendItem';
 
-const FriendList = ({navigation, relations: [friends]}) => {
+const FriendList = ({relations: [friends]}) => {
   const {BG} = SchemaStyles();
   return (
     <SafeAreaView style={[BG]}>
       <FlatList
         data={friends}
         keyExtractor={item => item}
-        renderItem={({item}) => (
-          <FriendItem navigation={navigation} fId={item} />
-        )}
+        renderItem={({item}) => <FriendItem fId={item} />}
       />
     </SafeAreaView>
   );

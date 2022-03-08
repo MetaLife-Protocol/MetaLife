@@ -1,13 +1,14 @@
 import React from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {localDate} from '../../../../utils';
+import {useNavigation} from '@react-navigation/native';
 
-const MessageItem = ({rootKey, navigation, feedId, peerInfoDic, msgArr}) => {
+const MessageItem = ({rootKey, feedId, peerInfoDic, msgArr}) => {
   const {
       value: {
         author,
@@ -15,16 +16,15 @@ const MessageItem = ({rootKey, navigation, feedId, peerInfoDic, msgArr}) => {
       },
     } = msgArr[0],
     recp = recps.filter(value => value !== feedId)[0],
-    lastMsg = msgArr[msgArr.length - 1];
+    lastMsg = msgArr[msgArr.length - 1],
+    {navigate} = useNavigation();
 
   const {row, flex1, text} = SchemaStyles(),
     {textContainer, item, title, desc} = styles;
   const {name = '', description = '', image = ''} = peerInfoDic[recp] || {};
   return (
     <Pressable
-      onPress={() =>
-        navigation.navigate('MessageDetailsScreen', {rootKey, recp})
-      }>
+      onPress={() => navigate('MessageDetailsScreen', {rootKey, recp})}>
       <View style={[item, row, flex1]}>
         <HeadIcon
           image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}

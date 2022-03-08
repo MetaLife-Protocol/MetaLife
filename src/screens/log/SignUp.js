@@ -1,25 +1,18 @@
 import React, {useState} from 'react';
-import {
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  TextInput,
-  View,
-} from 'react-native';
-import SchemaStyles, {
-  colorsBasics,
-  colorsSchema,
-} from '../../shared/SchemaStyles';
+import {StatusBar, TextInput, View} from 'react-native';
+import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import RoundBtn from '../../shared/comps/RoundBtn';
+import {useNavigation} from '@react-navigation/native';
 
-const SignUp = ({navigation, name, setName}) => {
-  const [nick, setNick] = useState('');
-  const [pwd, setPwd] = useState('');
-  const [confirm, setconfirm] = useState('');
-  // style & colors
+const SignUp = ({name, setName}) => {
   const {barStyle, BG, FG, flex1, input, text, marginTop10} = SchemaStyles(),
     {textHolder} = colorsSchema;
+
+  const [nick, setNick] = useState(''),
+    [pwd, setPwd] = useState(''),
+    [confirm, setConfirm] = useState(''),
+    {replace} = useNavigation();
 
   return (
     <View style={[BG, flex1]}>
@@ -44,7 +37,7 @@ const SignUp = ({navigation, name, setName}) => {
             placeholder={'Confirm Password'}
             secureTextEntry={true}
             placeholderTextColor={textHolder}
-            onChangeText={setconfirm}
+            onChangeText={setConfirm}
           />
         </View>
         <View style={flex1} />
@@ -52,14 +45,16 @@ const SignUp = ({navigation, name, setName}) => {
           style={{marginBottom: 50}}
           title={'Login'}
           disabled={!(nick && pwd && confirm)}
-          press={() => navigation.replace('Tabs')}
+          press={() => replace('Tabs')}
         />
       </View>
     </View>
   );
 };
 
-const msp = s => s.cfg;
+const msp = s => {
+  return {};
+};
 
 const mdp = d => {
   return {

@@ -22,10 +22,9 @@ import {markMsgCBByKey} from '../../../remote/ssb/MsgCB';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-tiny-toast';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const PeerDetailsScreen = ({
-  navigation,
-  route: {params: feedId},
   selfFeedId,
   friendsGraph,
   relations,
@@ -34,6 +33,9 @@ const PeerDetailsScreen = ({
 }) => {
   const {row, flex1, justifySpaceBetween, text} = SchemaStyles(),
     {textContainer, item, title, desc, btn} = styles;
+
+  const {push, setOptions} = useNavigation(),
+    {params: feedId} = useRoute();
 
   const isMyself = selfFeedId === feedId,
     {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
@@ -49,11 +51,11 @@ const PeerDetailsScreen = ({
   const [disabledFollow, setDisabledFollow] = useState(false);
 
   useLayoutEffect(() => {
-    navigation.setOptions({title: name || feedId});
+    setOptions({title: name || feedId});
   });
 
   function peerListHandler(title, list) {
-    navigation.push('PeersListScreen', {title, list});
+    push('PeersListScreen', {title, list});
   }
 
   return (
@@ -66,7 +68,7 @@ const PeerDetailsScreen = ({
           <Pressable
             onPress={event => {
               Clipboard.setString(feedId);
-              Toast.showSuccess('ID copied');
+              Toast.show('ID copied');
             }}>
             <View style={[textContainer]}>
               <Text numberOfLines={1} style={[title, text]}>

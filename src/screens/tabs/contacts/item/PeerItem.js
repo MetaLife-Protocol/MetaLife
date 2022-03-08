@@ -12,17 +12,17 @@ import {
 import {PeerIcons} from '../../../../shared/Icons';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import Toast from 'react-native-tiny-toast';
+import {useNavigation} from '@react-navigation/native';
 
 const PeerItem = ({
-  navigation,
   pObj: [address, {type, key, state = ''}],
   peerInfoDic,
   relations: [friends, following],
 }) => {
   const isFollowing = friends.includes(key) || following.includes(key);
-  const {row, flex1, text} = SchemaStyles();
-  const {textContainer, item, title, desc} = styles;
-
+  const {row, flex1, text} = SchemaStyles(),
+    {textContainer, item, title, desc} = styles;
+  const {navigate} = useNavigation();
   const {name = '', description = '', image = ''} = peerInfoDic[key] || {};
 
   function connectHandler(v) {
@@ -38,9 +38,7 @@ const PeerItem = ({
   }
 
   return (
-    <Pressable
-      key={key}
-      onPress={() => navigation.navigate('PeerDetailsScreen', key)}>
+    <Pressable key={key} onPress={() => navigate('PeerDetailsScreen', key)}>
       <View style={[item, row, flex1]}>
         <HeadIcon
           image={

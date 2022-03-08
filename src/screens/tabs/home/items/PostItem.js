@@ -2,14 +2,7 @@
  * Created on 17 Feb 2022 by lonmee
  */
 import React from 'react';
-import {
-  Image,
-  ImageResizeModeStatic,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {localDate} from '../../../../utils';
@@ -17,18 +10,18 @@ import PostMsgPanel from './PostMsgPannel';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
+import {useNavigation} from '@react-navigation/native';
 
 const PostItem = ({
   item: {
     value: {author, timestamp, content},
   },
   peerInfoDic,
-  navigation,
 }) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
     {container, textContainer, contentContainer, panel} = styles;
-
+  const {navigate} = useNavigation();
   const {
       name = author.substring(0, 10),
       description = '',
@@ -49,8 +42,7 @@ const PostItem = ({
   // }
   return (
     <View style={[row, container]}>
-      <Pressable
-        onPress={() => navigation.navigate('PeerDetailsScreen', author)}>
+      <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
         <HeadIcon
           image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
         />
@@ -72,8 +64,6 @@ const PostItem = ({
                 borderRadius: 10,
                 alignSelf: i % 2 ? 'flex-end' : 'flex-start',
               }}
-              // resizeMethod={'scale'}
-              // resizeMode={'center'}
               height={200}
               width={200}
               key={name}

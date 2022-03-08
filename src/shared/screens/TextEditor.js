@@ -2,22 +2,21 @@
  * Created on 07 Mar 2022 by lonmee
  */
 
-import React, {useLayoutEffect, useRef} from 'react';
+import React, {useLayoutEffect} from 'react';
 import {SafeAreaView, View} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-const TextEditor = ({
-  navigation,
-  route: {
-    params: {title},
-  },
-}) => {
+const TextEditor = () => {
   const {FG, flex1} = SchemaStyles();
+  const {setOptions} = useNavigation(),
+    {
+      params: {title},
+    } = useRoute();
 
   useLayoutEffect(() => {
-    console.log('effect');
-    navigation.setOptions({title});
-  });
+    setOptions({title});
+  }, [title]);
 
   return (
     <SafeAreaView style={[flex1]}>

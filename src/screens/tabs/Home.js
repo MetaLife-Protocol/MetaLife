@@ -19,8 +19,6 @@ import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
 import ItemAgent from './home/ItemAgent';
 
 const Home = ({
-  navigation,
-  feedId,
   setFeedId,
   addPeerInfo,
   setFriendsGraph,
@@ -68,7 +66,7 @@ const Home = ({
       <FlatList
         data={publicMsg.concat().reverse()}
         keyExtractor={item => item.key}
-        renderItem={info => <ItemAgent info={info} navigation={navigation} />}
+        renderItem={info => <ItemAgent info={info} />}
       />
     </SafeAreaView>
   );

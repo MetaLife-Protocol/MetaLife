@@ -3,7 +3,7 @@ import {SafeAreaView, ScrollView, StatusBar, View} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../shared/SchemaStyles';
 
-const SubScreen = ({navigation}) => {
+const SubScreen = () => {
   const {barStyle, FG, flex1} = SchemaStyles();
   useEffect(() => {
     console.log('enter screen');

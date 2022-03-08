@@ -12,6 +12,7 @@ import {connect} from 'react-redux/lib/exports';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-tiny-toast';
+import {useNavigation} from '@react-navigation/native';
 
 const iconDic = {
   BG: require('../../../assets/image/profiles/Profiles_backgroud.png'),
@@ -19,21 +20,18 @@ const iconDic = {
   photo: require('../../../assets/image/profiles/photo.png'),
 };
 
-const HeaderProfiles = ({
-  props: {navigation},
-  feedId,
-  relations,
-  peerInfoDic,
-}) => {
+const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
   const {row, flex1, justifySpaceBetween, alignItemsCenter, marginTop10} =
       SchemaStyles(),
     {container, photo, setting, nameFont, desc, at} = styles;
+
+  const {push} = useNavigation();
 
   const {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
 
   function peerListHandler(title, list) {
-    navigation.push('PeersListScreen', {title, list});
+    push('PeersListScreen', {title, list});
   }
 
   return (

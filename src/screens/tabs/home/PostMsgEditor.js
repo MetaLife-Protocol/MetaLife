@@ -8,9 +8,12 @@ import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import MsgInput from '../messages/MsgInput';
 import {sendMsg} from '../../../remote/ssbOP';
+import {useNavigation} from '@react-navigation/native';
 
-const PostMsgEditor = ({navigation}) => {
-  const {barStyle, FG, flex1} = SchemaStyles();
+const PostMsgEditor = () => {
+  const {FG, flex1} = SchemaStyles();
+  const {goBack} = useNavigation();
+
   useEffect(() => {
     console.log('enter screen');
     return () => console.log('exit screen');
@@ -23,7 +26,7 @@ const PostMsgEditor = ({navigation}) => {
         text: content,
       },
       msg => {
-        navigation.goBack();
+        goBack();
       },
     );
   }

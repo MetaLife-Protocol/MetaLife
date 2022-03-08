@@ -28,17 +28,14 @@ const PeersScreen = ({
         {stagedPeers.length > 0 && (
           <Section title={'Staged Peers'}>
             {stagedPeers.map(
-              (pObj, i) =>
-                pObj[0] && (
-                  <PeerItem navigation={navigation} pObj={pObj} key={i} />
-                ),
+              (pObj, i) => pObj[0] && <PeerItem pObj={pObj} key={i} />,
             )}
           </Section>
         )}
         {connectedPeers.length > 0 && (
           <Section title={'connectedPeers'}>
             {connectedPeers.map((pObj, i) => (
-              <PeerItem navigation={navigation} pObj={pObj} key={i} />
+              <PeerItem pObj={pObj} key={i} />
             ))}
           </Section>
         )}

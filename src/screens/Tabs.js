@@ -13,6 +13,7 @@ import I18n from '../i18n/I18n';
 import HeaderProfiles from './tabs/profiles/HeaderProfiles';
 import HeaderRightBtn from './tabs/HeaderRightBtn';
 import {connect} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
 const iconDic = {
   Home_icon_Default: require('../assets/image/tabBtn/Home_icon_Default.png'),
@@ -42,11 +43,12 @@ function Ionicons({name, focused, color, size}) {
   );
 }
 
-const Tabs = ({navigation, darkMode}) => {
+const Tabs = ({darkMode}) => {
   const addIcon = darkMode
     ? headerBtnIconDic.addWhite
     : headerBtnIconDic.addBlack;
-  const goScreen = screenName => () => navigation.navigate(screenName);
+  const {navigate} = useNavigation();
+  const goScreen = screenName => () => navigate(screenName);
   const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
@@ -134,7 +136,7 @@ const Tabs = ({navigation, darkMode}) => {
         component={Profiles}
         options={{
           title: I18n.t('Profiles'),
-          header: navigation => <HeaderProfiles props={navigation} />,
+          header: () => <HeaderProfiles />,
         }}
       />
     </Tab.Navigator>

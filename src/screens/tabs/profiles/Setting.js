@@ -2,20 +2,7 @@
  * Created on 08 Nov 2021 by lonmee
  */
 import React, {useEffect} from 'react';
-import {
-  Button,
-  Image,
-  Pressable,
-  RotateZTransform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import {Image, Pressable, SafeAreaView, ScrollView, Switch} from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ControllerItem from '../../../shared/comps/ControllerItem';
@@ -23,11 +10,15 @@ import I18n from '../../../i18n/I18n';
 import Section from '../../../shared/comps/Section';
 import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
 import {ArrowImage} from '../../../shared/Icons';
+import {useNavigation} from '@react-navigation/native';
 
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
 
-const Setting = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
+const Setting = ({darkMode, setDarkMode, lang, setLang}) => {
   const {flex1, alignItemsCenter, marginTop10} = SchemaStyles();
+
+  const {navigate} = useNavigation();
+
   useEffect(() => {
     // console.log('subscribe');
     return () => {
@@ -43,16 +34,14 @@ const Setting = ({navigation, darkMode, setDarkMode, lang, setLang}) => {
         </Section>
         <Section separator={NormalSeparator}>
           <Pressable
-            onPress={() =>
-              navigation.navigate('TextEditor', {title: 'Nickname'})
-            }>
+            onPress={() => navigate('TextEditor', {title: 'Nickname'})}>
             <ControllerItem title={'Nickname'}>
               <Image source={ArrowImage} />
             </ControllerItem>
           </Pressable>
           <Pressable
             onPress={() => {
-              navigation.navigate('TextEditor', {
+              navigate('TextEditor', {
                 title: 'Introduction',
               });
             }}>

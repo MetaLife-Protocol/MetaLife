@@ -12,7 +12,7 @@ const iconDic = {
   tt: require('../../assets/image/profiles/Twitter.png'),
 };
 
-const Messages = ({navigation, privateMsg}) => {
+const Messages = ({privateMsg}) => {
   const {textHolder} = colorsSchema;
   const {FG, row, text, alignItemsCenter} = SchemaStyles();
   const {searchBar, contactItemContainer, textView, nameTF, descTF} = styles;
@@ -44,12 +44,7 @@ const Messages = ({navigation, privateMsg}) => {
     <ScrollView style={FG}>
       <SearchBar style={[searchBar]} />
       {Object.keys(privateMsg).map(key => (
-        <MessageItem
-          key={key}
-          rootKey={key}
-          navigation={navigation}
-          msgArr={privateMsg[key]}
-        />
+        <MessageItem key={key} rootKey={key} msgArr={privateMsg[key]} />
       ))}
     </ScrollView>
   );

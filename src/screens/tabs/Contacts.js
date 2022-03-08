@@ -14,7 +14,7 @@ const iconDic = {
 
 const DATA_sn = [{icon: iconDic.fb}, {icon: iconDic.nf}, {icon: iconDic.tt}];
 
-const Contacts = ({navigation, relations: [friends, following, follower]}) => {
+const Contacts = ({relations: [friends, following, follower]}) => {
   const {BG} = SchemaStyles();
   const {searchBar, item} = styles;
 
@@ -38,21 +38,21 @@ const Contacts = ({navigation, relations: [friends, following, follower]}) => {
       {friends.length > 0 && (
         <Section key={0} title={'friends'}>
           {friends.map((key, i) => (
-            <FriendItem navigation={navigation} fId={key} key={i} />
+            <FriendItem fId={key} key={i} />
           ))}
         </Section>
       )}
       {following.length > 0 && (
         <Section key={1} title={'following'}>
           {following.map((key, i) => (
-            <FriendItem navigation={navigation} fId={key} key={i} />
+            <FriendItem fId={key} key={i} />
           ))}
         </Section>
       )}
       {follower.length > 0 && (
         <Section key={2} title={'follower'}>
           {follower.map((key, i) => (
-            <FriendItem navigation={navigation} fId={key} key={i} />
+            <FriendItem fId={key} key={i} />
           ))}
         </Section>
       )}

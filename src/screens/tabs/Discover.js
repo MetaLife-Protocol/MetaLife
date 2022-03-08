@@ -1,10 +1,18 @@
 import React, {useEffect} from 'react';
-import {FlatList, ImageBackground, StyleSheet, Text} from 'react-native';
+import {
+  FlatList,
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
+import {useNavigation} from '@react-navigation/native';
 
-const Discover = ({navigation}) => {
+const Discover = () => {
   const {justifyCenter, marginTop10} = SchemaStyles();
+  const {navigate} = useNavigation();
 
   const iconDic = {
     DAO: require('../../assets/image/discover/Discover_backgroud_DAO.png'),
@@ -24,12 +32,11 @@ const Discover = ({navigation}) => {
 
   const Item = ({item: {title, bgImg}}) => {
     return (
-      <ImageBackground
-        style={[styles.item, justifyCenter]}
-        source={bgImg}
-        onPress={() => navigation.navigate('SubScreen')}>
-        <Text style={styles.title}>{title}</Text>
-      </ImageBackground>
+      <Pressable onPress={() => navigate('SubScreen')}>
+        <ImageBackground style={[styles.item, justifyCenter]} source={bgImg}>
+          <Text style={styles.title}>{title}</Text>
+        </ImageBackground>
+      </Pressable>
     );
   };
 

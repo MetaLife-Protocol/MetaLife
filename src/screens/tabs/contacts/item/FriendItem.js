@@ -4,7 +4,7 @@ import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {findRootKey} from '../../../../filters/MsgFilters';
 
 const iconDic = {
@@ -13,21 +13,22 @@ const iconDic = {
   nftIcon: require('../../../../assets/image/contacts/nft_icon.png'),
 };
 
-const FriendItem = ({navigation, fId, peerInfoDic, privateMsg}) => {
+const FriendItem = ({fId, peerInfoDic, privateMsg}) => {
   const {row, flex1, text} = SchemaStyles();
   const {textContainer, item, title, desc} = styles;
   const {name = '', description = '', image = ''} = peerInfoDic[fId] || {},
+    {replace, push} = useNavigation(),
     {name: routeName} = useRoute();
-  console.log(routeName);
+
   return (
     <Pressable
       onPress={() =>
         routeName === 'FriendList'
-          ? navigation.replace('MessageDetailsScreen', {
+          ? replace('MessageDetailsScreen', {
               rootKey: findRootKey(fId, privateMsg),
               recp: fId,
             })
-          : navigation.push('PeerDetailsScreen', fId)
+          : push('PeerDetailsScreen', fId)
       }>
       <View style={[item, row, flex1]}>
         <HeadIcon
