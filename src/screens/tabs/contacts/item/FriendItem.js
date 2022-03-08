@@ -4,6 +4,8 @@ import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
+import {useRoute} from '@react-navigation/native';
+import {findRootKey} from '../../../../filters/MsgFilters';
 
 const iconDic = {
   peerIcon: require('../../../../assets/image/contacts/peer_icon.png'),
@@ -11,12 +13,22 @@ const iconDic = {
   nftIcon: require('../../../../assets/image/contacts/nft_icon.png'),
 };
 
-const FriendItem = ({navigation, fId, peerInfoDic, addPeerInfo}) => {
+const FriendItem = ({navigation, fId, peerInfoDic, privateMsg}) => {
   const {row, flex1, text} = SchemaStyles();
   const {textContainer, item, title, desc} = styles;
-  const {name = '', description = '', image = ''} = peerInfoDic[fId] || {};
+  const {name = '', description = '', image = ''} = peerInfoDic[fId] || {},
+    {name: routeName} = useRoute();
+  console.log(routeName);
   return (
-    <Pressable onPress={() => navigation.push('PeerDetailsScreen', fId)}>
+    <Pressable
+      onPress={() =>
+        routeName === 'FriendList'
+          ? navigation.replace('MessageDetailsScreen', {
+              rootKey: findRootKey(fId, privateMsg),
+              recp: fId,
+            })
+          : navigation.push('PeerDetailsScreen', fId)
+      }>
       <View style={[item, row, flex1]}>
         <HeadIcon
           image={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
@@ -61,6 +73,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     peerInfoDic: s.contacts.peerInfoDic,
+    privateMsg: s.msg.privateMsg,
   };
 };
 
