@@ -63,7 +63,9 @@ const Setting = ({darkMode, setDarkMode, lang, setLang}) => {
           <ControllerItem title={'En / Zh'}>
             <Switch
               value={lang === 'en'}
-              onValueChange={() => setLang(lang === 'en' ? 'zh' : 'en')}
+              onValueChange={() =>
+                setLang((I18n.locale = lang === 'en' ? 'zh' : 'en'))
+              }
             />
           </ControllerItem>
         </Section>
@@ -72,22 +74,13 @@ const Setting = ({darkMode, setDarkMode, lang, setLang}) => {
           title={'Privacy'}
           separator={NormalSeparator}>
           <ControllerItem title={'Not allowed to view my DAO'}>
-            <Switch
-              value={lang === 'en'}
-              onValueChange={() => setLang(lang === 'en' ? 'zh' : 'en')}
-            />
+            <Switch value={lang === 'en'} onValueChange={null} />
           </ControllerItem>
           <ControllerItem title={'Not allowed to view my NFT'}>
-            <Switch
-              value={lang === 'en'}
-              onValueChange={() => setLang(lang === 'en' ? 'zh' : 'en')}
-            />
+            <Switch value={lang === 'en'} onValueChange={null} />
           </ControllerItem>
           <ControllerItem title={"Don't allow strangers to send me messages"}>
-            <Switch
-              value={lang === 'en'}
-              onValueChange={() => setLang(lang === 'en' ? 'zh' : 'en')}
-            />
+            <Switch value={lang === 'en'} onValueChange={null} />
           </ControllerItem>
         </Section>
       </ScrollView>
@@ -102,7 +95,6 @@ const mdp = d => {
     setDarkMode: darkMode => d({type: 'setDarkMode', payload: darkMode}),
     setLang: lang => {
       d({type: 'setLang', payload: lang});
-      I18n.locale = lang;
     },
   };
 };

@@ -10,7 +10,7 @@ import {
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import HeadIcon from '../../../shared/comps/HeadIcon';
-import Clipboard from '@react-native-clipboard/clipboard';
+import {useClipboard} from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation} from '@react-navigation/native';
 
@@ -25,7 +25,8 @@ const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
       SchemaStyles(),
     {container, photo, setting, nameFont, desc, at} = styles;
 
-  const {push} = useNavigation();
+  const {navigate, push} = useNavigation(),
+    {setString} = useClipboard();
 
   const {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
@@ -38,8 +39,8 @@ const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
     <ImageBackground style={[container, alignItemsCenter]} source={iconDic.BG}>
       <HeadIcon style={[photo]} width={90} height={90} image={iconDic.photo} />
       <Pressable
-        onPress={event => {
-          Clipboard.setString(feedId);
+        onPress={() => {
+          setString(feedId);
           Toast.show('ID copied');
         }}>
         <Text style={[nameFont, marginTop10]}>
@@ -75,9 +76,7 @@ const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
           <Text style={[desc]}>friend:{myFriends.length}</Text>
         </Pressable>
       </View>
-      <Pressable
-        style={[setting]}
-        onPress={() => navigation.navigate('Setting')}>
+      <Pressable style={[setting]} onPress={() => navigate('Setting')}>
         <Image source={iconDic.icon_setting} />
       </Pressable>
     </ImageBackground>

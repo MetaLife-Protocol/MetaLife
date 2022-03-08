@@ -27,6 +27,7 @@ const Home = ({
   setPrivateMsg,
 }) => {
   const {flex1} = SchemaStyles();
+
   useEffect(() => {
     window.ssb ||
       reqStartSSB(ssb => {

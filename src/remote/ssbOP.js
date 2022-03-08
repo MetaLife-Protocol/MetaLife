@@ -88,7 +88,6 @@ export const inviteAccept = (code, cb = null) => ssb.invite.accept(code, cb);
 export const ping = cb =>
   ssb.conn.ping()(null, (e, v) => (e ? console.error(e) : cb && cb(v)));
 
-// ???
 // ssb.deweird.source(['threads', 'publicSummary'],{})(null,(e, v)=>console.log(v))
 // ssb.friends.graphStream({ old: true, live: true })(null,console.log)
 export const graph = cb =>
