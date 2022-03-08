@@ -15,6 +15,7 @@ function onFailure() {
 }
 
 mkdir -p ./nodejs-assets/nodejs-project;
+mv ./nodejs-assets/nodejs-project/README.md ./NODEJS-ASSETS-README.md;
 rm -rf ./nodejs-assets/nodejs-project;
 if [ -f ./nodejs-assets/BUILD_NATIVE_MODULES.txt ]
 then
@@ -33,4 +34,6 @@ cd ./nodejs-assets/nodejs-project;
 mv ./loader.mobile.js ./loader.js;
 rm ./*.js.map;
 rm ./plugins/*.js.map;
+rm ./loader.desktop.js;
 cd ../..;
+mv ./NODEJS-ASSETS-README.md ./nodejs-assets/nodejs-project/README.md;
