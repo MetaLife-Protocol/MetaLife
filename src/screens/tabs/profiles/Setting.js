@@ -1,7 +1,7 @@
 /**
  * Created on 08 Nov 2021 by lonmee
  */
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Image, Pressable, SafeAreaView, ScrollView, Switch} from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
@@ -18,13 +18,6 @@ const Setting = ({darkMode, setDarkMode, lang, setLang}) => {
   const {flex1, alignItemsCenter, marginTop10} = SchemaStyles();
 
   const {navigate} = useNavigation();
-
-  useEffect(() => {
-    // console.log('subscribe');
-    return () => {
-      // console.log('componentDidUpdate');
-    };
-  }, []);
 
   return (
     <SafeAreaView style={[flex1]}>
