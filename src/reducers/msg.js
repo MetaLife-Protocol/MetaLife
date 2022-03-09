@@ -24,7 +24,7 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
       return {
         ...state,
         privateMsg: state.privateMsg[rootKey]
-          ? state.privateMsg[rootKey].concat(msg)
+          ? [...state.privateMsg[rootKey], msg]
           : [msg],
       };
     case 'clearPrivateMsg':
@@ -32,7 +32,7 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
     case 'setPublicMsg':
       return {...state, publicMsg: payload};
     case 'addPublicMsg':
-      return {...state, publicMsg: state.publicMsg.concat(payload.messages)};
+      return {...state, publicMsg: [...state.publicMsg, ...payload.messages]};
     case 'clearPublicMsg':
       return {...state, publicMsg: {}};
     default:

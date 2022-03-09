@@ -2,16 +2,9 @@
  * Created on 09 Mar 2022 by lonmee
  */
 import React, {useState} from 'react';
-import {
-  Alert,
-  Modal,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  View,
-} from 'react-native';
-import {colorsSchema} from '../../../../shared/SchemaStyles';
+import {Alert, Modal, StyleSheet, TextInput, View} from 'react-native';
+import SchemaStyles, {colorsSchema} from '../../../../shared/SchemaStyles';
+import RoundBtn from '../../../../shared/comps/RoundBtn';
 
 export const ProfileModal = ({
   visible = false,
@@ -20,7 +13,8 @@ export const ProfileModal = ({
   holderText,
   changeHandler,
 }) => {
-  const {textHolder} = colorsSchema;
+  const {row} = SchemaStyles(),
+    {textHolder} = colorsSchema;
 
   const [valueLocal, setValueLocal] = useState(value);
 
@@ -36,19 +30,29 @@ export const ProfileModal = ({
         <View style={styles.modalView}>
           <TextInput
             style={styles.modalText}
+            autoFocus={true}
             // style={[invite, input, text]}
-            value={value}
+            value={valueLocal}
             placeholder={holderText}
             placeholderTextColor={textHolder}
-            onChangeText={changeHandler}
+            onChangeText={setValueLocal}
           />
-          <TouchableHighlight
-            style={{...styles.openButton, backgroundColor: '#2196F3'}}
-            onPress={() => {
-              setVisible(!visible);
-            }}>
-            <Text style={styles.textStyle}>Hide Modal</Text>
-          </TouchableHighlight>
+          <View style={[row]}>
+            <RoundBtn
+              style={[{width: 80, height: 30}]}
+              title={'cancel'}
+              press={() => setVisible(false)}
+            />
+            <RoundBtn
+              style={[{width: 80, height: 30}]}
+              disabled={!valueLocal}
+              title={'confirm'}
+              press={() => {
+                changeHandler(valueLocal);
+                setVisible(false);
+              }}
+            />
+          </View>
         </View>
       </View>
     </Modal>

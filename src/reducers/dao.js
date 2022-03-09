@@ -6,7 +6,7 @@ export const daoInitValue = [];
 export const daoReducer = (state = daoInitValue, {type, payload}) => {
   switch (type) {
     case 'add':
-      return state.concat(payload);
+      return [...state, payload];
     case 'remove':
       return state;
     case 'reset':

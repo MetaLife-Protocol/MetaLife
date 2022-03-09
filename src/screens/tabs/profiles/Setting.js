@@ -1,16 +1,21 @@
 /**
  * Created on 08 Nov 2021 by lonmee
  */
-import React, {useEffect, useReducer, useRef, useState} from 'react';
-import {Image, Pressable, SafeAreaView, ScrollView, Switch} from 'react-native';
+import React, {useEffect, useReducer, useState} from 'react';
+import {
+  Image,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  Switch,
+  Text,
+} from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ControllerItem from '../../../shared/comps/ControllerItem';
 import I18n from '../../../i18n/I18n';
 import Section from '../../../shared/comps/Section';
 import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
-import {ArrowImage} from '../../../shared/Icons';
-import {useNavigation} from '@react-navigation/native';
 import {launchCamera} from 'react-native-image-picker';
 import {setAbout} from '../../../remote/ssbOP';
 import Toast from 'react-native-tiny-toast';
@@ -25,12 +30,11 @@ const Setting = ({
   setDarkMode,
   setLang,
 }) => {
-  const {flex1, alignItemsCenter, marginTop10} = SchemaStyles();
+  const {flex1, alignItemsCenter, marginTop10, text} = SchemaStyles();
 
   const {name, description, image} = peerInfoDic[feedId] || {};
 
-  const {navigate} = useNavigation(),
-    [pnVisible, setPnVisible] = useState(false),
+  const [pnVisible, setPnVisible] = useState(false),
     [pdVisible, setPdVisible] = useState(false),
     [profile, dispatch] = useReducer((s, {type, payload}) => {
       switch (type) {
@@ -41,14 +45,14 @@ const Setting = ({
         case 'image':
           return {...s, image: payload};
       }
-    }, peerInfoDic[feedId] || {});
+    }, peerInfoDic[feedId] || {name: '', description: '', image: ''});
   useEffect(
     () => () =>
-      (profile.name !== name ||
-        profile.description !== description ||
-        profile.image !== image) &&
-      setAbout(feedId, profile, Toast.show('profile submitted')),
-    [],
+      // (profile.name !== name ||
+      //   profile.description !== description ||
+      //   profile.image !== image) &&
+      setAbout(feedId, profile, () => Toast.show('profile submitted')),
+    [profile],
   );
 
   function cameraHandler({didCancel, errorCode, errorMessage, assets}) {
@@ -60,13 +64,15 @@ const Setting = ({
       <ProfileModal
         visible={pnVisible}
         setVisible={setPnVisible}
-        va={profile.name}
+        value={profile.name}
+        holderText={'nickname'}
         changeHandler={text => dispatch({type: 'name', payload: text})}
       />
       <ProfileModal
         visible={pdVisible}
         setVisible={setPdVisible}
-        profile={profile.description}
+        value={profile.description}
+        holderText={'bio'}
         changeHandler={text => dispatch({type: 'description', payload: text})}
       />
       <ScrollView>
@@ -79,12 +85,12 @@ const Setting = ({
         <Section separator={NormalSeparator}>
           <Pressable onPress={() => setPnVisible(true)}>
             <ControllerItem title={'Nickname'}>
-              <Image source={ArrowImage} />
+              <Text style={[text]}>{profile.name}</Text>
             </ControllerItem>
           </Pressable>
           <Pressable onPress={() => setPdVisible(true)}>
             <ControllerItem title={'Introduction'}>
-              <Image source={ArrowImage} />
+              <Text style={[text]}>{profile.description}</Text>
             </ControllerItem>
           </Pressable>
         </Section>

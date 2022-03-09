@@ -25,7 +25,7 @@ export const contactsReducer = (state = contactsInitState, {type, payload}) => {
       };
     case 'addPeerInfo':
       const [fId, info] = payload;
-      return {...state, [fId]: info};
+      return {...state, peerInfoDic: {...state.peerInfoDic, [fId]: info}};
     default:
       return state;
   }
