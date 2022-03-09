@@ -28,7 +28,7 @@ const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
   const {navigate, push} = useNavigation(),
     {setString} = useClipboard();
 
-  const {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
+  const {name, description, image} = peerInfoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
 
   function peerListHandler(title, list) {

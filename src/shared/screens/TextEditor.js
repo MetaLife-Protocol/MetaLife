@@ -6,6 +6,7 @@ import React, {useLayoutEffect} from 'react';
 import {SafeAreaView, View} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import MsgInput from '../../screens/tabs/messages/MsgInput';
 
 const TextEditor = () => {
   const {FG, flex1} = SchemaStyles();
@@ -21,6 +22,7 @@ const TextEditor = () => {
   return (
     <SafeAreaView style={[flex1]}>
       <View style={FG} />
+      <MsgInput sendHandler={null} />
     </SafeAreaView>
   );
 };

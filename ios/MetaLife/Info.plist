@@ -57,6 +57,8 @@
 	<string>Head icon &amp; post image usage</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Head icon &amp; post image usage</string>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Take video</string>
 </dict>

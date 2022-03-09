@@ -1,0 +1,94 @@
+/**
+ * Created on 09 Mar 2022 by lonmee
+ */
+import React, {useState} from 'react';
+import {
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View,
+} from 'react-native';
+import {colorsSchema} from '../../../../shared/SchemaStyles';
+
+export const ProfileModal = ({
+  visible = false,
+  setVisible,
+  value,
+  holderText,
+  changeHandler,
+}) => {
+  const {textHolder} = colorsSchema;
+
+  const [valueLocal, setValueLocal] = useState(value);
+
+  return (
+    <Modal
+      animationType={'slide'}
+      transparent={true}
+      visible={visible}
+      onRequestClose={() => {
+        Alert.alert('Modal has been closed.');
+      }}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <TextInput
+            style={styles.modalText}
+            // style={[invite, input, text]}
+            value={value}
+            placeholder={holderText}
+            placeholderTextColor={textHolder}
+            onChangeText={changeHandler}
+          />
+          <TouchableHighlight
+            style={{...styles.openButton, backgroundColor: '#2196F3'}}
+            onPress={() => {
+              setVisible(!visible);
+            }}>
+            <Text style={styles.textStyle}>Hide Modal</Text>
+          </TouchableHighlight>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  openButton: {
+    backgroundColor: '#F194FF',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+});

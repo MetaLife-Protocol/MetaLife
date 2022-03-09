@@ -6,7 +6,6 @@ import {
   StatusBar,
   StyleSheet,
   TextInput,
-  View,
 } from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
@@ -20,7 +19,7 @@ import {
 import Toast from 'react-native-tiny-toast';
 
 const Profiles = ({setConnectedPeers}) => {
-  const {barStyle, FG, flex1, input, text, marginTop10} = SchemaStyles(),
+  const {barStyle, flex1, input, text, marginTop10} = SchemaStyles(),
     {textHolder} = colorsSchema,
     {invite} = styles;
   const [code, setCode] = useState('');
@@ -40,8 +39,6 @@ const Profiles = ({setConnectedPeers}) => {
           tAddr.pop();
           const tarAddr = tAddr.join(':');
           disconnectPeer(addr, () => persistentConnectPeer(tarAddr, {type}));
-        } else {
-          setTimeout(reconnect2pub, 1000);
         }
       });
       setConnectedPeers(peers);

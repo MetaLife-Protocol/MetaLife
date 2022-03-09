@@ -14,11 +14,6 @@ const PostMsgEditor = () => {
   const {FG, flex1} = SchemaStyles();
   const {goBack} = useNavigation();
 
-  useEffect(() => {
-    console.log('enter screen');
-    return () => console.log('exit screen');
-  }, []);
-
   function sendHandler(content) {
     sendMsg(
       {

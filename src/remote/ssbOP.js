@@ -4,7 +4,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import {makeClient} from './ssb/Client';
 
 export let ssb = window.ssb;
-
+window.ssbOP = this;
 export const status = cb =>
   ssb.status((e, v) => (e ? console.error(e) : cb(v)));
 // conn
@@ -89,6 +89,7 @@ export const ping = cb =>
   ssb.conn.ping()(null, (e, v) => (e ? console.error(e) : cb && cb(v)));
 
 // ssb.deweird.source(['threads', 'publicSummary'],{})(null,(e, v)=>console.log(v))
+// ssb.friends.hopStream({old:true, live:true})(null, console.log)
 // ssb.friends.graphStream({ old: true, live: true })(null,console.log)
 export const graph = cb =>
   ssb.friends.graph((e, v) => (e ? console.error(e) : cb(v)));
@@ -156,11 +157,5 @@ export const loadMsg = (msgKey, isPrivate = false, cb = null) => {
   ssb.threads.thread({
     root: msgKey,
     private: isPrivate,
-  })(null, (e, v) =>
-    e
-      ? console.log(e ? "other's private msg?" : "what's msg?")
-      : cb
-      ? cb(v)
-      : console.log(v),
-  );
+  })(null, (e, v) => (e ? console.log(e) : cb ? cb(v) : console.log(v)));
 };

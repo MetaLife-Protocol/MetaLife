@@ -60,6 +60,9 @@ const Home = ({
 
   function refreshGraph() {
     graph(setFriendsGraph);
+    window.ssb.friends.graphStream({old: false, live: true})(null, (e, v) =>
+      e ? console.warn(e) : console.log('graphStream live: ', v),
+    );
   }
 
   return (

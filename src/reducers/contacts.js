@@ -24,9 +24,8 @@ export const contactsReducer = (state = contactsInitState, {type, payload}) => {
         friendsGraph: payload,
       };
     case 'addPeerInfo':
-      let o = {...state.peerInfoDic};
-      o[payload[0]] = payload[1];
-      return {...state, peerInfoDic: {...o}};
+      const [fId, info] = payload;
+      return {...state, [fId]: info};
     default:
       return state;
   }

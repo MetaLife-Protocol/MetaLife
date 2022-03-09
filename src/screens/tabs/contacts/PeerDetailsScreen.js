@@ -34,11 +34,11 @@ const PeerDetailsScreen = ({
   const {row, flex1, justifySpaceBetween, text} = SchemaStyles(),
     {textContainer, item, title, desc, btn} = styles;
 
-  const {push, setOptions} = useNavigation(),
+  const {navigate, push, setOptions} = useNavigation(),
     {params: feedId} = useRoute();
 
   const isMyself = selfFeedId === feedId,
-    {name = '', description = '', image = ''} = peerInfoDic[feedId] || {},
+    {name, description, image} = peerInfoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations,
     [friends, following, follower, blockList, blocked, other] =
       friendsGraphParse(friendsGraph, feedId),
@@ -129,7 +129,7 @@ const PeerDetailsScreen = ({
                 style={[btn]}
                 title={'chat'}
                 press={() =>
-                  navigation.navigate('MessageDetailsScreen', {
+                  navigate('MessageDetailsScreen', {
                     rootKey: findRootKey(feedId, privateMsg),
                     recp: feedId,
                   })
