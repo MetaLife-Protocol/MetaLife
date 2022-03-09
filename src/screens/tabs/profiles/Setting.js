@@ -46,6 +46,7 @@ const Setting = ({
           return {...s, image: payload};
       }
     }, peerInfoDic[feedId] || {name: '', description: '', image: ''});
+
   useEffect(
     () => () =>
       // (profile.name !== name ||
