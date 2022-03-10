@@ -1,7 +1,7 @@
 /**
  * Created on 08 Nov 2021 by lonmee
  */
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useCallback, useEffect, useReducer, useState} from 'react';
 import {
   Image,
   Pressable,
@@ -35,25 +35,14 @@ const Setting = ({
   const {name, description, image} = peerInfoDic[feedId] || {};
 
   const [pnVisible, setPnVisible] = useState(false),
-    [pdVisible, setPdVisible] = useState(false),
-    [profile, dispatch] = useReducer((s, {type, payload}) => {
-      switch (type) {
-        case 'name':
-          return {...s, name: payload};
-        case 'description':
-          return {...s, description: payload};
-        case 'image':
-          return {...s, image: payload};
-      }
-    }, peerInfoDic[feedId] || {name: '', description: '', image: ''});
+    [pdVisible, setPdVisible] = useState(false);
 
-  useEffect(
-    () => () =>
-      // (profile.name !== name ||
-      //   profile.description !== description ||
-      //   profile.image !== image) &&
-      setAbout(feedId, profile, () => Toast.show('profile submitted')),
-    [profile],
+  const submit = useCallback(
+    (type, value) =>
+      setAbout(feedId, {...peerInfoDic[feedId], [type]: value}, () =>
+        Toast.show(type + ' submitted'),
+      ),
+    [],
   );
 
   function cameraHandler({didCancel, errorCode, errorMessage, assets}) {
@@ -65,16 +54,16 @@ const Setting = ({
       <ProfileModal
         visible={pnVisible}
         setVisible={setPnVisible}
-        value={profile.name}
+        value={name}
         holderText={'nickname'}
-        changeHandler={text => dispatch({type: 'name', payload: text})}
+        submitHandler={text => submit('name', text)}
       />
       <ProfileModal
         visible={pdVisible}
         setVisible={setPdVisible}
-        value={profile.description}
+        value={description}
         holderText={'bio'}
-        changeHandler={text => dispatch({type: 'description', payload: text})}
+        submitHandler={text => submit('description', text)}
       />
       <ScrollView>
         <Pressable
@@ -86,12 +75,12 @@ const Setting = ({
         <Section separator={NormalSeparator}>
           <Pressable onPress={() => setPnVisible(true)}>
             <ControllerItem title={'Nickname'}>
-              <Text style={[text]}>{profile.name}</Text>
+              <Text style={[text]}>{name}</Text>
             </ControllerItem>
           </Pressable>
           <Pressable onPress={() => setPdVisible(true)}>
             <ControllerItem title={'Introduction'}>
-              <Text style={[text]}>{profile.description}</Text>
+              <Text style={[text]}>{description}</Text>
             </ControllerItem>
           </Pressable>
         </Section>

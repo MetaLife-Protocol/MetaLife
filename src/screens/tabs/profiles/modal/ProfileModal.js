@@ -11,7 +11,7 @@ export const ProfileModal = ({
   setVisible,
   value,
   holderText,
-  changeHandler,
+  submitHandler,
 }) => {
   const {row} = SchemaStyles(),
     {textHolder} = colorsSchema;
@@ -48,7 +48,7 @@ export const ProfileModal = ({
               disabled={!valueLocal}
               title={'confirm'}
               press={() => {
-                changeHandler(valueLocal);
+                submitHandler(valueLocal);
                 setVisible(false);
               }}
             />
@@ -71,14 +71,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 35,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   openButton: {
     backgroundColor: '#F194FF',

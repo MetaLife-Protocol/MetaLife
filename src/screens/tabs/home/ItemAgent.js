@@ -22,9 +22,9 @@ const ItemAgent = ({info: {item}}) => {
     case 'about':
       return (
         <Text style={{color: colorsSchema.primary}}>
-          {`${content.about.substring(0, 6)} @> ${
-            content.name || content.description || content.image
-          }`}
+          {`${content.about.substring(0, 6)} @> ${content.name}:${
+            content.description
+          }:${content.image}`}
         </Text>
       );
     case 'post':
