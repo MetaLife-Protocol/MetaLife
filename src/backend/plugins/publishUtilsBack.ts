@@ -37,7 +37,9 @@ export = {
           for (const mention of (content as PostContent).mentions!) {
             if (Ref.isBlob(mention.link)) {
               ssb.blobs.push(mention.link, (err: any) => {
-                if (err) console.error(err);
+                if (err) {
+                  console.error(err);
+                }
               });
             }
           }
@@ -50,7 +52,7 @@ export = {
                 .map((e: FeedId | Record<string, any>) =>
                   Ref.isFeed(e) ? e : Ref.isFeed(e.link) ? e.link : void 0,
                 )
-                .filter((x) => !!x),
+                .filter(x => !!x),
             );
           } catch (e) {
             return cb(e);
@@ -58,28 +60,42 @@ export = {
         }
 
         ssb.publish(content, (err: any, msg: any) => {
-          if (err) console.error(err);
-          if (cb) cb(err, msg);
+          if (err) {
+            console.error(err);
+          }
+          if (cb) {
+            cb(err, msg);
+          }
         });
       },
 
       publishAbout(content: AboutContent, cb: Callback<Msg>) {
-        if (content.image && !Ref.isBlobId(content.image[0])) {
+        if (content.image && !Ref.isBlobId(content.image)) {
           ssb.blobsUtils.addFromPath(
             content.image,
             (err: any, hash: string) => {
-              if (err) return console.error(err);
+              if (err) {
+                return console.error(err);
+              }
               content.image = hash;
               ssb.publish(content, (err2: any, msg: any) => {
-                if (err2) console.error(err2);
-                if (cb) cb(err2, msg);
+                if (err2) {
+                  console.error(err2);
+                }
+                if (cb) {
+                  cb(err2, msg);
+                }
               });
             },
           );
         } else {
           ssb.publish(content, (err: any, msg: any) => {
-            if (err) console.error(err);
-            if (cb) cb(err, msg);
+            if (err) {
+              console.error(err);
+            }
+            if (cb) {
+              cb(err, msg);
+            }
           });
         }
       },
