@@ -1,10 +1,8 @@
-/* sync */
-// global
 import nodejs from 'nodejs-mobile-react-native';
 import {makeClient} from './ssb/Client';
 
 export let ssb = window.ssb;
-window.ssbOP = this;
+
 export const status = cb =>
   ssb.status((e, v) => (e ? console.error(e) : cb(v)));
 // conn
@@ -54,9 +52,9 @@ export const blobsGetter = cb =>
 /* profile / about */
 export const getProfile = (fid, cb) =>
   ssb.aboutSelf.get(fid, (e, v) => (e ? console.error(e) : cb(v)));
-export const setAbout = (fid, {name, description, imageUrl}, cb) =>
+export const setAbout = (fid, {name, description, image}, cb) =>
   ssb.publishUtilsBack.publishAbout(
-    {type: 'about', about: fid, name, description, image: ''},
+    {type: 'about', about: fid, name, description, image},
     (e, v) => (e ? console.error(e) : cb(v)),
   );
 

@@ -13,6 +13,8 @@ import HeadIcon from '../../../shared/comps/HeadIcon';
 import {useClipboard} from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation} from '@react-navigation/native';
+import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
+import {PeerIcons} from '../../../shared/Icons';
 
 const iconDic = {
   BG: require('../../../assets/image/profiles/Profiles_backgroud.png'),
@@ -37,7 +39,12 @@ const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
 
   return (
     <ImageBackground style={[container, alignItemsCenter]} source={iconDic.BG}>
-      <HeadIcon style={[photo]} width={90} height={90} image={iconDic.photo} />
+      <HeadIcon
+        style={[photo]}
+        width={90}
+        height={90}
+        image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+      />
       <Pressable
         onPress={() => {
           setString(feedId);

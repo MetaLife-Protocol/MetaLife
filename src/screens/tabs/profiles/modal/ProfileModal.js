@@ -31,7 +31,6 @@ export const ProfileModal = ({
           <TextInput
             style={styles.modalText}
             autoFocus={true}
-            // style={[invite, input, text]}
             value={valueLocal}
             placeholder={holderText}
             placeholderTextColor={textHolder}
@@ -45,7 +44,7 @@ export const ProfileModal = ({
             />
             <RoundBtn
               style={[{width: 80, height: 30}]}
-              disabled={!valueLocal}
+              disabled={value === valueLocal}
               title={'confirm'}
               press={() => {
                 submitHandler(valueLocal);

@@ -1,7 +1,7 @@
 /**
  * Created on 08 Nov 2021 by lonmee
  */
-import React, {useCallback, useEffect, useReducer, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Image,
   Pressable,
@@ -16,10 +16,14 @@ import ControllerItem from '../../../shared/comps/ControllerItem';
 import I18n from '../../../i18n/I18n';
 import Section from '../../../shared/comps/Section';
 import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
-import {launchCamera} from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import {setAbout} from '../../../remote/ssbOP';
 import Toast from 'react-native-tiny-toast';
 import {ProfileModal} from './modal/ProfileModal';
+import {checkAndLaunchCamera} from '../../../utils';
+import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
+import {PeerIcons} from '../../../shared/Icons';
+import HeadIcon from '../../../shared/comps/HeadIcon';
 
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
 
@@ -45,8 +49,17 @@ const Setting = ({
     [],
   );
 
+  const checkCamera2Launch = useCallback(
+    () => checkAndLaunchCamera(cameraHandler),
+    [],
+  );
+
   function cameraHandler({didCancel, errorCode, errorMessage, assets}) {
-    console.log(didCancel, errorCode, errorMessage, assets);
+    if (errorCode || didCancel) {
+      return errorCode && Toast.show(errorMessage);
+    }
+    const [file] = assets;
+    submit('image', file.uri.replace('file://', ''));
   }
 
   return (
@@ -67,9 +80,26 @@ const Setting = ({
       />
       <ScrollView>
         <Pressable
-          onPress={() => launchCamera({cameraType: 'front'}, cameraHandler)}>
+          onPress={checkCamera2Launch}
+          onLongPress={() =>
+            launchImageLibrary(
+              {
+                cameraType: 'front',
+                maxHeight: 1920,
+                maxWidth: 1080,
+                quality: 0.88,
+                mediaType: 'photo',
+                selectionLimit: 1,
+              },
+              cameraHandler,
+            )
+          }>
           <Section style={[marginTop10, alignItemsCenter, {marginBottom: -10}]}>
-            <Image source={HolderIcon} />
+            <HeadIcon
+              width={90}
+              height={90}
+              image={image ? {uri: blobIdToUrl(image)} : HolderIcon}
+            />
           </Section>
         </Pressable>
         <Section separator={NormalSeparator}>
