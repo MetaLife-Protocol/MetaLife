@@ -7,7 +7,7 @@ import React from 'react';
 
 const HeadIcon = ({style = [], height = 60, width = 60, image}) => (
   <Image
-    style={[...style, {borderRadius: height << 1}]}
+    style={[{borderRadius: height << 1}, ...style]}
     height={height}
     width={width}
     source={image}
