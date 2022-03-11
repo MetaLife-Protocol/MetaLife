@@ -70,7 +70,7 @@ export = {
       },
 
       publishAbout(content: AboutContent, cb: Callback<Msg>) {
-        if (content.image && !Ref.isBlobId(content.image)) {
+        if (content.image && !Ref.isBlobId(content.image[0])) {
           ssb.blobsUtils.addFromPath(
             content.image,
             (err: any, hash: string) => {
