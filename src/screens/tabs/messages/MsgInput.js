@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {
   Image,
   Keyboard,
@@ -26,26 +26,24 @@ const KeyboardAvoidingComponent = ({sendHandler}) => {
     <KeyboardAvoidingView
       keyboardVerticalOffset={isIPhoneX_deprecated ? 94 : 64}
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
-      <Pressable onPress={Keyboard.dismiss}>
-        <View style={[FG, row, alignItemsCenter, inner]}>
-          <View style={[input, flex1, round]}>
-            <TextInput
-              placeholder="Write a comment …"
-              style={[flex1, textInput, text]}
-              value={content}
-              onChangeText={setContent}
-              placeholderTextColor={placeholderTextColor.color}
-            />
-          </View>
-          <Pressable
-            onPress={() => {
-              sendHandler(content);
-              setContent('');
-            }}>
-            <Image style={[sender]} source={iconDic.iconSend} />
-          </Pressable>
+      <View style={[FG, row, alignItemsCenter, inner]}>
+        <View style={[input, flex1, round]}>
+          <TextInput
+            placeholder="Write a comment …"
+            style={[flex1, textInput, text]}
+            value={content}
+            onChangeText={setContent}
+            placeholderTextColor={placeholderTextColor.color}
+          />
         </View>
-      </Pressable>
+        <Pressable
+          onPress={() => {
+            sendHandler(content);
+            setContent('');
+          }}>
+          <Image style={[sender]} source={iconDic.iconSend} />
+        </Pressable>
+      </View>
     </KeyboardAvoidingView>
   );
 };

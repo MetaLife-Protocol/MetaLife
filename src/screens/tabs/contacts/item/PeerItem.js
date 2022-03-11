@@ -7,6 +7,7 @@ import {
   connectPeer,
   disconnectPeer,
   follow,
+  getProfile,
   persistentConnectPeer,
 } from '../../../../remote/ssbOP';
 import {PeerIcons} from '../../../../shared/Icons';
@@ -17,6 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 const PeerItem = ({
   pObj: [address, {type, key, state = ''}],
   peerInfoDic,
+  addPeerInfo,
   relations: [friends, following],
 }) => {
   const isFollowing = friends.includes(key) || following.includes(key);
@@ -34,7 +36,9 @@ const PeerItem = ({
   }
 
   function followHandler(v) {
-    Toast.show('Following: ' + v.value.content.contact.substring(0, 10));
+    const fid = v.value.content.contact;
+    getProfile(fid, v => addPeerInfo([fid, v])),
+      Toast.show('Following: ' + fid.substring(0, 10));
   }
 
   return (
