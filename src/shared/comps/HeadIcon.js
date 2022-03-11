@@ -1,6 +1,4 @@
-import {Image, StyleSheet} from 'react-native';
-import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
-import {PeerIcons} from '../Icons';
+import {Image} from 'react-native';
 import React from 'react';
 
 /**
