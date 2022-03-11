@@ -2,14 +2,7 @@
  * Created on 08 Nov 2021 by lonmee
  */
 import React, {useCallback, useState} from 'react';
-import {
-  Image,
-  Pressable,
-  SafeAreaView,
-  ScrollView,
-  Switch,
-  Text,
-} from 'react-native';
+import {Pressable, SafeAreaView, ScrollView, Switch, Text} from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ControllerItem from '../../../shared/comps/ControllerItem';
@@ -22,7 +15,6 @@ import Toast from 'react-native-tiny-toast';
 import {ProfileModal} from './modal/ProfileModal';
 import {checkAndLaunchCamera} from '../../../utils';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
-import {PeerIcons} from '../../../shared/Icons';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
