@@ -20,9 +20,9 @@ import {PeerIcons} from '../../../shared/Icons';
 import {block, follow} from '../../../remote/ssbOP';
 import {markMsgCBByKey} from '../../../remote/ssb/MsgCB';
 import HeadIcon from '../../../shared/comps/HeadIcon';
-import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
 const PeerDetailsScreen = ({
   selfFeedId,
@@ -49,6 +49,7 @@ const PeerDetailsScreen = ({
 
   const [disabledBlock, setDisabledBlock] = useState(false);
   const [disabledFollow, setDisabledFollow] = useState(false);
+  const {setString} = nativeClipboard;
 
   useLayoutEffect(() => {
     setOptions({title: name || feedId});
@@ -67,7 +68,7 @@ const PeerDetailsScreen = ({
           />
           <Pressable
             onPress={event => {
-              Clipboard.setString(feedId);
+              setString(feedId);
               Toast.show('ID copied');
             }}>
             <View style={[textContainer]}>

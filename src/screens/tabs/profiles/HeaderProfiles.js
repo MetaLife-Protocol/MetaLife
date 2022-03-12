@@ -10,11 +10,11 @@ import {
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import HeadIcon from '../../../shared/comps/HeadIcon';
-import {useClipboard} from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation} from '@react-navigation/native';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../shared/Icons';
+import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
 const iconDic = {
   BG: require('../../../assets/image/profiles/Profiles_backgroud.png'),
@@ -28,7 +28,7 @@ const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
     {container, photo, setting, nameFont, desc, at} = styles;
 
   const {navigate, push} = useNavigation(),
-    {setString} = useClipboard();
+    {setString} = nativeClipboard;
 
   const {name, description, image} = peerInfoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
