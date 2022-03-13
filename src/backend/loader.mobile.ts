@@ -17,6 +17,8 @@ const nodejsProjectDir = path.resolve(appDataDir, 'nodejs-project');
 os.homedir = () => nodejsProjectDir;
 process.cwd = () => nodejsProjectDir;
 
+rnBridge.channel.post('log4RN', appDataDir);
+
 // Set global variables
 process.env.MANYVERSE_PLATFORM = 'mobile';
 // process.env.CHLORIDE_JS = 'yes'; // uncomment to enable WASM libsodium
@@ -25,7 +27,7 @@ if (fs.existsSync(path.join(process.env.SSB_DIR, 'DETAILED_LOGS'))) {
 }
 
 // Report JS backend crashes to Java, and in turn, to ACRA
-process.on('unhandledRejection', (reason) => {
+process.on('unhandledRejection', reason => {
   console.error(reason);
   rnBridge.channel.post('exception', reason);
   setTimeout(() => {
