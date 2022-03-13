@@ -46,8 +46,8 @@ export const getStagedPeers = cb =>
   ssb.conn.stagedPeers()(null, (e, v) => (e ? console.error(e) : cb(v)));
 export const getConnectedPeers = cb =>
   ssb.conn.peers()(null, (e, v) => (e ? console.error(e) : cb(v)));
-export const blobsGetter = cb =>
-  ssb.blobs.get()(null, (e, v) => (e ? console.error(e) : cb(v)));
+export const blobsGetter = (blobId, cb) =>
+  ssb.blobs.get(blobId)(null, (e, v) => (e ? console.error(e) : cb(v)));
 
 /* profile / about */
 export const getProfile = (fid, cb) =>
