@@ -16,7 +16,7 @@
     "full-clean": "npm run clean-android && npm run clean-bundler && rm -rf node_modules && rm -rf lib",
     "android script": "~~~~~~~~~~~~~~ android ~~~~~~~~~~~~~~~~~",
     "build-backend-android": "./tools/build-backend.mjs --android",
-    "android-debug": "react-native run-android --verbose",
+    "android": "react-native run-android --verbose",
     "install-android-ide-release": "adb install -r android/app/release/app-release.apk",
     "build-android-release": "cd android && ./gradlew assembleRelease && cd ..",
     "install-android-release": "adb install -r android/app/build/outputs/apk/release/app-release.apk",
