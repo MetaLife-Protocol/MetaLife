@@ -8,7 +8,6 @@ import {connect} from 'react-redux/lib/exports';
 import {localDate} from '../../../../utils';
 import PostMsgPanel from './PostMsgPannel';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
-import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
 
@@ -44,7 +43,7 @@ const PostItem = ({
     <View style={[row, container]}>
       <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
         <HeadIcon
-          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+          image={PeerIcons.peerIcon}
         />
       </Pressable>
       <View style={[textContainer]}>
@@ -67,7 +66,7 @@ const PostItem = ({
               height={200}
               width={200}
               key={name}
-              source={{uri: blobIdToUrl(link)}}
+              source={{uri: link}}
             />
           ))}
         <PostMsgPanel style={[row, flex1, justifySpaceBetween, panel]} />

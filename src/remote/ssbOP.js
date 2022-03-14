@@ -1,4 +1,4 @@
-import nodejs from 'nodejs-mobile-react-native';
+// import nodejs from 'nodejs-mobile-react-native';
 import {makeClient} from './ssb/Client';
 
 export let ssb = window.ssb;
@@ -96,20 +96,20 @@ export const getHops = (hop = 1, cb = null) =>
     e ? console.log(e) : cb(v),
   );
 
-export const reqStartSSB = setInstance => {
-  const {channel} = nodejs;
-  channel.addListener(
-    'identity',
-    msg =>
-      msg === 'IDENTITY_READY' &&
-      makeClient()
-        .then(value => setInstance((ssb = value)))
-        .catch(error => console.error('ssb start error: ' + error)),
-  );
-  channel.post('identity', 'CREATE');
-  // rn.send('RESTORE: word0 word1...');
-  // channel.post('identity', 'RESTORE: word0 word1...');
-};
+// export const reqStartSSB = setInstance => {
+//   const {channel} = nodejs;
+//   channel.addListener(
+//     'identity',
+//     msg =>
+//       msg === 'IDENTITY_READY' &&
+//       makeClient()
+//         .then(value => setInstance((ssb = value)))
+//         .catch(error => console.error('ssb start error: ' + error)),
+//   );
+//   channel.post('identity', 'CREATE');
+//   // rn.send('RESTORE: word0 word1...');
+//   // channel.post('identity', 'RESTORE: word0 word1...');
+// };
 
 export const addPublicUpdatesListener = cb => {
   ssb.threads.publicUpdates({

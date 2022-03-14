@@ -2,7 +2,6 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {findRootKey} from '../../../../filters/MsgFilters';
@@ -32,7 +31,7 @@ const FriendItem = ({fId, peerInfoDic, privateMsg}) => {
       }>
       <View style={[item, row, flex1]}>
         <HeadIcon
-          image={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
+          image={iconDic.peerIcon}
         />
         <View style={[textContainer]}>
           <Text numberOfLines={1} style={[title, text]}>

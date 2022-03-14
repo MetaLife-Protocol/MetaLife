@@ -14,7 +14,6 @@ import {setAbout} from '../../../remote/ssbOP';
 import Toast from 'react-native-tiny-toast';
 import {ProfileModal} from './modal/ProfileModal';
 import {checkAndLaunchCamera} from '../../../utils';
-import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
@@ -90,7 +89,7 @@ const Setting = ({
             <HeadIcon
               width={90}
               height={90}
-              image={image ? {uri: blobIdToUrl(image)} : HolderIcon}
+              image={HolderIcon}
             />
           </Section>
         </Pressable>

@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {
   friendsGraphParse,
   mutualFriend,
@@ -64,7 +63,7 @@ const PeerDetailsScreen = ({
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={[item, row, flex1]}>
           <HeadIcon
-            image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+            image={PeerIcons.peerIcon}
           />
           <Pressable
             onPress={event => {

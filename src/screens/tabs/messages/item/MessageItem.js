@@ -2,7 +2,6 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {localDate} from '../../../../utils';
@@ -27,7 +26,7 @@ const MessageItem = ({rootKey, feedId, peerInfoDic, msgArr}) => {
       onPress={() => navigate('MessageDetailsScreen', {rootKey, recp})}>
       <View style={[item, row, flex1]}>
         <HeadIcon
-          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+          image={PeerIcons.peerIcon}
         />
         <View style={[textContainer]}>
           <Text numberOfLines={1} style={[title, text]}>

@@ -12,7 +12,6 @@ import {connect} from 'react-redux/lib/exports';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation} from '@react-navigation/native';
-import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../shared/Icons';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
@@ -43,7 +42,7 @@ const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
         style={[photo]}
         width={90}
         height={90}
-        image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+        image={PeerIcons.peerIcon}
       />
       <Pressable
         onPress={() => {

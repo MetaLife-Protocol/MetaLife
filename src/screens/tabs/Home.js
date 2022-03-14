@@ -1,21 +1,7 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {FlatList, SafeAreaView} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import * as ssbOP from '../../remote/ssbOP';
-import {
-  addPrivateUpdatesListener,
-  addPublicUpdatesListener,
-  connStart,
-  getProfile,
-  graph,
-  loadMsg,
-  replicationSchedulerStart,
-  reqStartSSB,
-  stage,
-  suggestStart,
-} from '../../remote/ssbOP';
-import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
 import ItemAgent from './home/ItemAgent';
 
 const Home = ({
@@ -28,42 +14,42 @@ const Home = ({
 }) => {
   const {flex1} = SchemaStyles();
 
-  useEffect(() => {
-    window.ssb ||
-      reqStartSSB(ssb => {
-        ssbOP.ssb = window.ssb = ssb;
-        setFeedId(ssb.id);
-        connStart(v => {
-          console.log(v ? 'conn start' : 'conn started yet');
-          stage(v => console.log(v ? 'peer stage' : 'peer staged yet'));
+  // useEffect(() => {
+  //   window.ssb ||
+  //     reqStartSSB(ssb => {
+  //       ssbOP.ssb = window.ssb = ssb;
+  //       setFeedId(ssb.id);
+  //       connStart(v => {
+  //         console.log(v ? 'conn start' : 'conn started yet');
+  //         stage(v => console.log(v ? 'peer stage' : 'peer staged yet'));
+  //
+  //         replicationSchedulerStart(v =>
+  //           console.log('replicationSchedulerStart: ', v),
+  //         );
+  //         suggestStart(v => console.log('suggestStart: ', v));
+  //         addPublicUpdatesListener(key =>
+  //           loadMsg(key, false, msg => {
+  //             checkMarkedMsgCB(msg);
+  //             addPublicMsg(msg);
+  //           }),
+  //         );
+  //       });
+  //       addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
+  //       // contact update
+  //       markMsgCBByType('contact', refreshGraph);
+  //       // about update
+  //       markMsgCBByType('about', (_, {about}) =>
+  //         getProfile(about, v => addPeerInfo([about, v])),
+  //       );
+  //     });
+  // }, []);
 
-          replicationSchedulerStart(v =>
-            console.log('replicationSchedulerStart: ', v),
-          );
-          suggestStart(v => console.log('suggestStart: ', v));
-          addPublicUpdatesListener(key =>
-            loadMsg(key, false, msg => {
-              checkMarkedMsgCB(msg);
-              addPublicMsg(msg);
-            }),
-          );
-        });
-        addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
-        // contact update
-        markMsgCBByType('contact', refreshGraph);
-        // about update
-        markMsgCBByType('about', (_, {about}) =>
-          getProfile(about, v => addPeerInfo([about, v])),
-        );
-      });
-  }, []);
-
-  function refreshGraph() {
-    graph(setFriendsGraph);
-    window.ssb.friends.graphStream({old: false, live: true})(null, (e, v) =>
-      e ? console.warn(e) : console.log('graphStream live: ', v),
-    );
-  }
+  // function refreshGraph() {
+  //   graph(setFriendsGraph);
+  //   window.ssb.friends.graphStream({old: false, live: true})(null, (e, v) =>
+  //     e ? console.warn(e) : console.log('graphStream live: ', v),
+  //   );
+  // }
 
   return (
     <SafeAreaView style={[flex1]}>

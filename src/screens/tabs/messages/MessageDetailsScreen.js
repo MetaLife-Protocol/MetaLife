@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import SchemaStyles, {colorsBasics} from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import MsgInput from './MsgInput';
 import {sendMsg} from '../../../remote/ssbOP';
 import {localDate} from '../../../utils';
@@ -37,7 +36,7 @@ const MessageDetailsScreen = ({
     <HeadIcon
       height={30}
       width={30}
-      image={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
+      image={iconDic.peerIcon}
     />
   );
 

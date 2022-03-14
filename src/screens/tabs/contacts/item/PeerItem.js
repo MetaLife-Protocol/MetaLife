@@ -2,7 +2,6 @@ import React from 'react';
 import {Button, Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {
   connectPeer,
   disconnectPeer,
@@ -46,9 +45,7 @@ const PeerItem = ({
       <View style={[item, row, flex1]}>
         <HeadIcon
           image={
-            image
-              ? {uri: blobIdToUrl(image)}
-              : type == 'lan'
+            type === 'lan'
               ? PeerIcons.peerIcon
               : type == 'pub'
               ? PeerIcons.daoIcon
