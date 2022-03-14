@@ -24,7 +24,6 @@ const ControllerItem = ({children, title}) => {
 
 const styles = StyleSheet.create({
   titleFont: {
-    width: '80%',
     fontSize: 16,
     fontFamily: 'Helvetica',
   },
