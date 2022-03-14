@@ -1,7 +1,6 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Image,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -58,6 +57,7 @@ const styles = StyleSheet.create({
     borderRadius: 34 >> 1,
   },
   textInput: {
+    textAlignVertical: 'center',
     marginHorizontal: 15,
     height: 40,
   },
