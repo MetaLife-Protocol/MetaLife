@@ -90,10 +90,22 @@ const Setting = ({
             <HeadIcon
               width={90}
               height={90}
-              image={image ? {uri: blobIdToUrl(image)} : HolderIcon}
+              image={image ? {uri: image} : HolderIcon}
             />
           </Section>
         </Pressable>
+        <Section title={'Blob Id'} separator={NormalSeparator}>
+          <Text selectable={true} style={[text]}>
+            {image}
+          </Text>
+        </Section>
+        {image && (
+          <Section title={'Blob url'} separator={NormalSeparator}>
+            <Text selectable={true} style={[text]}>
+              {blobIdToUrl(image)}
+            </Text>
+          </Section>
+        )}
         <Section separator={NormalSeparator}>
           <Pressable onPress={() => setPnVisible(true)}>
             <ControllerItem title={'Nickname'}>
