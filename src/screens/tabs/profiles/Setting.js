@@ -94,18 +94,6 @@ const Setting = ({
             />
           </Section>
         </Pressable>
-        <Section title={'Blob Id'} separator={NormalSeparator}>
-          <Text selectable={true} style={[text]}>
-            {image}
-          </Text>
-        </Section>
-        {image && (
-          <Section title={'Blob url'} separator={NormalSeparator}>
-            <Text selectable={true} style={[text]}>
-              {blobIdToUrl(image)}
-            </Text>
-          </Section>
-        )}
         <Section separator={NormalSeparator}>
           <Pressable onPress={() => setPnVisible(true)}>
             <ControllerItem title={'Nickname'}>
