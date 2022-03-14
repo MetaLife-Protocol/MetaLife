@@ -169,7 +169,7 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file('my-release-key.keystore')
+            storeFile file('release.keystore')
             storePassword '123456'
             keyAlias 'my-key-alias'
             keyPassword '123456'
