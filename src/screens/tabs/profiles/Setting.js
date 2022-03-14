@@ -90,7 +90,7 @@ const Setting = ({
             <HeadIcon
               width={90}
               height={90}
-              image={image ? {uri: image} : HolderIcon}
+              image={image ? {uri: blobIdToUrl(image)} : HolderIcon}
             />
           </Section>
         </Pressable>
