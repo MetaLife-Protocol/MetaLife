@@ -17,6 +17,8 @@ let deviceProperties = [];
 
 let commandResponseBuffer = [];
 
+let needAddIsEnableCmd = false;
+
 const bluetoothBridge=function(options){
     
     BLEWormhole.DiscoverDeviceHandler=(device)=>{
@@ -41,6 +43,17 @@ const bluetoothBridge=function(options){
         commandResponseBuffer.push({'command':'dicovered','arguments':{'devices':deviceProperties}})
     }
 
+    BLEWormhole.BluetoothStateHandler=(res)=>{
+        var bluetoothEnable=false;
+        if(res.state=='on'){
+            bluetoothEnable=true;
+        }
+
+        if(needAddIsEnableCmd){
+            commandResponseBuffer.push({'command':'isEnabled','arguments':{'enabled':bluetoothEnable}});
+        }
+    }
+
     let client = TcpSocket.createConnection(options, (err,stream) => {
         // Write on the socket
 
@@ -48,6 +61,8 @@ const bluetoothBridge=function(options){
 
     client.on('data', function(data) {
         var command = data.command;
+
+        var dicoveredSeconds = 3;
         if (command == 'connect'){
             var remoteAddress = data.arguments.remoteAddress;
 
@@ -56,11 +71,33 @@ const bluetoothBridge=function(options){
         }
         else if(command == 'discoverDevices'){
             deviceProperties=[];
-            BLEWormhole.Scan([bleServiceUUID],3);
+            BLEWormhole.Scan([bleServiceUUID],dicoveredSeconds);
         }
         else if(command == 'makeDiscoverable'){
-            deviceProperties=[];
-            BLEWormhole.Scan([bleServiceUUID],3);
+        
+            BLEWormhole.StartCentral()
+            .then(res=>{
+                commandResponseBuffer.push({'command':'discoverable','arguments':{'error':false,'discoverableUntil':dicoveredSeconds}})
+            })
+            .catch(err=>{
+                commandResponseBuffer.push({'command':'discoverable','arguments':{'error':true,'errorCode':'appNotVisible','description':err}})
+            });
+            
+        }
+        else if(command == 'isEnabled'){
+
+            BLEWormhole.CheckState();
+            needAddIsEnableCmd = true;
+            
+        }
+        else if(command == 'startMetadataService'){
+            BLEWormhole.StartPeripheral()
+            .then(res=>{
+                commandResponseBuffer.push({'command':'metadataService','arguments':{'error':false,'availableUntil':-1}})
+            })
+            .catch(err=>{
+                commandResponseBuffer.push({'command':'metadataService','arguments':{'error':true,'errorCode':'errorStarting','description':err}})
+            });
         }
         else{
 
