@@ -5,10 +5,27 @@
 const msgInitState = {
   privateMsg: {},
   publicMsg: [],
+  voteDic: {},
 };
 
 export const msgReducer = (state = msgInitState, {type, payload}) => {
   switch (type) {
+    case 'setVote':
+      const {
+        author,
+        content: {
+          vote: {value, link, expression},
+        },
+      } = payload;
+      return {
+        ...state,
+        voteDic: {
+          ...state.voteDic,
+          [link]: value
+            ? [...state.voteDic[link], author]
+            : state.voteDic[link].filter(item => item !== author),
+        },
+      };
     case 'setPrivateMsg':
       const {messages} = payload;
       return {

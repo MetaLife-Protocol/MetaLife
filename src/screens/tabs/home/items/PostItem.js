@@ -14,9 +14,12 @@ import {useNavigation} from '@react-navigation/native';
 
 const PostItem = ({
   item: {
+    key,
     value: {author, timestamp, content},
   },
+  feedId,
   peerInfoDic,
+  voteDic,
 }) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
@@ -27,19 +30,8 @@ const PostItem = ({
       description = '',
       image = '',
     } = peerInfoDic[author] || {},
-    {text: cText, mentions = null} = content;
-  // if (mentions && mentions.length) {
-  //   const cache = [];
-  //   for (const {link, name} of mentions) {
-  //     cache.push(blobIdToUrl(link));
-  //     // Image.getSize(
-  //     //   blobIdToUrl(link),
-  //     //   (w, h) => console.log(w, h),
-  //     //   console.warn,
-  //     // );
-  //   }
-  //   // Image.queryCache(cache).then(console.log).catch(console.warn);
-  // }
+    {text: cText, mentions = null} = content,
+    voteArr = voteDic[key] || [];
   return (
     <View style={[row, container]}>
       <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
@@ -57,20 +49,27 @@ const PostItem = ({
         <Text style={[text, contentContainer]}>{cText}</Text>
         {mentions &&
           mentions.map(({link, name}, i) => (
-            <Image
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: 10,
-                alignSelf: i % 2 ? 'flex-end' : 'flex-start',
-              }}
-              height={200}
-              width={200}
-              key={name}
-              source={{uri: blobIdToUrl(link)}}
-            />
+            <View key={i}>
+              <Image
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: 10,
+                  alignSelf: i % 2 ? 'flex-end' : 'flex-start',
+                }}
+                height={200}
+                width={200}
+                // key={i}
+                source={{uri: blobIdToUrl(link)}}
+              />
+              <Text>name</Text>
+            </View>
           ))}
-        <PostMsgPanel style={[row, flex1, justifySpaceBetween, panel]} />
+        <PostMsgPanel
+          style={[row, flex1, justifySpaceBetween, panel]}
+          voted={voteArr.includes(feedId)}
+          voteArr={voteArr}
+        />
       </View>
     </View>
   );
@@ -97,7 +96,9 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     cfg: s.cfg,
+    feedId: s.user.feedId,
     peerInfoDic: s.contacts.peerInfoDic,
+    voteDic: s.msg.voteDic,
   };
 };
 

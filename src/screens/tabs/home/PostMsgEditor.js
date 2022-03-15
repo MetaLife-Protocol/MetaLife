@@ -2,11 +2,11 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React, {useEffect} from 'react';
-import {SafeAreaView, ScrollView, StatusBar, View} from 'react-native';
+import React from 'react';
+import {SafeAreaView, ScrollView, View} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../shared/SchemaStyles';
-import MsgInput from '../messages/MsgInput';
+import MsgInput from '../../../shared/comps/MsgInput';
 import {sendMsg} from '../../../remote/ssbOP';
 import {useNavigation} from '@react-navigation/native';
 

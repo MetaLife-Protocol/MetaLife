@@ -20,11 +20,19 @@ const ItemAgent = ({info: {item}}) => {
         </Text>
       );
     case 'about':
+      const {about, name, description, image} = content;
       return (
         <Text style={{color: colorsSchema.primary}}>
-          {`${content.about.substring(0, 6)} @> ${content.name}:${
-            content.description
-          }:${content.image}`}
+          {`${about.substring(0, 6)} @> ${name}:${description}:${image}`}
+        </Text>
+      );
+    case 'vote':
+      const {link, value, expression} = content.vote;
+      return (
+        <Text style={{color: colorsSchema.primary}}>
+          {`${author.substring(0, 6)} ${
+            value ? '$>' : '$<'
+          } ${link}:${expression}`}
         </Text>
       );
     case 'post':

@@ -67,3 +67,16 @@ export const checkAndLaunchCamera = completeHandler => {
         .catch(Toast.show),
   })();
 };
+
+// if (mentions && mentions.length) {
+//   const cache = [];
+//   for (const {link, name} of mentions) {
+//     cache.push(blobIdToUrl(link));
+//     // Image.getSize(
+//     //   blobIdToUrl(link),
+//     //   (w, h) => console.log(w, h),
+//     //   console.warn,
+//     // );
+//   }
+//   // Image.queryCache(cache).then(console.log).catch(console.warn);
+// }

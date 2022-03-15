@@ -10,7 +10,7 @@ import {
 import SchemaStyles, {colorsBasics} from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
-import MsgInput from './MsgInput';
+import MsgInput from '../../../shared/comps/MsgInput';
 import {sendMsg} from '../../../remote/ssbOP';
 import {localDate} from '../../../utils';
 import HeadIcon from '../../../shared/comps/HeadIcon';

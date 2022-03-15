@@ -2,7 +2,8 @@
  * Created on 22 Feb 2022 by lonmee
  */
 import React from 'react';
-import {Image, View} from 'react-native';
+import {Image, Pressable, Text, View} from 'react-native';
+import SchemaStyles from '../../../../shared/SchemaStyles';
 
 const iconDic = {
   iconForward: require('../../../../assets/image/messages/dongtai_icon_forward.png'),
@@ -11,12 +12,24 @@ const iconDic = {
   iconLikePress: require('../../../../assets/image/messages/dongtai_icon_like_press.png'),
 };
 
-const PostMsgPanel = ({style}) => {
+const PostMsgPanel = ({style, voted, voteArr}) => {
+  const {row, text} = SchemaStyles();
   return (
     <View style={style}>
-      <Image source={iconDic.iconForward} />
-      <Image source={iconDic.iconComment} />
-      <Image source={iconDic.iconLikeNormal} />
+      <Pressable onPress={null}>
+        <Image source={iconDic.iconForward} />
+      </Pressable>
+      <Pressable onPress={null}>
+        <Image source={iconDic.iconComment} />
+      </Pressable>
+      <Pressable onPress={null}>
+        <View style={[row]}>
+          <Text style={[text, {paddingRight: 6}]}>{voteArr.length}</Text>
+          <Image
+            source={voted ? iconDic.iconLikePress : iconDic.iconLikeNormal}
+          />
+        </View>
+      </Pressable>
     </View>
   );
 };
