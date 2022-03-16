@@ -8,7 +8,6 @@ import PeerItem from './item/PeerItem';
 import {getConnectedPeers, getStagedPeers} from '../../../remote/ssbOP';
 
 const PeersScreen = ({
-  navigation,
   stagedPeers,
   setStagedPeers,
   connectedPeers,
