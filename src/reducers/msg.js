@@ -22,7 +22,9 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
         voteDic: {
           ...state.voteDic,
           [link]: value
-            ? [...state.voteDic[link], author]
+            ? state.voteDic[link]
+              ? [...state.voteDic[link], author]
+              : [author]
             : state.voteDic[link].filter(item => item !== author),
         },
       };

@@ -6,3 +6,6 @@ export const findRootKey = (feedId, msgs) => {
   }
   return '';
 };
+
+export const voteFilter = msg =>
+  msg.filter(msg => msg.value.content.type === 'vote');

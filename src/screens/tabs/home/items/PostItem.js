@@ -1,7 +1,7 @@
 /**
  * Created on 17 Feb 2022 by lonmee
  */
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
@@ -11,6 +11,7 @@ import HeadIcon from '../../../../shared/comps/HeadIcon';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
+import {sendMsg} from '../../../../remote/ssbOP';
 
 const PostItem = ({
   item: {
@@ -31,7 +32,23 @@ const PostItem = ({
       image = '',
     } = peerInfoDic[author] || {},
     {text: cText, mentions = null} = content,
-    voteArr = voteDic[key] || [];
+    voteArr = voteDic[key] || [],
+    voted = voteArr.includes(feedId);
+
+  const likeHandler = useCallback(
+    function () {
+      sendMsg({
+        type: 'vote',
+        vote: {
+          link: key,
+          value: !voted,
+          expression: voted ? 'Unlike' : 'like',
+        },
+      });
+    },
+    [voted],
+  );
+
   return (
     <View style={[row, container]}>
       <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
@@ -59,7 +76,6 @@ const PostItem = ({
                 }}
                 height={200}
                 width={200}
-                // key={i}
                 source={{uri: blobIdToUrl(link)}}
               />
               <Text>name</Text>
@@ -67,8 +83,9 @@ const PostItem = ({
           ))}
         <PostMsgPanel
           style={[row, flex1, justifySpaceBetween, panel]}
-          voted={voteArr.includes(feedId)}
+          voted={voted}
           voteArr={voteArr}
+          likeHandler={likeHandler}
         />
       </View>
     </View>
