@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
+    cfg: s.cfg,
     relations: s.user.relations,
   };
 };

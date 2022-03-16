@@ -19,7 +19,7 @@ const PostItem = ({
   },
   feedId,
   peerInfoDic,
-  voteDic,
+  voteDic = {},
 }) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
