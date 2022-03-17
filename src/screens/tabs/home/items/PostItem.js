@@ -49,6 +49,10 @@ const PostItem = ({
     [voted],
   );
 
+  const commentHandler = useCallback(function () {
+    navigate('PostMsgEditor', {name, content});
+  }, []);
+
   return (
     <View style={[row, container]}>
       <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
@@ -85,6 +89,7 @@ const PostItem = ({
           style={[row, flex1, justifySpaceBetween, panel]}
           voted={voted}
           voteArr={voteArr}
+          commentHandler={commentHandler}
           likeHandler={likeHandler}
         />
       </View>

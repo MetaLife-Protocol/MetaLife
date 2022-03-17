@@ -2,17 +2,28 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React from 'react';
-import {SafeAreaView, ScrollView, View} from 'react-native';
+import React, {useLayoutEffect} from 'react';
+import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import MsgInput from '../../../shared/comps/MsgInput';
 import {sendMsg} from '../../../remote/ssbOP';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 const PostMsgEditor = () => {
-  const {FG, flex1} = SchemaStyles();
-  const {goBack} = useNavigation();
+  const {FG, flex1, text} = SchemaStyles();
+
+  const {goBack, setOptions} = useNavigation(),
+    {
+      params: {
+        name,
+        content: {text: cText},
+      },
+    } = useRoute();
+
+  useLayoutEffect(() => {
+    setOptions({title: `comment to ${name}`});
+  });
 
   function sendHandler(content) {
     sendMsg(
@@ -29,7 +40,9 @@ const PostMsgEditor = () => {
   return (
     <SafeAreaView style={[flex1, FG]}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <View style={FG} />
+        <View style={FG}>
+          <Text style={[text]}>{cText}</Text>
+        </View>
       </ScrollView>
       <MsgInput sendHandler={sendHandler} />
     </SafeAreaView>

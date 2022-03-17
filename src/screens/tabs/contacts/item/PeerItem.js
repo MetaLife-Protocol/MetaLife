@@ -28,7 +28,7 @@ const PeerItem = ({
   const {name = '', description = '', image = ''} = peerInfoDic[key] || {};
 
   function connectHandler(v) {
-    Toast.show('connected: ' + v.id.substring(0, 10));
+    Toast.show('connected: ' + v.id ? v.id.substring(0, 10) : 'no id');
   }
 
   function disconnectHandler(v) {
