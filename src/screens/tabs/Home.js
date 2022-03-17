@@ -34,14 +34,17 @@ const Home = ({
       reqStartSSB(ssb => {
         ssbOP.ssb = window.ssb = ssb;
         setFeedId(ssb.id);
+        // setup conn
         connStart(v => {
           console.log(v ? 'conn start' : 'conn started yet');
+          // put line
           stage(v => console.log(v ? 'peer stage' : 'peer staged yet'));
 
           replicationSchedulerStart(v =>
             console.log('replicationSchedulerStart: ', v),
           );
           suggestStart(v => console.log('suggestStart: ', v));
+          // public msg handler
           addPublicUpdatesListener(key =>
             loadMsg(key, false, msg => {
               checkMarkedMsgCB(msg);
@@ -49,6 +52,7 @@ const Home = ({
             }),
           );
         });
+        // private msg handler
         addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
         // contact update
         markMsgCBByType('contact', refreshGraph);
