@@ -11,12 +11,12 @@ const Section = ({children, title, separator, style}) => {
   children && !Array.isArray(children) && (children = [children]);
   return (
     <View style={[FG, style]}>
-      {title && (
+      {!!title && (
         <View style={[titleContainer]}>
           <Text style={[text, ti]}>{title}</Text>
         </View>
       )}
-      {children &&
+      {!!children &&
         children.map((child, index, arr) => (
           <View
             key={index}

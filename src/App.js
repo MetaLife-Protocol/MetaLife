@@ -16,6 +16,7 @@ import PostMsgEditor from './screens/tabs/home/PostMsgEditor';
 import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
+import CreateChannel from './screens/photon/create_channel';
 
 const App = () => {
   const {theme} = SchemaStyles();
@@ -70,6 +71,12 @@ const App = () => {
         />
         {/* Screen holder */}
         <Stack.Screen name="SubScreen" options={{}} component={SubScreen} />
+        {/*Photon*/}
+        <Stack.Screen
+          name="CreateChannel"
+          options={{headerTitle: 'Create Channel'}}
+          component={CreateChannel}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

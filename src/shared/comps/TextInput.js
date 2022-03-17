@@ -9,11 +9,11 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import SchemaStyles from '../../shared/SchemaStyles';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 
 const iconDic = {
-  iconSend: require('../../../assets/image/messages/Message_icon_send.png'),
+  iconSend: require('../../assets/image/messages/Message_icon_send.png'),
 };
 
 const KeyboardAvoidingComponent = ({sendHandler}) => {
