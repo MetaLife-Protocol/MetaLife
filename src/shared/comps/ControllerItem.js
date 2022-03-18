@@ -16,7 +16,7 @@ const ControllerItem = ({children, title}) => {
         alignItemsCenter,
         {justifyContent: 'space-between', paddingHorizontal: 20},
       ]}>
-      <Text style={[{color: textHolder}, titleFont]}>{title}</Text>
+      {title && <Text style={[{color: textHolder}, titleFont]}>{title}</Text>}
       {children}
     </View>
   );

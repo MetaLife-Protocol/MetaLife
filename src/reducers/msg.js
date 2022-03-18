@@ -6,28 +6,29 @@ const msgInitState = {
   privateMsg: {},
   publicMsg: [],
   voteDic: {},
+  commentDic: {},
 };
 
 export const msgReducer = (state = msgInitState, {type, payload}) => {
   switch (type) {
-    case 'setVote':
-      const {
-        author,
-        content: {
-          vote: {value, link, expression},
-        },
-      } = payload;
-      return {
-        ...state,
-        voteDic: {
-          ...state.voteDic,
-          [link]: value
-            ? state.voteDic[link]
-              ? [...state.voteDic[link], author]
-              : [author]
-            : state.voteDic[link].filter(item => item !== author),
-        },
-      };
+    // case 'setVote':
+    //   const {
+    //     author,
+    //     content: {
+    //       vote: {value, link, expression},
+    //     },
+    //   } = payload;
+    //   return {
+    //     ...state,
+    //     voteDic: {
+    //       ...state.voteDic,
+    //       [link]: value
+    //         ? state.voteDic[link]
+    //           ? [...state.voteDic[link], author]
+    //           : [author]
+    //         : state.voteDic[link].filter(item => item !== author),
+    //     },
+    //   };
     case 'setPrivateMsg':
       const {messages} = payload;
       return {
@@ -51,7 +52,15 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
     case 'setPublicMsg':
       return {...state, publicMsg: payload};
     case 'addPublicMsg':
-      return {...state, publicMsg: [...state.publicMsg, ...payload.messages]};
+      const extraMsg = payload.messages.filter(
+        msg =>
+          msg.value.content.type === 'vote' ||
+          msg.value.content.branch ||
+          msg.value.content.fork,
+      );
+      return extraMsg.length
+        ? state
+        : {...state, publicMsg: [...state.publicMsg, ...payload.messages]};
     case 'clearPublicMsg':
       return {...state, publicMsg: {}};
     default:

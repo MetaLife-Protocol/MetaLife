@@ -22,7 +22,6 @@ const Home = ({
   setFeedId,
   addPeerInfo,
   setFriendsGraph,
-  setVote,
   publicMsg,
   addPublicMsg,
   setPrivateMsg,
@@ -55,24 +54,13 @@ const Home = ({
         // private msg handler
         addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
         // contact update
-        markMsgCBByType('contact', refreshGraph);
-        // vote counter
-        markMsgCBByType('vote', (author, content) =>
-          setVote({author, content}),
-        );
+        markMsgCBByType('contact', () => graph(setFriendsGraph));
         // about update
         markMsgCBByType('about', (_, {about}) =>
           getProfile(about, v => addPeerInfo([about, v])),
         );
       });
   }, []);
-
-  function refreshGraph() {
-    graph(setFriendsGraph);
-    window.ssb.friends.graphStream({old: false, live: true})(null, (e, v) =>
-      e ? console.warn(e) : console.log('graphStream live: ', v),
-    );
-  }
 
   return (
     <SafeAreaView style={[flex1]}>
@@ -97,7 +85,6 @@ const mdp = d => {
   return {
     setFeedId: v => d({type: 'setFeedId', payload: v}),
     addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
-    setVote: v => d({type: 'setVote', payload: v}),
     setPublicMsg: v => d({type: 'setPublicMsg', payload: v}),
     addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
     setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),

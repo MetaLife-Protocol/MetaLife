@@ -13,17 +13,13 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 const PostMsgEditor = () => {
   const {FG, flex1, text} = SchemaStyles();
 
-  const {goBack, setOptions} = useNavigation(),
-    {
-      params: {
-        name,
-        content: {text: cText},
-      },
-    } = useRoute();
+  const {goBack, setOptions} = useNavigation();
+  const {params} = useRoute();
+  const {name, content: {text: cText} = {}} = params || {};
 
   useLayoutEffect(() => {
-    setOptions({title: `comment to ${name}`});
-  });
+    name && setOptions({title: `comment to ${name}`});
+  }, []);
 
   function sendHandler(content) {
     sendMsg(
@@ -40,9 +36,11 @@ const PostMsgEditor = () => {
   return (
     <SafeAreaView style={[flex1, FG]}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
-        <View style={FG}>
-          <Text style={[text]}>{cText}</Text>
-        </View>
+        {cText && (
+          <View style={FG}>
+            <Text style={[text]}>{cText}</Text>
+          </View>
+        )}
       </ScrollView>
       <MsgInput sendHandler={sendHandler} />
     </SafeAreaView>
