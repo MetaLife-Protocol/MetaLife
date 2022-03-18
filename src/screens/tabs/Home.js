@@ -54,20 +54,13 @@ const Home = ({
         // private msg handler
         addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
         // contact update
-        markMsgCBByType('contact', refreshGraph);
+        markMsgCBByType('contact', () => graph(setFriendsGraph));
         // about update
         markMsgCBByType('about', (_, {about}) =>
           getProfile(about, v => addPeerInfo([about, v])),
         );
       });
   }, []);
-
-  function refreshGraph() {
-    graph(setFriendsGraph);
-    window.ssb.friends.graphStream({old: false, live: true})(null, (e, v) =>
-      e ? console.warn(e) : console.log('graphStream live: ', v),
-    );
-  }
 
   return (
     <SafeAreaView style={[flex1]}>
