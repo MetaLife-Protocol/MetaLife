@@ -151,6 +151,16 @@ export const sendMsg = (opt, cb = null) => {
   });
 };
 
+// id相关的消息
+// ssb.threads.profileSummary({id:'@AvWTlEvVCO5uL+FYRPnIaFCbeAjpPltJlfSgzbitQjI=.ed25519',reverse:false})(null, console.log)
+
+// 拉取最新的一条公共
+// todo: 前向拉取
+export const loadPublic = cb =>
+  ssb.threads.public({reverse: true, threadMaxSize: 10})(null, (e, v) =>
+    e ? console.warn(e) : cb && cb(v),
+  );
+
 export const loadMsg = (msgKey, isPrivate = false, cb = null) => {
   ssb.threads.thread({
     root: msgKey,
