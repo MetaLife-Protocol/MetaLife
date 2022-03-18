@@ -22,7 +22,6 @@ const Home = ({
   setFeedId,
   addPeerInfo,
   setFriendsGraph,
-  setVote,
   publicMsg,
   addPublicMsg,
   setPrivateMsg,
@@ -56,10 +55,6 @@ const Home = ({
         addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
         // contact update
         markMsgCBByType('contact', refreshGraph);
-        // vote counter
-        markMsgCBByType('vote', (author, content) =>
-          setVote({author, content}),
-        );
         // about update
         markMsgCBByType('about', (_, {about}) =>
           getProfile(about, v => addPeerInfo([about, v])),
@@ -97,7 +92,6 @@ const mdp = d => {
   return {
     setFeedId: v => d({type: 'setFeedId', payload: v}),
     addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
-    setVote: v => d({type: 'setVote', payload: v}),
     setPublicMsg: v => d({type: 'setPublicMsg', payload: v}),
     addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
     setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),
