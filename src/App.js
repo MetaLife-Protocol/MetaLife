@@ -17,6 +17,8 @@ import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import CreateChannel from './screens/photon/create_channel';
+import Scan from './screens/photon/scan';
+import ReceivingCode from './screens/photon/receiving_code';
 
 const App = () => {
   const {theme} = SchemaStyles();
@@ -76,6 +78,16 @@ const App = () => {
           name="CreateChannel"
           options={{headerTitle: 'Create Channel'}}
           component={CreateChannel}
+        />
+        <Stack.Screen
+          name="Scan"
+          options={{headerTitle: 'Scan'}}
+          component={Scan}
+        />
+        <Stack.Screen
+          name="ReceivingCode"
+          options={{headerTitle: 'ReceivingCode'}}
+          component={ReceivingCode}
         />
       </Stack.Navigator>
     </NavigationContainer>
