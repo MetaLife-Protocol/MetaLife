@@ -7,37 +7,17 @@
  */
 
 import React, {useMemo, useState} from 'react';
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../../shared/SchemaStyles';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
+import SchemaStyles from '../../../shared/SchemaStyles';
 import PureTextInput from '../../../shared/comps/PureTextInput';
 import RoundBtn from '../../../shared/comps/RoundBtn';
 import SelectDialog from '../comps/SelectDialog';
 import Constants from '../../../shared/Constants';
-
-const iconDic = {
-  arrowIcon: require('../../../assets/image/icons/icons_down_arrow.png'),
-};
+import CoinSelector from '../comps/CoinSelector';
 
 const CreatChannel = ({}) => {
-  const {
-      flex1,
-      BG,
-      row,
-      alignItemsCenter,
-      justifySpaceBetween,
-      FG,
-      btnInactiveFG,
-      text,
-    } = SchemaStyles(),
-    {container, coinContainer, textCoin, arrowIcon, button} = styles,
-    {textHolder} = colorsSchema;
+  const {flex1, BG, FG} = SchemaStyles(),
+    {container, button} = styles;
 
   const [address, setAddress] = useState(''),
     [amount, setAmount] = useState(''),
@@ -53,27 +33,14 @@ const CreatChannel = ({}) => {
   return (
     <SafeAreaView style={[flex1, BG]}>
       <View style={[flex1, container, FG]}>
-        <View
-          style={[
-            row,
-            alignItemsCenter,
-            justifySpaceBetween,
-            coinContainer,
-            {borderColor: textHolder},
-          ]}>
-          <Text style={[textCoin, text]}>Coin</Text>
-
-          <TouchableOpacity
-            onPress={() => {
-              setIsShowCoinSelect(preData => {
-                return !preData;
-              });
-            }}
-            style={[row, alignItemsCenter]}>
-            <Text style={btnInactiveFG}>{coin}</Text>
-            <Image source={iconDic.arrowIcon} style={arrowIcon} />
-          </TouchableOpacity>
-        </View>
+        <CoinSelector
+          coin={coin}
+          onPress={() => {
+            setIsShowCoinSelect(preData => {
+              return !preData;
+            });
+          }}
+        />
         <PureTextInput onChangeText={setAddress} placeholder={'Address'} />
         <PureTextInput onChangeText={setAmount} placeholder={'Amount'} />
         <PureTextInput onChangeText={setRemark} placeholder={'Remark'} />
@@ -102,23 +69,6 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 10,
     padding: 15,
-  },
-  coinContainer: {
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingVertical: 9,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-    height: 40,
-  },
-  textCoin: {
-    fontSize: 16,
-    lineHeight: 23,
-  },
-  arrowIcon: {width: 9, height: 5, marginLeft: 9},
-  textInput: {
-    marginHorizontal: 15,
-    height: 40,
   },
   button: {
     position: 'absolute',
