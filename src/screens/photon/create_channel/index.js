@@ -7,11 +7,19 @@
  */
 
 import React, {useMemo, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../../shared/SchemaStyles';
 import PureTextInput from '../../../shared/comps/PureTextInput';
-import Section from '../../../shared/comps/Section';
 import RoundBtn from '../../../shared/comps/RoundBtn';
+import SelectDialog from '../comps/SelectDialog';
+import Constants from '../../../shared/Constants';
 
 const iconDic = {
   arrowIcon: require('../../../assets/image/icons/icons_down_arrow.png'),
@@ -28,12 +36,14 @@ const CreatChannel = ({}) => {
       btnInactiveFG,
       text,
     } = SchemaStyles(),
-    {container, coinContainer, textCoin, arrowIcon} = styles,
+    {container, coinContainer, textCoin, arrowIcon, button} = styles,
     {textHolder} = colorsSchema;
 
   const [address, setAddress] = useState(''),
     [amount, setAmount] = useState(''),
-    [remark, setRemark] = useState('');
+    [remark, setRemark] = useState(''),
+    [coin, setCoin] = useState('SMT'),
+    [isShowCoinSelect, setIsShowCoinSelect] = useState(false);
 
   const btnDisabled = useMemo(
     () => !(address && amount && remark),
@@ -41,7 +51,7 @@ const CreatChannel = ({}) => {
   );
 
   return (
-    <View style={[flex1, BG]}>
+    <SafeAreaView style={[flex1, BG]}>
       <View style={[flex1, container, FG]}>
         <View
           style={[
@@ -52,19 +62,39 @@ const CreatChannel = ({}) => {
             {borderColor: textHolder},
           ]}>
           <Text style={[textCoin, text]}>Coin</Text>
-          <View style={[row, alignItemsCenter]}>
-            <Text style={btnInactiveFG}>SMT</Text>
+
+          <TouchableOpacity
+            onPress={() => {
+              setIsShowCoinSelect(preData => {
+                return !preData;
+              });
+            }}
+            style={[row, alignItemsCenter]}>
+            <Text style={btnInactiveFG}>{coin}</Text>
             <Image source={iconDic.arrowIcon} style={arrowIcon} />
-          </View>
+          </TouchableOpacity>
         </View>
-        <Section>
-          <PureTextInput onChangeText={setAddress} placeholder={'Address'} />
-          <PureTextInput onChangeText={setAmount} placeholder={'Amount'} />
-          <PureTextInput onChangeText={setRemark} placeholder={'Remark'} />
-        </Section>
-        <RoundBtn disabled={btnDisabled} title={'Create'} press={() => {}} />
+        <PureTextInput onChangeText={setAddress} placeholder={'Address'} />
+        <PureTextInput onChangeText={setAmount} placeholder={'Amount'} />
+        <PureTextInput onChangeText={setRemark} placeholder={'Remark'} />
+        <RoundBtn
+          style={button}
+          disabled={btnDisabled}
+          title={'Create'}
+          press={() => {
+            //  TODO create channel
+          }}
+        />
+        <SelectDialog
+          visible={isShowCoinSelect}
+          listData={['SMT', 'MESH']}
+          onPress={coin => {
+            setCoin(coin);
+            setIsShowCoinSelect(false);
+          }}
+        />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -78,16 +108,23 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 9,
     paddingHorizontal: 10,
+    marginBottom: 15,
+    height: 40,
   },
   textCoin: {
     fontSize: 16,
     lineHeight: 23,
   },
   arrowIcon: {width: 9, height: 5, marginLeft: 9},
-
   textInput: {
     marginHorizontal: 15,
     height: 40,
+  },
+  button: {
+    position: 'absolute',
+    bottom: Constants.safeBottom,
+    left: 15,
+    right: 15,
   },
 });
 

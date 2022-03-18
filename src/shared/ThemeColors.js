@@ -1,6 +1,6 @@
 'use strict';
 
-import SchemaStyles from './SchemaStyles';
+import SchemaStyles, {darkTheme, defaultTheme} from './SchemaStyles';
 import {useMemo} from 'react';
 
 /**
@@ -12,12 +12,14 @@ import {useMemo} from 'react';
 export function getTheme(isLightTheme) {
   if (isLightTheme) {
     return {
+      ...defaultTheme,
       isLight: true,
       c_FFFFFF_000000: '#FFF',
       c_000000_FFFFFF: '#000',
     };
   } else {
     return {
+      ...darkTheme,
       isLight: false,
       c_FFFFFF_000000: '#000',
       c_000000_FFFFFF: '#FFF',
