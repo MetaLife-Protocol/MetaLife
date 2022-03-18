@@ -117,7 +117,7 @@ export const addPublicUpdatesListener = cb => {
     includeSelf: true,
   })(null, (e, v) => {
     if (e) {
-      console.log('add public updates listener error:', e);
+      console.warn('add public updates listener error:', e);
     } else {
       console.log('public msg update with: ', v);
       cb && cb(v);

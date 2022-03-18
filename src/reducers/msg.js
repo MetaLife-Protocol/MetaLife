@@ -52,7 +52,6 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
     case 'setPublicMsg':
       return {...state, publicMsg: payload};
     case 'addPublicMsg':
-      console.log(payload.messages.length);
       const extraMsg = payload.messages.filter(
         msg =>
           msg.value.content.type === 'vote' ||
