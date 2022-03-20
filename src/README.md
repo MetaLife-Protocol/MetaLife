@@ -7,6 +7,8 @@ mode_modules/pull-reader/state.js
 
 * patch-package needed *
 
+> brew install coreutils libtool autoconf automake
+
 > change port on serve-blob  
 > add  
 > serveBlobs: {
