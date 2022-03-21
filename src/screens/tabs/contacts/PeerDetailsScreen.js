@@ -23,6 +23,7 @@ import HeadIcon from '../../../shared/comps/HeadIcon';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
+import {train} from '../../../remote/ssbAPI';
 
 const PeerDetailsScreen = ({
   selfFeedId,
@@ -53,6 +54,8 @@ const PeerDetailsScreen = ({
 
   useLayoutEffect(() => {
     setOptions({title: name || feedId});
+    // train('%NmZxfmYWvQqKCyN9zf5jYezYDg7UuRDvHcRmJTl0H6E=.sha256', 1);
+    train('%Lnp29ipnm9DmBLL22epekSAuTXSresKQlbcHQqzC5xA=.sha256', 1);
   });
 
   function peerListHandler(title, list) {
@@ -78,6 +81,7 @@ const PeerDetailsScreen = ({
               {description !== '' && (
                 <Text style={[desc]}>bio: {description}</Text>
               )}
+              o
             </View>
           </Pressable>
         </View>
@@ -111,7 +115,7 @@ const PeerDetailsScreen = ({
           </Pressable>
         </View>
         {isMyself || (
-          <View style={[row]}>
+          <View style={[row, justifySpaceBetween, {alignSelf: 'center'}]}>
             {isMyBlock || (
               <RoundBtn
                 style={[btn]}
