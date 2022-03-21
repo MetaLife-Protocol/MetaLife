@@ -1,0 +1,126 @@
+diff --git a/node_modules/ssb-mobile-bluetooth-manager/index.js b/node_modules/ssb-mobile-bluetooth-manager/index.js
+index 536f9f6..e96e546 100644
+--- a/node_modules/ssb-mobile-bluetooth-manager/index.js
++++ b/node_modules/ssb-mobile-bluetooth-manager/index.js
+@@ -17,15 +17,17 @@ const EventEmitter = require('events');
+ 
+ const delayedDeviceScanSource = pullDefer.source();
+ 
++const localHost='127.0.0.1';
++
+ let scanActive = false;
+ 
+ function makeManager (opts) {
+ 
+   const bluetoothScanStateEmitter = new EventEmitter();
+ 
+-  if (!opts || !opts.socketFolderPath) {
+-    throw new Error("ssb-mobile-bluetooth-manager must be configured with a socketFolderPath option.");
+-  }
++  // if (!opts || !opts.socketFolderPath) {
++  //   throw new Error("ssb-mobile-bluetooth-manager must be configured with a socketFolderPath option.");
++  // }
+ 
+   if (!opts || !opts.myIdent) {
+     throw new Error("ssb-mobile-bluetooth-manager must be configured with the myIdent option.")
+@@ -35,15 +37,15 @@ function makeManager (opts) {
+     throw new Error("ssb-mobile-bluetooth-manager must be configured with a metadataServiceUUID option.");
+   }
+ 
+-  if (!opts || !opts.controlSocketFilename) {
++  if (!opts || !opts.controlPort) {
+     throw new Error("ssb-mobile-bluetooth-manager must be configured with a controlSocketFilename option.");
+   }
+ 
+-  if (!opts || !opts.incomingSocketFilename) {
++  if (!opts || !opts.incomingPort) {
+     throw new Error("ssb-mobile-bluetooth-manager must be configured with a incomingSocketFilename option.");
+   }
+ 
+-  if (!opts || !opts.outgoingSocketFilename) {
++  if (!opts || !opts.outgoingPort) {
+     throw new Error("ssb-mobile-bluetooth-manager must be configured with a outgoingSocketFilename option.");
+   }
+ 
+@@ -104,12 +106,12 @@ function makeManager (opts) {
+   function makeControlSocket() {
+     if (controlSocketEstablished) return;
+ 
+-    var address = opts.socketFolderPath + "/" + opts.controlSocketFilename;
++    // var address = opts.socketFolderPath + "/" + opts.controlSocketFilename;
+ 
+-    try {
+-      fs.unlinkSync(address);
+-    } catch (error) {
+-    }
++    // try {
++    //   fs.unlinkSync(address);
++    // } catch (error) {
++    // }
+ 
+     var controlSocket = net.createServer(function(stream){
+ 
+@@ -125,7 +127,7 @@ function makeManager (opts) {
+       // Receive and process commands from the control server
+       pull(duplexConnection.source, pullJson.parse(), pull.drain(doCommand));
+ 
+-    }).listen(address);
++    }).listen({host:localHost,port:opts.controlPort});
+ 
+     controlSocketEstablished = true;
+ 
+@@ -303,13 +305,13 @@ function makeManager (opts) {
+   }
+ 
+   function listenForOutgoingEstablished() {
+-    var address = opts.socketFolderPath + "/" + opts.outgoingSocketFilename;
++    // var address = opts.socketFolderPath + "/" + opts.outgoingSocketFilename;
+ 
+-    try {
+-      fs.unlinkSync(address);
+-    } catch (error) {
++    // try {
++    //   fs.unlinkSync(address);
++    // } catch (error) {
+ 
+-    }
++    // }
+ 
+     var server = net.createServer(function(stream){
+       debug("bluetooth: Outgoing connection established proxy connection.")
+@@ -327,7 +329,7 @@ function makeManager (opts) {
+       makeControlSocket();
+     });
+ 
+-    return server.listen(address);
++    return server.listen({host:localHost,port:opts.outgoingPort});
+   }
+ 
+   // For some reason, .server gets called twice...
+@@ -339,12 +341,12 @@ function makeManager (opts) {
+ 
+     if(started) return
+ 
+-    var socket = opts.socketFolderPath + "/" + opts.incomingSocketFilename;
+-    try {
+-      fs.unlinkSync(socket);
+-    } catch (error) {
++    // var socket = opts.socketFolderPath + "/" + opts.incomingSocketFilename;
++    // try {
++    //   fs.unlinkSync(socket);
++    // } catch (error) {
+ 
+-    }
++    // }
+ 
+     var server = net.createServer(function (incomingStream) {
+ 
+@@ -355,7 +357,7 @@ function makeManager (opts) {
+         stream: logDuplexStreams( toPull.duplex(incomingStream) )
+       })
+ 
+-    }).listen(socket);
++    }).listen({host:localHost,port:opts.incomingPort});
+ 
+     server.on('close', function (e) {
+       debug("bt_bridge socket closed: " + e);
