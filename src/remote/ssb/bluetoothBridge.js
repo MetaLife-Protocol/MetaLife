@@ -23,6 +23,8 @@ let commandResponseBuffer = [];
 let needAddIsEnableCmd = false;
 
 const bluetoothBridge=function(options){
+    var localHost='127.0.0.1';
+
     BLEWormhole.ReceiveHandler=(characteristic)=>{
         if(characteristic!=undefined){
             if(characteristic.uuid == controlCharaUUID){
@@ -121,7 +123,7 @@ const bluetoothBridge=function(options){
         }
     }
 
-    let clientControll = TcpSocket.createConnection(options, () => {
+    let clientControll = TcpSocket.createConnection({port:options.controlPort,host:localHost}, () => {
         // Write on the socket
         while(true){
             var commandResponse=commandResponseBuffer.shift();
@@ -192,7 +194,7 @@ const bluetoothBridge=function(options){
     });
 
 
-    let clientIncoming = TcpSocket.createConnection(options, () => {
+    let clientIncoming = TcpSocket.createConnection({port:options.incomingPort,host:localHost}, () => {
 
     });
 
@@ -208,7 +210,7 @@ const bluetoothBridge=function(options){
     });
 
     
-    let clientOutgoing = TcpSocket.createConnection(options, () => {
+    let clientOutgoing = TcpSocket.createConnection({port:options.outgoingPort,host:localHost}, () => {
 
     });
 
