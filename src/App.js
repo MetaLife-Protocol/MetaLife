@@ -19,6 +19,7 @@ import TextEditor from './shared/screens/TextEditor';
 import CreateChannel from './screens/photon/create_channel';
 import Scan from './screens/photon/scan';
 import ReceivingCode from './screens/photon/receiving_code';
+import Web from './screens/webview';
 
 const App = () => {
   const {theme} = SchemaStyles();
@@ -73,6 +74,12 @@ const App = () => {
         />
         {/* Screen holder */}
         <Stack.Screen name="SubScreen" options={{}} component={SubScreen} />
+        {/* Web */}
+        <Stack.Screen
+          name="Web"
+          options={{headerTitle: 'Web'}}
+          component={Web}
+        />
         {/*Photon*/}
         <Stack.Screen
           name="CreateChannel"
