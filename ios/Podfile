@@ -12,6 +12,8 @@ target 'MetaLife' do
     :hermes_enabled => false
   )
 
+  pod 'react-native-cameraroll', :path => '../node_modules/@react-native-community/cameraroll'
+
   target 'MetaLifeTests' do
     inherit! :complete
     # Pods for testing
@@ -19,6 +21,8 @@ target 'MetaLife' do
 
   permissions_path = '../node_modules/react-native-permissions/ios'
   pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
 
   # Enables Flipper.
   #

@@ -1,6 +1,7 @@
 import {PermissionsAndroid, Platform} from 'react-native';
 import {launchCamera} from 'react-native-image-picker';
 import Toast from 'react-native-tiny-toast';
+import CameraRoll from '@react-native-community/cameraroll';
 
 /**
  * Created on 22 Feb 2022 by lonmee
@@ -12,6 +13,18 @@ export const localDate = timestamp => {
     day = date.toLocaleDateString();
   return time + ' ' + day;
 };
+
+export function saveImg(img) {
+  // console.log('saveImg', img);
+  const promise = CameraRoll.saveToCameraRoll(img);
+  promise
+    .then(function (result) {
+      alert('保存成功！地址如下：\n' + result);
+    })
+    .catch(function (error) {
+      alert('保存失败！\n' + error);
+    });
+}
 
 export const checkAndLaunchCamera = completeHandler => {
   Platform.select({
