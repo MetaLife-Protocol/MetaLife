@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.reactnativecommunity.cameraroll.CameraRollPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -13,7 +14,14 @@ import com.metalife.photon.PhotonPackage;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import mobile.API;
+
 public class MainApplication extends Application implements ReactApplication {
+    public static Context mContext;
+    public static API api;
+    //光子网络状态  可能正在启动 或者启动成功
+    public static boolean photonStatus = false;
+    public static boolean photonStatusStatus = false;
 
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {

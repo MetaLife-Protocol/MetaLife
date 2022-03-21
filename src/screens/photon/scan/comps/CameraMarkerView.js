@@ -25,7 +25,7 @@ const CameraMarkerView = ({}) => {
   useEffect(() => {
     startAnimation();
     // eslint-disable-next-line
-  }, []);
+	}, []);
   return (
     <View style={{width: '100%', height: '100%', flexDirection: 'column'}}>
       <View style={{flex: 1, opacity: 0.7, backgroundColor: 'black'}} />
