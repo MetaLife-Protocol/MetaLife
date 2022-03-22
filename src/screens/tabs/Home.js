@@ -17,6 +17,7 @@ import {
 } from '../../remote/ssbOP';
 import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
 import ItemAgent from './home/ItemAgent';
+import { bluetoothBridge } from '../../remote/ssb/bluetoothBridge';
 
 const Home = ({
   setFeedId,
@@ -32,6 +33,7 @@ const Home = ({
     window.ssb ||
       reqStartSSB(ssb => {
         ssbOP.ssb = window.ssb = ssb;
+
         setFeedId(ssb.id);
         // setup conn
         connStart(v => {
@@ -50,6 +52,12 @@ const Home = ({
               addPublicMsg(msg);
             }),
           );
+
+          bluetoothBridge({
+            controlPort: 20310,
+            incomingPort: 20311,
+            outgoingPort: 20312
+          })
         });
         // private msg handler
         addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));

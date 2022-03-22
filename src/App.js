@@ -16,6 +16,9 @@ import PostMsgEditor from './screens/tabs/home/PostMsgEditor';
 import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
+import { bluetoothSearch } from './remote/ssbOP';
+import HeaderRightBtn from './screens/tabs/HeaderRightBtn';
+const addIcon =require('./assets/image/headerBtn/contacts_icon_add_white.png');
 
 const App = () => {
   const {theme} = SchemaStyles();
@@ -42,7 +45,14 @@ const App = () => {
         <Stack.Screen
           name="PeersScreen"
           //fixme: large title causes twinkle unusually
-          options={{title: 'Peers' /*, headerLargeTitle: true*/}}
+          options={{title: 'Peers' /*, headerLargeTitle: true*/ ,headerRight: props => (
+            <HeaderRightBtn
+              btnIcon={addIcon}
+              btnHandler={(bluetoothSearch(20e3,(e,v)=>{
+                
+              }))}
+            />
+          )}}
           component={PeersScreen}
         />
         <Stack.Screen name="PeersListScreen" component={PeersListScreen} />
