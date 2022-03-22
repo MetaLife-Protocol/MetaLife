@@ -1,0 +1,13 @@
+diff --git a/node_modules/packet-stream-codec/index.js b/node_modules/packet-stream-codec/index.js
+index d35293a..60abc25 100644
+--- a/node_modules/packet-stream-codec/index.js
++++ b/node_modules/packet-stream-codec/index.js
+@@ -8,6 +8,8 @@ const OBJECT = 2
+ 
+ const GOODBYE = 'GOODBYE'
+ 
++var Buffer = require('buffer').Buffer;
++
+ function encodePair(msg) {
+   let head = Buffer.alloc(9)
+   let flags = 0
