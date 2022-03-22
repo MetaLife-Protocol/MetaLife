@@ -81,7 +81,6 @@ const PeerDetailsScreen = ({
               {description !== '' && (
                 <Text style={[desc]}>bio: {description}</Text>
               )}
-              o
             </View>
           </Pressable>
         </View>
