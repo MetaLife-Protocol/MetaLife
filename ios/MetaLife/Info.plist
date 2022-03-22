@@ -59,5 +59,9 @@
 	<string>Head icon &amp; post image usage</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Take video</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Online Chat Usage</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Online Chat Usage</string>
 </dict>
 </plist>

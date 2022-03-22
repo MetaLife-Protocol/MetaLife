@@ -46,9 +46,9 @@ export = function createBluetoothPlugin(keys: any, appDataDir: string) {
     socketFolderPath: appDataDir,
     myIdent: '@' + keys.public,
     metadataServiceUUID: 'b4721184-46dc-4314-b031-bf52c2b197f3',
-    controlSocketFilename: 'manyverse_bt_control.sock',
-    incomingSocketFilename: 'manyverse_bt_incoming.sock',
-    outgoingSocketFilename: 'manyverse_bt_outgoing.sock',
+    controlPort: 20310,
+    incomingPort: 20311,
+    outgoingPort: 20312,
     logStreams: false,
   });
 
