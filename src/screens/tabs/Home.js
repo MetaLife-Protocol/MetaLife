@@ -45,14 +45,16 @@ const Home = ({
           suggestStart(v => console.log('suggestStart: ', v));
           // public msg handler
           addPublicUpdatesListener(key =>
-            loadMsg(key, false, msg => {
+            loadMsg(key, false, (_, msg) => {
               checkMarkedMsgCB(msg);
               addPublicMsg(msg);
             }),
           );
         });
         // private msg handler
-        addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));
+        addPrivateUpdatesListener(key =>
+          loadMsg(key, true, (_, msg) => setPrivateMsg(msg)),
+        );
         // contact update
         markMsgCBByType('contact', () => graph(setFriendsGraph));
         // about update

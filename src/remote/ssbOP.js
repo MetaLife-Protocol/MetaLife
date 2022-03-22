@@ -165,5 +165,8 @@ export const loadMsg = (msgKey, isPrivate = false, cb = null) => {
   ssb.threads.thread({
     root: msgKey,
     private: isPrivate,
-  })(null, (e, v) => (e ? console.log(e) : cb ? cb(v) : console.log(v)));
+  })(null, cb);
 };
+
+export const profileFeed = (id, cb) =>
+  ssb.threads.profileSummary({id, threadMaxSize: 3})(null, cb);

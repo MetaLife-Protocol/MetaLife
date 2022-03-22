@@ -1,5 +1,6 @@
 import React, {useLayoutEffect, useState} from 'react';
 import {
+  FlatList,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -23,7 +24,8 @@ import HeadIcon from '../../../shared/comps/HeadIcon';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
-import {train} from '../../../remote/ssbAPI';
+import {trainProfileFeed} from '../../../remote/ssbAPI';
+import ItemAgent from '../home/ItemAgent';
 
 const PeerDetailsScreen = ({
   selfFeedId,
@@ -50,13 +52,13 @@ const PeerDetailsScreen = ({
 
   const [disabledBlock, setDisabledBlock] = useState(false);
   const [disabledFollow, setDisabledFollow] = useState(false);
+  const [feed, setFeed] = useState([]);
   const {setString} = nativeClipboard;
 
   useLayoutEffect(() => {
     setOptions({title: name || feedId});
-    // train('%NmZxfmYWvQqKCyN9zf5jYezYDg7UuRDvHcRmJTl0H6E=.sha256', 1);
-    train('%Lnp29ipnm9DmBLL22epekSAuTXSresKQlbcHQqzC5xA=.sha256', 1);
-  });
+    trainProfileFeed(feedId, 0, setFeed);
+  }, [feed]);
 
   function peerListHandler(title, list) {
     push('PeersListScreen', {title, list});
@@ -64,7 +66,13 @@ const PeerDetailsScreen = ({
 
   return (
     <SafeAreaView style={[flex1]}>
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
+      <FlatList
+        data={feed.reverse()}
+        keyExtractor={item => item.key}
+        ListHeaderComponent={null}
+        renderItem={info => <ItemAgent info={info} />}
+      />
+      <ScrollView>
         <View style={[item, row, flex1]}>
           <HeadIcon
             image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
