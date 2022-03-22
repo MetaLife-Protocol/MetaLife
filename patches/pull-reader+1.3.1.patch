@@ -1,0 +1,23 @@
+diff --git a/node_modules/pull-reader/index.js b/node_modules/pull-reader/index.js
+index 5c13586..2bfe053 100644
+--- a/node_modules/pull-reader/index.js
++++ b/node_modules/pull-reader/index.js
+@@ -1,5 +1,6 @@
+ 'use strict'
+ var State = require('./state')
++var Buffer = require('buffer').Buffer;
+ 
+ function isInteger (i) {
+   return Number.isFinite(i)
+diff --git a/node_modules/pull-reader/state.js b/node_modules/pull-reader/state.js
+index 4c2f700..1d060c5 100644
+--- a/node_modules/pull-reader/state.js
++++ b/node_modules/pull-reader/state.js
+@@ -2,6 +2,7 @@
+ module.exports = function () {
+ 
+   var buffers = [], length = 0
++  var Buffer = require('buffer').Buffer;
+   
+   //just used for debugging...
+   function calcLength () {
