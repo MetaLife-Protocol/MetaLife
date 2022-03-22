@@ -24,6 +24,7 @@ const PureTextInput = ({
   placeholder,
   defaultValue = '',
   onChangeText,
+  inputProps,
 }) => {
   const {flex1, text, placeholderTextColor} = SchemaStyles(),
     {round, textInput} = styles;
@@ -47,6 +48,7 @@ const PureTextInput = ({
           value={content}
           onChangeText={textChange}
           placeholderTextColor={placeholderTextColor.color}
+          {...inputProps}
         />
       </View>
       <PhotonSeparator />
