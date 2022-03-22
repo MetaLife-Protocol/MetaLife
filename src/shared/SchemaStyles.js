@@ -72,6 +72,9 @@ const stylesDefault = StyleSheet.create({
   orderBtnText: {
     color: '#29DAD7',
   },
+  areaBorderColor: {
+    borderColor: '#00000040',
+  }
 });
 
 const stylesDark = StyleSheet.create({
@@ -103,6 +106,9 @@ const stylesDark = StyleSheet.create({
   orderBtnText: {
     color: '#29DAD7',
   },
+  areaBorderColor: {
+    borderColor: '#4E586E',
+  }
 });
 
 const stylesBasics = StyleSheet.create({

@@ -16,7 +16,7 @@ import BackupBtn from '../../shared/comps/BackupBtn';
 import {useNavigation} from '@react-navigation/native';
 
 const Backup = ({name, setName}) => {
-  const {barStyle, BG, FG, flex1, inputBG, text, marginTop10, padding} =
+  const {barStyle, BG, FG, flex1, inputBG, text, marginTop10, padding, areaBorderColor} =
       SchemaStyles(),
     {textHolder} = colorsSchema;
 
@@ -141,7 +141,7 @@ const Backup = ({name, setName}) => {
             Please choose mnemonic words in order and make sure your nemonic was
             correct written
           </Text>
-          <View style={[styles.enterArea]}>
+          <View style={[styles.enterArea, areaBorderColor]}>
             <View style={[styles.row]}>
               {enterButtons(mnemonic.slice(0, 3))}
             </View>
@@ -200,19 +200,19 @@ const styles = StyleSheet.create({
   description: {
     color: '#4E586E',
     fontSize: 17,
-    marginTop: 16,
+    marginTop: 15,
   },
   enterArea: {
     padding: 5,
     borderRadius: 10,
-    borderColor: '#4E586E',
+    // borderColor: '#00000040',
     height: 180,
     borderWidth: 1,
-    marginTop: 32,
+    marginTop: 30,
   },
   buttonArea: {
     display: 'flex',
-    marginTop: 20,
+    marginTop: 10,
   },
   row: {
     display: 'flex',
