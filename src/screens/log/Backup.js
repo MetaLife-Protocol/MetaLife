@@ -11,6 +11,8 @@ import {
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import RoundBtn from '../../shared/comps/RoundBtn';
+import OrderBtn from '../../shared/comps/OrderBtn';
+import BackupBtn from '../../shared/comps/BackupBtn';
 import {useNavigation} from '@react-navigation/native';
 
 const Backup = ({name, setName}) => {
@@ -106,10 +108,10 @@ const Backup = ({name, setName}) => {
     array.map((item, index) => {
       return (
         <View key={index} style={{flex: 1, padding: 5}}>
-          <Button
+          <BackupBtn
             disabled={mnemonic.includes(item)}
             title={item}
-            onPress={() => handleAddItem(item)}
+            press={() => handleAddItem(item)}
           />
         </View>
       );
@@ -118,12 +120,8 @@ const Backup = ({name, setName}) => {
   const enterButtons = array =>
     array.map((item, index) => {
       return (
-        <View key={index} style={{flex: 1, padding: 3}}>
-          <Button
-            height={30}
-            title={item}
-            onPress={() => handleRemoveItem(item)}
-          />
+        <View key={index} style={{flex: 1, padding: 3, maxWidth: '33%'}}>
+          <OrderBtn title={item} press={() => handleRemoveItem(item)} />
         </View>
       );
     });
@@ -136,46 +134,38 @@ const Backup = ({name, setName}) => {
           style={{
             padding: 20,
           }}>
-          <Text style={{color: 'white', fontSize: 16}}>
+          <Text style={[text, styles.title]}>
             Please backup the mnemonic words
           </Text>
-          <Text style={{color: 'gray', fontSize: 15, marginTop: 16}}>
+          <Text style={[styles.description]}>
             Please choose mnemonic words in order and make sure your nemonic was
             correct written
           </Text>
-          <View
-            style={{
-              padding: 5,
-              borderRadius: 10,
-              borderColor: 'gray',
-              height: 180,
-              borderWidth: 1,
-              marginTop: 32,
-            }}>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
+          <View style={[styles.enterArea]}>
+            <View style={[styles.row]}>
               {enterButtons(mnemonic.slice(0, 3))}
             </View>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
+            <View style={[styles.row]}>
               {enterButtons(mnemonic.slice(3, 6))}
             </View>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
+            <View style={[styles.row]}>
               {enterButtons(mnemonic.slice(6, 9))}
             </View>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
+            <View style={[styles.row]}>
               {enterButtons(mnemonic.slice(9, 12))}
             </View>
           </View>
-          <View style={{display: 'flex', marginTop: 20}}>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
+          <View style={[styles.buttonArea]}>
+            <View style={[styles.row]}>
               {MnemonicButtons(temp.slice(0, 3))}
             </View>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
+            <View style={[styles.row]}>
               {MnemonicButtons(temp.slice(3, 6))}
             </View>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
+            <View style={[styles.row]}>
               {MnemonicButtons(temp.slice(6, 9))}
             </View>
-            <View style={{display: 'flex', flexDirection: 'row'}}>
+            <View style={[styles.row]}>
               {MnemonicButtons(temp.slice(9, 12))}
             </View>
           </View>
@@ -202,5 +192,32 @@ const mdp = d => {
     deleteName: name => d({type: 'delete'}),
   };
 };
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 16,
+  },
+  description: {
+    color: 'gray',
+    fontSize: 15,
+    marginTop: 16,
+  },
+  enterArea: {
+    padding: 5,
+    borderRadius: 10,
+    borderColor: 'gray',
+    height: 180,
+    borderWidth: 1,
+    marginTop: 32,
+  },
+  buttonArea: {
+    display: 'flex',
+    marginTop: 20,
+  },
+  row: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+});
 
 export default connect(msp, mdp)(Backup);
