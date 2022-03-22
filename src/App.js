@@ -20,14 +20,20 @@ import CreateChannel from './screens/photon/create_channel';
 import Scan from './screens/photon/scan';
 import ReceivingCode from './screens/photon/receiving_code';
 import Web from './screens/webview';
+import Payment from './screens/photon/payment';
+import NavigationBackView from './shared/comps/NavigationBackView';
 
 const App = () => {
-  const {theme} = SchemaStyles();
+  const {theme, BG} = SchemaStyles();
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer theme={theme}>
       {/*<Stack.Navigator initialRouteName="Guid">*/}
-      <Stack.Navigator initialRouteName="Tabs">
+      <Stack.Navigator
+        initialRouteName="Tabs"
+        screenOptions={{
+          headerLeft: props => <NavigationBackView {...props} />,
+        }}>
         <Stack.Screen
           name="Guid"
           component={Guid}
@@ -95,6 +101,11 @@ const App = () => {
           name="ReceivingCode"
           options={{headerTitle: 'ReceivingCode'}}
           component={ReceivingCode}
+        />
+        <Stack.Screen
+          name="Payment"
+          options={{headerTitle: 'Photon Payment'}}
+          component={Payment}
         />
       </Stack.Navigator>
     </NavigationContainer>
