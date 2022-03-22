@@ -5,6 +5,7 @@ import Tabs from './screens/Tabs';
 import Guid from './screens/Guid';
 import Login from './screens/log/Login';
 import SignUp from './screens/log/SignUp';
+import Backup from './screens/log/Backup';
 import SubScreen from './screens/SubScreen';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from './shared/SchemaStyles';
@@ -23,7 +24,7 @@ const App = () => {
   return (
     <NavigationContainer theme={theme}>
       {/*<Stack.Navigator initialRouteName="Guid">*/}
-      <Stack.Navigator initialRouteName="Tabs">
+      <Stack.Navigator initialRouteName="Backup">
         <Stack.Screen
           name="Guid"
           component={Guid}
@@ -31,6 +32,7 @@ const App = () => {
         />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Backup Mnemonic" component={Backup} />
         <Stack.Screen
           name="Tabs"
           options={{headerShown: false}}

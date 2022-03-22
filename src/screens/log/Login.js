@@ -37,7 +37,7 @@ const Login = ({name, setName}) => {
           style={{marginBottom: 50}}
           title={'Login'}
           disabled={!(nick && pwd)}
-          press={() => replace('Tabs')}
+          press={() => replace('Backup Mnemonic')}
         />
       </View>
     </View>
