@@ -7,33 +7,16 @@ import SchemaStyles from '../SchemaStyles';
 
 const OrderBtn = ({title, press, disabled = false, style = null}) => {
   const [active, setActive] = useState(false);
-  const {
-    btnActiveBG,
-    btnActiveFG,
-    btnInactiveBG,
-    btnInactiveFG,
-    btnDisabledBG,
-    btnDisabledFG,
-  } = SchemaStyles();
+  const {memoBtnDisabled, orderBtnText} = SchemaStyles();
   return (
     <TouchableNativeFeedback onPress={disabled ? null : press}>
       <View
-        style={[
-          styles.border,
-          style,
-          disabled ? btnDisabledBG : active ? btnActiveBG : btnInactiveBG,
-        ]}
+        style={[styles.border, style, memoBtnDisabled]}
         onTouchStart={() => setActive(true)}
         onTouchEnd={() => {
           setActive(false);
         }}>
-        <Text
-          style={[
-            styles.title,
-            disabled ? btnDisabledFG : active ? btnActiveFG : btnInactiveFG,
-          ]}>
-          {title}
-        </Text>
+        <Text style={[styles.title, orderBtnText]}>{title}</Text>
       </View>
     </TouchableNativeFeedback>
   );
@@ -41,9 +24,9 @@ const OrderBtn = ({title, press, disabled = false, style = null}) => {
 
 const styles = StyleSheet.create({
   border: {
-    borderWidth: 1,
-    borderRadius: 10,
-    height: 36,
+    borderWidth: 0,
+    borderRadius: 6,
+    height: 35,
     // marginHorizontal: 30,
     alignItems: 'center',
     justifyContent: 'center',

@@ -57,6 +57,21 @@ const stylesDefault = StyleSheet.create({
     backgroundColor: '#F1F1F2',
   },
   placeholderTextColor: {color: '#B6B7B9'},
+  memoBtn: {
+    backgroundColor: '#F0F0F0',
+  },
+  memoBtnText: {
+    color: '#4E586E',
+  },
+  memoBtnDisabled: {
+    backgroundColor: '#D4F8F7',
+  },
+  memoBtnTextDisabled: {
+    color: '#8E8E92',
+  },
+  orderBtnText: {
+    color: '#29DAD7',
+  },
 });
 
 const stylesDark = StyleSheet.create({
@@ -73,6 +88,21 @@ const stylesDark = StyleSheet.create({
     backgroundColor: '#282C2D',
   },
   placeholderTextColor: {color: '#7C7E82'},
+  memoBtn: {
+    backgroundColor: '#000000',
+  },
+  memoBtnText: {
+    color: '#FFFFFF',
+  },
+  memoBtnDisabled: {
+    backgroundColor: '#000000',
+  },
+  memoBtnTextDisabled: {
+    color: '#8E8E92',
+  },
+  orderBtnText: {
+    color: '#29DAD7',
+  },
 });
 
 const stylesBasics = StyleSheet.create({

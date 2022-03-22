@@ -89,7 +89,7 @@ const Backup = ({name, setName}) => {
     for (i = 0; i < 12; i++) {
       if (originalMnemoic[i] != mnemonic[i]) break;
     }
-    if (i == 11) {
+    if (i == 12) {
       return true;
     }
     return false;
@@ -195,17 +195,17 @@ const mdp = d => {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 16,
+    fontSize: 20,
   },
   description: {
-    color: 'gray',
-    fontSize: 15,
+    color: '#4E586E',
+    fontSize: 17,
     marginTop: 16,
   },
   enterArea: {
     padding: 5,
     borderRadius: 10,
-    borderColor: 'gray',
+    borderColor: '#4E586E',
     height: 180,
     borderWidth: 1,
     marginTop: 32,
