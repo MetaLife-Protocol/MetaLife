@@ -1,5 +1,5 @@
-import BLEWormhole from 'react-native-ble-wormhole/src/BLEWormhole';
 import TcpSocket from 'react-native-tcp-socket';
+import { BLEWormhole } from 'react-native-ble-wormhole';
 
 const bleServiceUUID = 'C4FB2349-72FE-1BA2-94D6-1F3CB16311EE'
 
@@ -22,9 +22,9 @@ let commandResponseBuffer = [];
 
 let needAddIsEnableCmd = false;
 
-const bluetoothBridge=function(options){
+export const bluetoothBridge=function(options){
     var localHost='127.0.0.1';
-
+    console.log('bluetoothBridge init');
     BLEWormhole.ReceiveHandler=(characteristic)=>{
         if(characteristic!=undefined){
             if(characteristic.uuid == controlCharaUUID){
@@ -228,3 +228,5 @@ const bluetoothBridge=function(options){
 
     BLEWormhole.CreatServer(bleServiceUUID,connectCharaUUIDs);
 }
+
+ 
