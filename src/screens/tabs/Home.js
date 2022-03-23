@@ -56,8 +56,8 @@ const Home = ({
           bluetoothBridge({
             controlPort: 20310,
             incomingPort: 20311,
-            outgoingPort: 20312
-          })
+            outgoingPort: 20312,
+          });
         });
         // private msg handler
         addPrivateUpdatesListener(key => loadMsg(key, true, setPrivateMsg));

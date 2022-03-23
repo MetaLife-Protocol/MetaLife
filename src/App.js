@@ -16,13 +16,19 @@ import PostMsgEditor from './screens/tabs/home/PostMsgEditor';
 import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
-import { bluetoothSearch } from './remote/ssbOP';
+import {bluetoothSearch} from './remote/ssbOP';
 import HeaderRightBtn from './screens/tabs/HeaderRightBtn';
-const addIcon =require('./assets/image/headerBtn/contacts_icon_add_white.png');
-
+const addIcon = require('./assets/image/headerBtn/contacts_icon_add_white.png');
+function TestHandel() {
+  console.log('TestHandle');
+  bluetoothSearch(20e3, (e, v) => {
+    console.log('bluetooth search');
+  });
+}
 const App = () => {
   const {theme} = SchemaStyles();
   const Stack = createNativeStackNavigator();
+
   return (
     <NavigationContainer theme={theme}>
       {/*<Stack.Navigator initialRouteName="Guid">*/}
@@ -45,14 +51,12 @@ const App = () => {
         <Stack.Screen
           name="PeersScreen"
           //fixme: large title causes twinkle unusually
-          options={{title: 'Peers' /*, headerLargeTitle: true*/ ,headerRight: props => (
-            <HeaderRightBtn
-              btnIcon={addIcon}
-              btnHandler={(bluetoothSearch(20e3,(e,v)=>{
-                
-              }))}
-            />
-          )}}
+          options={{
+            title: 'Peers' /*, headerLargeTitle: true*/,
+            headerRight: props => (
+              <HeaderRightBtn btnIcon={addIcon} btnHandler={TestHandel} />
+            ),
+          }}
           component={PeersScreen}
         />
         <Stack.Screen name="PeersListScreen" component={PeersListScreen} />
