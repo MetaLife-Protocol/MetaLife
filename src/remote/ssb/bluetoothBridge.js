@@ -1,6 +1,9 @@
 import TcpSocket from 'react-native-tcp-socket';
 import {BLEWormhole} from 'react-native-ble-wormhole';
 import {Buffer} from 'buffer';
+import BleManager from 'react-native-ble-manager/BleManager';
+import BLEPeripheral from 'react-native-ble-peripheral';
+import {NativeEventEmitter, NativeModules} from 'react-native';
 
 const bleServiceUUID = 'C4FB2349-72FE-1BA2-94D6-1F3CB16311EE';
 
@@ -30,6 +33,9 @@ let needAddIsEnableCmd = false;
 export const bluetoothBridge = function (options) {
   var localHost = '127.0.0.1';
   console.log('bluetoothBridge init');
+  var peripheralEmitter = new NativeEventEmitter(BLEPeripheral);
+  var centralEmitter = new NativeEventEmitter(NativeModules.BleManager);
+  BLEWormhole.CreateNativeEventEmitter(centralEmitter, peripheralEmitter);
   BLEWormhole.ReceiveHandler = characteristic => {
     if (characteristic !== undefined) {
       if (characteristic.uuid === controlCharaUUID) {
