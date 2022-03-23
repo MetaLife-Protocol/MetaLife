@@ -6,7 +6,7 @@ import {loadMsg, profileFeed} from './ssbOP';
 let feed = [];
 let callback;
 export const trainProfileFeed = (id, length, cb) => {
-  callback = cb;
+  (feed = []), (callback = cb);
   profileFeed(id, (err, msg) => {
     const {root, replyCount} = msg;
     feed.push(root);

@@ -5,6 +5,7 @@
 const msgInitState = {
   privateMsg: {},
   publicMsg: [],
+  feedDic: {},
   voteDic: {},
   commentDic: {},
 };

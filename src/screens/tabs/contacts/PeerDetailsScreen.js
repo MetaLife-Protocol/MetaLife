@@ -39,7 +39,7 @@ const PeerDetailsScreen = ({
   useLayoutEffect(() => {
     setOptions({title: name || feedId});
     trainProfileFeed(feedId, 0, setFeed);
-  }, [feed]);
+  }, [feed, feedId]);
 
   return (
     <SafeAreaView style={[flex1]}>
