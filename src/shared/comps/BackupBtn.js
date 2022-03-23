@@ -12,20 +12,13 @@ const BackupBtn = ({title, press, disabled = false, style = null}) => {
   return (
     <TouchableNativeFeedback onPress={disabled ? null : press}>
       <View
-        style={[
-          styles.border,
-          style,
-          disabled ? memoBtnDisabled : memoBtn,
-        ]}
+        style={[styles.border, style, disabled ? memoBtnDisabled : memoBtn]}
         onTouchStart={() => setActive(true)}
         onTouchEnd={() => {
           setActive(false);
         }}>
         <Text
-          style={[
-            styles.title,
-            disabled ? memoBtnTextDisabled : memoBtnText,
-          ]}>
+          style={[styles.title, disabled ? memoBtnTextDisabled : memoBtnText]}>
           {title}
         </Text>
       </View>

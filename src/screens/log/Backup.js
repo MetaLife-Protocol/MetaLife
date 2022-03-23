@@ -1,13 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  StyleSheet,
-  StatusBar,
-  TextInput,
-  Alert,
-  View,
-  Text,
-  Button,
-} from 'react-native';
+import {StyleSheet, StatusBar, Alert, View, Text} from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import RoundBtn from '../../shared/comps/RoundBtn';
@@ -16,8 +8,17 @@ import BackupBtn from '../../shared/comps/BackupBtn';
 import {useNavigation} from '@react-navigation/native';
 
 const Backup = ({name, setName}) => {
-  const {barStyle, BG, FG, flex1, inputBG, text, marginTop10, padding, areaBorderColor} =
-      SchemaStyles(),
+  const {
+      barStyle,
+      BG,
+      FG,
+      flex1,
+      inputBG,
+      text,
+      marginTop10,
+      padding,
+      areaBorderColor,
+    } = SchemaStyles(),
     {textHolder} = colorsSchema;
 
   const [nick, setNick] = useState('');
@@ -87,7 +88,9 @@ const Backup = ({name, setName}) => {
   const isCorrect = () => {
     let i;
     for (i = 0; i < 12; i++) {
-      if (originalMnemoic[i] != mnemonic[i]) break;
+      if (originalMnemoic[i] != mnemonic[i]) {
+        break;
+      }
     }
     if (i == 12) {
       return true;

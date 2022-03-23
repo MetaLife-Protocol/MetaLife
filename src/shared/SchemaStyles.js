@@ -74,7 +74,7 @@ const stylesDefault = StyleSheet.create({
   },
   areaBorderColor: {
     borderColor: '#00000040',
-  }
+  },
 });
 
 const stylesDark = StyleSheet.create({
@@ -108,7 +108,7 @@ const stylesDark = StyleSheet.create({
   },
   areaBorderColor: {
     borderColor: '#4E586E',
-  }
+  },
 });
 
 const stylesBasics = StyleSheet.create({
