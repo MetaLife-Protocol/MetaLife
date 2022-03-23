@@ -1,6 +1,8 @@
 package com.metalife.photon;
 
 
+import static com.metalife.MainApplication.mContext;
+
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.text.TextUtils;
@@ -57,21 +59,21 @@ public class PhotonNetUtil {
 //        }
     }
 
-//    /**
-//     * 获取当前wifi ip
-//     * */
-//    public String getCurWifiIp(){
-//        try {
-//            WifiManager wm = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//            String clientIP = null;
-//            if (wm != null) {
-//                clientIP = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-//            }
-//            return clientIP;
-//        }catch (Exception e){
-//            return null;
-//        }
-//    }
+    /**
+     * 获取当前wifi ip
+     * */
+    public String getCurWifiIp(){
+        try {
+            WifiManager wm = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            String clientIP = null;
+            if (wm != null) {
+                clientIP = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+            }
+            return clientIP;
+        }catch (Exception e){
+            return null;
+        }
+    }
 //
 //    /**
 //     * 转账切换无网有网
