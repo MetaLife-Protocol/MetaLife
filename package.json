@@ -34,7 +34,19 @@
     "test": "jest",
     "lint": "eslint"
   },
+  "peerDependencies": {
+    "react-native-ble-manager": "^8.0.2",
+    "react-native-ble-peripheral": "github:heroims/react-native-ble-peripheral",
+    "react-native-ble-wormhole": "github:heroims/WormholeProtocol-RN",
+    "react-native-tcp-socket": "^5.6.0",
+    "react-native-permissions": "^3.3.1"
+  },
   "dependencies": {
+    "react-native-ble-manager": "^8.0.2",
+    "react-native-ble-peripheral": "github:heroims/react-native-ble-peripheral",
+    "react-native-ble-wormhole": "github:heroims/WormholeProtocol-RN",
+    "react-native-tcp-socket": "^5.6.0",
+    "react-native-permissions": "^3.3.1",
     "@react-native-async-storage/async-storage": "^1.16.1",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
@@ -58,7 +70,6 @@
     "react-native-sound-player": "^0.12.0",
     "react-native-splash-screen": "^3.3.0",
     "react-native-ssb-client": "^7.1.0",
-    "react-native-tcp-socket": "^5.6.0",
     "react-native-tiny-toast": "^1.0.7",
     "react-native-version": "^4.0.0",
     "react-native-webview": "^11.18.2",
