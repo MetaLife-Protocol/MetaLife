@@ -32,6 +32,7 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
     //   };
     case 'addFeedDic':
       const {fId, feed} = payload;
+      // todo: partial adding
       return {...state, feedDic: {...state.feedDic, [fId]: feed}};
     case 'setPrivateMsg':
       const {messages} = payload;
