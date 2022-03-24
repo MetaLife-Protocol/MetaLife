@@ -3,20 +3,21 @@
  */
 import {loadMsg, profileFeed} from './ssbOP';
 
-let feed = [];
-let callback;
+let fId, feed, callback;
 export const trainProfileFeed = (id, length, cb) => {
-  (feed = []), (callback = cb);
+  (fId = id), (feed = []), (callback = cb);
   profileFeed(id, (err, msg) => {
     const {root, replyCount} = msg;
     feed.push(root);
-    loadMsg(root.value.previous, false, loadPrevious);
+    root.value.previous
+      ? loadMsg(root.value.previous, false, loadPrevious)
+      : cb({fId, feed});
   });
 };
 
 function loadPrevious(err, msg) {
   if (err) {
-    callback(feed);
+    callback({fId, feed});
     return;
   }
   const {messages, full} = msg;
@@ -24,7 +25,7 @@ function loadPrevious(err, msg) {
   if (messages[0].value.previous) {
     loadMsg(messages[0].value.previous, false, loadPrevious);
   } else {
-    callback(feed);
+    callback({fId, feed});
   }
 }
 

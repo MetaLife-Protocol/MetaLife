@@ -7,7 +7,13 @@ import {trainProfileFeed} from '../../../remote/ssbAPI';
 import ItemAgent from '../home/ItemAgent';
 import PeerDetailsHeader from './details/PeerDetailsHeader';
 
-const PeerDetailsScreen = ({selfFeedId, relations, peerInfoDic}) => {
+const PeerDetailsScreen = ({
+  selfFeedId,
+  relations,
+  peerInfoDic,
+  feedDic,
+  addFeedDic,
+}) => {
   const {flex1} = SchemaStyles(),
     {} = styles;
 
@@ -19,17 +25,15 @@ const PeerDetailsScreen = ({selfFeedId, relations, peerInfoDic}) => {
     myBlock = relations[3],
     isMyBlock = myBlock.includes(feedId);
 
-  const [feed, setFeed] = useState([]);
-
   useLayoutEffect(() => {
     setOptions({title: name || feedId});
-    trainProfileFeed(feedId, 0, setFeed);
-  }, [feed, feedId]);
+    trainProfileFeed(feedId, 0, addFeedDic);
+  }, [feedId]);
 
   return (
     <SafeAreaView style={[flex1]}>
       <FlatList
-        data={feed}
+        data={feedDic[feedId]}
         keyExtractor={item => item.key}
         ListHeaderComponent={<PeerDetailsHeader />}
         renderItem={info => <ItemAgent info={info} />}
@@ -45,12 +49,13 @@ const msp = s => {
     selfFeedId: s.user.feedId,
     relations: s.user.relations,
     peerInfoDic: s.contacts.peerInfoDic,
+    feedDic: s.msg.feedDic,
   };
 };
 
 const mdp = d => {
   return {
-    addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
+    addFeedDic: v => d({type: 'addFeedDic', payload: v}),
   };
 };
 
