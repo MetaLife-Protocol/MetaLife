@@ -14,9 +14,10 @@ export const trainProfileFeed = (id, length, cb) => {
   });
 };
 
-export const loadPrevious = (err, msg) => {
+function loadPrevious(err, msg) {
   if (err) {
     callback(feed);
+    return;
   }
   const {messages, full} = msg;
   feed.push(messages[0]);
@@ -25,7 +26,7 @@ export const loadPrevious = (err, msg) => {
   } else {
     callback(feed);
   }
-};
+}
 
 // toReplyPostContent({
 //   text: state.replyText,
