@@ -2,7 +2,14 @@
  * Created on 08 Nov 2021 by lonmee
  */
 import React, {useCallback, useState} from 'react';
-import {Pressable, SafeAreaView, ScrollView, Switch, Text} from 'react-native';
+import {
+  Image,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  Switch,
+  Text,
+} from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ControllerItem from '../../../shared/comps/ControllerItem';
@@ -16,6 +23,8 @@ import {ProfileModal} from './modal/ProfileModal';
 import {checkAndLaunchCamera} from '../../../utils';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../shared/comps/HeadIcon';
+import {ArrowImage} from '../../../shared/Icons';
+import {useNavigation} from '@react-navigation/native';
 
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
 
@@ -29,6 +38,8 @@ const Setting = ({
   const {flex1, alignItemsCenter, marginTop10, text} = SchemaStyles();
 
   const {name, description, image} = peerInfoDic[feedId] || {};
+
+  const {navigate} = useNavigation();
 
   const [pnVisible, setPnVisible] = useState(false),
     [pdVisible, setPdVisible] = useState(false);
@@ -106,6 +117,13 @@ const Setting = ({
             </ControllerItem>
           </Pressable>
         </Section>
+        <Section style={[marginTop10]} separator={NormalSeparator}>
+          <Pressable onPress={() => navigate('Pubs')}>
+            <ControllerItem title={'Connect PUB'}>
+              <Image source={ArrowImage} />
+            </ControllerItem>
+          </Pressable>
+        </Section>
         <Section
           style={[marginTop10]}
           title={'Settings'}
@@ -135,7 +153,7 @@ const Setting = ({
           <ControllerItem title={'Not allowed to view my NFT'}>
             <Switch value={lang === 'en'} onValueChange={null} />
           </ControllerItem>
-          <ControllerItem title={"Don't allow strangers to send me messages"}>
+          <ControllerItem title={'Block messages from stranger'}>
             <Switch value={lang === 'en'} onValueChange={null} />
           </ControllerItem>
         </Section>

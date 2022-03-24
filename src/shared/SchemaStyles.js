@@ -78,6 +78,7 @@ const stylesDark = StyleSheet.create({
 const stylesBasics = StyleSheet.create({
   // layout
   flex1: {
+    display: 'flex',
     flex: 1,
   },
   row: {

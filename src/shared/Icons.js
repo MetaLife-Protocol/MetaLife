@@ -9,3 +9,5 @@ export const PeerIcons = {
 };
 
 export const ArrowImage = require('../assets/image/shared/back.png');
+export const PlusBlack = require('../assets/image/shared/Message_icon_add_black.png');
+export const PlusWhite = require('../assets/image/shared/Message_icon_add_white.png');

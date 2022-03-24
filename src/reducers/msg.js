@@ -30,6 +30,9 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
     //         : state.voteDic[link].filter(item => item !== author),
     //     },
     //   };
+    case 'addFeedDic':
+      const {fId, feed} = payload;
+      return {...state, feedDic: {...state.feedDic, [fId]: feed}};
     case 'setPrivateMsg':
       const {messages} = payload;
       return {

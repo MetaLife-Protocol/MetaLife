@@ -5,7 +5,7 @@
 >> mode_modules/pull-reader/state.js
 
 > ### install compile tools
->> brew install coreutils libtool autoconf automake  
+>> brew install coreutils libtool autoconf automake
 
 > ### add Env variable  
 >> `# nodejs-mobile-react-native for android`  

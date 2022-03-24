@@ -6,6 +6,7 @@ import {friendsGraphParse} from '../filters/ContactsFilters';
 
 const msgInitState = {
   feedId: '',
+  pubs: [],
   relations: [[], [], [], [], [], []],
 };
 
@@ -13,6 +14,10 @@ export const userReducer = (state = msgInitState, {type, payload}) => {
   switch (type) {
     case 'setFeedId':
       return {...state, feedId: payload};
+    case 'addPub':
+      return {...state, pubs: [...state.pubs, payload]};
+    case 'removePub':
+      return {...state, pubs: state.pubs.filter(p => p.id !== payload)};
     case 'setFriendsGraph':
       return {
         ...state,

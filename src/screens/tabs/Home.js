@@ -69,7 +69,7 @@ const Home = ({
       <FlatList
         data={[...publicMsg].reverse()}
         keyExtractor={item => item.key}
-        renderItem={info => <ItemAgent info={info} />}
+        renderItem={info => <ItemAgent info={info} verbose={true} />}
       />
     </SafeAreaView>
   );
