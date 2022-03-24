@@ -291,6 +291,7 @@ export const bluetoothBridge = function (options) {
       }
     }
   });
-
-  BLEWormhole.CreatServer(bleServiceUUID, connectCharaUUIDs);
+  BLEWormhole.GenerateDeviceID().then(res => {
+    BLEWormhole.CreatServer(bleServiceUUID, connectCharaUUIDs, res);
+  });
 };
