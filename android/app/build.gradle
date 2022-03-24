@@ -232,7 +232,8 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     implementation 'org.web3j:core:4.2.0-android'  //3.3.1 version will cause oom
-
+//    封装的光子
+    implementation project(path: ':react-native-photon')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'
@@ -247,8 +248,6 @@ dependencies {
         exclude group:'com.facebook.flipper'
     }
 
-    //光子
-    implementation(name: 'mobile', ext: 'aar')
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";

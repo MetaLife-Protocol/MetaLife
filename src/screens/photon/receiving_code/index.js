@@ -11,17 +11,23 @@ import SchemaStyles from '../../../shared/SchemaStyles';
 import QRCode from 'react-native-qrcode-svg';
 import RNFS from 'react-native-fs';
 import {saveImg} from '../../../utils';
+import {startPhotonServer} from 'react-native-photon';
 
 const ReceivingCode = ({}) => {
   const {flex1, BG} = SchemaStyles(),
     {container} = styles;
 
   // eslint-disable-next-line prettier/prettier
-	const svg = useRef();
+  const svg = useRef();
 
   let logoFromFile = require('../../../assets/image/contacts/nft_icon.png');
 
   const saveQrToDisk = useCallback(() => {
+    startPhotonServer({
+      privateKey: 'privateKey',
+      ethRPCEndPoint: 'ethRPCEndPoint',
+    });
+    return;
     console.log('svg.current::', svg.current);
     svg.current &&
       svg.current.toDataURL(data => {
