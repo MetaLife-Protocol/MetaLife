@@ -233,7 +233,7 @@ dependencies {
 
     implementation 'org.web3j:core:4.2.0-android'  //3.3.1 version will cause oom
 //    封装的光子
-    implementation project(path: ':react-native-photon')
+//    implementation project(path: ':react-native-photon')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'

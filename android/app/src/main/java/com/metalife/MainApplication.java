@@ -9,7 +9,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.reactlibrary.PhotonApplication;
-import com.reactlibrary.PhotonPackage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -30,7 +29,7 @@ public class MainApplication extends PhotonApplication implements ReactApplicati
                     // Packages that cannot be autolinked yet can be added manually here, for example:
                     // packages.add(new MyReactNativePackage());
 
-                    packages.add(new PhotonPackage());
+//                    packages.add(new PhotonPackage());
                     return packages;
                 }
 

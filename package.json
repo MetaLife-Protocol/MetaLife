@@ -55,7 +55,7 @@
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
     "redux-persist": "^6.0.0",
-    "react-native-photon": "git+ssh://git@github.com:MetaLife-Protocol/RNPhoton.git#master"
+    "react-native-photon": "git+ssh://git@github.com:MetaLife-Protocol/react-native-photon.git#master"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
