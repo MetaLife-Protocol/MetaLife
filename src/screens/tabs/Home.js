@@ -36,7 +36,7 @@ const Home = ({
         // setup conn
         connStart(v => {
           console.log(v ? 'conn start' : 'conn started yet');
-          // put line
+          // put online
           stage(v => console.log(v ? 'peer stage' : 'peer staged yet'));
 
           replicationSchedulerStart(v =>
@@ -45,15 +45,14 @@ const Home = ({
           suggestStart(v => console.log('suggestStart: ', v));
           // public msg handler
           addPublicUpdatesListener(key =>
-            loadMsg(key, false, (_, msg) => {
-              checkMarkedMsgCB(msg);
-              addPublicMsg(msg);
+            loadMsg(key, false, (err, msg) => {
+              err || (checkMarkedMsgCB(msg), addPublicMsg(msg));
             }),
           );
         });
         // private msg handler
         addPrivateUpdatesListener(key =>
-          loadMsg(key, true, (_, msg) => setPrivateMsg(msg)),
+          loadMsg(key, true, (err, msg) => err || setPrivateMsg(msg)),
         );
         // contact update
         markMsgCBByType('contact', () => graph(setFriendsGraph));

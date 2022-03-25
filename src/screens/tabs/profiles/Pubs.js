@@ -76,9 +76,8 @@ const Pubs = ({darkMode, pubs, addPub}) => {
           </View>
         </ControllerItem>
       </Section>
-      {pubs.length > 0 && (
+      {pubs.length && (
         <Section style={[marginTop10]} title={'Your pubs'}>
-          // todo: pubs operation in sub screen
           {pubs.map((pObj, i) => (
             <PeerItem pObj={pObj} key={i} />
           ))}

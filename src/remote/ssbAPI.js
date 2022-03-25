@@ -17,7 +17,12 @@ export const trainProfileFeed = (id, length, cb) => {
 
 function loadPrevious(err, msg) {
   if (err) {
-    callback({fId, feed});
+    const {sequence, previous} = feed[feed.length - 1].value;
+    if (sequence > 1) {
+      loadMsg(previous, true, loadPrevious);
+    } else {
+      callback({fId, feed});
+    }
     return;
   }
   const {messages, full} = msg;

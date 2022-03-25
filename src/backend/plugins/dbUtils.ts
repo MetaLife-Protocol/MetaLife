@@ -14,12 +14,24 @@ const HEART_UNICODE = '\u2764\ufe0f';
 
 function voteExpressionToReaction(expression: string) {
   const lowCase = expression.toLowerCase();
-  if (lowCase === 'like') return THUMBS_UP_UNICODE;
-  if (lowCase === 'yup') return THUMBS_UP_UNICODE;
-  if (lowCase === 'heart') return HEART_UNICODE;
-  if (lowCase === 'dig') return DIG_UNICODE;
-  if (expression.codePointAt(0) === 0x270c) return DIG_UNICODE;
-  if (expression) return expression;
+  if (lowCase === 'like') {
+    return THUMBS_UP_UNICODE;
+  }
+  if (lowCase === 'yup') {
+    return THUMBS_UP_UNICODE;
+  }
+  if (lowCase === 'heart') {
+    return HEART_UNICODE;
+  }
+  if (lowCase === 'dig') {
+    return DIG_UNICODE;
+  }
+  if (expression.codePointAt(0) === 0x270c) {
+    return DIG_UNICODE;
+  }
+  if (expression) {
+    return expression;
+  }
   return THUMBS_UP_UNICODE;
 }
 
@@ -79,7 +91,9 @@ export = {
       },
       update(msg: Msg<VoteContent>) {
         const {expression, value} = msg.value.content.vote;
-        if (value <= 0 || !expression) return;
+        if (value <= 0 || !expression) {
+          return;
+        }
         const reaction = voteExpressionToReaction(expression);
         const previous = this._map.get(reaction) ?? 0;
         this._map.set(reaction, previous + 1);
@@ -87,7 +101,7 @@ export = {
       toArray() {
         return [...this._map.entries()]
           .sort((a, b) => b[1] - a[1]) // sort by descending count
-          .map((x) => x[0]); // pick the emoji string
+          .map(x => x[0]); // pick the emoji string
       },
     };
 
@@ -170,8 +184,12 @@ export = {
                 ssb.db.query(
                   where(and(type('vote'), author(ssb.id, {dedicated: true}))),
                   toCallback((err: any, msgs: Array<Msg<VoteContent>>) => {
-                    if (err) return cb(err);
-                    for (const msg of msgs) reactionsCount.update(msg);
+                    if (err) {
+                      return cb(err);
+                    }
+                    for (const msg of msgs) {
+                      reactionsCount.update(msg);
+                    }
                     cb(null, reactionsCount.toArray());
                   }),
                 );
