@@ -78,7 +78,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    enableHermes: true,  // clean and rebuild if changing
+        enableHermes: true,  // clean and rebuild if changing
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -137,7 +137,8 @@ android {
         versionCode 1
         versionName "1.0"
         ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a" // , "x86", "x86_64"
+            abiFilters "armeabi-v7a"
+//, "arm64-v8a" // , "x86", "x86_64" 打开这个需要注意需要增加相应的libscrypto.so库。光子sdk需要依赖
         }
         aaptOptions {
             ignoreAssetsPattern '!*.json.license!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~'
@@ -145,7 +146,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         missingDimensionStrategy 'react-native-camera', 'general'
     }
-    lintOptions{
+    lintOptions {
         checkDependencies true
         checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
@@ -179,11 +180,11 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-            if (nativeArchitectures) {
-                ndk {
-                    abiFilters nativeArchitectures.split(',')
-                }
-            }
+//            if (nativeArchitectures) {
+//                ndk {
+//                    abiFilters nativeArchitectures.split(',')
+//                }
+//            }
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -223,29 +224,30 @@ android {
 }
 
 
-
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+//    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
+
 
     implementation 'org.web3j:core:4.2.0-android'  //3.3.1 version will cause oom
 //    封装的光子
 //    implementation project(path: ':react-native-photon')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
-        exclude group:'com.facebook.fbjni'
+        exclude group: 'com.facebook.fbjni'
     }
 
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {
-        exclude group:'com.facebook.flipper'
-        exclude group:'com.squareup.okhttp3', module:'okhttp'
+        exclude group: 'com.facebook.flipper'
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
 
     debugImplementation("com.facebook.flipper:flipper-fresco-plugin:${FLIPPER_VERSION}") {
-        exclude group:'com.facebook.flipper'
+        exclude group: 'com.facebook.flipper'
     }
 
 
