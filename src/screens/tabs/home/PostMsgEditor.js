@@ -11,12 +11,13 @@ import {sendMsg} from '../../../remote/ssbOP';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import ItemAgent from './ItemAgent';
 
-const PostMsgEditor = () => {
-  const {FG, flex1, text} = SchemaStyles();
+const PostMsgEditor = ({commentDic}) => {
+  const {FG, flex1} = SchemaStyles();
 
   const {goBack, setOptions} = useNavigation();
   const {params} = useRoute();
-  const {name, commentArr} = params || {};
+  const {name, key} = params || {},
+    commentArr = commentDic[key] || [];
 
   useLayoutEffect(() => {
     name && setOptions({title: `comment to ${name}`});
@@ -24,10 +25,12 @@ const PostMsgEditor = () => {
 
   function sendHandler(content) {
     sendMsg(
-      {
-        type: 'post',
-        text: content,
-      },
+      key
+        ? {type: 'post', text: content, root: key, fork: key, branch: key}
+        : {
+            type: 'post',
+            text: content,
+          },
       msg => {
         goBack();
       },
@@ -49,6 +52,7 @@ const PostMsgEditor = () => {
 const msp = s => {
   return {
     feedId: s.user.feedId,
+    commentDic: s.msg.commentDic,
   };
 };
 

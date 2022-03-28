@@ -170,3 +170,8 @@ export const loadMsg = (msgKey, isPrivate = false, cb = null) => {
 
 export const profileFeed = (id, cb) =>
   ssb.threads.profileSummary({id, threadMaxSize: 3})(null, cb);
+
+export const foo = () =>
+  new Promise((resolve, reject) => {
+    setTimeout(() => resolve('resolved'), 1000);
+  });

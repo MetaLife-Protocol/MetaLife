@@ -7,6 +7,7 @@ import {
   addPrivateUpdatesListener,
   addPublicUpdatesListener,
   connStart,
+  foo,
   getProfile,
   graph,
   loadMsg,
@@ -30,6 +31,8 @@ const Home = ({
   const {flex1} = SchemaStyles();
 
   useEffect(() => {
+    // promise demo
+    // foo().then(console.log).catch(console.warn);
     window.ssb ||
       reqStartSSB(ssb => {
         ssbOP.ssb = window.ssb = ssb;
