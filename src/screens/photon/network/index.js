@@ -6,19 +6,55 @@
  * @desc:
  */
 
-import React, {useLayoutEffect} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import React, {useLayoutEffect, useState} from 'react';
+import {
+  FlatList,
+  Image,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {useStyle} from '../../../shared/ThemeColors';
 import PhotonAccountInfoCard from './comps/PhotonAccountInfoCard';
 import {useNavigation} from '@react-navigation/native';
+import PhotonMoreActionsView from './comps/PhotonMoreActionsView';
+import PhotonListItemView from './comps/PhotonListItemView';
 
 const PhotonNetwork = () => {
   const styles = useStyle(createSty);
+  const [moreActionsVisible, setMoreActionsVisible] = useState(false);
+
   const navigation = useNavigation();
-  useLayoutEffect(() => {}, []);
+  useLayoutEffect(() => {
+    // navigationOptions;
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPress={() => setMoreActionsVisible(true)}>
+          <Image
+            source={require('../../../assets/image/photon/photon_more.png')}
+            style={styles.moreImg}
+          />
+        </Pressable>
+      ),
+    });
+  }, [navigation, styles.moreImg]);
   return (
     <SafeAreaView style={styles.container}>
-      <PhotonAccountInfoCard style={{marginTop: 20}} />
+      <PhotonAccountInfoCard style={styles.topCard} />
+      <View style={styles.channelListContainer}>
+        <View style={styles.channelListTextContainer}>
+          <Text style={styles.channelText}>Channel list</Text>
+        </View>
+      </View>
+      <FlatList data={[0, 1]} renderItem={() => <PhotonListItemView />} />
+      <PhotonMoreActionsView
+        visible={moreActionsVisible}
+        onSelect={() => {
+          setMoreActionsVisible(false);
+        }}
+      />
     </SafeAreaView>
   );
 };
@@ -28,5 +64,21 @@ const createSty = theme =>
       flex: 1,
       backgroundColor: theme.c_F8F9FD_000000,
     },
+    topCard: {marginTop: 20},
+    moreImg: {width: 20, height: 20, tintColor: theme.c_000000_FFFFFF},
+    channelListContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 20,
+    },
+    channelListTextContainer: {
+      height: 24,
+      backgroundColor: theme.primary,
+      paddingHorizontal: 10,
+      paddingVertical: 2,
+      borderTopRightRadius: 50,
+      borderBottomRightRadius: 50,
+    },
+    channelText: {fontSize: 14, lineHeight: 20, color: theme.black},
   });
 export default PhotonNetwork;
