@@ -6,16 +6,19 @@
  * @desc:
  */
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import {useStyle} from '../../../shared/ThemeColors';
+import TransactionRecordItem from './comps/TransactionRecordItem';
 
 const RecordPhoton = () => {
   const styles = useStyle(createSty);
 
   return (
-    <View style={styles.container}>
-      <Text style={{color: 'red'}}>RecordPhoton</Text>
-    </View>
+    <FlatList
+      style={styles.container}
+      data={[0, 1]}
+      renderItem={() => <TransactionRecordItem />}
+    />
   );
 };
 const createSty = theme =>
@@ -23,6 +26,7 @@ const createSty = theme =>
     container: {
       flex: 1,
       backgroundColor: theme.c_F8F9FD_000000,
+      margin: 15,
     },
   });
 export default RecordPhoton;

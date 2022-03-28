@@ -9,9 +9,7 @@ import React, {useCallback, useRef} from 'react';
 import {SafeAreaView, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import QRCode from 'react-native-qrcode-svg';
-import RNFS from 'react-native-fs';
-import {saveImg} from '../../../utils';
-import {startPhotonServer} from 'react-native-photon';
+import {loadChannelList, startPhotonServer} from 'react-native-photon';
 
 const ReceivingCode = ({}) => {
   const {flex1, BG} = SchemaStyles(),
@@ -24,28 +22,33 @@ const ReceivingCode = ({}) => {
 
   const saveQrToDisk = useCallback(() => {
     startPhotonServer({
-      privateKey: 'privateKey',
-      ethRPCEndPoint: 'ethRPCEndPoint',
+      privateKey:
+        '22d2654f2ad702a98a32df1d33604ccda9c750c2b2730072952e9f76296e9286',
+      ethRPCEndPoint: '',
     });
-    return;
-    console.log('svg.current::', svg.current);
-    svg.current &&
-      svg.current.toDataURL(data => {
-        RNFS.writeFile(
-          RNFS.CachesDirectoryPath + '/some-name.png',
-          data,
-          'base64',
-        )
-          .then(success => {
-            // console.log('url:::', RNFS.CachesDirectoryPath + '/some-name.png');
-            //保存图片
-            saveImg(RNFS.CachesDirectoryPath + '/some-name.png');
-          })
-          .then(() => {
-            // this.setState({busy: false, imageSaved: true});
-            // ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
-          });
-      });
+
+    // console.log('svg.current::', svg.current);
+    // svg.current &&
+    //   svg.current.toDataURL(data => {
+    //     RNFS.writeFile(
+    //       RNFS.CachesDirectoryPath + '/some-name.png',
+    //       data,
+    //       'base64',
+    //     )
+    //       .then(success => {
+    //         // console.log('url:::', RNFS.CachesDirectoryPath + '/some-name.png');
+    //         //保存图片
+    //         saveImg(RNFS.CachesDirectoryPath + '/some-name.png');
+    //       })
+    //       .then(() => {
+    //         // this.setState({busy: false, imageSaved: true});
+    //         // ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
+    //       });
+    //   });
+  }, []);
+
+  const getChannelList = useCallback(() => {
+    loadChannelList();
   }, []);
 
   return (
@@ -70,7 +73,13 @@ const ReceivingCode = ({}) => {
       <TouchableOpacity
         onPress={saveQrToDisk}
         style={{backgroundColor: 'yellow', marginTop: 40}}>
-        <Text>save</Text>
+        <Text>start photon</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={getChannelList}
+        style={{backgroundColor: 'yellow', marginTop: 15}}>
+        <Text>getChannelList</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
