@@ -23,6 +23,7 @@ import Web from './screens/webview';
 import Payment from './screens/photon/payment';
 import NavigationBackView from './shared/comps/NavigationBackView';
 import PhotonNetwork from './screens/photon/network';
+import PhotonTransactionRecord from './screens/photon/transaction_record';
 
 const App = () => {
   const {theme, BG} = SchemaStyles();
@@ -112,6 +113,11 @@ const App = () => {
           name="PhotonNetwork"
           options={{headerTitle: 'Photon network'}}
           component={PhotonNetwork}
+        />
+        <Stack.Screen
+          name="PhotonTransactionRecord"
+          options={{headerTitle: 'Transaction Record'}}
+          component={PhotonTransactionRecord}
         />
       </Stack.Navigator>
     </NavigationContainer>

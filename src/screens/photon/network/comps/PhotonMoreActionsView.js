@@ -36,7 +36,14 @@ const PhotonMoreActionsView = ({visible, onSelect}) => {
         }}>
         Create channel
       </Text>
-      <Text style={styles.text}>Transaction record</Text>
+      <Text
+        style={styles.text}
+        onPress={() => {
+          onSelect();
+          navigate('PhotonTransactionRecord');
+        }}>
+        Transaction record
+      </Text>
       <Text style={styles.text}>Upload data</Text>
     </View>
   );
