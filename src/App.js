@@ -18,13 +18,15 @@ import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import {bluetoothSearch} from './remote/ssbOP';
 import HeaderRightBtn from './screens/tabs/HeaderRightBtn';
+
 const addIcon = require('./assets/image/headerBtn/contacts_icon_add_white.png');
 function TestHandel() {
   console.log('TestHandle');
-  bluetoothSearch(20e3, (e, v) => {
-    console.log('bluetooth search');
+  bluetoothSearch(20e3, res => {
+    console.log('bluetooth search', res);
   });
 }
+
 const App = () => {
   const {theme} = SchemaStyles();
   const Stack = createNativeStackNavigator();
