@@ -35,10 +35,7 @@ const dummyBluetoothPlugin = {
 
 export = function createBluetoothPlugin(keys: any, appDataDir: string) {
   // Disable Bluetooth on iOS and Desktop, for now
-  if (
-    (process.platform as string) === 'ios' ||
-    process.env.MANYVERSE_PLATFORM === 'desktop'
-  ) {
+  if (process.env.MANYVERSE_PLATFORM === 'desktop') {
     return dummyBluetoothPlugin;
   }
 
