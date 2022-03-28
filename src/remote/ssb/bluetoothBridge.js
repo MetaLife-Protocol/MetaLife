@@ -33,6 +33,7 @@ let needAddIsEnableCmd = false;
 export const bluetoothBridge = function (options) {
   var localHost = '127.0.0.1';
   console.log('bluetoothBridge init');
+
   var peripheralEmitter = new NativeEventEmitter(BLEPeripheral);
   var centralEmitter = new NativeEventEmitter(NativeModules.BleManager);
   BLEWormhole.CreateNativeEventEmitter(centralEmitter, peripheralEmitter);
@@ -166,6 +167,7 @@ export const bluetoothBridge = function (options) {
   let clientControll = TcpSocket.createConnection(
     {port: options.controlPort, host: localHost},
     () => {
+      console.log('connect controller');
       // Write on the socket
       while (true) {
         var commandResponse = commandResponseBuffer.shift();
@@ -177,12 +179,14 @@ export const bluetoothBridge = function (options) {
       }
     },
   );
-
+  clientControll.on('error', function (error) {
+    console.log('clientControll error:', error);
+  });
   clientControll.on('data', function (data) {
     var jsonString = Buffer.from(data).toString();
     var jsonData = JSON.parse(jsonString);
     var command = jsonData.command;
-
+    console.log('data:', data);
     var dicoveredSeconds = 3;
     if (command === 'connect') {
       var remoteAddress = data.arguments.remoteAddress;
@@ -248,7 +252,9 @@ export const bluetoothBridge = function (options) {
     {port: options.incomingPort, host: localHost},
     () => {},
   );
-
+  clientIncoming.on('error', function (error) {
+    console.log('clientIncoming error:', error);
+  });
   clientIncoming.on('data', function (data) {
     for (let connectedDeviceID in connectedDevices) {
       if (!connectedDevices.hasOwnProperty(connectedDeviceID)) {
@@ -272,7 +278,9 @@ export const bluetoothBridge = function (options) {
     {port: options.outgoingPort, host: localHost},
     () => {},
   );
-
+  clientOutgoing.on('error', function (error) {
+    console.log('clientOutgoing error:', error);
+  });
   clientOutgoing.on('data', function (data) {
     for (let disconnectedDeviceID in connectedDevices) {
       if (!connectedDevices.hasOwnProperty(disconnectedDeviceID)) {
