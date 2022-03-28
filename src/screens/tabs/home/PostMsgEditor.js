@@ -10,14 +10,17 @@ import MsgInput from '../../../shared/comps/MsgInput';
 import {sendMsg} from '../../../remote/ssbOP';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import ItemAgent from './ItemAgent';
+import Section from '../../../shared/comps/Section';
+import PostItem from './items/PostItem';
 
-const PostMsgEditor = ({commentDic}) => {
-  const {FG, flex1} = SchemaStyles();
+const PostMsgEditor = ({publicMsg, commentDic}) => {
+  const {FG, flex1, text} = SchemaStyles();
 
   const {goBack, setOptions} = useNavigation();
   const {params} = useRoute();
   const {name, key} = params || {},
-    commentArr = commentDic[key] || [];
+    commentArr = commentDic[key] || [],
+    [shownMsg] = publicMsg.filter(msg => msg.key === key);
 
   useLayoutEffect(() => {
     name && setOptions({title: `comment to ${name}`});
@@ -39,11 +42,16 @@ const PostMsgEditor = ({commentDic}) => {
 
   return (
     <SafeAreaView style={[flex1, FG]}>
-      <FlatList
-        data={commentArr}
-        keyExtractor={item => item.key}
-        renderItem={info => <ItemAgent info={info} verbose={false} />}
-      />
+      <Section title={'Reply to:'}>
+        <PostItem item={shownMsg} showPanel={false} />
+      </Section>
+      <Section title={'Replies:'} style={[flex1]}>
+        <FlatList
+          data={commentArr}
+          keyExtractor={item => item.key}
+          renderItem={info => <ItemAgent info={info} verbose={false} />}
+        />
+      </Section>
       <MsgInput sendHandler={sendHandler} />
     </SafeAreaView>
   );
@@ -52,6 +60,7 @@ const PostMsgEditor = ({commentDic}) => {
 const msp = s => {
   return {
     feedId: s.user.feedId,
+    publicMsg: s.msg.publicMsg,
     commentDic: s.msg.commentDic,
   };
 };

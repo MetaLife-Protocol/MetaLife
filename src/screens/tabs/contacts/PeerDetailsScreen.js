@@ -36,7 +36,7 @@ const PeerDetailsScreen = ({
         data={feedDic[feedId]}
         keyExtractor={item => item.key}
         ListHeaderComponent={<PeerDetailsHeader />}
-        renderItem={info => <ItemAgent info={info} verbose={true} />}
+        renderItem={info => <ItemAgent info={info} verbose={false} />}
       />
     </SafeAreaView>
   );

@@ -18,6 +18,7 @@ const PostItem = ({
     key,
     value: {author, timestamp, content},
   },
+  showPanel = true,
   feedId,
   peerInfoDic,
   voteDic = {},
@@ -87,14 +88,16 @@ const PostItem = ({
               <Text>name</Text>
             </View>
           ))}
-        <PostMsgPanel
-          style={[row, flex1, justifySpaceBetween, panel]}
-          voted={voted}
-          voteArr={voteArr}
-          commentArr={commentArr}
-          commentHandler={commentHandler}
-          likeHandler={likeHandler}
-        />
+        {showPanel && (
+          <PostMsgPanel
+            style={[row, flex1, justifySpaceBetween, panel]}
+            voted={voted}
+            voteArr={voteArr}
+            commentArr={commentArr}
+            commentHandler={commentHandler}
+            likeHandler={likeHandler}
+          />
+        )}
       </View>
     </View>
   );
