@@ -12,7 +12,14 @@ const iconDic = {
   iconLikePress: require('../../../../assets/image/messages/dongtai_icon_like_press.png'),
 };
 
-const PostMsgPanel = ({style, voted, voteArr, commentHandler, likeHandler}) => {
+const PostMsgPanel = ({
+  style,
+  voted,
+  voteArr,
+  commentArr,
+  commentHandler,
+  likeHandler,
+}) => {
   const {row, text} = SchemaStyles();
   return (
     <View style={style}>
@@ -20,7 +27,10 @@ const PostMsgPanel = ({style, voted, voteArr, commentHandler, likeHandler}) => {
         <Image source={iconDic.iconForward} />
       </Pressable>
       <Pressable onPress={commentHandler}>
-        <Image source={iconDic.iconComment} />
+        <View style={[row]}>
+          <Text style={[text, {paddingRight: 6}]}>{commentArr.length}</Text>
+          <Image source={iconDic.iconComment} />
+        </View>
       </Pressable>
       <Pressable onPress={likeHandler}>
         <View style={[row]}>

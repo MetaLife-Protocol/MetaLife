@@ -25,6 +25,7 @@ const Home = ({
   publicMsg,
   addPublicMsg,
   setPrivateMsg,
+  setVote,
 }) => {
   const {flex1} = SchemaStyles();
 
@@ -68,7 +69,7 @@ const Home = ({
       <FlatList
         data={[...publicMsg].reverse()}
         keyExtractor={item => item.key}
-        renderItem={info => <ItemAgent info={info} verbose={true} />}
+        renderItem={info => <ItemAgent info={info} verbose={false} />}
       />
     </SafeAreaView>
   );
@@ -87,9 +88,17 @@ const mdp = d => {
     setFeedId: v => d({type: 'setFeedId', payload: v}),
     addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
     setPublicMsg: v => d({type: 'setPublicMsg', payload: v}),
-    addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
+    addPublicMsg: v => {
+      switch (v.messages[0].value.content.type) {
+        case 'vote':
+          return d({type: 'setVote', payload: v.messages[0].value});
+        case 'post':
+          return d({type: 'addPublicMsg', payload: v});
+      }
+    },
     setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),
     addPrivateMsg: v => d({type: 'addPrivateMsg', payload: v}),
+    setVote: v => d({type: 'setVote', payload: v}),
     setFriendsGraph: v => d({type: 'setFriendsGraph', payload: v}),
   };
 };

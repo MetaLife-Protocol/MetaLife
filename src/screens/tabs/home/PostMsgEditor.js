@@ -3,19 +3,20 @@
  */
 
 import React, {useLayoutEffect} from 'react';
-import {SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {FlatList, SafeAreaView, ScrollView, Text, View} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import MsgInput from '../../../shared/comps/MsgInput';
 import {sendMsg} from '../../../remote/ssbOP';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import ItemAgent from './ItemAgent';
 
 const PostMsgEditor = () => {
   const {FG, flex1, text} = SchemaStyles();
 
   const {goBack, setOptions} = useNavigation();
   const {params} = useRoute();
-  const {name, content: {text: cText} = {}} = params || {};
+  const {name, commentArr} = params || {};
 
   useLayoutEffect(() => {
     name && setOptions({title: `comment to ${name}`});
@@ -35,13 +36,11 @@ const PostMsgEditor = () => {
 
   return (
     <SafeAreaView style={[flex1, FG]}>
-      <ScrollView contentInsetAdjustmentBehavior="automatic">
-        {cText && (
-          <View style={FG}>
-            <Text style={[text]}>{cText}</Text>
-          </View>
-        )}
-      </ScrollView>
+      <FlatList
+        data={commentArr}
+        keyExtractor={item => item.key}
+        renderItem={info => <ItemAgent info={info} verbose={false} />}
+      />
       <MsgInput sendHandler={sendHandler} />
     </SafeAreaView>
   );

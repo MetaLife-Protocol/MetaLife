@@ -21,11 +21,12 @@ const PostItem = ({
   feedId,
   peerInfoDic,
   voteDic = {},
+  commentDic = {},
 }) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
     {container, textContainer, contentContainer, panel} = styles;
-  const {navigate} = useNavigation();
+  const {navigate, push} = useNavigation();
   const {
       name = author.substring(0, 10),
       description = '',
@@ -33,7 +34,8 @@ const PostItem = ({
     } = peerInfoDic[author] || {},
     {text: cText, mentions = null} = content,
     voteArr = voteDic[key] || [],
-    voted = voteArr.includes(feedId);
+    voted = voteArr.includes(feedId),
+    commentArr = commentDic[key] || [];
 
   const likeHandler = useCallback(
     function () {
@@ -50,7 +52,7 @@ const PostItem = ({
   );
 
   const commentHandler = useCallback(function () {
-    navigate('PostMsgEditor', {name, content});
+    push('PostMsgEditor', {name, commentArr});
   }, []);
 
   return (
@@ -89,6 +91,7 @@ const PostItem = ({
           style={[row, flex1, justifySpaceBetween, panel]}
           voted={voted}
           voteArr={voteArr}
+          commentArr={commentArr}
           commentHandler={commentHandler}
           likeHandler={likeHandler}
         />
@@ -121,6 +124,7 @@ const msp = s => {
     feedId: s.user.feedId,
     peerInfoDic: s.contacts.peerInfoDic,
     voteDic: s.msg.voteDic,
+    commentDic: s.msg.commentDic,
   };
 };
 
