@@ -1,5 +1,8 @@
 import nodejs from 'nodejs-mobile-react-native';
 import {makeClient} from './ssb/Client';
+import xs from 'xstream';
+import xsFromPullStream from 'xstream-from-pull-stream';
+import {pull} from 'pull-stream';
 
 export let ssb = window.ssb;
 
@@ -182,3 +185,53 @@ export const foo = () =>
   new Promise((resolve, reject) => {
     setTimeout(() => resolve('resolved'), 1000);
   });
+
+export const xsTest = () => {
+  // Tick every second incremental numbers,
+  // only pass even numbers, then map them to their square,
+  // and stop after 5 seconds has passed
+
+  const stream = xs
+    .periodic(1000)
+    .filter(i => i)
+    .map(i => i)
+    .endWhen(xs.periodic(5000).take(1));
+
+  // So far, the stream is idle.
+  // As soon as it gets its first listener, it starts executing.
+
+  stream.addListener({
+    next: i => console.log(i),
+    error: err => console.error(err),
+    complete: () => console.log('completed'),
+  });
+};
+
+export const xsTest2 = key => {
+  console.log('retrieve key: ', key);
+  xsFromPullStream(ssb.votes.voterStream(key))
+    .startWith([])
+    .map(arr => {
+      console.log(arr);
+      return arr.reverse();
+    });
+};
+
+export const xsTest3 = () => {
+  ssb.threads.public({
+    reverse: true, // threads sorted from most recent to least recent
+    threadMaxSize: 3, // at most 3 messages in each thread
+  }),
+    pull.drain(thread => {
+      console.log(thread);
+    });
+};
+
+export const publicFeed = opts => {
+  return pull(
+    ssb.deweird.source(['threads', 'publicSummary'], {
+      ...opts,
+    }),
+    pull.asyncMap(console.log),
+  );
+};
