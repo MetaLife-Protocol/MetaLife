@@ -5,23 +5,21 @@ export let ssb = window.ssb;
 
 export const status = cb =>
   ssb.status((e, v) => (e ? console.error(e) : cb(v)));
-// conn
-export const stage = cb =>
-  ssb.conn.stage((e, v) => (e ? console.error(e) : cb(v)));
-export const connStart = cb =>
-  ssb.conn.start((e, v) => (e ? console.error(e) : cb(v)));
-//
+
+/************************** ssb **************************/
 export const replicationSchedulerStart = cb =>
   ssb.replicationScheduler.start((e, v) => (e ? console.error(e) : cb(v)));
+
 export const suggestStart = cb =>
   ssb.suggest.start((e, v) => (e ? console.error(e) : cb(v)));
-/* async */
-export const block = (fid, opts, cb) => {
-  ssb.friends.block(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));
-};
-export const follow = (fid, opts, cb) => {
-  ssb.friends.follow(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));
-};
+
+/************************** conn **************************/
+export const stage = cb =>
+  ssb.conn.stage((e, v) => (e ? console.error(e) : cb(v)));
+
+export const connStart = cb =>
+  ssb.conn.start((e, v) => (e ? console.error(e) : cb(v)));
+
 export const connectPeer = (address, data = {}, cb = null) =>
   ssb.conn.connect(address, data, (e, v) => (e ? console.error(e) : cb(v)));
 
@@ -41,15 +39,38 @@ export const rememberPeer = (address, data, cb) =>
 export const forgetPeer = (address, cb) =>
   ssb.conn.forget(address, (e, v) => (e ? console.error(e) : cb(v)));
 
-/* source */
 export const getStagedPeers = cb =>
   ssb.conn.stagedPeers()(null, (e, v) => (e ? console.error(e) : cb(v)));
+
 export const getConnectedPeers = cb =>
   ssb.conn.peers()(null, (e, v) => (e ? console.error(e) : cb(v)));
+
 export const blobsGetter = (blobId, cb) =>
   ssb.blobs.get(blobId)(null, (e, v) => (e ? console.error(e) : cb(v)));
 
-/* profile / about */
+export const ping = cb =>
+  ssb.conn.ping()(null, (e, v) => (e ? console.error(e) : cb && cb(v)));
+/************************** friends **************************/
+export const block = (fid, opts, cb) => {
+  ssb.friends.block(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));
+};
+
+export const follow = (fid, opts, cb) => {
+  ssb.friends.follow(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));
+};
+
+// ssb.deweird.source(['threads', 'publicSummary'],{})(null,(e, v)=>console.log(v))
+// ssb.friends.hopStream({old:true, live:true})(null, console.log)
+// ssb.friends.graphStream({ old: true, live: true })(null,console.log)
+export const graph = cb =>
+  ssb.friends.graph((e, v) => (e ? console.error(e) : cb(v)));
+
+export const getHops = (hop = 1, cb = null) =>
+  ssb.friends.hops({start: ssb.id, reverse: true, max: hop}, (e, v) =>
+    e ? console.log(e) : cb(v),
+  );
+
+/************************** profile & about **************************/
 export const getProfile = (fid, cb) =>
   ssb.aboutSelf.get(fid, (e, v) => (e ? console.error(e) : cb(v)));
 export const setAbout = (fid, {name, description, image}, cb) =>
@@ -68,34 +89,14 @@ export const isFollowing = (source, dest, cb = null) =>
     (e, v) => (e ? console.warn(e) : cb && cb(v)),
   );
 
-// getMnemonic
+/************************** mnemonic **************************/
 export const getMnemonic = cb =>
   ssb.keysUtils.getMnemonic((e, v) => (e ? console.warn(e) : cb(v)));
 
-// invite
-/**
- * 106.52.171.12:8008:@eVs235wBX5aRoyUwWyZRbo9r1oZ9a7+V+wEvf+F/MCw=.ed25519~XOpv/D1TnStp6uLgVvOY2qsmuc9TUyrpuq/C0v3V4kw=
- * 18.136.101.14:8008:@zDQg3H5QxUNnfPv2dDH03jCl6Az7A9iNBi57zOIP9R4=.ed25519~CLz9rH2fGe0lCR3O0IICUbtFO9BPUHnX+HkTY0Dv9Uc=
- * @param code
- * @param cb
- * @returns {*}
- */
+/************************** invite **************************/
 export const inviteAccept = (code, cb = null) => ssb.invite.accept(code, cb);
 
-/* duplex */
-export const ping = cb =>
-  ssb.conn.ping()(null, (e, v) => (e ? console.error(e) : cb && cb(v)));
-
-// ssb.deweird.source(['threads', 'publicSummary'],{})(null,(e, v)=>console.log(v))
-// ssb.friends.hopStream({old:true, live:true})(null, console.log)
-// ssb.friends.graphStream({ old: true, live: true })(null,console.log)
-export const graph = cb =>
-  ssb.friends.graph((e, v) => (e ? console.error(e) : cb(v)));
-export const getHops = (hop = 1, cb = null) =>
-  ssb.friends.hops({start: ssb.id, reverse: true, max: hop}, (e, v) =>
-    e ? console.log(e) : cb(v),
-  );
-
+/************************** initialize **************************/
 export const reqStartSSB = setInstance => {
   const {channel} = nodejs;
   channel.addListener(
@@ -111,6 +112,7 @@ export const reqStartSSB = setInstance => {
   // channel.post('identity', 'RESTORE: word0 word1...');
 };
 
+/************************** listeners **************************/
 export const addPublicUpdatesListener = cb => {
   ssb.threads.publicUpdates({
     reverse: true,
@@ -140,6 +142,7 @@ export const addPrivateUpdatesListener = cb => {
   });
 };
 
+/************************** publish **************************/
 export const sendMsg = (opt, cb = null) => {
   ssb.publish(opt, (e, v) => {
     if (e) {
@@ -151,11 +154,11 @@ export const sendMsg = (opt, cb = null) => {
   });
 };
 
+/************************** retrieve **************************/
 // id相关的消息
 // ssb.threads.profileSummary({id:'@AvWTlEvVCO5uL+FYRPnIaFCbeAjpPltJlfSgzbitQjI=.ed25519',reverse:false})(null, console.log)
 
 // 拉取最新的一条公共
-// todo: 前向拉取
 export const loadPublic = cb =>
   ssb.threads.public({reverse: true, threadMaxSize: 10})(null, (e, v) =>
     e ? console.warn(e) : cb && cb(v),
@@ -168,9 +171,13 @@ export const loadMsg = (msgKey, isPrivate = false, cb = null) => {
   })(null, cb);
 };
 
+export const voted = (key, cb) => ssb.votes.voterStream(key)(null, cb);
+
+// last feed
 export const profileFeed = (id, cb) =>
   ssb.threads.profileSummary({id, threadMaxSize: 3})(null, cb);
 
+/************************** preset **************************/
 export const foo = () =>
   new Promise((resolve, reject) => {
     setTimeout(() => resolve('resolved'), 1000);

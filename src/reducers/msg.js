@@ -57,21 +57,21 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
     case 'setPublicMsg':
       return {...state, publicMsg: payload};
     case 'addPublicMsg':
-      const extraMsg = payload.messages.filter(
-        msg => msg.value.content.branch || msg.value.content.fork,
-      );
-      return extraMsg.length
-        ? {
-            ...state,
-            commentDic: {
-              ...state.commentDic,
-              [extraMsg[0].value.content.root]: [
-                ...(state.commentDic[extraMsg[0].value.content.root] || []),
-                extraMsg[0],
-              ],
-            },
-          }
-        : {...state, publicMsg: [...state.publicMsg, ...payload.messages]};
+      let index, appendMsg;
+      const [comment] = payload.messages.filter(msg => msg.value.content.root),
+        [root] = state.publicMsg.filter((msg, i) => {
+          index = i;
+          return msg.key === comment.value.content.root;
+        });
+      if (comment && root) {
+        appendMsg = [...state.publicMsg];
+        root.push(comment);
+        appendMsg[index] = [...root];
+      }
+      return {
+        ...state,
+        publicMsg: [...[appendMsg ? appendMsg : payload.messages]],
+      };
     case 'clearPublicMsg':
       return {...state, publicMsg: {}};
     default:
