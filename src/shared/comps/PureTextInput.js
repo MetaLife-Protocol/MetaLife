@@ -25,6 +25,7 @@ const PureTextInput = ({
   defaultValue = '',
   onChangeText,
   inputProps,
+  hasSeparator = false,
 }) => {
   const {flex1, text, placeholderTextColor} = SchemaStyles(),
     {round, textInput} = styles;
@@ -51,7 +52,7 @@ const PureTextInput = ({
           {...inputProps}
         />
       </View>
-      <PhotonSeparator />
+      {hasSeparator && <PhotonSeparator />}
     </KeyboardAvoidingView>
   );
 };
