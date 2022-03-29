@@ -37,12 +37,43 @@ let needAddIsEnableCmd = false;
 export const bluetoothBridge = function (options) {
   var localHost = '127.0.0.1';
   console.log('bluetoothBridge init');
+  let clientIncoming;
+  function createConnection() {
+    clientIncoming = TcpSocket.createConnection(
+      {port: options.incomingPort, host: localHost},
+      () => {},
+    );
+    clientIncoming.on('error', function (error) {
+      console.log('clientIncoming error:', error);
+    });
+    clientIncoming.on('data', function (data) {
+      for (let connectedDeviceID in connectedDevices) {
+        if (!connectedDevices.hasOwnProperty(connectedDeviceID)) {
+          continue;
+        }
+
+        let connectedDeviceName = connectedDevices[connectedDeviceID];
+        if (connectedDeviceName !== undefined) {
+          BLEWormhole.SendBuffer(
+            connectedDeviceName,
+            connectedDeviceID,
+            bleServiceUUID,
+            incomingCharaUUID,
+            data,
+          );
+        }
+      }
+    });
+  }
+
   DeviceEventEmitter.addListener('commandPop', () => {
     var commandResponse = commandResponseBuffer.shift();
     if (commandResponse !== undefined) {
       var jsonString = JSON.stringify(commandResponse);
       var sendBuffer = Buffer.from(jsonString);
-      clientControll.write(sendBuffer);
+      console.log('send:', jsonString);
+      var res = clientControll.write(sendBuffer);
+      console.log('send', res ? 'success' : 'fail');
     }
   });
   var peripheralEmitter = new NativeEventEmitter(BLEPeripheral);
@@ -80,6 +111,9 @@ export const bluetoothBridge = function (options) {
           if (deviceName !== undefined) {
             if (deviceName === BLEWormhole.deviceUUID) {
             } else {
+              if (clientIncoming === undefined) {
+                createConnection();
+              }
               if (connectedDevices[deviceID] === undefined) {
                 commandResponseBuffer.push({
                   command: 'connected',
@@ -185,10 +219,7 @@ export const bluetoothBridge = function (options) {
 
   let clientControll = TcpSocket.createConnection(
     {port: options.controlPort, host: localHost},
-    () => {
-      console.log('connect controller');
-
-    },
+    () => {},
   );
   clientControll.on('error', function (error) {
     console.log('clientControll error:', error);
@@ -197,12 +228,18 @@ export const bluetoothBridge = function (options) {
     var jsonString = Buffer.from(data).toString();
     var jsonData = JSON.parse(jsonString);
     var command = jsonData.command;
-    console.log('data:', data);
+    console.log('controll data:', jsonData);
     var dicoveredSeconds = 3;
     if (command === 'connect') {
       var remoteAddress = data.arguments.remoteAddress;
 
       // awaitingOutgoingConnection.push(remoteAddress);
+    } else if (command === 'ownMacAddress') {
+      commandResponseBuffer.push({
+        command: 'ownMacAddress',
+        arguments: {address: BLEWormhole.deviceUUID},
+      });
+      DeviceEventEmitter.emit('commandPop');
     } else if (command === 'discoverDevices') {
       deviceProperties = [];
       BLEWormhole.Scan([bleServiceUUID], dicoveredSeconds);
@@ -260,32 +297,6 @@ export const bluetoothBridge = function (options) {
         controlCharaUUID,
       );
     } else {
-    }
-  });
-
-  let clientIncoming = TcpSocket.createConnection(
-    {port: options.incomingPort, host: localHost},
-    () => {},
-  );
-  clientIncoming.on('error', function (error) {
-    console.log('clientIncoming error:', error);
-  });
-  clientIncoming.on('data', function (data) {
-    for (let connectedDeviceID in connectedDevices) {
-      if (!connectedDevices.hasOwnProperty(connectedDeviceID)) {
-        continue;
-      }
-
-      let connectedDeviceName = connectedDevices[connectedDeviceID];
-      if (connectedDeviceName !== undefined) {
-        BLEWormhole.SendBuffer(
-          connectedDeviceName,
-          connectedDeviceID,
-          bleServiceUUID,
-          incomingCharaUUID,
-          data,
-        );
-      }
     }
   });
 
