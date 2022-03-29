@@ -19,6 +19,8 @@ export function getTheme(isLightTheme) {
       c_F8F9FD_000000: '#F8F9FD',
       c_FFFFFF_111717: '#FFF',
       c_64D39F: '#64D39F',
+      c_4E586E: '#4E586E',
+      c_F0F0F0_000000: '#F0F0F0',
     };
   } else {
     return {
@@ -30,6 +32,8 @@ export function getTheme(isLightTheme) {
       c_FFFFFF_111717: '#111717',
       c_8E8E92: '#8E8E92',
       c_64D39F: '#64D39F',
+      c_4E586E: '#4E586E',
+      c_F0F0F0_000000: '#000000',
     };
   }
 }
