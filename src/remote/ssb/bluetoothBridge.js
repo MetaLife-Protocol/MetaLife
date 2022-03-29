@@ -3,7 +3,11 @@ import {BLEWormhole} from 'react-native-ble-wormhole';
 import {Buffer} from 'buffer';
 import BleManager from 'react-native-ble-manager/BleManager';
 import BLEPeripheral from 'react-native-ble-peripheral';
-import {NativeEventEmitter, NativeModules} from 'react-native';
+import {
+  NativeEventEmitter,
+  NativeModules,
+  DeviceEventEmitter,
+} from 'react-native';
 
 const bleServiceUUID = 'C4FB2349-72FE-1BA2-94D6-1F3CB16311EE';
 
@@ -33,7 +37,14 @@ let needAddIsEnableCmd = false;
 export const bluetoothBridge = function (options) {
   var localHost = '127.0.0.1';
   console.log('bluetoothBridge init');
-
+  DeviceEventEmitter.addListener('commandPop', () => {
+    var commandResponse = commandResponseBuffer.shift();
+    if (commandResponse !== undefined) {
+      var jsonString = JSON.stringify(commandResponse);
+      var sendBuffer = Buffer.from(jsonString);
+      clientControll.write(sendBuffer);
+    }
+  });
   var peripheralEmitter = new NativeEventEmitter(BLEPeripheral);
   var centralEmitter = new NativeEventEmitter(NativeModules.BleManager);
   BLEWormhole.CreateNativeEventEmitter(centralEmitter, peripheralEmitter);
@@ -50,6 +61,7 @@ export const bluetoothBridge = function (options) {
               command: 'getMetadata',
               arguments: {metaData: metaData, error: false},
             });
+            DeviceEventEmitter.emit('commandPop');
           } else {
             commandResponseBuffer.push({
               command: 'getMetadata',
@@ -59,6 +71,7 @@ export const bluetoothBridge = function (options) {
                 description: errInfo,
               },
             });
+            DeviceEventEmitter.emit('commandPop');
           }
         }
         if (dataCommand.command === 'incoming') {
@@ -72,6 +85,7 @@ export const bluetoothBridge = function (options) {
                   command: 'connected',
                   arguments: {remoteAddress: deviceID, isIncoming: true},
                 });
+                DeviceEventEmitter.emit('commandPop');
                 connectedDevices[deviceID] = deviceName;
               } else {
                 commandResponseBuffer.push({
@@ -82,6 +96,7 @@ export const bluetoothBridge = function (options) {
                     reason: 'Already connected.',
                   },
                 });
+                DeviceEventEmitter.emit('commandPop');
               }
             }
           }
@@ -134,6 +149,7 @@ export const bluetoothBridge = function (options) {
             isIncoming: true,
           },
         });
+        DeviceEventEmitter.emit('commandPop');
       }
     }
   };
@@ -143,6 +159,7 @@ export const bluetoothBridge = function (options) {
       command: 'dicovered',
       arguments: {devices: deviceProperties},
     });
+    DeviceEventEmitter.emit('commandPop');
   };
 
   BLEWormhole.BluetoothStateHandler = res => {
@@ -156,11 +173,13 @@ export const bluetoothBridge = function (options) {
         command: 'isEnabled',
         arguments: {enabled: bluetoothEnable},
       });
+      DeviceEventEmitter.emit('commandPop');
     } else {
       commandResponseBuffer.push({
         command: 'bluetoothState',
         arguments: {error: false, isEnabled: bluetoothEnable},
       });
+      DeviceEventEmitter.emit('commandPop');
     }
   };
 
@@ -168,15 +187,7 @@ export const bluetoothBridge = function (options) {
     {port: options.controlPort, host: localHost},
     () => {
       console.log('connect controller');
-      // Write on the socket
-      while (true) {
-        var commandResponse = commandResponseBuffer.shift();
-        if (commandResponse !== undefined) {
-          var jsonString = JSON.stringify(commandResponse);
-          var sendBuffer = Buffer.from(jsonString);
-          clientControll.write(sendBuffer);
-        }
-      }
+
     },
   );
   clientControll.on('error', function (error) {
@@ -202,6 +213,7 @@ export const bluetoothBridge = function (options) {
             command: 'discoverable',
             arguments: {error: false, discoverableUntil: dicoveredSeconds},
           });
+          DeviceEventEmitter.emit('commandPop');
         })
         .catch(err => {
           commandResponseBuffer.push({
@@ -212,6 +224,7 @@ export const bluetoothBridge = function (options) {
               description: err,
             },
           });
+          DeviceEventEmitter.emit('commandPop');
         });
     } else if (command === 'isEnabled') {
       BLEWormhole.CheckState();
@@ -223,6 +236,7 @@ export const bluetoothBridge = function (options) {
             command: 'metadataService',
             arguments: {error: false, availableUntil: -1},
           });
+          DeviceEventEmitter.emit('commandPop');
         })
         .catch(err => {
           commandResponseBuffer.push({
@@ -233,6 +247,7 @@ export const bluetoothBridge = function (options) {
               description: err,
             },
           });
+          DeviceEventEmitter.emit('commandPop');
         });
     } else if (command === 'getMetadata') {
       //ssb-mobile-bluetooth-manager need change
