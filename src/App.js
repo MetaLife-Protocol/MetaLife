@@ -24,6 +24,7 @@ import Payment from './screens/photon/payment';
 import NavigationBackView from './shared/comps/NavigationBackView';
 import PhotonNetwork from './screens/photon/network';
 import PhotonTransactionRecord from './screens/photon/transaction_record';
+import SupplementaryBalance from './screens/photon/supplementary_balance';
 
 const App = () => {
   const {theme, BG} = SchemaStyles();
@@ -118,6 +119,11 @@ const App = () => {
           name="PhotonTransactionRecord"
           options={{headerTitle: 'Transaction Record'}}
           component={PhotonTransactionRecord}
+        />
+        <Stack.Screen
+          name="SupplementaryBalance"
+          options={{headerTitle: 'supplementary balance'}}
+          component={SupplementaryBalance}
         />
       </Stack.Navigator>
     </NavigationContainer>

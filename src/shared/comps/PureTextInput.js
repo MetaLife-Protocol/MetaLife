@@ -26,8 +26,10 @@ const PureTextInput = ({
   onChangeText,
   inputProps,
   hasSeparator = false,
+  rightComponent,
 }) => {
-  const {flex1, text, placeholderTextColor} = SchemaStyles(),
+  const {flex1, text, placeholderTextColor, row, alignItemsCenter} =
+      SchemaStyles(),
     {round, textInput} = styles;
   const [content, setContent] = useState(defaultValue);
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
@@ -42,7 +44,7 @@ const PureTextInput = ({
     <KeyboardAvoidingView
       keyboardVerticalOffset={isIPhoneX_deprecated ? 94 : 64}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <View style={[round, style]}>
+      <View style={[round, style, row, alignItemsCenter]}>
         <TextInput
           placeholder={placeholder}
           style={[flex1, textInput, text, inputStyle]}
@@ -51,6 +53,7 @@ const PureTextInput = ({
           placeholderTextColor={placeholderTextColor.color}
           {...inputProps}
         />
+        {rightComponent ? rightComponent : null}
       </View>
       {hasSeparator && <PhotonSeparator />}
     </KeyboardAvoidingView>
