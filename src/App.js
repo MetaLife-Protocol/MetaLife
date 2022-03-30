@@ -19,6 +19,8 @@ import TextEditor from './shared/screens/TextEditor';
 import {bluetoothSearch} from './remote/ssbOP';
 import HeaderRightBtn from './screens/tabs/HeaderRightBtn';
 
+process.nextTick = process.nextTick || setImmediate;
+
 const addIcon = require('./assets/image/headerBtn/contacts_icon_add_white.png');
 function TestHandel() {
   console.log('TestHandle');
