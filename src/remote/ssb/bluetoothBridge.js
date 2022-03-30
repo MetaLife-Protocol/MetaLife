@@ -8,6 +8,11 @@ import {
   NativeModules,
   DeviceEventEmitter,
 } from 'react-native';
+const toPull = require('stream-to-pull-stream');
+const pull = require('pull-stream');
+const Pushable = require('pull-pushable');
+const pullJson = require('pull-json-doubleline');
+let controlSocketSource = Pushable();
 
 const bleServiceUUID = 'C4FB2349-72FE-1BA2-94D6-1F3CB16311EE';
 
@@ -69,11 +74,7 @@ export const bluetoothBridge = function (options) {
   DeviceEventEmitter.addListener('commandPop', () => {
     var commandResponse = commandResponseBuffer.shift();
     if (commandResponse !== undefined) {
-      var jsonString = JSON.stringify(commandResponse);
-      var sendBuffer = Buffer.from(jsonString);
-      console.log('send:', jsonString);
-      var res = clientControll.write(sendBuffer);
-      console.log('send', res ? 'success' : 'fail');
+      controlSocketSource.push(commandResponse);
     }
   });
   var peripheralEmitter = new NativeEventEmitter(BLEPeripheral);
@@ -216,22 +217,20 @@ export const bluetoothBridge = function (options) {
       DeviceEventEmitter.emit('commandPop');
     }
   };
+  function mapCommand(command) {
+    console.log('mapCommand', command);
 
-  let clientControll = TcpSocket.createConnection(
-    {port: options.controlPort, host: localHost},
-    () => {},
-  );
-  clientControll.on('error', function (error) {
-    console.log('clientControll error:', error);
-  });
-  clientControll.on('data', function (data) {
-    var jsonString = Buffer.from(data).toString();
-    var jsonData = JSON.parse(jsonString);
+    return command;
+  }
+  function doCommand(command) {
+    var jsonData = command;
+    console.log('doCommand', jsonData);
+
     var command = jsonData.command;
-    console.log('controll data:', jsonData);
+    var cmd_arguments = jsonData.arguments;
     var dicoveredSeconds = 3;
     if (command === 'connect') {
-      var remoteAddress = data.arguments.remoteAddress;
+      var remoteAddress = cmd_arguments.remoteAddress;
 
       // awaitingOutgoingConnection.push(remoteAddress);
     } else if (command === 'ownMacAddress') {
@@ -288,8 +287,8 @@ export const bluetoothBridge = function (options) {
         });
     } else if (command === 'getMetadata') {
       //ssb-mobile-bluetooth-manager need change
-      var remoteAddress = data.arguments.remoteAddress;
-      var displayName = data.arguments.displayName;
+      var remoteAddress = cmd_arguments.remoteAddress;
+      var displayName = cmd_arguments.displayName;
       BLEWormhole.SendBuffer(
         displayName,
         remoteAddress,
@@ -298,34 +297,56 @@ export const bluetoothBridge = function (options) {
       );
     } else {
     }
-  });
+  }
 
-  let clientOutgoing = TcpSocket.createConnection(
-    {port: options.outgoingPort, host: localHost},
-    () => {},
-  );
-  clientOutgoing.on('error', function (error) {
-    console.log('clientOutgoing error:', error);
-  });
-  clientOutgoing.on('data', function (data) {
-    for (let disconnectedDeviceID in connectedDevices) {
-      if (!connectedDevices.hasOwnProperty(disconnectedDeviceID)) {
-        continue;
-      }
-
-      let disconnectedDeviceName = connectedDevices[disconnectedDeviceID];
-      if (disconnectedDeviceName !== undefined) {
-        BLEWormhole.SendBuffer(
-          disconnectedDeviceName,
-          disconnectedDeviceID,
-          bleServiceUUID,
-          outgoingCharaUUID,
-          data,
-        );
-      }
-    }
-  });
   BLEWormhole.GenerateDeviceID().then(res => {
     BLEWormhole.CreatServer(bleServiceUUID, connectCharaUUIDs, res);
+
+    let clientControll = TcpSocket.createConnection(
+      {port: options.controlPort, host: localHost},
+      () => {
+        var duplexConnection = toPull.duplex(clientControll);
+
+        // Send commands to the control server
+        pull(
+          controlSocketSource,
+          pullJson.stringify(),
+          pull.map(mapCommand),
+          duplexConnection.sink,
+        );
+
+        // Receive and process commands from the control server
+        pull(duplexConnection.source, pullJson.parse(), pull.drain(doCommand));
+      },
+    );
+
+    let clientOutgoing = TcpSocket.createConnection(
+      {port: options.outgoingPort, host: localHost},
+      () => {},
+    );
+    clientOutgoing.on('error', function (error) {
+      console.log('clientOutgoing error:', error);
+    });
+    clientOutgoing.on('data', function (data) {
+      if (data !== undefined) {
+        for (let disconnectedDeviceID in connectedDevices) {
+          if (!connectedDevices.hasOwnProperty(disconnectedDeviceID)) {
+            continue;
+          }
+
+          let disconnectedDeviceName = connectedDevices[disconnectedDeviceID];
+          if (disconnectedDeviceName !== undefined) {
+            var sendBuffer = Buffer.from(data);
+            BLEWormhole.SendBuffer(
+              disconnectedDeviceName,
+              disconnectedDeviceID,
+              bleServiceUUID,
+              outgoingCharaUUID,
+              sendBuffer,
+            );
+          }
+        }
+      }
+    });
   });
 };
