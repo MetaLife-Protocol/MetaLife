@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, SafeAreaView} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
@@ -7,7 +7,6 @@ import {
   addPrivateUpdatesListener,
   addPublicUpdatesListener,
   connStart,
-  foo,
   getProfile,
   graph,
   loadMsg,
@@ -15,12 +14,14 @@ import {
   reqStartSSB,
   stage,
   suggestStart,
-  xsTest,
 } from '../../remote/ssbOP';
 import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
 import ItemAgent from './home/ItemAgent';
+import {getDBProgress} from '../../remote/ssbAPI';
+import LoadingBar from '../../shared/comps/LoadingBar';
 
 const Home = ({
+  cfg: {verbose},
   setFeedId,
   addPeerInfo,
   setFriendsGraph,
@@ -54,6 +55,7 @@ const Home = ({
               err || (checkMarkedMsgCB(msg), addPublicMsg(msg));
             }),
           );
+          getDBProgress().then(console.log);
         });
         // private msg handler
         addPrivateUpdatesListener(key =>
@@ -72,8 +74,8 @@ const Home = ({
     <SafeAreaView style={[flex1]}>
       <FlatList
         data={[...publicMsg].reverse()}
-        keyExtractor={item => item.key}
-        renderItem={info => <ItemAgent info={info} verbose={false} />}
+        keyExtractor={(_, index) => index}
+        renderItem={info => <ItemAgent info={info} verbose={verbose} />}
       />
     </SafeAreaView>
   );

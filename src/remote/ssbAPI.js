@@ -1,16 +1,24 @@
 /**
  * Created on 21 Mar 2022 by lonmee
  */
-import {loadMsg, profileFeed} from './ssbOP';
+import {
+  indexingProgress,
+  loadMsg,
+  migrationProgress,
+  profileFeed,
+} from './ssbOP';
 
 let fId, feed, callback;
 export const trainProfileFeed = (id, length, cb) => {
   (fId = id), (feed = []), (callback = cb);
   profileFeed(id, (err, msg) => {
-    const {root, replyCount} = msg;
-    feed.push(root);
-    root.value.previous
-      ? loadMsg(root.value.previous, false, loadPrevious)
+    if (err) {
+      return;
+    }
+    const {messages} = msg;
+    feed.push(messages);
+    messages[0].value.previous
+      ? loadMsg(messages[0].value.previous, false, loadPrevious)
       : cb({fId, feed});
   });
 };
@@ -26,7 +34,7 @@ function loadPrevious(err, msg) {
     return;
   }
   const {messages, full} = msg;
-  feed.push(messages[0]);
+  feed.push(messages);
   if (messages[0].value.previous) {
     loadMsg(messages[0].value.previous, false, loadPrevious);
   } else {
@@ -40,3 +48,8 @@ function loadPrevious(err, msg) {
 //   fork: state.higherRootMsgId,
 //   branch: messages[messages.length - 1].key,
 // });
+
+export const getDBProgress = () =>
+  Promise.all([indexingProgress, migrationProgress]).then(([ip, mp]) =>
+    ip > 0 && mp > 0 ? (ip + mp) * 0.5 : ip > 0 ? ip : mp > 0 ? mp : 1,
+  );

@@ -17,10 +17,18 @@ import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import Pubs from './screens/tabs/profiles/Pubs';
+import LoadingBar from './shared/comps/LoadingBar';
+import {useEffect, useState} from 'react';
+import {getDBProgress} from './remote/ssbAPI';
 
 const App = () => {
   const {theme} = SchemaStyles();
+  const [progress, setProgress] = useState(0);
   const Stack = createNativeStackNavigator();
+
+  useEffect(() => {
+    setInterval(() => getDBProgress().then(setProgress), 100);
+  }, []);
   return (
     <NavigationContainer theme={theme}>
       {/*<Stack.Navigator initialRouteName="Guid">*/}
@@ -73,6 +81,7 @@ const App = () => {
         {/* Screen holder */}
         <Stack.Screen name="SubScreen" options={{}} component={SubScreen} />
       </Stack.Navigator>
+      <LoadingBar style={[{position: 'absolute'}]} loaded={progress} />
     </NavigationContainer>
   );
 };

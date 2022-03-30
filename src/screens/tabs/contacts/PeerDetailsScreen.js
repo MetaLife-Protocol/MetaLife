@@ -8,6 +8,7 @@ import ItemAgent from '../home/ItemAgent';
 import PeerDetailsHeader from './details/PeerDetailsHeader';
 
 const PeerDetailsScreen = ({
+  verbose,
   selfFeedId,
   relations,
   peerInfoDic,
@@ -34,9 +35,9 @@ const PeerDetailsScreen = ({
     <SafeAreaView style={[flex1]}>
       <FlatList
         data={feedDic[feedId]}
-        keyExtractor={item => item.key}
+        keyExtractor={(_, i) => i}
         ListHeaderComponent={<PeerDetailsHeader />}
-        renderItem={info => <ItemAgent info={info} verbose={false} />}
+        renderItem={info => <ItemAgent info={info} verbose={verbose} />}
       />
     </SafeAreaView>
   );
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({});
 
 const msp = s => {
   return {
+    verbose: s.cfg.verbose,
     selfFeedId: s.user.feedId,
     relations: s.user.relations,
     peerInfoDic: s.contacts.peerInfoDic,

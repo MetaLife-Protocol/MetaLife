@@ -29,11 +29,12 @@ import {useNavigation} from '@react-navigation/native';
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
 
 const Setting = ({
-  cfg: {darkMode, lang},
+  cfg: {darkMode, lang, verbose},
   feedId,
   peerInfoDic,
   setDarkMode,
   setLang,
+  setVerbose,
 }) => {
   const {flex1, alignItemsCenter, marginTop10, text} = SchemaStyles();
 
@@ -142,6 +143,12 @@ const Setting = ({
               }
             />
           </ControllerItem>
+          <ControllerItem title={'MSG verbose'}>
+            <Switch
+              value={verbose}
+              onValueChange={() => setVerbose(!verbose)}
+            />
+          </ControllerItem>
         </Section>
         <Section
           style={[marginTop10]}
@@ -174,6 +181,7 @@ const mdp = d => {
   return {
     setDarkMode: darkMode => d({type: 'setDarkMode', payload: darkMode}),
     setLang: lang => d({type: 'setLang', payload: lang}),
+    setVerbose: v => d({type: 'setVerbose', payload: v}),
   };
 };
 

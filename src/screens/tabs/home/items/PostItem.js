@@ -14,10 +14,7 @@ import {useNavigation} from '@react-navigation/native';
 import {sendMsg} from '../../../../remote/ssbOP';
 
 const PostItem = ({
-  item: {
-    key,
-    value: {author, timestamp, content},
-  },
+  item,
   showPanel = true,
   feedId,
   peerInfoDic,
@@ -27,6 +24,12 @@ const PostItem = ({
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
     {container, textContainer, contentContainer, panel} = styles;
+  const [
+    {
+      key,
+      value: {author, timestamp, content},
+    },
+  ] = item;
   const {navigate, push} = useNavigation();
   const {
       name = author.substring(0, 10),
@@ -35,8 +38,7 @@ const PostItem = ({
     } = peerInfoDic[author] || {},
     {text: cText, mentions = null} = content,
     voteArr = voteDic[key] || [],
-    voted = voteArr.includes(feedId),
-    commentArr = commentDic[key] || [];
+    voted = voteArr.includes(feedId);
 
   const likeHandler = useCallback(
     function () {
@@ -93,7 +95,7 @@ const PostItem = ({
             style={[row, flex1, justifySpaceBetween, panel]}
             voted={voted}
             voteArr={voteArr}
-            commentArr={commentArr}
+            commentArr={item.filter((_, i) => i > 0)}
             commentHandler={commentHandler}
             likeHandler={likeHandler}
           />

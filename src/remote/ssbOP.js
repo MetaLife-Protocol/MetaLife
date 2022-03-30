@@ -177,8 +177,20 @@ export const loadMsg = (msgKey, isPrivate = false, cb = null) => {
 export const voted = (key, cb) => ssb.votes.voterStream(key)(null, cb);
 
 // last feed
-export const profileFeed = (id, cb) =>
-  ssb.threads.profileSummary({id, threadMaxSize: 3})(null, cb);
+export const profileFeed = (id, cb) => ssb.threads.profile({id})(null, cb);
+
+/************************** DB **************************/
+export const indexingProgress = () =>
+  new Promise((resolve, reject) =>
+    ssb.db.indexingProgress()(null, (e, v) => (e ? reject(e) : resolve(v))),
+  );
+export const migrationProgress = () =>
+  new Promise((resolve, reject) =>
+    ssb.db2migrate.progress()(null, (e, v) => (e ? reject(e) : resolve(v))),
+  );
+
+// ssb.db2migrate.start(console.log);
+// ssb.db2migrate.stop(console.log);
 
 /************************** preset **************************/
 export const foo = () =>
@@ -197,7 +209,7 @@ export const xsTest = () => {
     .map(i => i)
     .endWhen(xs.periodic(5000).take(1));
 
-  // So far, the stream is idle.
+  // So far, the stream is idl
   // As soon as it gets its first listener, it starts executing.
 
   stream.addListener({

@@ -42,16 +42,22 @@ const PostMsgEditor = ({publicMsg, commentDic}) => {
 
   return (
     <SafeAreaView style={[flex1, FG]}>
-      <Section title={'Reply to:'}>
-        <PostItem item={shownMsg} showPanel={false} />
-      </Section>
-      <Section title={'Replies:'} style={[flex1]}>
-        <FlatList
-          data={commentArr}
-          keyExtractor={item => item.key}
-          renderItem={info => <ItemAgent info={info} verbose={false} />}
-        />
-      </Section>
+      {key ? (
+        <>
+          <Section title={'Reply to:'}>
+            <PostItem item={shownMsg} showPanel={false} />
+          </Section>
+          <Section title={'Replies:'} style={[flex1]}>
+            <FlatList
+              data={commentArr}
+              keyExtractor={item => item.key}
+              renderItem={info => <ItemAgent info={info} verbose={false} />}
+            />
+          </Section>
+        </>
+      ) : (
+        <View style={[flex1]} />
+      )}
       <MsgInput sendHandler={sendHandler} />
     </SafeAreaView>
   );
@@ -67,7 +73,7 @@ const msp = s => {
 
 const mdp = d => {
   return {
-    setDarkMode: darkMode => d({type: 'setDarkMode', payload: darkMode}),
+    setDarkMode: v => d({type: 'setDarkMode', payload: v}),
   };
 };
 
