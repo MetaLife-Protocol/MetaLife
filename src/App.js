@@ -26,6 +26,7 @@ import PhotonNetwork from './screens/photon/network';
 import PhotonTransactionRecord from './screens/photon/transaction_record';
 import SupplementaryBalance from './screens/photon/supplementary_balance';
 import PhotonAddressContact from './screens/photon/address_contact';
+import PhotonTokenOption from './screens/photon/token_option';
 
 const App = () => {
   const {theme, BG} = SchemaStyles();
@@ -130,6 +131,11 @@ const App = () => {
           name="PhotonAddressContact"
           options={{headerTitle: 'Address Contact'}}
           component={PhotonAddressContact}
+        />
+        <Stack.Screen
+          name="PhotonTokenOption"
+          options={{headerTitle: 'Token option'}}
+          component={PhotonTokenOption}
         />
       </Stack.Navigator>
     </NavigationContainer>

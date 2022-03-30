@@ -23,7 +23,7 @@ const ReceivingCode = ({}) => {
   const saveQrToDisk = useCallback(() => {
     startPhotonServer({
       privateKey:
-        '22d2654f2ad702a98a32df1d33604ccda9c750c2b2730072952e9f76296e9286',
+        '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
       ethRPCEndPoint: '',
     });
 
