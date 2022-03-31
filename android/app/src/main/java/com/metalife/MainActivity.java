@@ -47,14 +47,15 @@ public class MainActivity extends ReactActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             final RxPermissions rxPermissions = new RxPermissions(this);
             rxPermissions
-                    .request(Manifest.permission.CAMERA
-                            , Manifest.permission.READ_PHONE_STATE
-                            , Manifest.permission.WRITE_EXTERNAL_STORAGE
-                            , Manifest.permission.READ_EXTERNAL_STORAGE
-                            , Manifest.permission.RECORD_AUDIO
-                            , Manifest.permission.READ_CONTACTS).subscribe();
+                    .request(
+//                            Manifest.permission.CAMERA,
+//                            Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+//                            Manifest.permission.RECORD_AUDIO,
+//                            Manifest.permission.READ_CONTACTS
+                    ).subscribe();
         }
-
     }
 
 //    @Override
