@@ -7,7 +7,6 @@ const msgInitState = {
   publicMsg: [],
   feedDic: {},
   voteDic: {},
-  commentDic: {},
 };
 
 export const msgReducer = (state = msgInitState, {type, payload}) => {
@@ -54,8 +53,10 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
       };
     case 'clearPrivateMsg':
       return {...state, privateMsg: {}};
-    case 'setPublicMsg':
-      return {...state, publicMsg: payload};
+    case 'insertPublicMsg':
+      // todo: 1. reduce repeat 2. order by time
+      const [root] = payload.messages;
+      return {...state, publicMsg: [...state.publicMsg, payload.messages]};
     case 'addPublicMsg':
       // let index, appendMsg;
       // const [comment] = payload.messages.filter(msg => msg.value.content.root),

@@ -28,7 +28,7 @@ const PeerDetailsScreen = ({
 
   useLayoutEffect(() => {
     setOptions({title: name || feedId});
-    trainProfileFeed(feedId, 0, addFeedDic);
+    isMyBlock || trainProfileFeed(feedId, feedDic[feedId], addFeedDic);
   }, [feedId]);
 
   return isMyBlock ? null : (

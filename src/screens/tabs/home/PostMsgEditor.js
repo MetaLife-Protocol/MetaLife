@@ -13,13 +13,12 @@ import ItemAgent from './ItemAgent';
 import Section from '../../../shared/comps/Section';
 import PostItem from './items/PostItem';
 
-const PostMsgEditor = ({publicMsg, commentDic}) => {
-  const {FG, flex1, text} = SchemaStyles();
+const PostMsgEditor = ({publicMsg}) => {
+  const {FG, flex1} = SchemaStyles();
 
   const {goBack, setOptions} = useNavigation();
   const {params} = useRoute();
   const {name, key} = params || {},
-    commentArr = commentDic[key] || [],
     [shownMsg] = publicMsg.filter(msg => msg.key === key);
 
   useLayoutEffect(() => {
@@ -45,11 +44,11 @@ const PostMsgEditor = ({publicMsg, commentDic}) => {
       {key ? (
         <>
           <Section title={'Reply to:'}>
-            <PostItem item={shownMsg} showPanel={false} />
+            <PostItem item={shownMsg[0]} showPanel={false} />
           </Section>
           <Section title={'Replies:'} style={[flex1]}>
             <FlatList
-              data={commentArr}
+              data={shownMsg[0]}
               keyExtractor={item => item.key}
               renderItem={info => <ItemAgent info={info} verbose={false} />}
             />
@@ -67,7 +66,6 @@ const msp = s => {
   return {
     feedId: s.user.feedId,
     publicMsg: s.msg.publicMsg,
-    commentDic: s.msg.commentDic,
   };
 };
 

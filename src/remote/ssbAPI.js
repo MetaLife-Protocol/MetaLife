@@ -9,7 +9,7 @@ import {
 } from './ssbOP';
 
 let fId, feed, callback;
-export const trainProfileFeed = (id, length, cb) => {
+export const trainProfileFeed = (id, exist, cb) => {
   (fId = id), (feed = []), (callback = cb);
   profileFeed(id, (err, msg) => {
     if (err) {
