@@ -11,7 +11,8 @@ export const markMsgCBByType = (type, handler) => {
   typeHandlers[type] = handler;
 };
 export const checkMarkedMsgCB = msg => {
-  msg.messages.map(({key, value: {author, content}}) => {
+  const tMsg = msg.messages ? msg.messages : msg;
+  tMsg.map(({key, value: {author, content}}) => {
     keyHandlers[key] && keyHandlers[key]();
     delete keyHandlers[key];
     typeHandlers.hasOwnProperty(content.type) &&

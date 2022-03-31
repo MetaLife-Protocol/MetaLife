@@ -53,6 +53,7 @@ export const blobsGetter = (blobId, cb) =>
 
 export const ping = cb =>
   ssb.conn.ping()(null, (e, v) => (e ? console.error(e) : cb && cb(v)));
+
 /************************** friends **************************/
 export const block = (fid, opts, cb) => {
   ssb.friends.block(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));

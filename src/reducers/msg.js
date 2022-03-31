@@ -30,9 +30,19 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
         },
       };
     case 'addFeedDic':
+      let feedMsg, pubMsg;
       const {fId, feed} = payload;
-      // todo: partial adding
-      return {...state, feedDic: {...state.feedDic, [fId]: feed}};
+      if (feed.length > 0) {
+        feedMsg = [...feed, ...(state.feedDic[fId] || [])];
+        pubMsg = [...state.publicMsg, ...feed];
+        pubMsg.sort((a, b) => a[0].timestamp - b[0].timestamp);
+      }
+      // merge feed to public
+      return {
+        ...state,
+        publicMsg: pubMsg ? pubMsg : state.publicMsg,
+        feedDic: {...state.feedDic, [fId]: feedMsg},
+      };
     case 'setPrivateMsg':
       const {messages} = payload;
       return {
@@ -53,27 +63,19 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
       };
     case 'clearPrivateMsg':
       return {...state, privateMsg: {}};
-    case 'insertPublicMsg':
-      // todo: 1. reduce repeat 2. order by time
-      const [root] = payload.messages;
-      return {...state, publicMsg: [...state.publicMsg, payload.messages]};
     case 'addPublicMsg':
-      // let index, appendMsg;
-      // const [comment] = payload.messages.filter(msg => msg.value.content.root),
-      //   [root] = state.publicMsg.filter((msg, i) => {
-      //     index = i;
-      //     return msg.key === comment.value.content.root;
-      //   });
-      // if (comment && root) {
-      //   appendMsg = [...state.publicMsg];
-      //   root.push(comment);
-      //   appendMsg[index] = [...root];
-      // }
-      // return {
-      //   ...state,
-      //   publicMsg: [...[appendMsg ? appendMsg : payload.messages]],
-      // };
-      return {...state, publicMsg: [...state.publicMsg, payload.messages]};
+      feedMsg = [
+        payload.messages,
+        ...(state.feedDic[payload.messages[0].value.author] || []),
+      ];
+      return {
+        ...state,
+        publicMsg: [...state.publicMsg, payload.messages],
+        feedDic: {
+          ...state.feedDic,
+          [payload.messages[0].value.author]: feedMsg,
+        },
+      };
     case 'clearPublicMsg':
       return {...state, publicMsg: {}};
     default:

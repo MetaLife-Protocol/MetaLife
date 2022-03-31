@@ -44,7 +44,16 @@ const ItemAgent = ({info: {item}, verbose = false}) => {
         )
       );
     case 'post':
-      return <PostItem item={item} />;
+      return content.recps ? (
+        verbose && (
+          <>
+            <Text style={[{color: 'red'}]}>This is your own private msg</Text>
+            <PostItem item={item} />
+          </>
+        )
+      ) : (
+        <PostItem item={item} />
+      );
     default:
       return null;
   }

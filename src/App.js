@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Tabs from './screens/Tabs';
@@ -17,20 +18,21 @@ import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import Pubs from './screens/tabs/profiles/Pubs';
-import LoadingBar from './shared/comps/LoadingBar';
-import {useEffect, useState} from 'react';
-import {getDBProgress} from './remote/ssbAPI';
+import {StatusBar} from 'react-native';
 
 const App = () => {
-  const {theme} = SchemaStyles();
+  const {barStyle, theme} = SchemaStyles();
   const [progress, setProgress] = useState(0);
   const Stack = createNativeStackNavigator();
 
-  useEffect(() => {
-    setInterval(() => getDBProgress().then(setProgress), 100);
-  }, []);
+  // todo: loading bar test
+  // useEffect(() => {
+  //   setInterval(() => getDBProgress().then(setProgress), 100);
+  // }, []);
+
   return (
     <NavigationContainer theme={theme}>
+      <StatusBar barStyle={barStyle} />
       {/*<Stack.Navigator initialRouteName="Guid">*/}
       <Stack.Navigator initialRouteName="Tabs">
         <Stack.Screen
@@ -81,7 +83,7 @@ const App = () => {
         {/* Screen holder */}
         <Stack.Screen name="SubScreen" options={{}} component={SubScreen} />
       </Stack.Navigator>
-      <LoadingBar style={[{position: 'absolute'}]} loaded={progress} />
+      {/*<LoadingBar style={[{position: 'absolute'}]} loaded={progress} />*/}
     </NavigationContainer>
   );
 };

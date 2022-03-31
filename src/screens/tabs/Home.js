@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList, SafeAreaView} from 'react-native';
+import React, {useCallback, useEffect, useRef} from 'react';
+import {AppState, FlatList, SafeAreaView} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import * as ssbOP from '../../remote/ssbOP';
@@ -17,18 +17,19 @@ import {
 } from '../../remote/ssbOP';
 import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
 import ItemAgent from './home/ItemAgent';
-import {getDBProgress} from '../../remote/ssbAPI';
-import LoadingBar from '../../shared/comps/LoadingBar';
+import {trainProfileFeed} from '../../remote/ssbAPI';
 
 const Home = ({
   cfg: {verbose},
   setFeedId,
+  relations,
+  feedDic,
   addPeerInfo,
   setFriendsGraph,
   publicMsg,
   addPublicMsg,
   setPrivateMsg,
-  setVote,
+  addFeedDic,
 }) => {
   const {flex1} = SchemaStyles();
 
@@ -37,6 +38,7 @@ const Home = ({
     // foo().then(console.log).catch(console.warn);
     window.ssb ||
       reqStartSSB(ssb => {
+        /******** ssb started handlers ********/
         ssbOP.ssb = window.ssb = ssb;
         setFeedId(ssb.id);
         // setup conn
@@ -49,26 +51,64 @@ const Home = ({
             console.log('replicationSchedulerStart: ', v),
           );
           suggestStart(v => console.log('suggestStart: ', v));
-          // public msg handler
+
+          /******** msg handlers ********/
           addPublicUpdatesListener(key =>
             loadMsg(key, false, (err, msg) => {
               err || (checkMarkedMsgCB(msg), addPublicMsg(msg));
             }),
           );
-          getDBProgress().then(console.log);
+          addPrivateUpdatesListener(key =>
+            loadMsg(key, true, (err, msg) => err || setPrivateMsg(msg)),
+          );
+
+          mergeAndExecuteOfflineMsg();
         });
-        // private msg handler
-        addPrivateUpdatesListener(key =>
-          loadMsg(key, true, (err, msg) => err || setPrivateMsg(msg)),
-        );
-        // contact update
+        /******** msg checker ********/
         markMsgCBByType('contact', () => graph(setFriendsGraph));
-        // about update
         markMsgCBByType('about', (_, {about}) =>
           getProfile(about, v => addPeerInfo([about, v])),
         );
       });
+    /******** app state handlers ********/
+    AppState.addEventListener('change', state => {
+      switch (state) {
+        case 'active':
+          mergeAndExecuteOfflineMsg();
+          break;
+        case 'inactive':
+          break;
+      }
+    });
   }, []);
+
+  /******** mergeAndExecuteOfflineMsg ********/
+  let loopIds = useRef([]);
+  const mergeAndExecuteOfflineMsg = useCallback(() => {
+    const [myFriends, myFollowing] = relations;
+    loopIds.current = [...myFriends, ...myFollowing];
+    console.log('mergeAndExecuteOfflineMsg: ', [...myFriends, ...myFollowing]);
+    if (loopIds.current.length) {
+      let fId = loopIds.current.shift();
+      trainProfileFeed(fId, feedDic[fId], stepper);
+    }
+  }, [relations, feedDic]);
+
+  const stepper = useCallback(
+    idFeed => {
+      const {feed} = idFeed;
+      console.log('feed: ', idFeed.fId, 'add on: ', idFeed.feed);
+      if (feed.length) {
+        feed.forEach(checkMarkedMsgCB);
+        addFeedDic(idFeed);
+      }
+      if (loopIds.current.length) {
+        const fId = loopIds.current.shift();
+        trainProfileFeed(fId, feedDic[fId], stepper);
+      }
+    },
+    [loopIds.current, feedDic],
+  );
 
   return (
     <SafeAreaView style={[flex1]}>
@@ -85,6 +125,8 @@ const msp = s => {
   return {
     cfg: s.cfg,
     feedId: s.user.feedId,
+    relations: s.user.relations,
+    feedDic: s.msg.feedDic,
     publicMsg: s.msg.publicMsg,
   };
 };
@@ -97,15 +139,15 @@ const mdp = d => {
     addPublicMsg: v => {
       switch (v.messages[0].value.content.type) {
         case 'vote':
-          return d({type: 'setVote', payload: v.messages[0].value});
-        case 'post':
-          return d({type: 'addPublicMsg', payload: v});
+          d({type: 'setVote', payload: v.messages[0].value});
+        default:
+          d({type: 'addPublicMsg', payload: v});
       }
     },
     setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),
     addPrivateMsg: v => d({type: 'addPrivateMsg', payload: v}),
-    setVote: v => d({type: 'setVote', payload: v}),
     setFriendsGraph: v => d({type: 'setFriendsGraph', payload: v}),
+    addFeedDic: v => d({type: 'addFeedDic', payload: v}),
   };
 };
 

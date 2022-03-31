@@ -31,7 +31,7 @@ const PeerDetailsScreen = ({
     isMyBlock || trainProfileFeed(feedId, feedDic[feedId], addFeedDic);
   }, [feedId]);
 
-  return isMyBlock ? null : (
+  return (
     <SafeAreaView style={[flex1]}>
       <FlatList
         data={feedDic[feedId]}
