@@ -7,15 +7,10 @@
  */
 import React, {useCallback, useRef} from 'react';
 import {SafeAreaView, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
 import QRCode from 'react-native-qrcode-svg';
 import {loadChannelList, startPhotonServer} from 'react-native-photon';
 
 const ReceivingCode = ({}) => {
-  const {flex1, BG} = SchemaStyles(),
-    {container} = styles;
-
-  // eslint-disable-next-line prettier/prettier
   const svg = useRef();
 
   let logoFromFile = require('../../../assets/image/contacts/nft_icon.png');

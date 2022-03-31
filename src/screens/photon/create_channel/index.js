@@ -21,6 +21,8 @@ import {useStyle} from '../../../shared/ThemeColors';
 import {useNavigation} from '@react-navigation/native';
 import PureTextInput from '../../../shared/comps/PureTextInput';
 import {PhotonSeparator} from '../../../shared/comps/PhotonSeparator';
+import {createChannel} from 'react-native-photon';
+import Toast from 'react-native-tiny-toast';
 
 const CreateChannel = ({}) => {
   const styles = useStyle(createSty);
@@ -28,9 +30,7 @@ const CreateChannel = ({}) => {
 
   const [address, setAddress] = useState(''),
     [amount, setAmount] = useState(''),
-    [remark, setRemark] = useState(''),
-    [coin, setCoin] = useState('SMT'),
-    [isShowCoinSelect, setIsShowCoinSelect] = useState(false);
+    [remark, setRemark] = useState('');
 
   const btnDisabled = useMemo(
     () => !(address && amount && remark),
@@ -54,7 +54,7 @@ const CreateChannel = ({}) => {
           <Pressable
             onPress={() => {
               //TODO select wallet others address
-              alert('TODO');
+              navigate('PhotonAddressContact');
             }}>
             <Image
               source={require('../../../assets/image/photon/icon_photon_address.png')}
@@ -82,6 +82,7 @@ const CreateChannel = ({}) => {
         <PhotonSeparator />
         <View style={styles.row}>
           <Text style={styles.title}>Amount</Text>
+          {/*TODO wallet number*/}
           <Text style={styles.coinAmount}>32748 SMT</Text>
         </View>
       </View>
@@ -102,6 +103,16 @@ const CreateChannel = ({}) => {
         disabled={btnDisabled}
         title={'Create'}
         press={() => {
+          //TODO 昵称需要本地维护
+          createChannel(address, amount).then(res => {
+            const resJson = JSON.parse(res);
+            console.log('res::', resJson);
+            if (resJson.error_code == 0) {
+              Toast.show('create channel success');
+            } else {
+              Toast.show(resJson.error_message);
+            }
+          });
           //  TODO create channel
         }}
       />
