@@ -1,9 +1,13 @@
 diff --git a/node_modules/ssb-mobile-bluetooth-manager/index.js b/node_modules/ssb-mobile-bluetooth-manager/index.js
-index 536f9f6..e96e546 100644
+index 536f9f6..c7f1ad4 100644
 --- a/node_modules/ssb-mobile-bluetooth-manager/index.js
 +++ b/node_modules/ssb-mobile-bluetooth-manager/index.js
-@@ -17,15 +17,17 @@ const EventEmitter = require('events');
+@@ -14,19 +14,20 @@ const uuidv4 = require('uuid/v4');
+ const debug = require('debug')('ssb-mobile-bluetooth-manager');
  
+ const EventEmitter = require('events');
+-
++const rnBridge = require('rn-bridge');
  const delayedDeviceScanSource = pullDefer.source();
  
 +const localHost='127.0.0.1';
@@ -17,13 +21,14 @@ index 536f9f6..e96e546 100644
 -  if (!opts || !opts.socketFolderPath) {
 -    throw new Error("ssb-mobile-bluetooth-manager must be configured with a socketFolderPath option.");
 -  }
+-
 +  // if (!opts || !opts.socketFolderPath) {
 +  //   throw new Error("ssb-mobile-bluetooth-manager must be configured with a socketFolderPath option.");
 +  // }
- 
    if (!opts || !opts.myIdent) {
      throw new Error("ssb-mobile-bluetooth-manager must be configured with the myIdent option.")
-@@ -35,15 +37,15 @@ function makeManager (opts) {
+   }
+@@ -35,15 +36,15 @@ function makeManager (opts) {
      throw new Error("ssb-mobile-bluetooth-manager must be configured with a metadataServiceUUID option.");
    }
  
@@ -42,7 +47,7 @@ index 536f9f6..e96e546 100644
      throw new Error("ssb-mobile-bluetooth-manager must be configured with a outgoingSocketFilename option.");
    }
  
-@@ -104,12 +106,12 @@ function makeManager (opts) {
+@@ -104,12 +105,12 @@ function makeManager (opts) {
    function makeControlSocket() {
      if (controlSocketEstablished) return;
  
@@ -60,7 +65,7 @@ index 536f9f6..e96e546 100644
  
      var controlSocket = net.createServer(function(stream){
  
-@@ -125,7 +127,7 @@ function makeManager (opts) {
+@@ -125,13 +126,18 @@ function makeManager (opts) {
        // Receive and process commands from the control server
        pull(duplexConnection.source, pullJson.parse(), pull.drain(doCommand));
  
@@ -69,7 +74,27 @@ index 536f9f6..e96e546 100644
  
      controlSocketEstablished = true;
  
-@@ -303,13 +305,13 @@ function makeManager (opts) {
+     controlSocket.on('closed', function() {
+       debug("Control socket closed");
+     })
++    controlSocket.on('error', function(err) {
++      debug("Control socket error",err);
++      rnBridge.channel.post('exception', err);
++    })
++    rnBridge.channel.post('log4RN', 'control socket create');
+ 
+     debug("Created control socket");
+   }
+@@ -189,6 +195,8 @@ function makeManager (opts) {
+     debug("Received command: ");
+     debug(command);
+ 
++    rnBridge.channel.post('log4RN', 'Received command:' + JSON.stringify(command));
++
+     let commandName = command.command;
+ 
+     if (commandName === "connected" && !command.arguments.isIncoming) {
+@@ -303,13 +311,13 @@ function makeManager (opts) {
    }
  
    function listenForOutgoingEstablished() {
@@ -88,16 +113,23 @@ index 536f9f6..e96e546 100644
  
      var server = net.createServer(function(stream){
        debug("bluetooth: Outgoing connection established proxy connection.")
-@@ -327,7 +329,7 @@ function makeManager (opts) {
+@@ -326,8 +334,14 @@ function makeManager (opts) {
+       debug("Server listening for outgoing connections. Starting control unix socket.");
        makeControlSocket();
      });
++    server.on('error', function(err) {
++      debug("outgoing socket error",err);
++      rnBridge.channel.post('exception', err);
++    });
++
++    rnBridge.channel.post('log4RN', 'outgoing socket create');
  
 -    return server.listen(address);
 +    return server.listen({host:localHost,port:opts.outgoingPort});
    }
  
    // For some reason, .server gets called twice...
-@@ -339,12 +341,12 @@ function makeManager (opts) {
+@@ -339,12 +353,12 @@ function makeManager (opts) {
  
      if(started) return
  
@@ -115,12 +147,37 @@ index 536f9f6..e96e546 100644
  
      var server = net.createServer(function (incomingStream) {
  
-@@ -355,7 +357,7 @@ function makeManager (opts) {
+@@ -355,11 +369,15 @@ function makeManager (opts) {
          stream: logDuplexStreams( toPull.duplex(incomingStream) )
        })
  
 -    }).listen(socket);
+-
 +    }).listen({host:localHost,port:opts.incomingPort});
- 
++    server.on('error', function(err) {
++      debug("incoming socket error",err);
++      rnBridge.channel.post('exception', err);
++    })
      server.on('close', function (e) {
        debug("bt_bridge socket closed: " + e);
+     });
++    rnBridge.channel.post('log4RN', 'incoming socket create');
+ 
+     started = true;
+ 
+@@ -492,6 +510,7 @@ function makeManager (opts) {
+ 
+   function makeDeviceDiscoverable(forTime, cb) {
+     debug("Making device discoverable");
++    rnBridge.channel.post('log4RN', 'Making device discoverable');
+ 
+     if (awaitingDiscoverableResponse != null) {
+       cb(new Error("Already requesting to make device discoverable."), null)
+@@ -689,6 +708,7 @@ function makeManager (opts) {
+ 
+   listenForOutgoingEstablished();
+   makeFullyEstablishConnectionsHandler();
++  rnBridge.channel.post('log4RN', 'bluetooth manager init');
+ 
+   return {
+     connect,

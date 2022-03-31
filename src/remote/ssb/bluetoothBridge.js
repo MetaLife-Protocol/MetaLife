@@ -39,10 +39,14 @@ let commandResponseBuffer = [];
 
 let needAddIsEnableCmd = false;
 
+let IsStartCentral = false;
+let IsStartPeripheral = false;
+
 export const bluetoothBridge = function (options) {
   var localHost = '127.0.0.1';
   console.log('bluetoothBridge init');
   let clientIncoming;
+  let clientOutgoing;
   function createConnection() {
     clientIncoming = TcpSocket.createConnection(
       {port: options.incomingPort, host: localHost},
@@ -83,7 +87,9 @@ export const bluetoothBridge = function (options) {
   BLEWormhole.ReceiveHandler = characteristic => {
     if (characteristic !== undefined) {
       if (characteristic.uuid === controlCharaUUID) {
-        var jsonString = Buffer.from(characteristic.data).toString();
+        console.log('characteristic', characteristic);
+        var jsonString = Buffer.from(characteristic.value).toString();
+        console.log('json', jsonString);
         var dataCommand = JSON.parse(jsonString);
         if (dataCommand.command === 'metaData') {
           var metaData = dataCommand.arguments.metadata;
@@ -147,11 +153,12 @@ export const bluetoothBridge = function (options) {
   };
 
   BLEWormhole.DiscoverDeviceHandler = device => {
+    console.log('device', device);
     if (deviceID_Name[device.deviceID] === undefined) {
       deviceID_Name[device.deviceID] = device.name;
     }
 
-    if (deviceInfos[device.name] !== undefined) {
+    if (deviceInfos[device.name] === undefined) {
       deviceInfos[device.name] = device;
       var deviceProperty = {
         remoteAddress: device.deviceID,
@@ -243,48 +250,69 @@ export const bluetoothBridge = function (options) {
       deviceProperties = [];
       BLEWormhole.Scan([bleServiceUUID], dicoveredSeconds);
     } else if (command === 'makeDiscoverable') {
-      BLEWormhole.StartCentral()
-        .then(res => {
-          commandResponseBuffer.push({
-            command: 'discoverable',
-            arguments: {error: false, discoverableUntil: dicoveredSeconds},
-          });
-          DeviceEventEmitter.emit('commandPop');
-        })
-        .catch(err => {
-          commandResponseBuffer.push({
-            command: 'discoverable',
-            arguments: {
-              error: true,
-              errorCode: 'appNotVisible',
-              description: err,
-            },
-          });
-          DeviceEventEmitter.emit('commandPop');
+      if (IsStartCentral) {
+        commandResponseBuffer.push({
+          command: 'discoverable',
+          arguments: {error: false, discoverableUntil: dicoveredSeconds},
         });
+        DeviceEventEmitter.emit('commandPop');
+      } else {
+        BLEWormhole.StartCentral()
+          .then(res => {
+            commandResponseBuffer.push({
+              command: 'discoverable',
+              arguments: {error: false, discoverableUntil: dicoveredSeconds},
+            });
+            DeviceEventEmitter.emit('commandPop');
+            IsStartCentral = true;
+          })
+          .catch(err => {
+            commandResponseBuffer.push({
+              command: 'discoverable',
+              arguments: {
+                error: true,
+                errorCode: 'appNotVisible',
+                description: err,
+              },
+            });
+            DeviceEventEmitter.emit('commandPop');
+          });
+      }
     } else if (command === 'isEnabled') {
       BLEWormhole.CheckState();
       needAddIsEnableCmd = true;
     } else if (command === 'startMetadataService') {
-      BLEWormhole.StartPeripheral()
-        .then(res => {
-          commandResponseBuffer.push({
-            command: 'metadataService',
-            arguments: {error: false, availableUntil: -1},
-          });
-          DeviceEventEmitter.emit('commandPop');
-        })
-        .catch(err => {
-          commandResponseBuffer.push({
-            command: 'metadataService',
-            arguments: {
-              error: true,
-              errorCode: 'errorStarting',
-              description: err,
-            },
-          });
-          DeviceEventEmitter.emit('commandPop');
+      if (IsStartPeripheral) {
+        commandResponseBuffer.push({
+          command: 'metadataService',
+          arguments: {error: false, availableUntil: -1},
         });
+        DeviceEventEmitter.emit('commandPop');
+
+        deviceProperties = [];
+        BLEWormhole.Scan([bleServiceUUID], dicoveredSeconds);
+      } else {
+        BLEWormhole.StartPeripheral()
+          .then(res => {
+            commandResponseBuffer.push({
+              command: 'metadataService',
+              arguments: {error: false, availableUntil: -1},
+            });
+            DeviceEventEmitter.emit('commandPop');
+            IsStartPeripheral = true;
+          })
+          .catch(err => {
+            commandResponseBuffer.push({
+              command: 'metadataService',
+              arguments: {
+                error: true,
+                errorCode: 'errorStarting',
+                description: err,
+              },
+            });
+            DeviceEventEmitter.emit('commandPop');
+          });
+      }
     } else if (command === 'getMetadata') {
       //ssb-mobile-bluetooth-manager need change
       var remoteAddress = cmd_arguments.remoteAddress;
@@ -320,7 +348,7 @@ export const bluetoothBridge = function (options) {
       },
     );
 
-    let clientOutgoing = TcpSocket.createConnection(
+    clientOutgoing = TcpSocket.createConnection(
       {port: options.outgoingPort, host: localHost},
       () => {},
     );
