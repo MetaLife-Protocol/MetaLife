@@ -4,6 +4,7 @@
 
 import fs = require('fs');
 import path = require('path');
+
 const mkdirp = require('mkdirp');
 const caps = require('ssb-caps');
 const ssbKeys = require('ssb-keys');
@@ -13,15 +14,16 @@ import settingsUtils = require('./plugins/settingsUtils');
 import bluetoothTransport = require('./plugins/bluetooth');
 import oneTimeFixes = require('./one-time-fixes');
 
-// Make sure SSB_DIR exists
-if (!process.env.APP_DATA_DIR || !process.env.SSB_DIR) {
-  throw new Error('misconfigured default paths for the backend');
-}
-if (!fs.existsSync(process.env.SSB_DIR)) {
-  mkdirp.sync(process.env.SSB_DIR);
-}
+export = async function startSSB(isNewIdentity: boolean) {
+  // Make sure SSB_DIR exists
+  if (!process.env.APP_DATA_DIR || !process.env.SSB_DIR) {
+    throw new Error('misconfigured default paths for the backend');
+  }
+  if (!fs.existsSync(process.env.SSB_DIR)) {
+    mkdirp.sync(process.env.SSB_DIR);
+  }
 
-oneTimeFixes().then(() => {
+  await oneTimeFixes();
   const KEYS_PATH = path.join(process.env.SSB_DIR!, 'secret');
   const keys = ssbKeys.loadOrCreateSync(KEYS_PATH);
 
@@ -35,6 +37,13 @@ oneTimeFixes().then(() => {
       maxCpuMaxPause: 120, // ms
       automigrate: true,
       dangerouslyKillFlumeWhenMigrated: true,
+      // For new users that have just created an identity, only try to decrypt
+      // messages created recently (1 week ago) to speed up onboarding:
+      startDecryptBox1: isNewIdentity
+        ? new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split('T')[0]
+        : null,
     },
     blobs: {
       sympathy: 2,
@@ -125,4 +134,4 @@ oneTimeFixes().then(() => {
     .use(require('./plugins/dbUtils')) // needs: db2, syncing
     .use(require('./plugins/votes')) // needs: db2
     .call(null, config);
-});
+};

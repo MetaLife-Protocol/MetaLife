@@ -51,7 +51,7 @@ const Home = ({
             console.log('replicationSchedulerStart: ', v),
           );
           suggestStart(v => console.log('suggestStart: ', v));
-
+          mergeAndExecuteOfflineMsg();
           /******** msg handlers ********/
           addPublicUpdatesListener(key =>
             loadMsg(key, false, (err, msg) => {
@@ -61,8 +61,6 @@ const Home = ({
           addPrivateUpdatesListener(key =>
             loadMsg(key, true, (err, msg) => err || setPrivateMsg(msg)),
           );
-
-          mergeAndExecuteOfflineMsg();
         });
         /******** msg checker ********/
         markMsgCBByType('contact', () => graph(setFriendsGraph));

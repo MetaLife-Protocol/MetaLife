@@ -1,15 +1,17 @@
-// SPDX-FileCopyrightText: 2018-2021 The Manyverse Authors
+// SPDX-FileCopyrightText: 2018-2022 The Manyverse Authors
 //
 // SPDX-License-Identifier: MPL-2.0
 
 import identity = require('./identity');
 const {restore, migrate} = identity;
+import startSSB = require('./ssb');
 
 // Install Desktop backend plugins
 if (process.env.MANYVERSE_PLATFORM === 'desktop') {
   require('./plugins/electron/win-blur-focus');
   require('./plugins/electron/wifi-is-enabled');
   require('./plugins/electron/incoming-urls');
+  require('./plugins/electron/context-menu');
 }
 
 interface Channel {
@@ -54,18 +56,22 @@ if (process.env.MANYVERSE_PLATFORM === 'mobile') {
 }
 
 // Setup initial communication with the frontend, to create or restore identity
-channel.addListener('identity', (request) => {
-  const startSSB = () => require('./ssb');
+channel.addListener('identity', request => {
   let response: string;
-  if (request === 'CREATE' || request === 'USE') {
-    startSSB();
+  if (request === 'CREATE') {
+    startSSB(true);
+    response = 'IDENTITY_READY';
+  } else if (request === 'USE') {
+    startSSB(false);
     response = 'IDENTITY_READY';
   } else if (request.startsWith('RESTORE:')) {
     const words = request.split('RESTORE: ')[1].trim();
     response = restore(words);
-    if (response === 'IDENTITY_READY') startSSB();
+    if (response === 'IDENTITY_READY') {
+      startSSB(false);
+    }
   } else if (request === 'MIGRATE') {
-    migrate(startSSB);
+    migrate(() => startSSB(false));
     response = 'IDENTITY_READY';
   } else {
     return;
