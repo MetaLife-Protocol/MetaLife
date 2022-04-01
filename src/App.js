@@ -5,6 +5,7 @@ import Tabs from './screens/Tabs';
 import Guid from './screens/Guid';
 import Login from './screens/log/Login';
 import SignUp from './screens/log/SignUp';
+import Create from './screens/log/Create';
 import Backup from './screens/log/Backup';
 import SubScreen from './screens/SubScreen';
 import {connect} from 'react-redux/lib/exports';
@@ -32,6 +33,7 @@ const App = () => {
         />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Create" component={Create} />
         <Stack.Screen name="Backup Mnemonic" component={Backup} />
         <Stack.Screen
           name="Tabs"
