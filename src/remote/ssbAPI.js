@@ -13,7 +13,7 @@ export const trainProfileFeed = (id, exist, cb) => {
   (fId = id), (feed = []), (callback = cb);
   existSequence = (exist && exist[0] && exist[0][0].value.sequence) || 0;
   console.log(
-    'fId: ' + id.substring(1, 6) + '-> exist sequence: ' + existSequence,
+    'fId: ' + id.substring(1, 6) + ' -> exist sequence: ' + existSequence,
   );
   profileFeed(id, (err, msg) => {
     if (err) {
@@ -22,7 +22,7 @@ export const trainProfileFeed = (id, exist, cb) => {
     const {messages} = msg,
       {previous, sequence} = messages[0].value;
     console.log(
-      'fId: ' + id.substring(1, 6) + '-> update sequence: ' + sequence,
+      'fId: ' + id.substring(1, 6) + ' -> update sequence: ' + sequence,
     );
     if (sequence === existSequence) {
       return cb({fId, feed});

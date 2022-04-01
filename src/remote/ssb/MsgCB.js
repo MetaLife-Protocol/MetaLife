@@ -19,3 +19,6 @@ export const checkMarkedMsgCB = msg => {
       typeHandlers[content.type](author, content);
   });
 };
+export const batchMsgCB = feed => {
+  console.log(feed);
+};

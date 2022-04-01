@@ -24,7 +24,9 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
           ...state.voteDic,
           [link]: value
             ? state.voteDic[link]
-              ? [...state.voteDic[link], author]
+              ? state.voteDic[link].includes(author)
+                ? state.voteDic[link]
+                : [...state.voteDic[link], author]
               : [author]
             : state.voteDic[link].filter(item => item !== author),
         },
@@ -32,7 +34,7 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
     case 'addFeedDic':
       let feedMsg, pubMsg;
       const {fId, feed} = payload;
-      if (feed.length > 0) {
+      if (feed.length) {
         feedMsg = [...feed, ...(state.feedDic[fId] || [])];
         pubMsg = [...state.publicMsg, ...feed];
         pubMsg.sort((a, b) => a[0].timestamp - b[0].timestamp);
@@ -42,6 +44,13 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
         ...state,
         publicMsg: pubMsg ? pubMsg : state.publicMsg,
         feedDic: {...state.feedDic, [fId]: feedMsg},
+      };
+    case 'removeFeedDic':
+      const nextState = {...state.feedDic};
+      delete nextState[payload];
+      return {
+        ...state,
+        feedDic: nextState,
       };
     case 'setPrivateMsg':
       const {messages} = payload;

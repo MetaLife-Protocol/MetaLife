@@ -1,4 +1,4 @@
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useLayoutEffect} from 'react';
 import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
@@ -6,6 +6,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {trainProfileFeed} from '../../../remote/ssbAPI';
 import ItemAgent from '../home/ItemAgent';
 import PeerDetailsHeader from './details/PeerDetailsHeader';
+import {batchMsgCB, checkMarkedMsgCB} from '../../../remote/ssb/MsgCB';
 
 const PeerDetailsScreen = ({
   verbose,
@@ -28,8 +29,15 @@ const PeerDetailsScreen = ({
 
   useLayoutEffect(() => {
     setOptions({title: name || feedId});
-    isMyBlock || trainProfileFeed(feedId, feedDic[feedId], addFeedDic);
-  }, [feedId]);
+    isMyBlock ||
+      (console.log('peer details addon ->'),
+      trainProfileFeed(
+        feedId,
+        feedDic[feedId],
+        idFeed =>
+          idFeed.feed.length && (batchMsgCB(idFeed.feed), addFeedDic(idFeed)),
+      ));
+  }, []);
 
   return (
     <SafeAreaView style={[flex1]}>

@@ -15,12 +15,17 @@ import {
   stage,
   suggestStart,
 } from '../../remote/ssbOP';
-import {checkMarkedMsgCB, markMsgCBByType} from '../../remote/ssb/MsgCB';
+import {
+  batchMsgCB,
+  checkMarkedMsgCB,
+  markMsgCBByType,
+} from '../../remote/ssb/MsgCB';
 import ItemAgent from './home/ItemAgent';
 import {trainProfileFeed} from '../../remote/ssbAPI';
 
 const Home = ({
   cfg: {verbose},
+  feedId,
   setFeedId,
   relations,
   feedDic,
@@ -30,6 +35,8 @@ const Home = ({
   addPublicMsg,
   setPrivateMsg,
   addFeedDic,
+  removeFeedDic,
+  setVote,
 }) => {
   const {flex1} = SchemaStyles();
 
@@ -51,6 +58,7 @@ const Home = ({
             console.log('replicationSchedulerStart: ', v),
           );
           suggestStart(v => console.log('suggestStart: ', v));
+          console.log('launching addon ->');
           mergeAndExecuteOfflineMsg();
           /******** msg handlers ********/
           addPublicUpdatesListener(key =>
@@ -63,15 +71,25 @@ const Home = ({
           );
         });
         /******** msg checker ********/
-        markMsgCBByType('contact', () => graph(setFriendsGraph));
+        markMsgCBByType('contact', (author, {following, contact}) => {
+          author === feedId && following
+            ? (trainFeedDic(contact),
+              console.log(`following ${contact.substring(1, 6)} addon ->`))
+            : removeFeedDic(contact);
+          graph(setFriendsGraph);
+        });
         markMsgCBByType('about', (_, {about}) =>
           getProfile(about, v => addPeerInfo([about, v])),
+        );
+        markMsgCBByType('vote', (author, content) =>
+          setVote({author, content}),
         );
       });
     /******** app state handlers ********/
     AppState.addEventListener('change', state => {
       switch (state) {
         case 'active':
+          console.log('active addon ->');
           mergeAndExecuteOfflineMsg();
           break;
         case 'inactive':
@@ -85,7 +103,7 @@ const Home = ({
   const mergeAndExecuteOfflineMsg = useCallback(() => {
     const [myFriends, myFollowing] = relations;
     loopIds.current = [...myFriends, ...myFollowing];
-    console.log('mergeAndExecuteOfflineMsg: ', [...myFriends, ...myFollowing]);
+    console.log('friend & following: ', [...myFriends, ...myFollowing]);
     if (loopIds.current.length) {
       let fId = loopIds.current.shift();
       trainProfileFeed(fId, feedDic[fId], stepper);
@@ -95,9 +113,14 @@ const Home = ({
   const stepper = useCallback(
     idFeed => {
       const {feed} = idFeed;
-      console.log('feed: ', idFeed.fId, 'add on: ', idFeed.feed);
+      console.log(
+        'feed: ',
+        idFeed.fId.substring(1, 6),
+        'add on: ',
+        idFeed.feed,
+      );
       if (feed.length) {
-        feed.forEach(checkMarkedMsgCB);
+        batchMsgCB(feed);
         addFeedDic(idFeed);
       }
       if (loopIds.current.length) {
@@ -106,6 +129,18 @@ const Home = ({
       }
     },
     [loopIds.current, feedDic],
+  );
+
+  /******** train new peer's feed ********/
+  const trainFeedDic = useCallback(
+    contact =>
+      trainProfileFeed(
+        contact,
+        feedDic[contact],
+        idFeed =>
+          idFeed.feed.length && (batchMsgCB(idFeed.feed), addFeedDic(idFeed)),
+      ),
+    [feedDic],
   );
 
   return (
@@ -134,18 +169,13 @@ const mdp = d => {
     setFeedId: v => d({type: 'setFeedId', payload: v}),
     addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
     setPublicMsg: v => d({type: 'setPublicMsg', payload: v}),
-    addPublicMsg: v => {
-      switch (v.messages[0].value.content.type) {
-        case 'vote':
-          d({type: 'setVote', payload: v.messages[0].value});
-        default:
-          d({type: 'addPublicMsg', payload: v});
-      }
-    },
+    addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
     setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),
     addPrivateMsg: v => d({type: 'addPrivateMsg', payload: v}),
+    setVote: v => d({type: 'setVote', payload: v}),
     setFriendsGraph: v => d({type: 'setFriendsGraph', payload: v}),
     addFeedDic: v => d({type: 'addFeedDic', payload: v}),
+    removeFeedDic: v => d({type: 'removeFeedDic', payload: v}),
   };
 };
 
