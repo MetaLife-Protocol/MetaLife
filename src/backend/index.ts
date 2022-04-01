@@ -6,14 +6,6 @@ import identity = require('./identity');
 const {restore, migrate} = identity;
 import startSSB = require('./ssb');
 
-// Install Desktop backend plugins
-if (process.env.MANYVERSE_PLATFORM === 'desktop') {
-  require('./plugins/electron/win-blur-focus');
-  require('./plugins/electron/wifi-is-enabled');
-  require('./plugins/electron/incoming-urls');
-  require('./plugins/electron/context-menu');
-}
-
 interface Channel {
   addListener(type: string, fn: (msg: string) => void): void;
   post(type: string, msg: string): void;
