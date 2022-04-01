@@ -6,34 +6,30 @@
  * @desc:
  */
 
-import React, {useCallback, useLayoutEffect} from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useStyle} from '../../../../shared/ThemeColors';
 
-const PhotonAccountInfoCard = ({style}) => {
+const PhotonAccountInfoCard = ({style, balance}) => {
   const styles = useStyle(createSty);
 
-  useLayoutEffect(() => {}, []);
+  // useEffect(() => {
+  //   const {balance_in_photon, balance_on_chain, token_address} = balance;
+  //   if (token_address === '0x6601F810eaF2fa749EEa10533Fd4CC23B8C791dc') {
+  //     if (!balance_in_photon) {
+  //     }
+  //   }
+  // }, [balance]);
 
   const itemView = useCallback(
-    (title, values, style) => {
+    (title, values, showUnit = true, style) => {
       return (
         <View style={[styles.itemContainer, style]}>
           <Text style={styles.itemTitle}>{title}</Text>
-          <View>
-            {values.map((item, index) => {
-              return (
-                <Text
-                  style={[styles.itemValue, {marginTop: index ? 7 : 0}]}
-                  key={index + '_unit'}>
-                  {item.valueNumber}
-                  {!!item.valueUnit && (
-                    <Text style={styles.unit}>{' ' + item.valueUnit}</Text>
-                  )}
-                </Text>
-              );
-            })}
-          </View>
+          <Text style={[styles.itemValue]}>
+            {values}
+            {!!showUnit && <Text style={styles.unit}>SMT</Text>}
+          </Text>
         </View>
       );
     },
@@ -42,27 +38,17 @@ const PhotonAccountInfoCard = ({style}) => {
 
   return (
     <View style={[styles.container, style]}>
-      {itemView('Aries', [{valueNumber: '0xcC5D33d…0805810'}])}
+      {itemView('Aries', '0xcC5D33d…0805810')}
       {itemView(
         'On-chain balance',
-        [
-          {valueNumber: '5140.00', valueUnit: 'SMT'},
-          {
-            valueNumber: '5140.00',
-            valueUnit: 'MESH',
-          },
-        ],
+        balance.balance_on_chain,
+        true,
         styles.marginTop20,
       )}
       {itemView(
         'Channel total balance',
-        [
-          {valueNumber: '5140.00', valueUnit: 'SMT'},
-          {
-            valueNumber: '5140.00',
-            valueUnit: 'MESH',
-          },
-        ],
+        balance.balance_in_photon,
+        true,
         styles.marginTop20,
       )}
     </View>

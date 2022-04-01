@@ -6,7 +6,7 @@
  * @desc:
  */
 
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -21,10 +21,12 @@ import PhotonAccountInfoCard from './comps/PhotonAccountInfoCard';
 import {useNavigation} from '@react-navigation/native';
 import PhotonMoreActionsView from './comps/PhotonMoreActionsView';
 import PhotonListItemView from './comps/PhotonListItemView';
+import {getBalanceFromPhoton} from 'react-native-photon';
 
 const PhotonNetwork = () => {
   const styles = useStyle(createSty);
-  const [moreActionsVisible, setMoreActionsVisible] = useState(false);
+  const [moreActionsVisible, setMoreActionsVisible] = useState(false),
+    [balance, setBalance] = useState({});
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -40,9 +42,29 @@ const PhotonNetwork = () => {
       ),
     });
   }, [navigation, styles.moreImg]);
+
+  useEffect(() => {
+    getBalanceFromPhoton().then(res => {
+      const jsonRes = JSON.parse(res);
+      console.log('balance:::', jsonRes);
+      if (jsonRes.error_code === 0) {
+        const array = jsonRes.data;
+        if (array && array.length) {
+          setBalance(array[0]);
+          // const {balance_in_photon, balance_on_chain, token_address} = array[0];
+          // if (token_address === '0x6601F810eaF2fa749EEa10533Fd4CC23B8C791dc') {
+          //   if (!balance_in_photon) {
+          //   }
+          // }
+        }
+        // for ()
+      }
+    });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
-      <PhotonAccountInfoCard style={styles.topCard} />
+      <PhotonAccountInfoCard style={styles.topCard} balance={balance} />
       <View style={styles.channelListContainer}>
         <View style={styles.channelListTextContainer}>
           <Text style={styles.channelText}>Channel list</Text>
