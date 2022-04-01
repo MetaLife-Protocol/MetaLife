@@ -31,15 +31,26 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
             : state.voteDic[link].filter(item => item !== author),
         },
       };
-    case 'addFeedDic':
+    case 'appendFeedDic':
+      const aAuthor = payload[0].value.author;
+      return {
+        ...state,
+        feedDic: {
+          ...state.feedDic,
+          [aAuthor]: [...state.feedDic[aAuthor], payload],
+        },
+      };
+    case 'mergeFeedDic':
       let feedMsg, pubMsg;
       const {fId, feed} = payload;
       if (feed.length) {
         feedMsg = [...feed, ...(state.feedDic[fId] || [])];
-        pubMsg = [...state.publicMsg, ...feed];
+        pubMsg = [
+          ...state.publicMsg,
+          ...feed.filter(msg => msg[0].value.content.type === 'post'),
+        ];
         pubMsg.sort((a, b) => a[0].timestamp - b[0].timestamp);
       }
-      // merge feed to public
       return {
         ...state,
         publicMsg: pubMsg ? pubMsg : state.publicMsg,

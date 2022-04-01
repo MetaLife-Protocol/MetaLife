@@ -14,7 +14,7 @@ const PeerDetailsScreen = ({
   relations,
   peerInfoDic,
   feedDic,
-  addFeedDic,
+  mergeFeedDic,
 }) => {
   const {flex1} = SchemaStyles(),
     {} = styles;
@@ -35,7 +35,7 @@ const PeerDetailsScreen = ({
         feedId,
         feedDic[feedId],
         idFeed =>
-          idFeed.feed.length && (batchMsgCB(idFeed.feed), addFeedDic(idFeed)),
+          idFeed.feed.length && (batchMsgCB(idFeed.feed), mergeFeedDic(idFeed)),
       ));
   }, []);
 
@@ -65,7 +65,7 @@ const msp = s => {
 
 const mdp = d => {
   return {
-    addFeedDic: v => d({type: 'addFeedDic', payload: v}),
+    mergeFeedDic: v => d({type: 'mergeFeedDic', payload: v}),
   };
 };
 

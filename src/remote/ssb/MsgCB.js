@@ -10,15 +10,15 @@ export const markMsgCBByKey = (key, handler) => {
 export const markMsgCBByType = (type, handler) => {
   typeHandlers[type] = handler;
 };
-export const checkMarkedMsgCB = msg => {
-  const tMsg = msg.messages ? msg.messages : msg;
-  tMsg.map(({key, value: {author, content}}) => {
+export const checkMarkedMsgCB = messages => {
+  messages.map(({key, value: {author, content}}) => {
     keyHandlers[key] && keyHandlers[key]();
     delete keyHandlers[key];
     typeHandlers.hasOwnProperty(content.type) &&
       typeHandlers[content.type](author, content);
   });
+  return messages;
 };
 export const batchMsgCB = feed => {
-  console.log(feed);
+  console.log('batchMsgCB: ', feed);
 };

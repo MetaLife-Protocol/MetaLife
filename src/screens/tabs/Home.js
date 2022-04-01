@@ -33,8 +33,9 @@ const Home = ({
   setFriendsGraph,
   publicMsg,
   addPublicMsg,
+  appendFeedDic,
   setPrivateMsg,
-  addFeedDic,
+  mergeFeedDic,
   removeFeedDic,
   setVote,
 }) => {
@@ -62,8 +63,8 @@ const Home = ({
           mergeAndExecuteOfflineMsg();
           /******** msg handlers ********/
           addPublicUpdatesListener(key =>
-            loadMsg(key, false, (err, msg) => {
-              err || (checkMarkedMsgCB(msg), addPublicMsg(msg));
+            loadMsg(key, false, (err, {messages, full}) => {
+              err || appendFeedDic(checkMarkedMsgCB(messages));
             }),
           );
           addPrivateUpdatesListener(key =>
@@ -72,10 +73,12 @@ const Home = ({
         });
         /******** msg checker ********/
         markMsgCBByType('contact', (author, {following, contact}) => {
-          author === feedId && following
-            ? (trainFeedDic(contact),
-              console.log(`following ${contact.substring(1, 6)} addon ->`))
-            : removeFeedDic(contact);
+          if (author === feedId) {
+            following
+              ? (console.log(`following ${contact.substring(1, 6)} addon ->`),
+                trainFeedDic(contact))
+              : removeFeedDic(contact);
+          }
           graph(setFriendsGraph);
         });
         markMsgCBByType('about', (_, {about}) =>
@@ -83,6 +86,9 @@ const Home = ({
         );
         markMsgCBByType('vote', (author, content) =>
           setVote({author, content}),
+        );
+        markMsgCBByType('post', (author, content) =>
+          addPublicMsg({author, content}),
         );
       });
     /******** app state handlers ********/
@@ -121,7 +127,7 @@ const Home = ({
       );
       if (feed.length) {
         batchMsgCB(feed);
-        addFeedDic(idFeed);
+        mergeFeedDic(idFeed);
       }
       if (loopIds.current.length) {
         const fId = loopIds.current.shift();
@@ -138,7 +144,7 @@ const Home = ({
         contact,
         feedDic[contact],
         idFeed =>
-          idFeed.feed.length && (batchMsgCB(idFeed.feed), addFeedDic(idFeed)),
+          idFeed.feed.length && (batchMsgCB(idFeed.feed), mergeFeedDic(idFeed)),
       ),
     [feedDic],
   );
@@ -169,12 +175,13 @@ const mdp = d => {
     setFeedId: v => d({type: 'setFeedId', payload: v}),
     addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
     setPublicMsg: v => d({type: 'setPublicMsg', payload: v}),
+    appendFeedDic: v => d({type: 'appendFeedDic', payload: v}),
     addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
     setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),
     addPrivateMsg: v => d({type: 'addPrivateMsg', payload: v}),
     setVote: v => d({type: 'setVote', payload: v}),
     setFriendsGraph: v => d({type: 'setFriendsGraph', payload: v}),
-    addFeedDic: v => d({type: 'addFeedDic', payload: v}),
+    mergeFeedDic: v => d({type: 'mergeFeedDic', payload: v}),
     removeFeedDic: v => d({type: 'removeFeedDic', payload: v}),
   };
 };
