@@ -32,12 +32,15 @@ export const msgReducer = (state = msgInitState, {type, payload}) => {
         },
       };
     case 'appendFeedDic':
-      const aAuthor = payload[0].value.author;
+      const aAuthor = payload[0].value.author,
+        aFeed = state.feedDic[aAuthor]
+          ? [payload, ...state.feedDic[aAuthor]]
+          : [payload];
       return {
         ...state,
         feedDic: {
           ...state.feedDic,
-          [aAuthor]: [...state.feedDic[aAuthor], payload],
+          [aAuthor]: aFeed,
         },
       };
     case 'mergeFeedDic':

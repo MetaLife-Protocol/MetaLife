@@ -7,22 +7,23 @@ import {
   migrationProgress,
   profileFeed,
 } from './ssbOP';
+import {batchMsgCB} from './ssb/MsgCB';
 
-let fId, feed, callback, existSequence;
-export const trainProfileFeed = (id, exist, cb) => {
-  (fId = id), (feed = []), (callback = cb);
-  existSequence = (exist && exist[0] && exist[0][0].value.sequence) || 0;
+export const trainProfileFeed = (fId, exist, cb) => {
+  let feed = [],
+    callback = cb,
+    existSequence = (exist && exist[0] && exist[0][0].value.sequence) || 0;
   console.log(
-    'fId: ' + id.substring(1, 6) + ' -> exist sequence: ' + existSequence,
+    'fId: ' + fId.substring(1, 6) + ' -> exist sequence: ' + existSequence,
   );
-  profileFeed(id, (err, msg) => {
+  profileFeed(fId, (err, msg) => {
     if (err) {
       return cb({fId, feed});
     }
     const {messages} = msg,
       {previous, sequence} = messages[0].value;
     console.log(
-      'fId: ' + id.substring(1, 6) + ' -> update sequence: ' + sequence,
+      'fId: ' + fId.substring(1, 6) + ' -> update sequence: ' + sequence,
     );
     if (sequence === existSequence) {
       return cb({fId, feed});
@@ -33,22 +34,47 @@ export const trainProfileFeed = (id, exist, cb) => {
         : cb({fId, feed});
     }
   });
+
+  function loadPrevious(err, msg) {
+    if (err) {
+      const {previous} = feed[feed.length - 1][0].value;
+      return loadMsg(previous, true, loadPrevious);
+    }
+    const {messages, full} = msg,
+      {sequence, previous} = messages[0].value;
+    feed.push(messages);
+    if (previous && sequence !== existSequence + 1) {
+      loadMsg(previous, false, loadPrevious);
+    } else {
+      callback({fId, feed});
+    }
+  }
 };
 
-function loadPrevious(err, msg) {
-  if (err) {
-    const {previous} = feed[feed.length - 1][0].value;
-    return loadMsg(previous, true, loadPrevious);
+export const trainFeed = (fId, feedDic, cb) => {
+  trainProfileFeed(
+    fId,
+    feedDic[fId],
+    idFeed => idFeed.feed.length && cb(idFeed),
+  );
+};
+
+export const trainRangeFeed = (loopIds, feedDic, cb) => {
+  if (loopIds.length) {
+    let fId = loopIds.shift();
+    trainProfileFeed(fId, feedDic[fId], stepper);
   }
-  const {messages, full} = msg,
-    {sequence, previous} = messages[0].value;
-  feed.push(messages);
-  if (previous && sequence !== existSequence + 1) {
-    loadMsg(previous, false, loadPrevious);
-  } else {
-    callback({fId, feed});
+
+  function stepper(idFeed) {
+    const {feed} = idFeed;
+    console.log('feed: ', idFeed.fId.substring(1, 6), 'add on: ', idFeed.feed);
+    feed.length && cb(idFeed);
+    if (loopIds.length) {
+      const fId = loopIds.shift();
+      trainProfileFeed(fId, feedDic[fId], stepper);
+    }
   }
-}
+};
 
 // toReplyPostContent({
 //   text: state.replyText,
