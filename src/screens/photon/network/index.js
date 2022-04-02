@@ -21,14 +21,17 @@ import PhotonAccountInfoCard from './comps/PhotonAccountInfoCard';
 import {useNavigation} from '@react-navigation/native';
 import PhotonMoreActionsView from './comps/PhotonMoreActionsView';
 import PhotonListItemView from './comps/PhotonListItemView';
-import {getBalanceFromPhoton} from 'react-native-photon';
+import {getBalanceFromPhoton, loadChannelList} from 'react-native-photon';
 
 const PhotonNetwork = () => {
   const styles = useStyle(createSty);
   const [moreActionsVisible, setMoreActionsVisible] = useState(false),
-    [balance, setBalance] = useState({});
+    [balance, setBalance] = useState({}),
+    [channelList, setChannelList] = useState([]);
 
   const navigation = useNavigation();
+
+  //set tabBar right more icon
   useLayoutEffect(() => {
     // navigationOptions;
     navigation.setOptions({
@@ -43,21 +46,30 @@ const PhotonNetwork = () => {
     });
   }, [navigation, styles.moreImg]);
 
+  //get Balance
   useEffect(() => {
     getBalanceFromPhoton().then(res => {
       const jsonRes = JSON.parse(res);
-      console.log('balance:::', jsonRes);
+      // console.log('balance:::', jsonRes);
       if (jsonRes.error_code === 0) {
         const array = jsonRes.data;
         if (array && array.length) {
           setBalance(array[0]);
-          // const {balance_in_photon, balance_on_chain, token_address} = array[0];
-          // if (token_address === '0x6601F810eaF2fa749EEa10533Fd4CC23B8C791dc') {
-          //   if (!balance_in_photon) {
-          //   }
-          // }
         }
-        // for ()
+      }
+    });
+  }, []);
+
+  //get Channel List
+  useEffect(() => {
+    loadChannelList().then(res => {
+      const jsonRes = JSON.parse(res);
+      console.log('loadChannelList:::', jsonRes);
+      if (jsonRes.error_code === 0) {
+        const array = jsonRes.data;
+        if (array && array.length) {
+          setChannelList(array);
+        }
       }
     });
   }, []);
@@ -70,7 +82,11 @@ const PhotonNetwork = () => {
           <Text style={styles.channelText}>Channel list</Text>
         </View>
       </View>
-      <FlatList data={[0, 1]} renderItem={() => <PhotonListItemView />} />
+      <FlatList
+        data={channelList}
+        renderItem={({item, index}) => <PhotonListItemView data={item} />}
+        keyExtractor={(item, index) => `list_${index}`}
+      />
       <PhotonMoreActionsView
         visible={moreActionsVisible}
         onSelect={() => {

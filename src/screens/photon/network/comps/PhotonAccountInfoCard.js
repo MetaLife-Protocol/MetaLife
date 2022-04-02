@@ -9,6 +9,7 @@
 import React, {useCallback} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useStyle} from '../../../../shared/ThemeColors';
+import {ethNumberFixed} from '../../../../shared/numberUtils';
 
 const PhotonAccountInfoCard = ({style, balance}) => {
   const styles = useStyle(createSty);
@@ -38,16 +39,17 @@ const PhotonAccountInfoCard = ({style, balance}) => {
 
   return (
     <View style={[styles.container, style]}>
-      {itemView('Aries', '0xcC5D33d…0805810')}
+      {/*storableWallet.getPublicKey()*/}
+      {itemView('Aries', 'TODO wallet 0xcC5D33d…0805810', false)}
       {itemView(
         'On-chain balance',
-        balance.balance_on_chain,
+        ethNumberFixed(balance?.balance_on_chain),
         true,
         styles.marginTop20,
       )}
       {itemView(
         'Channel total balance',
-        balance.balance_in_photon,
+        ethNumberFixed(balance?.balance_in_photon),
         true,
         styles.marginTop20,
       )}
