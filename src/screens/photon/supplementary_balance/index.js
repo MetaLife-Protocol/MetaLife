@@ -12,9 +12,14 @@ import {PhotonSeparator} from '../../../shared/comps/PhotonSeparator';
 import PureTextInput from '../../../shared/comps/PureTextInput';
 import RoundBtn from '../../../shared/comps/RoundBtn';
 import Constants from '../../../shared/Constants';
+import {useRoute} from '@react-navigation/native';
+import {depositChannelMethod} from 'react-native-photon';
 
 const SupplementaryBalance = () => {
   const styles = useStyle(createSty);
+  const route = useRoute();
+  const {channelData} = route.params;
+  // console.log('channelData::', channelData);
 
   const [amount, setAmount] = useState(''),
     [remark, setRemark] = useState('');
@@ -24,7 +29,9 @@ const SupplementaryBalance = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.pageContainer}>
-        <Text style={styles.address}>0xcC5D3A537E...bC9c1</Text>
+        <Text style={styles.address} numberOfLines={1} ellipsizeMode={'middle'}>
+          {channelData.partner_address}
+        </Text>
         <PhotonSeparator />
         <PureTextInput
           rightComponent={<Text style={styles.coin}>SMT</Text>}
@@ -43,7 +50,20 @@ const SupplementaryBalance = () => {
           disabled={btnDisabled}
           title={'Create'}
           press={() => {
-            //  TODO create channel
+            depositChannelMethod({
+              photonTokenAddress: channelData.token_address,
+              partnerAddress: channelData.partner_address,
+              depositBalance: amount,
+            })
+              .then(res => {
+                const jsonRes = JSON.parse(res);
+                if (jsonRes.error_code === 0) {
+                }
+                console.log('depositChannelMethod res::', res);
+              })
+              .catch(error => {
+                console.log('depositChannelMethod error::', error);
+              });
           }}
         />
       </View>

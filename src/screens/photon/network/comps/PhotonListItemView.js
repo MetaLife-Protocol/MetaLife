@@ -39,9 +39,11 @@ import {useStyle} from '../../../../shared/ThemeColors';
 import Constants from '../../../../shared/Constants';
 import {ethNumberFixed} from '../../../../shared/numberUtils';
 import {getPhotonTokenSymbol} from '../../PhotonUtils';
+import {useNavigation} from '@react-navigation/native';
 
 const PhotonListItemView = ({data}) => {
   const styles = useStyle(createSty);
+  const {navigate} = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -70,7 +72,13 @@ const PhotonListItemView = ({data}) => {
       </View>
       <Text style={styles.dis}>Withdrawal, estimated 1~2 minutes</Text>
       <View style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>Replenish</Text>
+        <Text
+          style={styles.buttonText}
+          onPress={() => {
+            navigate('SupplementaryBalance', {channelData: data});
+          }}>
+          Replenish
+        </Text>
         <Text style={styles.buttonText}>withdraw</Text>
         <Text style={styles.buttonText}>closure</Text>
       </View>
