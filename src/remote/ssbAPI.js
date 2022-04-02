@@ -7,7 +7,7 @@ import {
   migrationProgress,
   profileFeed,
 } from './ssbOP';
-import {batchMsgCB} from './ssb/MsgCB';
+import {batchMsgCB} from '../store/MsgCB';
 
 export const trainProfileFeed = (fId, exist, cb) => {
   let feed = [],

@@ -1,8 +1,6 @@
-import {combineReducers} from 'redux';
-import {contactsReducer} from './contacts';
-import {msgReducer} from './msg';
-import {daoReducer} from './dao';
-import {userReducer} from './user';
+/**
+ * Created on 21 Dec 2021 by lonmee
+ */
 
 export const cfgInitState = {lang: 'en', darkMode: true, verbose: false};
 export const cfgReducer = (state = cfgInitState, {type, payload}) => {
@@ -19,13 +17,3 @@ export const cfgReducer = (state = cfgInitState, {type, payload}) => {
       return state;
   }
 };
-
-const reducer = combineReducers({
-  cfg: cfgReducer,
-  user: userReducer,
-  msg: msgReducer,
-  contacts: contactsReducer,
-  dao: daoReducer,
-});
-
-export default reducer;

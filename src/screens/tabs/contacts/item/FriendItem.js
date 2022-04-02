@@ -5,7 +5,7 @@ import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {findRootKey} from '../../../../filters/MsgFilters';
+import {findRootKey} from '../../../../store/filters/MsgFilters';
 
 const iconDic = {
   peerIcon: require('../../../../assets/image/contacts/peer_icon.png'),

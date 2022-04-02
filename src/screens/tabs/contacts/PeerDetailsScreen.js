@@ -6,7 +6,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {trainProfileFeed} from '../../../remote/ssbAPI';
 import ItemAgent from '../home/ItemAgent';
 import PeerDetailsHeader from './details/PeerDetailsHeader';
-import {batchMsgCB, checkMarkedMsgCB} from '../../../remote/ssb/MsgCB';
+import {batchMsgCB, checkMarkedMsgCB} from '../../../store/MsgCB';
 
 const PeerDetailsScreen = ({
   verbose,

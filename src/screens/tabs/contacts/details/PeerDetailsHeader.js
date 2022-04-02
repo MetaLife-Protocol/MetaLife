@@ -5,8 +5,8 @@ import {PeerIcons} from '../../../../shared/Icons';
 import Toast from 'react-native-tiny-toast';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
 import {block, follow} from '../../../../remote/ssbOP';
-import {markMsgCBByKey} from '../../../../remote/ssb/MsgCB';
-import {findRootKey} from '../../../../filters/MsgFilters';
+import {markMsgCBByKey} from '../../../../store/MsgCB';
+import {findRootKey} from '../../../../store/filters/MsgFilters';
 import React, {useState} from 'react';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../../shared/SchemaStyles';
@@ -14,7 +14,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   friendsGraphParse,
   mutualFriend,
-} from '../../../../filters/ContactsFilters';
+} from '../../../../store/filters/ContactsFilters';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
 /**

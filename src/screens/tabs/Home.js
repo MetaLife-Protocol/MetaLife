@@ -15,11 +15,7 @@ import {
   stage,
   suggestStart,
 } from '../../remote/ssbOP';
-import {
-  batchMsgCB,
-  checkMarkedMsgCB,
-  markMsgCBByType,
-} from '../../remote/ssb/MsgCB';
+import {batchMsgCB, checkMarkedMsgCB, markMsgCBByType} from '../../store/MsgCB';
 import ItemAgent from './home/ItemAgent';
 import {trainRangeFeed, trainFeed} from '../../remote/ssbAPI';
 
@@ -64,62 +60,32 @@ const Home = ({
           trainRangeFeed([...myFriends, ...myFollowing], feedDic, idFeed =>
             mergeFeedDic(batchMsgCB(idFeed)),
           );
-          /******** msg handlers ********/
-          addPublicUpdatesListener(key =>
-            loadMsg(key, false, publicMsgHandler),
-          );
-          addPrivateUpdatesListener(key =>
-            loadMsg(key, true, (err, msg) => err || setPrivateMsg(msg)),
-          );
         });
-        /******** msg checker ********/
-        markMsgCBByType('contact', contactMsgHandler);
-        markMsgCBByType('about', (_, {about}) =>
-          getProfile(about, v => addPeerInfo([about, v])),
-        );
-        markMsgCBByType('vote', (author, content) =>
-          setVote({author, content}),
-        );
-        markMsgCBByType('post', (author, content) =>
-          addPublicMsg({author, content}),
-        );
+        initialListeners();
       });
-    /******** app state handlers ********/
-    AppState.addEventListener('change', appStateChangeHandler);
   }, []);
 
-  const appStateChangeHandler = useCallback(
-    state => {
-      switch (state) {
-        case 'active':
-          console.log('active addon ->');
-          trainRangeFeed([...myFriends, ...myFollowing], feedDic, mergeFeedDic);
-          break;
-        case 'inactive':
-          break;
-      }
-    },
-    [relations, feedDic],
-  );
-
-  const publicMsgHandler = useCallback(
-    (err, {messages, full}) => {
-      if (!err) {
-        const {author, sequence} = messages[0].value;
-        const feedSeq =
-          (feedDic[author] && feedDic[author][0][0].value.sequence) || 0;
-        sequence === feedSeq + 1
-          ? appendFeedDic(checkMarkedMsgCB(messages))
-          : trainFeed(author, feedDic, idFeed =>
-              mergeFeedDic(batchMsgCB(idFeed)),
-            );
-      }
-    },
-    [feedDic],
-  );
-
-  const contactMsgHandler = useCallback(
-    (author, {following, contact}) => {
+  const initialListeners = useCallback(() => {
+    /******** msg handlers ********/
+    addPublicUpdatesListener(key =>
+      loadMsg(key, false, (err, {messages, full}) => {
+        if (!err) {
+          const {author, sequence} = messages[0].value;
+          const feedSeq =
+            (feedDic[author] && feedDic[author][0][0].value.sequence) || 0;
+          sequence === feedSeq + 1
+            ? appendFeedDic(checkMarkedMsgCB(messages))
+            : trainFeed(author, feedDic, idFeed =>
+                mergeFeedDic(batchMsgCB(idFeed)),
+              );
+        }
+      }),
+    );
+    addPrivateUpdatesListener(key =>
+      loadMsg(key, true, (err, msg) => err || setPrivateMsg(msg)),
+    );
+    /******** msg checker ********/
+    markMsgCBByType('contact', (author, {following, contact}) => {
       if (author === feedId) {
         following
           ? (console.log(`following ${contact.substring(1, 6)} addon ->`),
@@ -129,9 +95,26 @@ const Home = ({
           : removeFeedDic(contact);
       }
       graph(setFriendsGraph);
-    },
-    [feedDic],
-  );
+    });
+    markMsgCBByType('about', (_, {about}) =>
+      getProfile(about, v => addPeerInfo([about, v])),
+    );
+    markMsgCBByType('vote', (author, content) => setVote({author, content}));
+    markMsgCBByType('post', (author, content) =>
+      addPublicMsg({author, content}),
+    );
+    /******** app state handlers ********/
+    AppState.addEventListener('change', state => {
+      switch (state) {
+        case 'active':
+          console.log('active addon ->');
+          trainRangeFeed([...myFriends, ...myFollowing], feedDic, mergeFeedDic);
+          break;
+        case 'inactive':
+          break;
+      }
+    });
+  }, [feedDic]);
 
   return (
     <SafeAreaView style={[flex1]}>
