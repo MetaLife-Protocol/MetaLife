@@ -6,7 +6,7 @@ import Tabs from './screens/Tabs';
 import Guid from './screens/Guid';
 import Login from './screens/log/Login';
 import SignUp from './screens/log/SignUp';
-import SubScreen from './screens/SubScreen';
+import SubScreen from './shared/screens/SubScreen';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from './shared/SchemaStyles';
 import Setting from './screens/tabs/profiles/Setting';

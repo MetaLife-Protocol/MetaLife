@@ -1,120 +1,15 @@
-import React, {useCallback, useEffect} from 'react';
-import {AppState, FlatList, SafeAreaView} from 'react-native';
+import React from 'react';
+import {FlatList, SafeAreaView} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import * as ssbOP from '../../remote/ssbOP';
-import {
-  addPrivateUpdatesListener,
-  addPublicUpdatesListener,
-  connStart,
-  getProfile,
-  graph,
-  loadMsg,
-  replicationSchedulerStart,
-  reqStartSSB,
-  stage,
-  suggestStart,
-} from '../../remote/ssbOP';
-import {batchMsgCB, checkMarkedMsgCB, markMsgCBByType} from '../../store/MsgCB';
 import ItemAgent from './home/ItemAgent';
-import {trainRangeFeed, trainFeed} from '../../remote/ssbAPI';
+import {useHomeHooks} from '../../store/helper/HomeHooks';
+import {useDispatch} from 'react-redux';
 
-const Home = ({
-  cfg: {verbose},
-  feedId,
-  setFeedId,
-  relations,
-  feedDic,
-  addPeerInfo,
-  setFriendsGraph,
-  publicMsg,
-  addPublicMsg,
-  appendFeedDic,
-  setPrivateMsg,
-  mergeFeedDic,
-  removeFeedDic,
-  setVote,
-}) => {
-  const {flex1} = SchemaStyles(),
-    [myFriends, myFollowing] = relations;
+const Home = ({cfg: {verbose}, publicMsg}) => {
+  const {flex1} = SchemaStyles();
 
-  useEffect(() => {
-    // promise demo
-    // foo().then(console.log).catch(console.warn);
-    window.ssb ||
-      reqStartSSB(ssb => {
-        /******** ssb started handlers ********/
-        ssbOP.ssb = window.ssb = ssb;
-        setFeedId(ssb.id);
-        // setup conn
-        connStart(v => {
-          console.log(v ? 'conn start' : 'conn started yet');
-          // put online
-          stage(v => console.log(v ? 'peer stage' : 'peer staged yet'));
-
-          replicationSchedulerStart(v =>
-            console.log('replicationSchedulerStart: ', v),
-          );
-          suggestStart(v => console.log('suggestStart: ', v));
-          console.log('launching addon ->');
-          trainRangeFeed([...myFriends, ...myFollowing], feedDic, idFeed =>
-            mergeFeedDic(batchMsgCB(idFeed)),
-          );
-        });
-        initialListeners();
-      });
-  }, []);
-
-  const initialListeners = useCallback(() => {
-    /******** msg handlers ********/
-    addPublicUpdatesListener(key =>
-      loadMsg(key, false, (err, {messages, full}) => {
-        if (!err) {
-          const {author, sequence} = messages[0].value;
-          const feedSeq =
-            (feedDic[author] && feedDic[author][0][0].value.sequence) || 0;
-          sequence === feedSeq + 1
-            ? appendFeedDic(checkMarkedMsgCB(messages))
-            : trainFeed(author, feedDic, idFeed =>
-                mergeFeedDic(batchMsgCB(idFeed)),
-              );
-        }
-      }),
-    );
-    addPrivateUpdatesListener(key =>
-      loadMsg(key, true, (err, msg) => err || setPrivateMsg(msg)),
-    );
-    /******** msg checker ********/
-    markMsgCBByType('contact', (author, {following, contact}) => {
-      if (author === feedId) {
-        following
-          ? (console.log(`following ${contact.substring(1, 6)} addon ->`),
-            trainFeed(contact, feedDic, idFeed =>
-              mergeFeedDic(batchMsgCB(idFeed)),
-            ))
-          : removeFeedDic(contact);
-      }
-      graph(setFriendsGraph);
-    });
-    markMsgCBByType('about', (_, {about}) =>
-      getProfile(about, v => addPeerInfo([about, v])),
-    );
-    markMsgCBByType('vote', (author, content) => setVote({author, content}));
-    markMsgCBByType('post', (author, content) =>
-      addPublicMsg({author, content}),
-    );
-    /******** app state handlers ********/
-    AppState.addEventListener('change', state => {
-      switch (state) {
-        case 'active':
-          console.log('active addon ->');
-          trainRangeFeed([...myFriends, ...myFollowing], feedDic, mergeFeedDic);
-          break;
-        case 'inactive':
-          break;
-      }
-    });
-  }, [feedDic]);
+  useHomeHooks(useDispatch(), []);
 
   return (
     <SafeAreaView style={[flex1]}>
@@ -131,25 +26,12 @@ const msp = s => {
   return {
     cfg: s.cfg,
     feedId: s.user.feedId,
-    relations: s.user.relations,
-    publicMsg: s.msg.publicMsg,
-    feedDic: s.msg.feedDic,
   };
 };
 
-const mdp = d => {
+const mdp = (d, s) => {
   return {
-    setFeedId: v => d({type: 'setFeedId', payload: v}),
-    addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
-    setPublicMsg: v => d({type: 'setPublicMsg', payload: v}),
-    appendFeedDic: v => d({type: 'appendFeedDic', payload: v}),
-    addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
-    setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),
-    addPrivateMsg: v => d({type: 'addPrivateMsg', payload: v}),
-    setVote: v => d({type: 'setVote', payload: v}),
-    setFriendsGraph: v => d({type: 'setFriendsGraph', payload: v}),
-    mergeFeedDic: v => d({type: 'mergeFeedDic', payload: v}),
-    removeFeedDic: v => d({type: 'removeFeedDic', payload: v}),
+    foo: v => d({type: 'xx', s}),
   };
 };
 
