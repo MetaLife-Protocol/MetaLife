@@ -10,7 +10,7 @@ export const feedReducer = (state = initState, {type, payload}) => {
       const {fId, feed} = payload;
       return {
         ...state,
-        [fId]: state[fId] ? [...feed, ...state[fId]] : feed,
+        [fId]: state[fId] ? [...feed, ...state[fId]] : [...feed],
       };
     case 'removeFeed':
       return state;

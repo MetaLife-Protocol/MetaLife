@@ -65,7 +65,7 @@ const PostMsgEditor = ({publicMsg}) => {
 const msp = s => {
   return {
     feedId: s.user.feedId,
-    publicMsg: s.msg.publicMsg,
+    publicMsg: s.public,
   };
 };
 

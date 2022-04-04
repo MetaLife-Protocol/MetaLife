@@ -69,7 +69,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     feedId: s.user.feedId,
-    infoDic: s.info.dic,
+    infoDic: s.info,
   };
 };
 

@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     cfg: s.cfg,
-    infoDic: s.info.dic,
-    privateMsg: s.msg.privateMsg,
+    infoDic: s.info,
+    privateMsg: s.private,
   };
 };
 

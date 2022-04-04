@@ -2,9 +2,7 @@
  * Created on 21 Dec 2021 by lonmee
  */
 
-const initState = {
-  dic: {},
-};
+const initState = {};
 
 export const voteReducer = (state = initState, {type, payload}) => {
   switch (type) {
@@ -17,16 +15,13 @@ export const voteReducer = (state = initState, {type, payload}) => {
       } = payload;
       return {
         ...state,
-        dic: {
-          ...state.dic,
-          [link]: value
-            ? state.dic[link]
-              ? state.dic[link].includes(author)
-                ? state.dic[link]
-                : [...state.dic[link], author]
-              : [author]
-            : state.dic[link].filter(item => item !== author),
-        },
+        [link]: value
+          ? state[link]
+            ? state[link].includes(author)
+              ? state[link]
+              : [...state[link], author]
+            : [author]
+          : state[link].filter(item => item !== author),
       };
     default:
       return state;

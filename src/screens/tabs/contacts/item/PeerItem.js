@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
-    infoDic: s.info.dic,
+    infoDic: s.info,
     relations: s.user.relations,
   };
 };

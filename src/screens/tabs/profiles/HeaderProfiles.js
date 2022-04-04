@@ -123,7 +123,7 @@ const msp = s => {
   return {
     feedId: s.user.feedId,
     relations: s.user.relations,
-    infoDic: s.info.dic,
+    infoDic: s.info,
   };
 };
 

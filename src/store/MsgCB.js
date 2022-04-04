@@ -21,10 +21,19 @@ export const checkMarkedMsgCB = messages => {
 };
 export const batchMsgCB = idFeed => {
   const {feed} = idFeed;
-  feed.forEach(([{key}]) => {
-    keyHandlers[key] && keyHandlers[key]();
-    delete keyHandlers[key];
-  });
+  feed.forEach(
+    ([
+      {
+        key,
+        value: {author, content},
+      },
+    ]) => {
+      keyHandlers[key] && keyHandlers[key]();
+      delete keyHandlers[key];
+      typeHandlers.hasOwnProperty(content.type) &&
+        typeHandlers[content.type](author, content);
+    },
+  );
   feed.length && console.log('batchMsgCB: ', idFeed);
   return idFeed;
 };

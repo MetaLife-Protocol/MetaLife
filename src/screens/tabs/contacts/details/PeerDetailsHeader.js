@@ -184,7 +184,7 @@ const msp = s => {
     selfFeedId: s.user.feedId,
     relations: s.user.relations,
     friendsGraph: s.contact.friendsGraph,
-    infoDic: s.info.dic,
+    infoDic: s.info,
     privateMsg: s.private,
   };
 };
