@@ -1,8 +1,8 @@
 > ### add "var Buffer = require('buffer').Buffer;" to  
->> mode_modules/pull-rn-channel/index.js  
->> mode_modules/packet-stream-codec/index.js  
->> mode_modules/pull-reader/index.js  
->> mode_modules/pull-reader/state.js
+>> [`node_modules/pull-rn-channel/index.js`](node_modules/pull-rn-channel/index.js)  
+>> [`node_modules/packet-stream-codec/index.js`](node_modules/packet-stream-codec/index.js)  
+>> [`node_modules/pull-reader/index.js`](node_modules/pull-reader/index.js)  
+>> [`node_modules/pull-reader/state.js`](node_modules/pull-reader/state.js)  
 
 > ### install RN dev env
 >> brew tap AdoptOpenJDK/openjdk
@@ -26,7 +26,7 @@
 > #### change port on serve-blob  
 >> - add `serveBlobs: {
   port: 26834
-  }`, to [`ssb.ts:46`](backend/ssb.ts)
+  }` under blobsPurge, to [`ssb.ts`](backend/ssb.ts)
 >
 >> - fix
  `26835 to 26834` at [`port.js:1`](node_modules/ssb-serve-blobs/port.js)
