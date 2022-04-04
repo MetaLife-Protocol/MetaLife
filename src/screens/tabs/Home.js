@@ -5,9 +5,8 @@ import {connect} from 'react-redux/lib/exports';
 import ItemAgent from './home/ItemAgent';
 import {useSsb} from '../../store/hook/SsbHook';
 
-const Home = ({verbose, feedId, feed, publicMsg}) => {
+const Home = ({verbose, publicMsg}) => {
   const {flex1} = SchemaStyles();
-  console.log(feed[feedId][0][0].value.sequence || 0);
   useSsb();
 
   return (
@@ -24,8 +23,6 @@ const Home = ({verbose, feedId, feed, publicMsg}) => {
 const msp = s => {
   return {
     verbose: s.cfg.verbose,
-    feedId: s.user.feedId,
-    feed: s.feed,
     publicMsg: s.public,
   };
 };

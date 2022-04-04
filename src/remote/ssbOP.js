@@ -124,6 +124,7 @@ export const addPublicUpdatesListener = cb => {
     } else {
       console.log('public msg update with: ', v);
       cb && cb(v);
+      addPublicUpdatesListener(cb);
     }
   });
 };

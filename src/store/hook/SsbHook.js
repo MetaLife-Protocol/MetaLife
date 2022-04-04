@@ -6,44 +6,17 @@ import * as ssbOP from '../../remote/ssbOP';
 import {
   addPublicUpdatesListener,
   connStart,
-  loadMsg,
   replicationSchedulerStart,
   reqStartSSB,
   stage,
   suggestStart,
 } from '../../remote/ssbOP';
-import {useDispatch, useSelector} from 'react-redux';
-import {useCallback, useEffect} from 'react';
-import {batchMsgCB, checkMarkedMsgCB} from '../MsgCB';
-import {trainFeed} from '../../remote/ssbAPI';
+import {useDispatch} from 'react-redux';
+import {useEffect} from 'react';
 
 export function useSsb(cb) {
-  const dispatch = useDispatch(),
-    feed = useSelector(state => state.feed);
+  const dispatch = useDispatch();
 
-  const publicUpdateHandler = useCallback(
-    key =>
-      loadMsg(key, false, (err, {messages, full}) => {
-        if (!err) {
-          const {author, sequence} = messages[0].value,
-            feedSeq = (feed[author] && feed[author][0][0].value.sequence) || 0;
-          console.log(sequence, feedSeq);
-          sequence === feedSeq + 1
-            ? dispatch({
-                type: 'appendFeed',
-                payload: checkMarkedMsgCB(messages),
-              })
-            : trainFeed(author, feed, idFeed =>
-                dispatch({
-                  type: 'appendFeed',
-                  payload: batchMsgCB(idFeed),
-                }),
-              );
-        }
-        addPublicUpdatesListener(publicUpdateHandler());
-      }),
-    [feed],
-  );
   useEffect(() => {
     window.ssb ||
       reqStartSSB(ssb => {
@@ -63,14 +36,14 @@ export function useSsb(cb) {
 
           /******** msg handlers ********/
           addPublicUpdatesListener(publicUpdateHandler);
-          // addPrivateUpdatesListener(privateUpdateHandler);
-          // /******** msg checker ********/
-          // markMsgCBByType('contact', contactHandler);
-          // markMsgCBByType('about', aboutHandler);
-          // markMsgCBByType('vote', voteHandler);
-          // markMsgCBByType('post', postHandler);
-          // /******** app state handlers ********/
-          // AppState.addEventListener('change', appStateChangeHandler);
+          addPrivateUpdatesListener(privateUpdateHandler);
+          /******** msg checker ********/
+          markMsgCBByType('contact', contactHandler);
+          markMsgCBByType('about', aboutHandler);
+          markMsgCBByType('vote', voteHandler);
+          markMsgCBByType('post', postHandler);
+          /******** app state handlers ********/
+          AppState.addEventListener('change', appStateChangeHandler);
         });
       });
   }, [feed]);
