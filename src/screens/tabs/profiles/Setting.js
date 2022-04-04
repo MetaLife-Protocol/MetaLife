@@ -31,14 +31,14 @@ const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png'
 const Setting = ({
   cfg: {darkMode, lang, verbose},
   feedId,
-  peerInfoDic,
+  infoDic,
   setDarkMode,
   setLang,
   setVerbose,
 }) => {
   const {flex1, alignItemsCenter, marginTop10, text} = SchemaStyles();
 
-  const {name, description, image} = peerInfoDic[feedId] || {};
+  const {name, description, image} = infoDic[feedId] || {};
 
   const {navigate} = useNavigation();
 
@@ -47,10 +47,10 @@ const Setting = ({
 
   const submit = useCallback(
     (type, value) =>
-      setAbout(feedId, {...peerInfoDic[feedId], [type]: value}, () =>
+      setAbout(feedId, {...infoDic[feedId], [type]: value}, () =>
         Toast.show(type + ' submitted'),
       ),
-    [peerInfoDic],
+    [infoDic],
   );
 
   const checkCamera2Launch = useCallback(
@@ -173,7 +173,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     feedId: s.user.feedId,
-    peerInfoDic: s.contacts.peerInfoDic,
+    infoDic: s.info.dic,
   };
 };
 

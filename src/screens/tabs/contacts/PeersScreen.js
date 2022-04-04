@@ -45,8 +45,8 @@ const PeersScreen = ({
 
 const msp = s => {
   return {
-    stagedPeers: s.contacts.stagedPeers,
-    connectedPeers: s.contacts.connectedPeers,
+    stagedPeers: s.contact.stagedPeers,
+    connectedPeers: s.contact.connectedPeers,
   };
 };
 

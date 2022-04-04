@@ -6,13 +6,13 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {trainProfileFeed} from '../../../remote/ssbAPI';
 import ItemAgent from '../home/ItemAgent';
 import PeerDetailsHeader from './details/PeerDetailsHeader';
-import {batchMsgCB, checkMarkedMsgCB} from '../../../store/MsgCB';
+import {batchMsgCB} from '../../../store/MsgCB';
 
 const PeerDetailsScreen = ({
   verbose,
   selfFeedId,
   relations,
-  peerInfoDic,
+  infoDic,
   feedDic,
   mergeFeedDic,
 }) => {
@@ -23,7 +23,7 @@ const PeerDetailsScreen = ({
     {params: feedId} = useRoute();
 
   const isMyself = selfFeedId === feedId,
-    {name} = peerInfoDic[feedId] || {},
+    {name} = infoDic[feedId] || {},
     myBlock = relations[3],
     isMyBlock = myBlock.includes(feedId);
 
@@ -58,8 +58,8 @@ const msp = s => {
     verbose: s.cfg.verbose,
     selfFeedId: s.user.feedId,
     relations: s.user.relations,
-    peerInfoDic: s.contacts.peerInfoDic,
-    feedDic: s.msg.feedDic,
+    infoDic: s.info.dic,
+    feedDic: s.feed,
   };
 };
 

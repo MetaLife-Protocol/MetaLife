@@ -13,10 +13,10 @@ const iconDic = {
   nftIcon: require('../../../../assets/image/contacts/nft_icon.png'),
 };
 
-const FriendItem = ({fId, peerInfoDic, privateMsg}) => {
+const FriendItem = ({fId, infoDic, privateMsg}) => {
   const {row, flex1, text} = SchemaStyles();
   const {textContainer, item, title, desc} = styles;
-  const {name = '', description = '', image = ''} = peerInfoDic[fId] || {},
+  const {name = '', description = '', image = ''} = infoDic[fId] || {},
     {replace, push} = useNavigation(),
     {name: routeName} = useRoute();
 
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     cfg: s.cfg,
-    peerInfoDic: s.contacts.peerInfoDic,
+    infoDic: s.info.dic,
     privateMsg: s.msg.privateMsg,
   };
 };

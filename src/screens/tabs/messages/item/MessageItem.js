@@ -8,7 +8,7 @@ import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {localDate} from '../../../../utils';
 import {useNavigation} from '@react-navigation/native';
 
-const MessageItem = ({rootKey, feedId, peerInfoDic, msgArr}) => {
+const MessageItem = ({rootKey, feedId, infoDic, msgArr}) => {
   const {
       value: {
         author,
@@ -21,7 +21,7 @@ const MessageItem = ({rootKey, feedId, peerInfoDic, msgArr}) => {
 
   const {row, flex1, text} = SchemaStyles(),
     {textContainer, item, title, desc} = styles;
-  const {name = '', description = '', image = ''} = peerInfoDic[recp] || {};
+  const {name = '', description = '', image = ''} = infoDic[recp] || {};
   return (
     <Pressable
       onPress={() => navigate('MessageDetailsScreen', {rootKey, recp})}>
@@ -69,7 +69,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     feedId: s.user.feedId,
-    peerInfoDic: s.contacts.peerInfoDic,
+    infoDic: s.info.dic,
   };
 };
 

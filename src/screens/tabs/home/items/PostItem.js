@@ -17,7 +17,7 @@ const PostItem = ({
   item,
   showPanel = true,
   feedId,
-  peerInfoDic,
+  infoDic,
   voteDic = {},
   commentDic = {},
 }) => {
@@ -35,7 +35,7 @@ const PostItem = ({
       name = author.substring(0, 10),
       description = '',
       image = '',
-    } = peerInfoDic[author] || {},
+    } = infoDic[author] || {},
     {text: cText, mentions = null} = content,
     voteArr = voteDic[key] || [],
     voted = voteArr.includes(feedId);
@@ -127,7 +127,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     feedId: s.user.feedId,
-    peerInfoDic: s.contacts.peerInfoDic,
+    infoDic: s.info.dic,
     voteDic: s.msg.voteDic,
     commentDic: s.msg.commentDic,
   };

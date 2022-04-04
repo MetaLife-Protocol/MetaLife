@@ -2,9 +2,7 @@
  * Created on 21 Dec 2021 by lonmee
  */
 
-const initState = {
-  privateMsg: {},
-};
+const initState = {};
 
 export const privateReducer = (state = initState, {type, payload}) => {
   switch (type) {
@@ -12,21 +10,11 @@ export const privateReducer = (state = initState, {type, payload}) => {
       const {messages} = payload;
       return {
         ...state,
-        privateMsg: {
-          ...state.privateMsg,
-          [messages[0].key]: messages,
-        },
-      };
-    case 'addPrivateMsg':
-      const [msg] = payload.messages,
-        rootKey = msg.value.content.root || msg.key;
-      return {
-        ...state,
-        privateMsg: state.privateMsg[rootKey]
-          ? [...state.privateMsg[rootKey], msg]
-          : [msg],
+        [messages[0].key]: messages,
       };
     case 'clearPrivateMsg':
-      return {...state, privateMsg: {}};
+      return initState;
+    default:
+      return state;
   }
 };

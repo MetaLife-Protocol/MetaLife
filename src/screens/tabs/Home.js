@@ -3,18 +3,17 @@ import {FlatList, SafeAreaView} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ItemAgent from './home/ItemAgent';
-import {useHomeHooks} from '../../store/helper/HomeHooks';
-import {useDispatch} from 'react-redux';
+import {useSsb} from '../../store/hook/SsbHook';
 
-const Home = ({cfg: {verbose}, publicMsg}) => {
+const Home = ({verbose, feedId, feed, publicMsg}) => {
   const {flex1} = SchemaStyles();
-
-  useHomeHooks(useDispatch(), []);
+  console.log(feed[feedId][0][0].value.sequence || 0);
+  useSsb();
 
   return (
     <SafeAreaView style={[flex1]}>
       <FlatList
-        data={[...publicMsg].reverse()}
+        data={publicMsg.reverse()}
         keyExtractor={(_, index) => index}
         renderItem={info => <ItemAgent info={info} verbose={verbose} />}
       />
@@ -24,15 +23,15 @@ const Home = ({cfg: {verbose}, publicMsg}) => {
 
 const msp = s => {
   return {
-    cfg: s.cfg,
+    verbose: s.cfg.verbose,
     feedId: s.user.feedId,
+    feed: s.feed,
+    publicMsg: s.public,
   };
 };
 
-const mdp = (d, s) => {
-  return {
-    foo: v => d({type: 'xx', s}),
-  };
+const mdp = (dispatch, {navigation, route}) => {
+  return {};
 };
 
 export default connect(msp, mdp)(Home);

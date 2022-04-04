@@ -72,18 +72,16 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
-    cfg: s.cfg,
     feedId: s.user.feedId,
-    privateMsg: s.msg.privateMsg,
+    cfg: s.cfg,
+    privateMsg: s.private,
   };
 };
 
 const mdp = d => {
   return {
-    setPublicMsg: v => d({type: 'setPublicMsg', payload: v}),
     addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
     setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),
-    addPrivateMsg: v => d({type: 'addPrivateMsg', payload: v}),
   };
 };
 

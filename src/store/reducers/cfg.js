@@ -2,8 +2,8 @@
  * Created on 21 Dec 2021 by lonmee
  */
 
-export const cfgInitState = {lang: 'en', darkMode: true, verbose: false};
-export const cfgReducer = (state = cfgInitState, {type, payload}) => {
+const initState = {lang: 'en', darkMode: true, verbose: false};
+export const cfgReducer = (state = initState, {type, payload}) => {
   switch (type) {
     case 'setLang':
       return {...state, lang: payload};
@@ -12,7 +12,7 @@ export const cfgReducer = (state = cfgInitState, {type, payload}) => {
     case 'setVerbose':
       return {...state, verbose: payload};
     case 'reset':
-      return cfgInitState;
+      return initState;
     default:
       return state;
   }

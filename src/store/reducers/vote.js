@@ -3,7 +3,7 @@
  */
 
 const initState = {
-  voteDic: {},
+  dic: {},
 };
 
 export const voteReducer = (state = initState, {type, payload}) => {
@@ -17,16 +17,18 @@ export const voteReducer = (state = initState, {type, payload}) => {
       } = payload;
       return {
         ...state,
-        voteDic: {
-          ...state.voteDic,
+        dic: {
+          ...state.dic,
           [link]: value
-            ? state.voteDic[link]
-              ? state.voteDic[link].includes(author)
-                ? state.voteDic[link]
-                : [...state.voteDic[link], author]
+            ? state.dic[link]
+              ? state.dic[link].includes(author)
+                ? state.dic[link]
+                : [...state.dic[link], author]
               : [author]
-            : state.voteDic[link].filter(item => item !== author),
+            : state.dic[link].filter(item => item !== author),
         },
       };
+    default:
+      return state;
   }
 };

@@ -25,7 +25,7 @@ const PeerDetailsHeader = ({
   selfFeedId,
   friendsGraph,
   relations,
-  peerInfoDic,
+  infoDic,
   privateMsg,
 }) => {
   const {row, flex1, justifySpaceBetween, text} = SchemaStyles(),
@@ -35,7 +35,7 @@ const PeerDetailsHeader = ({
     {params: feedId} = useRoute();
 
   const isMyself = selfFeedId === feedId,
-    {name, description, image} = peerInfoDic[feedId] || {},
+    {name, description, image} = infoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations,
     [friends, following, follower, blockList, blocked, other] =
       friendsGraphParse(friendsGraph, feedId),
@@ -183,9 +183,9 @@ const msp = s => {
   return {
     selfFeedId: s.user.feedId,
     relations: s.user.relations,
-    friendsGraph: s.contacts.friendsGraph,
-    peerInfoDic: s.contacts.peerInfoDic,
-    privateMsg: s.msg.privateMsg,
+    friendsGraph: s.contact.friendsGraph,
+    infoDic: s.info.dic,
+    privateMsg: s.private,
   };
 };
 

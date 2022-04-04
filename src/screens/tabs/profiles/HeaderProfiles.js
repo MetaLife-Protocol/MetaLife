@@ -22,7 +22,7 @@ const iconDic = {
   photo: require('../../../assets/image/profiles/photo.png'),
 };
 
-const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
+const HeaderProfiles = ({feedId, relations, infoDic}) => {
   const {row, flex1, justifySpaceBetween, alignItemsCenter, marginTop10} =
       SchemaStyles(),
     {container, photo, setting, nameFont, desc, at} = styles;
@@ -30,7 +30,7 @@ const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
   const {navigate, push} = useNavigation(),
     {setString} = nativeClipboard;
 
-  const {name, description, image} = peerInfoDic[feedId] || {},
+  const {name, description, image} = infoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
 
   function peerListHandler(title, list) {
@@ -123,7 +123,7 @@ const msp = s => {
   return {
     feedId: s.user.feedId,
     relations: s.user.relations,
-    peerInfoDic: s.contacts.peerInfoDic,
+    infoDic: s.info.dic,
   };
 };
 

@@ -17,7 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 
 const PeerItem = ({
   pObj: [address, {type, key, state = ''}],
-  peerInfoDic,
+  infoDic,
   addPeerInfo,
   relations: [friends, following],
 }) => {
@@ -25,7 +25,7 @@ const PeerItem = ({
   const {row, flex1, text} = SchemaStyles(),
     {textContainer, item, title, desc} = styles;
   const {navigate} = useNavigation();
-  const {name = '', description = '', image = ''} = peerInfoDic[key] || {};
+  const {name = '', description = '', image = ''} = infoDic[key] || {};
 
   function connectHandler(v) {
     Toast.show('connected: ' + v.id ? v.id.substring(0, 10) : 'no id');
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
-    peerInfoDic: s.contacts.peerInfoDic,
+    infoDic: s.info.dic,
     relations: s.user.relations,
   };
 };

@@ -26,12 +26,12 @@ const MessageDetailsScreen = ({
     params: {rootKey, recp},
   },
   feedId,
-  peerInfoDic,
+  infoDic,
   privateMsg,
 }) => {
   const {BG, FG, row, flex1} = SchemaStyles(),
     {itemContainer, item, itemLeft, itemRight, title, desc} = styles,
-    {name = '', description = '', image = ''} = peerInfoDic[recp] || {};
+    {name = '', description = '', image = ''} = infoDic[recp] || {};
 
   const headerRight = () => (
     <HeadIcon
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     feedId: s.user.feedId,
-    peerInfoDic: s.contacts.peerInfoDic,
+    infoDic: s.info.dic,
     privateMsg: s.msg.privateMsg,
   };
 };
