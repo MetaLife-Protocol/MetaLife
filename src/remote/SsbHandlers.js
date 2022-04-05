@@ -12,12 +12,10 @@ import {
   postHandler,
   privateUpdateHandler,
   publicUpdateHandler,
-  setStore,
   voteHandler,
 } from './SsbListeners';
 
-export function initializeHandlers(store) {
-  setStore(store);
+export function initializeHandlers() {
   console.log('add ssb listeners');
   /******** archive msg handlers ********/
   addPublicUpdatesListener(publicUpdateHandler);

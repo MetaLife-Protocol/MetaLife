@@ -13,11 +13,11 @@ export const populateListeners = ({dispatch, feedId, feed, relations}) => {
   feedIdRef = feedId;
   updatesPeers = [...relations[0], ...relations[1]];
   feedRef = feed;
-  console.log('populate -> ', feed, updatesPeers);
+  console.log('populate -> ', 'feed: ', feed, 'updatesPeers: ', updatesPeers);
 };
 
 export const checkAddon = active => {
-  console.log(active + ' -> ', updatesPeers);
+  console.log(active + ' -> ', 'updatesPeers: ', updatesPeers);
   trainRangeFeed(updatesPeers, feedRef, idFeed =>
     dispatchRef({type: 'appendFeed', payload: batchMsgCB(idFeed)}),
   );

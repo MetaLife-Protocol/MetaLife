@@ -26,7 +26,7 @@ const Home = ({verbose, feedId, feed, relations, publicMsg}) => {
   return (
     <SafeAreaView style={[flex1]}>
       <FlatList
-        data={publicMsg.reverse()}
+        data={publicMsg}
         keyExtractor={(_, index) => index}
         renderItem={info => <ItemAgent info={info} verbose={verbose} />}
       />
