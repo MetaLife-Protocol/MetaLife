@@ -8,13 +8,6 @@ import {trainFeed, trainRangeFeed} from './ssbAPI';
 
 let dispatchRef, feedIdRef, updatesPeers, feedRef;
 
-export const setStore = store => {
-  store.subscribe(changeState);
-  function changeState(p, n) {
-    console.log(p, n);
-  }
-};
-
 export const populateListeners = ({dispatch, feedId, feed, relations}) => {
   dispatchRef = dispatch;
   feedIdRef = feedId;

@@ -5,16 +5,15 @@ import {connect} from 'react-redux/lib/exports';
 import ItemAgent from './home/ItemAgent';
 import {initializeHandlers} from '../../remote/SsbHandlers';
 import {startSSB} from '../../remote/starter';
-import {useDispatch, useStore} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {checkAddon, populateListeners} from '../../remote/SsbListeners';
 
 const Home = ({verbose, feedId, feed, relations, publicMsg}) => {
   const {flex1} = SchemaStyles();
-  const dispatch = useDispatch(),
-    store = useStore();
+  const dispatch = useDispatch();
   useEffect(() => {
     startSSB(dispatch).then(() => {
-      initializeHandlers(store);
+      initializeHandlers();
       checkAddon('launch');
     });
   });
