@@ -13,14 +13,7 @@ import {PeerIcons} from '../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
 import {sendMsg} from '../../../../remote/ssbOP';
 
-const PostItem = ({
-  item,
-  showPanel = true,
-  feedId,
-  infoDic,
-  voteDic = {},
-  commentDic = {},
-}) => {
+const PostItem = ({item, showPanel = true, feedId, infoDic, voteDic = {}}) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
     {container, textContainer, contentContainer, panel} = styles;
@@ -128,8 +121,7 @@ const msp = s => {
     cfg: s.cfg,
     feedId: s.user.feedId,
     infoDic: s.info,
-    voteDic: s.msg.voteDic,
-    commentDic: s.msg.commentDic,
+    voteDic: s.vote,
   };
 };
 

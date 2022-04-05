@@ -1,27 +1,27 @@
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {FlatList, SafeAreaView} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ItemAgent from './home/ItemAgent';
 import {initializeHandlers} from '../../remote/SsbHandlers';
 import {startSSB} from '../../remote/starter';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useStore} from 'react-redux';
 import {checkAddon, populateListeners} from '../../remote/SsbListeners';
-import useRefEffect from 'react-native/Libraries/Utilities/useRefEffect';
 
 const Home = ({verbose, feedId, feed, relations, publicMsg}) => {
   const {flex1} = SchemaStyles();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(),
+    store = useStore();
   useEffect(() => {
     startSSB(dispatch).then(() => {
-      initializeHandlers();
+      initializeHandlers(store);
       checkAddon('launch');
     });
   });
 
   useMemo(
     () => populateListeners({dispatch, feedId, feed, relations}),
-    [feedId, feed, relations],
+    [feedId, feed],
   );
 
   return (

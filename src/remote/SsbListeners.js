@@ -8,6 +8,13 @@ import {trainFeed, trainRangeFeed} from './ssbAPI';
 
 let dispatchRef, feedIdRef, updatesPeers, feedRef;
 
+export const setStore = store => {
+  store.subscribe(changeState);
+  function changeState(p, n) {
+    console.log(p, n);
+  }
+};
+
 export const populateListeners = ({dispatch, feedId, feed, relations}) => {
   dispatchRef = dispatch;
   feedIdRef = feedId;
@@ -22,7 +29,7 @@ export const checkAddon = active => {
     dispatchRef({type: 'appendFeed', payload: batchMsgCB(idFeed)}),
   );
 };
-/******** msg listeners ********/
+/******** archive msg listeners ********/
 export const publicUpdateHandler = key =>
   loadMsg(key, false, (err, {messages, full}) => {
     if (!err) {
@@ -49,29 +56,45 @@ export const privateUpdateHandler = key =>
     (err, msg) => err || dispatchRef({type: 'setPrivateMsg', payload: msg}),
   );
 
-/******** msg listeners ********/
-export const contactHandler = (author, {following, contact}) => {
+/******** executable msg listeners ********/
+export const contactHandler = ([
+  {
+    value: {
+      author,
+      content: {contact, following, blocking},
+    },
+  },
+]) => {
   if (author === feedIdRef) {
     following
       ? (console.log(`following ${contact.substring(1, 6)} addon ->`),
         trainFeed(contact, feedRef, idFeed =>
           dispatchRef({
-            type: 'appendFeedDic',
+            type: 'appendFeed',
             payload: batchMsgCB(idFeed),
           }),
         ))
-      : dispatchRef({type: 'removeFeedDic', payload: contact});
+      : dispatchRef({type: 'removeFeed', payload: contact});
   }
   graph(payload => dispatchRef({type: 'setFriendsGraph', payload}));
 };
-export const aboutHandler = (_, {about}) =>
+export const aboutHandler = ([
+  {
+    value: {
+      content: {about},
+    },
+  },
+]) =>
   getProfile(about, v =>
     dispatchRef({type: 'addPeerInfo', payload: [about, v]}),
   );
-export const voteHandler = (author, content) =>
-  dispatchRef({type: 'setVote', payload: {author, content}});
-export const postHandler = (author, content) =>
-  dispatchRef({type: 'addPublicMsg', payload: {author, content}});
+export const voteHandler = ([
+  {
+    value: {author, content},
+  },
+]) => dispatchRef({type: 'setVote', payload: {author, content}});
+export const postHandler = msg =>
+  dispatchRef({type: 'addPublicMsg', payload: msg});
 
 /******** app state listeners ********/
 export const appStateChangeHandler = state => {

@@ -12,15 +12,17 @@ import {
   postHandler,
   privateUpdateHandler,
   publicUpdateHandler,
+  setStore,
   voteHandler,
 } from './SsbListeners';
 
-export function initializeHandlers() {
+export function initializeHandlers(store) {
+  setStore(store);
   console.log('add ssb listeners');
-  /******** msg handlers ********/
+  /******** archive msg handlers ********/
   addPublicUpdatesListener(publicUpdateHandler);
   addPrivateUpdatesListener(privateUpdateHandler);
-  /******** msg checker ********/
+  /******** executable msg checker ********/
   markMsgCBByType('contact', contactHandler);
   markMsgCBByType('about', aboutHandler);
   markMsgCBByType('vote', voteHandler);

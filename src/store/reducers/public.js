@@ -7,7 +7,7 @@ const initState = [];
 export const publicReducer = (state = initState, {type, payload}) => {
   switch (type) {
     case 'addPublicMsg':
-      return [...state.msg, payload.messages];
+      return [...state, payload];
     case 'clearPublicMsg':
       return initState;
     default:
