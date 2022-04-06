@@ -6,13 +6,17 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import ItemAgent from '../home/ItemAgent';
 import PeerDetailsHeader from './details/PeerDetailsHeader';
 import {checkAddon} from '../../../remote/SsbListeners';
+import {trainFeed} from '../../../remote/ssbAPI';
+import {batchMsgCB} from '../../../store/MsgCB';
+import {useDispatch} from 'react-redux';
 
 const PeerDetailsScreen = ({verbose, selfFeedId, relations, info, feed}) => {
   const {flex1} = SchemaStyles(),
     {} = styles;
 
   const {setOptions} = useNavigation(),
-    {params: feedId} = useRoute();
+    {params: feedId} = useRoute(),
+    dispatch = useDispatch();
 
   const isMyself = selfFeedId === feedId,
     {name} = info[feedId] || {},
@@ -21,7 +25,13 @@ const PeerDetailsScreen = ({verbose, selfFeedId, relations, info, feed}) => {
 
   useLayoutEffect(() => {
     setOptions({title: name || feedId});
-    isMyBlock || checkAddon('peer details');
+    isMyBlock ||
+      trainFeed(feedId, feed, idMsgs =>
+        dispatch({
+          type: 'appendFeed',
+          payload: batchMsgCB(idMsgs),
+        }),
+      );
   }, []);
 
   return (
