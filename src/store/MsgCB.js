@@ -34,10 +34,6 @@ export const batchMsgCB = idMsgs => {
       type = msg.value.content.type;
     type === 'contact' || (typeHandlers[type] && typeHandlers[type](msg));
   }
-  // [...msgs].reverse().forEach(msg => {
-  //   const type = msg.value.content.type;
-  //   type === 'contact' || (typeHandlers[type] && typeHandlers[type](msg));
-  // });
   msgs.length && console.log('batchMsgCB: ', idMsgs);
   return idMsgs;
 };
