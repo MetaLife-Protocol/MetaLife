@@ -13,17 +13,20 @@ import {PeerIcons} from '../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
 import {sendMsg} from '../../../../remote/ssbOP';
 
-const PostItem = ({item, showPanel = true, feedId, infoDic, voteDic = {}}) => {
+const PostItem = ({item, showPanel = true, feedId, infoDic, voteDic}) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
     {container, textContainer, contentContainer, panel} = styles;
+
   const [
     {
       key,
       value: {author, timestamp, content},
     },
   ] = item;
+
   const {navigate, push} = useNavigation();
+
   const {
       name = author.substring(0, 10),
       description = '',

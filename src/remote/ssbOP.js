@@ -169,13 +169,15 @@ export const loadMsg = (msgKey, isPrivate = false, cb = null) => {
   ssb.threads.thread({
     root: msgKey,
     private: isPrivate,
+    threadMaxSize: isPrivate ? Infinity : 0,
   })(null, cb);
 };
 
 export const voted = (key, cb) => ssb.votes.voterStream(key)(null, cb);
 
 // last feed
-export const profileFeed = (id, cb) => ssb.threads.profile({id})(null, cb);
+export const profileFeed = (id, cb) =>
+  ssb.threads.profile({id, threadMaxSize: 0})(null, cb);
 
 /************************** DB **************************/
 export const indexingProgress = () =>

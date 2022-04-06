@@ -17,9 +17,10 @@ const PostMsgEditor = ({publicMsg}) => {
   const {FG, flex1} = SchemaStyles();
 
   const {goBack, setOptions} = useNavigation();
-  const {params} = useRoute();
-  const {name, key} = params || {},
-    [shownMsg] = publicMsg.filter(msg => msg.key === key);
+  const {params} = useRoute(),
+    {name, key} = params || {},
+    msgArr = publicMsg.filter(msg => msg[0].key === key),
+    shownMsg = msgArr.shift();
 
   useLayoutEffect(() => {
     name && setOptions({title: `comment to ${name}`});
@@ -41,22 +42,22 @@ const PostMsgEditor = ({publicMsg}) => {
 
   return (
     <SafeAreaView style={[flex1, FG]}>
-      {key ? (
-        <>
+      <View style={[flex1]}>
+        {shownMsg && (
           <Section title={'Reply to:'}>
-            <PostItem item={shownMsg[0]} showPanel={false} />
+            <PostItem item={shownMsg} showPanel={false} />
           </Section>
+        )}
+        {msgArr.length > 0 && (
           <Section title={'Replies:'} style={[flex1]}>
             <FlatList
-              data={shownMsg[0]}
+              data={msgArr}
               keyExtractor={item => item.key}
               renderItem={info => <ItemAgent info={info} verbose={false} />}
             />
           </Section>
-        </>
-      ) : (
-        <View style={[flex1]} />
-      )}
+        )}
+      </View>
       <MsgInput sendHandler={sendHandler} />
     </SafeAreaView>
   );

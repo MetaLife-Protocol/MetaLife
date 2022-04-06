@@ -3,7 +3,7 @@
  */
 
 import {getProfile, graph, loadMsg} from './ssbOP';
-import {batchMsgCB} from '../store/MsgCB';
+import {batchMsgCB, checkMarkedMsgCB} from '../store/MsgCB';
 import {trainFeed, trainRangeFeed} from './ssbAPI';
 
 let dispatchRef, feedIdRef, updatesPeers, feedRef;
@@ -22,9 +22,10 @@ export const checkAddon = active => {
     dispatchRef({type: 'appendFeed', payload: batchMsgCB(idFeed)}),
   );
 };
+
 /******** archive msg listeners ********/
 export const publicUpdateHandler = key =>
-  loadMsg(key, false, (err, {messages, full}) => {
+  loadMsg(key, false, (err, {messages}) => {
     if (!err) {
       const {author, sequence} = messages[0].value;
       const feedSeq =
@@ -32,7 +33,7 @@ export const publicUpdateHandler = key =>
       sequence === feedSeq + 1
         ? dispatchRef({
             type: 'appendFeed',
-            payload: batchMsgCB({fId: author, feed: [messages]}),
+            payload: checkMarkedMsgCB({fId: author, feed: [messages]}),
           })
         : trainFeed(author, feedRef, idFeed =>
             dispatchRef({
@@ -42,6 +43,7 @@ export const publicUpdateHandler = key =>
           );
     }
   });
+
 export const privateUpdateHandler = key =>
   loadMsg(
     key,
@@ -50,44 +52,51 @@ export const privateUpdateHandler = key =>
   );
 
 /******** executable msg listeners ********/
-export const contactHandler = ([
-  {
-    value: {
-      author,
-      content: {contact, following, blocking},
-    },
+export const contactHandler = ({
+  value: {
+    author,
+    content: {contact, following, blocking},
   },
-]) => {
+}) => {
   if (author === feedIdRef) {
     following
       ? (console.log(`following ${contact.substring(1, 6)} addon ->`),
         trainFeed(contact, feedRef, idFeed =>
           dispatchRef({
             type: 'appendFeed',
-            payload: batchMsgCB(idFeed),
+            payload: checkMarkedMsgCB(idFeed),
           }),
         ))
       : dispatchRef({type: 'removeFeed', payload: contact});
   }
   graph(payload => dispatchRef({type: 'setFriendsGraph', payload}));
 };
-export const aboutHandler = ([
-  {
-    value: {
-      content: {about},
-    },
+
+export const aboutHandler = ({
+  value: {
+    content: {about},
   },
-]) =>
-  getProfile(about, v =>
-    dispatchRef({type: 'addPeerInfo', payload: [about, v]}),
+}) =>
+  getProfile(about, msg =>
+    dispatchRef({type: 'addPeerInfo', payload: [about, msg]}),
   );
-export const voteHandler = ([
-  {
-    value: {author, content},
-  },
-]) => dispatchRef({type: 'setVote', payload: {author, content}});
-export const postHandler = msg =>
-  dispatchRef({type: 'addPublicMsg', payload: msg});
+
+export const voteHandler = ({value: {author, content}}) =>
+  dispatchRef({type: 'setVote', payload: {author, content}});
+
+export const postHandler = msg => {
+  const {
+    value: {
+      content: {root, fork, branch, recps},
+    },
+  } = msg;
+
+  recps ||
+    dispatchRef({
+      type: branch ? 'insertPublicMsg' : 'addPublicMsg',
+      payload: msg,
+    });
+};
 
 /******** app state listeners ********/
 export const appStateChangeHandler = state => {

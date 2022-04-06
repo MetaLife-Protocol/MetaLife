@@ -7,6 +7,7 @@ import {publicReducer} from './public';
 import {voteReducer} from './vote';
 import {contactReducer} from './contact';
 import {infoReducer} from './info';
+import {commentReducer} from './comment';
 
 const reducer = combineReducers({
   cfg: cfgReducer,
@@ -14,6 +15,7 @@ const reducer = combineReducers({
   contact: contactReducer,
   info: infoReducer,
   public: publicReducer,
+  comment: commentReducer,
   private: privateReducer,
   feed: feedReducer,
   vote: voteReducer,
