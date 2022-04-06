@@ -29,10 +29,15 @@ export const checkMarkedMsgCB = idMsg => {
 export const batchMsgCB = idMsgs => {
   const {msgs} = idMsgs;
   // todo: 'contact' cause multiple executing
-  msgs.forEach(msg => {
-    const type = msg.value.content.type;
+  for (let i = msgs.length - 1; i > 0; i--) {
+    const msg = msgs[i],
+      type = msg.value.content.type;
     type === 'contact' || (typeHandlers[type] && typeHandlers[type](msg));
-  });
+  }
+  // [...msgs].reverse().forEach(msg => {
+  //   const type = msg.value.content.type;
+  //   type === 'contact' || (typeHandlers[type] && typeHandlers[type](msg));
+  // });
   msgs.length && console.log('batchMsgCB: ', idMsgs);
   return idMsgs;
 };

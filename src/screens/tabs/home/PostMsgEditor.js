@@ -19,7 +19,7 @@ const PostMsgEditor = ({publicMsg}) => {
   const {goBack, setOptions} = useNavigation();
   const {params} = useRoute(),
     {name, key} = params || {},
-    msgArr = publicMsg.filter(msg => msg[0].key === key),
+    msgArr = publicMsg.filter(msg => msg.key === key),
     shownMsg = msgArr.shift();
 
   useLayoutEffect(() => {
