@@ -13,7 +13,7 @@ export const populateListeners = ({dispatch, feedId, feed, relations}) => {
   feedIdRef = feedId;
   updatesPeers = [...relations[0], ...relations[1]];
   feedRef = feed;
-  console.log('populate -> ', 'feed: ', feed, 'updatesPeers: ', updatesPeers);
+  console.log('populate -> feed & updatesPeers');
 };
 
 export const checkAddon = active => {

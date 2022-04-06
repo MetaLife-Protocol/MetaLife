@@ -76,7 +76,7 @@ const Pubs = ({darkMode, pubs, addPub}) => {
           </View>
         </ControllerItem>
       </Section>
-      {pubs.length && (
+      {pubs.length > 0 && (
         <Section style={[marginTop10]} title={'Your pubs'}>
           {pubs.map((pObj, i) => (
             <PeerItem pObj={pObj} key={i} />
@@ -99,7 +99,7 @@ const msp = s => {
   return {
     darkMode: s.cfg.darkMode,
     pubs: s.user.pubs,
-    stagedPeers: s.contacts.stagedPeers,
+    stagedPeers: s.contact.stagedPeers,
   };
 };
 

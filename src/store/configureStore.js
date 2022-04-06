@@ -1,12 +1,11 @@
 import reducer from './reducers/Reducer';
-import {applyMiddleware, createStore} from 'redux';
+import {createStore} from 'redux';
 import persistReducer from 'redux-persist/es/persistReducer';
 import persistStore from 'redux-persist/es/persistStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import I18n from 'react-native-i18n';
 import {populateStyles} from '../shared/SchemaStyles';
 import {devToolsEnhancer} from 'redux-devtools-extension';
-import thunk from 'redux-thunk';
 
 /**
  * Created on 11 Nov 2021 by lonmee
@@ -20,7 +19,7 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 
 export const store = createStore(
   persistedReducer,
-  devToolsEnhancer(applyMiddleware(thunk)),
+  devToolsEnhancer(/*applyMiddleware(thunk)*/),
 );
 
 export const persistor = persistStore(store, [

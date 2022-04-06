@@ -22,7 +22,7 @@ const PeerDetailsScreen = ({verbose, selfFeedId, relations, info, feed}) => {
   useLayoutEffect(() => {
     setOptions({title: name || feedId});
     isMyBlock || checkAddon('peer details');
-  });
+  }, []);
 
   return (
     <SafeAreaView style={[flex1]}>
