@@ -13,17 +13,22 @@ import {PeerIcons} from '../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
 import {sendMsg} from '../../../../remote/ssbOP';
 
-const PostItem = ({item, showPanel = true, feedId, infoDic, voteDic}) => {
+const PostItem = ({
+  item,
+  showPanel = true,
+  feedId,
+  commentDic,
+  infoDic,
+  voteDic,
+}) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
     {container, textContainer, contentContainer, panel} = styles;
 
-  const [
-    {
-      key,
-      value: {author, timestamp, content},
-    },
-  ] = item;
+  const {
+    key,
+    value: {author, timestamp, content},
+  } = item;
 
   const {navigate, push} = useNavigation();
 
@@ -33,6 +38,7 @@ const PostItem = ({item, showPanel = true, feedId, infoDic, voteDic}) => {
       image = '',
     } = infoDic[author] || {},
     {text: cText, mentions = null} = content,
+    commentArr = commentDic[key] || [],
     voteArr = voteDic[key] || [],
     voted = voteArr.includes(feedId);
 
@@ -91,7 +97,7 @@ const PostItem = ({item, showPanel = true, feedId, infoDic, voteDic}) => {
             style={[row, flex1, justifySpaceBetween, panel]}
             voted={voted}
             voteArr={voteArr}
-            commentArr={item.filter((_, i) => i > 0)}
+            commentArr={commentArr}
             commentHandler={commentHandler}
             likeHandler={likeHandler}
           />
@@ -123,6 +129,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     feedId: s.user.feedId,
+    commentDic: s.comment,
     infoDic: s.info,
     voteDic: s.vote,
   };

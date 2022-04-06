@@ -13,26 +13,26 @@ export const markMsgCBByType = (type, handler) => {
   typeHandlers[type] = handler;
 };
 
-export const checkMarkedMsgCB = idFeed => {
+export const checkMarkedMsgCB = idMsg => {
   const {
     key,
     value: {
       content: {type},
     },
-  } = idFeed.feed[0][0];
-  keyHandlers[key] && keyHandlers[key](idFeed.feed[0][0]);
+  } = idMsg.msg;
+  keyHandlers[key] && keyHandlers[key](idMsg.msg);
   delete keyHandlers[key];
-  typeHandlers[type] && typeHandlers[type](idFeed.feed[0][0]);
-  return idFeed;
+  typeHandlers[type] && typeHandlers[type](idMsg.msg);
+  return idMsg;
 };
 
-export const batchMsgCB = idFeed => {
-  const {feed} = idFeed;
+export const batchMsgCB = idMsgs => {
+  const {msgs} = idMsgs;
   // todo: 'contact' cause multiple executing
-  feed.forEach(msg => {
-    const handler = typeHandlers[msg[0].value.content.type];
-    handler && handler(msg[0]);
+  msgs.forEach(msg => {
+    const type = msg.value.content.type;
+    type === 'contact' || (typeHandlers[type] && typeHandlers[type](msg));
   });
-  feed.length && console.log('batchMsgCB: ', idFeed);
-  return idFeed;
+  msgs.length && console.log('batchMsgCB: ', idMsgs);
+  return idMsgs;
 };

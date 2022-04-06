@@ -19,10 +19,12 @@ export const publicReducer = (state = initState, {type, payload}) => {
       return state;
     case 'addPublicMsg':
       const nextState = [payload, ...state];
-      nextState.sort((a, b) => b[0].value.timestamp - a[0].value.timestamp);
+      nextState.sort((a, b) => b.value.timestamp - a.value.timestamp);
       return nextState;
     case 'clearPublicMsg':
-      return initState;
+      return payload
+        ? state.filter(msg => msg.value.author !== payload)
+        : initState;
     default:
       return state;
   }

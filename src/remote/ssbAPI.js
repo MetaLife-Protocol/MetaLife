@@ -8,70 +8,70 @@ import {
   profileFeed,
 } from './ssbOP';
 
-export const trainProfileFeed = (fId, exist, cb) => {
-  let feed = [],
-    callback = cb,
-    existSequence = (exist && exist[0] && exist[0][0].value.sequence) || 0;
+/*************************** core of retrieve loop ***************************/
+const trainProfileFeed = (fId, existSequence, cb) => {
+  let msgs = [];
   console.log(
     'fId: ' + fId.substring(1, 6) + ' -> exist sequence: ' + existSequence,
   );
-  profileFeed(fId, (err, msg) => {
+  profileFeed(fId, (err, rMsgs) => {
     if (err) {
-      return cb({fId, feed});
+      return cb({fId, msgs});
     }
-    const {messages} = msg,
-      {previous, sequence} = messages[0].value;
+    const {
+        messages: [msg],
+      } = rMsgs,
+      {previous, sequence} = msg.value;
     console.log(
       'fId: ' + fId.substring(1, 6) + ' -> update sequence: ' + sequence,
     );
     if (sequence === existSequence) {
-      return cb({fId, feed});
+      return cb({fId, msgs});
     } else {
-      feed.push(messages);
+      msgs.push(msg);
       previous && sequence !== existSequence + 1
-        ? loadMsg(messages[0].value.previous, false, loadPrevious)
-        : cb({fId, feed});
+        ? loadMsg(previous, false, loadPrevious)
+        : cb({fId, msgs});
     }
   });
 
-  function loadPrevious(err, msg) {
+  function loadPrevious(err, rMsgs) {
     if (err) {
-      const {previous} = feed[feed.length - 1][0].value;
+      const {previous} = msgs[msgs.length - 1].value;
       return loadMsg(previous, true, loadPrevious);
     }
-    const {messages, full} = msg,
-      {sequence, previous} = messages[0].value;
-    feed.push(messages);
+    const {
+        messages: [msg],
+      } = rMsgs,
+      {previous, sequence} = msg.value;
+    msgs.push(msg);
     if (previous && sequence !== existSequence + 1) {
       loadMsg(previous, false, loadPrevious);
     } else {
-      callback({fId, feed});
+      cb({fId, msgs});
     }
   }
 };
 
-export const trainFeed = (fId, feedDic, cb) => {
+/****************** API: retrieve all of feed by special id ******************/
+export const trainFeed = (fId, feed, cb) =>
   trainProfileFeed(
     fId,
-    feedDic[fId],
-    idFeed => idFeed.feed.length && cb(idFeed),
+    (feed[fId] && feed[fId][0].value.sequence) || 0,
+    idMsgs => idMsgs.msgs.length && cb(idMsgs),
   );
-};
 
-export const trainRangeFeed = (loopIds, feedDic, cb) => {
+/****************** API: retrieve all of feed by special ids ******************/
+export const trainRangeFeed = (loopIds, feed, cb) => {
   if (loopIds.length) {
     let fId = loopIds.shift();
-    trainProfileFeed(fId, feedDic[fId], stepper);
+    trainFeed(fId, feed, stepper);
   }
 
-  function stepper(idFeed) {
-    const {feed} = idFeed;
-    console.log('feed: ', idFeed.fId.substring(1, 6), 'add on: ', idFeed.feed);
-    feed.length && cb(idFeed);
-    if (loopIds.length) {
-      const fId = loopIds.shift();
-      trainProfileFeed(fId, feedDic[fId], stepper);
-    }
+  function stepper(idMsgs) {
+    console.log('msgs: ', idMsgs.fId.substring(1, 6), 'add on: ', idMsgs.msgs);
+    idMsgs.msgs.length && cb(idMsgs);
+    loopIds.length && trainFeed(loopIds.shift(), feed, stepper);
   }
 };
 

@@ -7,11 +7,9 @@ import {colorsSchema} from '../../../shared/SchemaStyles';
 import {Text} from 'react-native';
 
 const ItemAgent = ({info: {item}, verbose = false}) => {
-  const [
-    {
-      value: {author, timestamp, content},
-    },
-  ] = item;
+  const {
+    value: {author, timestamp, content},
+  } = item;
   switch (content.type) {
     case 'contact':
       return (
