@@ -77,9 +77,9 @@ const Pubs = ({darkMode, pubs, addPub}) => {
         </ControllerItem>
       </Section>
       {pubs.length > 0 && (
-        <Section style={[marginTop10]} title={'Your pubs'}>
+        <Section style={[marginTop10, {height: '100%'}]} title={'Your pubs'}>
           {pubs.map((pObj, i) => (
-            <PeerItem pObj={pObj} key={i} />
+            <PeerItem item={pObj} key={i} />
           ))}
         </Section>
       )}

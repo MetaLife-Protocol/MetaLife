@@ -16,7 +16,7 @@ import Toast from 'react-native-tiny-toast';
 import {useNavigation} from '@react-navigation/native';
 
 const PeerItem = ({
-  pObj: [address, {type, key, state = ''}],
+  item: [address, {type, key, state = ''}],
   infoDic,
   addPeerInfo,
   relations: [friends, following],

@@ -2,8 +2,8 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React, {useLayoutEffect} from 'react';
-import {FlatList, SafeAreaView, ScrollView, Text, View} from 'react-native';
+import React, {useEffect, useLayoutEffect, useRef} from 'react';
+import {Keyboard, SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import MsgInput from '../../../shared/comps/MsgInput';
@@ -21,6 +21,8 @@ const PostMsgEditor = ({commentDic}) => {
     {name, shownMsg} = params || {},
     {key, value} = shownMsg || {},
     commentArr = commentDic[key] || [];
+
+  const scrollView = useRef();
 
   useLayoutEffect(() => {
     name && setOptions({title: `comment to ${name}`});
@@ -52,14 +54,14 @@ const PostMsgEditor = ({commentDic}) => {
             text: content,
           },
       msg => {
-        goBack();
+        key ? Keyboard.dismiss() : goBack();
       },
     );
   }
 
   return (
     <SafeAreaView style={[flex1, FG]}>
-      <View style={[flex1]}>
+      <ScrollView style={[flex1]} ref={scrollView}>
         {shownMsg && (
           <Section title={'Reply to:'}>
             <PostItem item={shownMsg} showPanel={false} />
@@ -67,15 +69,18 @@ const PostMsgEditor = ({commentDic}) => {
         )}
         {commentArr.length > 0 && (
           <Section title={'Replies:'} style={[flex1]}>
-            <FlatList
-              data={commentArr}
-              style={[{height: '100%'}]}
-              keyExtractor={item => item.key}
-              renderItem={info => <ItemAgent info={info} verbose={false} />}
-            />
+            {/*<FlatList*/}
+            {/*  data={commentArr}*/}
+            {/*  style={[{height: '100%'}]}*/}
+            {/*  keyExtractor={item => item.key}*/}
+            {/*  renderItem={info => <ItemAgent info={info} verbose={false} />}*/}
+            {/*/>*/}
+            {commentArr.map((info, i) => (
+              <ItemAgent info={{item: info}} key={info.key} />
+            ))}
           </Section>
         )}
-      </View>
+      </ScrollView>
       <MsgInput sendHandler={sendHandler} />
     </SafeAreaView>
   );
