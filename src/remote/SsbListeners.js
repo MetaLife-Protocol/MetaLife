@@ -70,7 +70,8 @@ export const contactHandler = ({
           }),
         ))
       : (dispatch({type: 'removeFeed', payload: contact}),
-        dispatch({type: 'clearPublicMsg', payload: contact}));
+        dispatch({type: 'clearPublicMsg', payload: contact}),
+        dispatch({type: 'clearComment', payload: contact}));
   }
   graph(payload => dispatch({type: 'setFriendsGraph', payload}));
 };
@@ -96,7 +97,7 @@ export const postHandler = msg => {
 
   recps ||
     dispatch({
-      type: branch ? 'insertPublicMsg' : 'addPublicMsg',
+      type: branch ? 'addComment' : 'addPublicMsg',
       payload: msg,
     });
 };

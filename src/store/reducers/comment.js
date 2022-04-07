@@ -7,11 +7,18 @@ const initState = {};
 export const commentReducer = (state = initState, {type, payload}) => {
   switch (type) {
     case 'addComment':
-      const [root, comment] = payload;
+      const root = payload.value.content.root;
       return {
         ...state,
-        [root]: state[root] ? [...state[root], comment] : [comment],
+        [root]: state[root] ? [...state[root], payload] : [payload],
       };
+    case 'clearComment':
+      const ns = {};
+      for (const stateKey in state) {
+        let cArr = state[stateKey].filter(msg => msg.value.author !== payload);
+        cArr.length && (ns[stateKey] = cArr);
+      }
+      return ns;
     default:
       return state;
   }
