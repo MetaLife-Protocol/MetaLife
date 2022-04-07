@@ -19,17 +19,34 @@ const PostMsgEditor = ({commentDic}) => {
   const {goBack, setOptions} = useNavigation();
   const {params} = useRoute(),
     {name, shownMsg} = params || {},
-    {key} = shownMsg || {},
+    {key, value} = shownMsg || {},
     commentArr = commentDic[key] || [];
 
   useLayoutEffect(() => {
     name && setOptions({title: `comment to ${name}`});
   }, []);
 
+  /**
+   * // toReplyPostContent({
+   * //   text: state.replyText,
+   * //   root: state.rootMsgId,
+   * //   fork: state.higherRootMsgId,
+   * //   branch: messages[messages.length - 1].key,
+   * // });
+   * @param content
+   */
   function sendHandler(content) {
     sendMsg(
       key
-        ? {type: 'post', text: content, root: key, fork: key, branch: key}
+        ? value.root
+          ? {
+              type: 'post',
+              text: content,
+              root: key,
+              fork: value.root,
+              branch: key,
+            }
+          : {type: 'post', text: content, root: key, branch: key}
         : {
             type: 'post',
             text: content,
@@ -52,6 +69,7 @@ const PostMsgEditor = ({commentDic}) => {
           <Section title={'Replies:'} style={[flex1]}>
             <FlatList
               data={commentArr}
+              style={[{height: '100%'}]}
               keyExtractor={item => item.key}
               renderItem={info => <ItemAgent info={info} verbose={false} />}
             />

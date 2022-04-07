@@ -99,6 +99,9 @@ const stylesBasics = StyleSheet.create({
   justifySpaceBetween: {
     justifyContent: 'space-between',
   },
+  justifySpaceAround: {
+    justifyContent: 'space-around',
+  },
   width100Percent: {
     width: '100%',
   },

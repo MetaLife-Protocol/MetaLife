@@ -28,7 +28,7 @@ const PeerDetailsHeader = ({
   infoDic,
   privateMsg,
 }) => {
-  const {row, flex1, justifySpaceBetween, text} = SchemaStyles(),
+  const {row, flex1, justifySpaceAround, text} = SchemaStyles(),
     {textContainer, item, title, desc, btn} = styles;
 
   const {navigate, push} = useNavigation(),
@@ -73,7 +73,7 @@ const PeerDetailsHeader = ({
           </View>
         </Pressable>
       </View>
-      <View style={[row, flex1, justifySpaceBetween]}>
+      <View style={[row, flex1, justifySpaceAround]}>
         <Pressable
           onPress={() =>
             peerListHandler(
@@ -103,21 +103,19 @@ const PeerDetailsHeader = ({
         </Pressable>
       </View>
       {isMyself || (
-        <View style={[row, justifySpaceBetween, {alignSelf: 'center'}]}>
-          {isMyBlock || (
-            <RoundBtn
-              style={[btn]}
-              title={'block'}
-              disabled={disabledBlock}
-              press={() => {
-                setDisabledBlock(true);
-                block(feedId, {}, v =>
-                  markMsgCBByKey(v.key, () => setDisabledBlock(false)),
-                );
-              }}
-            />
-          )}
-          {isMyFriend ? (
+        <View style={[row, justifySpaceAround]}>
+          <RoundBtn
+            style={[btn]}
+            title={isMyBlock ? 'unblock' : 'block'}
+            disabled={disabledBlock}
+            press={() => {
+              setDisabledBlock(true);
+              block(feedId, {state: !isMyBlock}, v =>
+                markMsgCBByKey(v.key, () => setDisabledBlock(false)),
+              );
+            }}
+          />
+          {isMyFriend && (
             <RoundBtn
               style={[btn]}
               title={'chat'}
@@ -128,21 +126,18 @@ const PeerDetailsHeader = ({
                 })
               }
             />
-          ) : (
-            isMyFollowing || (
-              <RoundBtn
-                style={[btn]}
-                title={'follow'}
-                disabled={disabledFollow}
-                press={() => {
-                  setDisabledFollow(true);
-                  follow(feedId, {}, v =>
-                    markMsgCBByKey(v.key, () => setDisabledFollow(false)),
-                  );
-                }}
-              />
-            )
           )}
+          <RoundBtn
+            style={[btn]}
+            title={isMyFriend || isMyFollowing ? 'unfollow' : 'follow'}
+            disabled={disabledFollow}
+            press={() => {
+              setDisabledFollow(true);
+              follow(feedId, {state: !(isMyFriend || isMyFollowing)}, v =>
+                markMsgCBByKey(v.key, () => setDisabledFollow(false)),
+              );
+            }}
+          />
         </View>
       )}
     </View>
@@ -174,7 +169,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginVertical: 10,
-    width: 120,
+    width: 100,
     height: 30,
   },
 });
@@ -190,9 +185,7 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {
-    addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(PeerDetailsHeader);

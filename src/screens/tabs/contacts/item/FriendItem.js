@@ -79,9 +79,7 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {
-    addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(FriendItem);

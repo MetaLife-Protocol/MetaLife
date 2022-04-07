@@ -75,13 +75,6 @@ export const trainRangeFeed = (loopIds, feed, cb) => {
   }
 };
 
-// toReplyPostContent({
-//   text: state.replyText,
-//   root: state.rootMsgId,
-//   fork: state.higherRootMsgId,
-//   branch: messages[messages.length - 1].key,
-// });
-
 export const getDBProgress = () =>
   Promise.all([indexingProgress, migrationProgress]).then(([ip, mp]) =>
     ip > 0 && mp > 0 ? (ip + mp) * 0.5 : ip > 0 ? ip : mp > 0 ? mp : 1,
