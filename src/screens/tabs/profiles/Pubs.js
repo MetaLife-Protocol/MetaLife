@@ -3,7 +3,9 @@
  */
 import React, {useState} from 'react';
 import {
+  FlatList,
   Image,
+  Keyboard,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -70,6 +72,7 @@ const Pubs = ({darkMode, pubs, addPub}) => {
                   e || reconnect2pub();
                 });
                 setCode('');
+                Keyboard.dismiss();
               }}>
               <Image source={darkMode ? PlusWhite : PlusBlack} />
             </Pressable>
@@ -79,7 +82,7 @@ const Pubs = ({darkMode, pubs, addPub}) => {
       {pubs.length > 0 && (
         <Section style={[marginTop10, {height: '100%'}]} title={'Your pubs'}>
           {pubs.map((pObj, i) => (
-            <PeerItem item={pObj} key={i} />
+            <ControllerItem title={pObj.split(':').pop()} />
           ))}
         </Section>
       )}

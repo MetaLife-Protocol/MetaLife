@@ -56,9 +56,12 @@ const PostItem = ({
     [key, voted],
   );
 
-  const commentHandler = useCallback(function () {
-    push('PostMsgEditor', {name, shownMsg: item});
-  }, []);
+  const commentHandler = useCallback(
+    function () {
+      push('PostMsgEditor', {name, shownMsg: item});
+    },
+    [item],
+  );
 
   return (
     <View style={[row, container]}>
