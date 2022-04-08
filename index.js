@@ -5,7 +5,7 @@ import React from 'react';
 import App from './src/App';
 import {persistor, store} from './src/store/configureStore';
 import {PersistGate} from 'redux-persist/integration/react';
-import Dialog from './src/shared/dialog/Dialog';
+import {Dialog} from 'metalife-base';
 
 // setTimeout(() => {
 //   const {start, channel} = nodejs;

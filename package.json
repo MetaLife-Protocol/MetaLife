@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "webpack script": "~~~~~~~~~~~~~~ webpack ~~~~~~~~~~~~~~~~~",
+    "git-init": "git submodule init && git submodule update",
     "npm&pod": "npm install && npx pod-install",
     "lib": "tsc",
     "clean script": "~~~~~~~~~~~~~~ cleaners ~~~~~~~~~~~~~~~~~",
@@ -31,6 +32,9 @@
     "test": "jest",
     "lint": "eslint ."
   },
+  "workspaces": [
+    "packages/metalife-base"
+  ],
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.16.1",
     "@react-native-community/cameraroll": "^4.1.2",
@@ -48,7 +52,7 @@
     "react-native-image-picker": "^4.7.3",
     "react-native-pager-view": "^5.4.15",
     "react-native-permissions": "^3.3.1",
-    "react-native-photon": "git+ssh://git@github.com:MetaLife-Protocol/react-native-photon.git#master",
+    "react-native-photon": "file:/Users/qiangliu/lingtuan/react-native-photon",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-qrcode-svg": "^6.1.2",
     "react-native-safe-area-context": "^3.3.2",
