@@ -7,7 +7,7 @@
 
 import React from 'react';
 import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
-import {useStyle} from '../../../shared/ThemeColors';
+import {useStyle} from 'metalife-base';
 import AddressContactItem from './comps/AddressContactItem';
 
 const PhotonAddressContact = () => {

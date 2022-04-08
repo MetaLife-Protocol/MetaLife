@@ -7,9 +7,8 @@
 
 import React from 'react';
 import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
-import {useStyle, useTheme} from '../../../shared/ThemeColors';
+import {PhotonSeparator, useStyle, useTheme} from 'metalife-base';
 import PhotonTokenOptionItem from './comps/PhotonTokenOptionItem';
-import {PhotonSeparator} from '../../../shared/comps/PhotonSeparator';
 
 const PhotonTokenOption = () => {
   const styles = useStyle(createSty),

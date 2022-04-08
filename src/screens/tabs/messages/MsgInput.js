@@ -1,7 +1,6 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Image,
-  Keyboard,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -9,7 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import {SchemaStyles} from 'metalife-base';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 
 const iconDic = {

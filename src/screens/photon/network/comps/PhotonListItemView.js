@@ -35,11 +35,13 @@
 
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useStyle} from '../../../../shared/ThemeColors';
+import {useStyle} from 'metalife-base';
 import Constants from '../../../../shared/Constants';
 import {ethNumberFixed} from '../../../../shared/numberUtils';
 import {getPhotonTokenSymbol} from '../../PhotonUtils';
 import {useNavigation} from '@react-navigation/native';
+import {photonCloseChannel, photonWithDraw} from 'react-native-photon';
+import Toast from 'react-native-tiny-toast';
 
 const PhotonListItemView = ({data}) => {
   const styles = useStyle(createSty);
@@ -79,7 +81,36 @@ const PhotonListItemView = ({data}) => {
           }}>
           Replenish
         </Text>
-        <Text style={styles.buttonText}>withdraw</Text>
+        <Text
+          style={styles.buttonText}
+          onPress={() => {
+            // console.log('data:::', data);
+            // return;
+            photonWithDraw({
+              channelIdentifierHashStr: data.channel_identifier + '',
+              amountStr: data?.balance + '' ?? '0',
+              op: '',
+            }).then(res => {
+              const resJson = JSON.parse(res);
+              if (resJson.error_code === 0) {
+                //  TODO
+              } else if (resJson.error_code === 2000) {
+                //没有足够的余额支付gas
+                Toast.show('Insufficient balance to pay for gas');
+              } else {
+                console.log('error::::init::::');
+                photonCloseChannel({
+                  channelIdentifierHashStr: data.channel_identifier + '',
+                  isForced: true,
+                }).then(res => {
+                  console.log('photonCloseChannel::res::', res);
+                });
+              }
+              console.log('photonWithDraw res:', res);
+            });
+          }}>
+          withdraw
+        </Text>
         <Text style={styles.buttonText}>closure</Text>
       </View>
     </View>

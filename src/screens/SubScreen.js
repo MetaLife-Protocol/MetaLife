@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {SafeAreaView, ScrollView, StatusBar, View} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../shared/SchemaStyles';
+import {SchemaStyles} from 'metalife-base';
 
 const SubScreen = () => {
   const {barStyle, FG, flex1} = SchemaStyles();

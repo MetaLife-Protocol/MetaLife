@@ -7,9 +7,8 @@ import {
   Text,
   View,
 } from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import HeadIcon from '../../../shared/comps/HeadIcon';
+import {HeadIcon, SchemaStyles} from 'metalife-base';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation} from '@react-navigation/native';
 import {PeerIcons} from '../../../shared/Icons';

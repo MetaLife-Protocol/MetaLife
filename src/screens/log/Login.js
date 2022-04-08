@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import {StatusBar, TextInput, View} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
+import {colorsSchema, RoundBtn, SchemaStyles} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
-import RoundBtn from '../../shared/comps/RoundBtn';
 import {useNavigation} from '@react-navigation/native';
 
 const Login = ({name, setName}) => {

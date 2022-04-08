@@ -8,7 +8,7 @@
 
 import React, {useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useStyle} from '../../../../shared/ThemeColors';
+import {useStyle} from 'metalife-base';
 import Constants from '../../../../shared/Constants';
 
 const TransactionRecordItem = () => {

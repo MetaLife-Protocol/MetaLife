@@ -1,9 +1,8 @@
 import React from 'react';
 import {SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import {SchemaStyles, Section} from 'metalife-base';
 import {useTimer} from '../../../shared/Hooks';
-import Section from '../../../shared/comps/Section';
 import PeerItem from './item/PeerItem';
 import {getConnectedPeers, getStagedPeers} from '../../../remote/ssbOP';
 

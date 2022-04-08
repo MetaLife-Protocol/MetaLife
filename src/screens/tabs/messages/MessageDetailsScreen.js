@@ -7,12 +7,11 @@ import {
   Text,
   View,
 } from 'react-native';
-import SchemaStyles, {colorsBasics} from '../../../shared/SchemaStyles';
+import {colorsBasics, HeadIcon, SchemaStyles} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
 import MsgInput from './MsgInput';
 import {sendMsg} from '../../../remote/ssbOP';
 import {localDate} from '../../../utils';
-import HeadIcon from '../../../shared/comps/HeadIcon';
 
 const iconDic = {
   peerIcon: require('../../../assets/image/contacts/peer_icon.png'),
@@ -33,11 +32,7 @@ const MessageDetailsScreen = ({
     {name = '', description = '', image = ''} = peerInfoDic[recp] || {};
 
   const headerRight = () => (
-    <HeadIcon
-      height={30}
-      width={30}
-      image={iconDic.peerIcon}
-    />
+    <HeadIcon height={30} width={30} image={iconDic.peerIcon} />
   );
 
   const [rootKeyLocal, setRootKeyLocal] = useState(rootKey);

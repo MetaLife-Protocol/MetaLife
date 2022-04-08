@@ -1,7 +1,7 @@
 import React, {useLayoutEffect} from 'react';
 import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import FriendItem from './item/FriendItem';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import {SchemaStyles} from 'metalife-base';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
 const PeersListScreen = () => {

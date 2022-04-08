@@ -1,7 +1,6 @@
 import React from 'react';
 import {Image, ImageBackground, StyleSheet, View} from 'react-native';
-import RoundBtn from '../shared/comps/RoundBtn';
-import SchemaStyles from '../shared/SchemaStyles';
+import {RoundBtn, SchemaStyles} from 'metalife-base';
 import {useNavigation} from '@react-navigation/native';
 
 /**

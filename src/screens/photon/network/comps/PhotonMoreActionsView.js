@@ -8,7 +8,7 @@
 
 import React, {memo} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useStyle} from '../../../../shared/ThemeColors';
+import {useStyle} from 'metalife-base';
 import {useNavigation} from '@react-navigation/native';
 
 const PhotonMoreActionsView = ({visible, onSelect}) => {

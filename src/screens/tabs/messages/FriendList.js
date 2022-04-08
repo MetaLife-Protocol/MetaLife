@@ -4,7 +4,7 @@
 import * as React from 'react';
 import {FlatList, SafeAreaView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import {SchemaStyles} from 'metalife-base';
 import FriendItem from '../contacts/item/FriendItem';
 
 const FriendList = ({relations: [friends]}) => {

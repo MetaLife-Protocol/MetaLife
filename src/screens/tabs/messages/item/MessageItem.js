@@ -1,9 +1,8 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import {HeadIcon, SchemaStyles} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
 import {PeerIcons} from '../../../../shared/Icons';
-import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {localDate} from '../../../../utils';
 import {useNavigation} from '@react-navigation/native';
 
@@ -25,9 +24,7 @@ const MessageItem = ({rootKey, feedId, peerInfoDic, msgArr}) => {
     <Pressable
       onPress={() => navigate('MessageDetailsScreen', {rootKey, recp})}>
       <View style={[item, row, flex1]}>
-        <HeadIcon
-          image={PeerIcons.peerIcon}
-        />
+        <HeadIcon image={PeerIcons.peerIcon} />
         <View style={[textContainer]}>
           <Text numberOfLines={1} style={[title, text]}>
             {lastMsg.value.content.text}

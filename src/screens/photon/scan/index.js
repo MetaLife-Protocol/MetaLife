@@ -7,8 +7,8 @@
  */
 
 import React, {useRef, useState} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import {StyleSheet, Text} from 'react-native';
+import {SchemaStyles} from 'metalife-base';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import CameraMarkerView from './comps/CameraMarkerView';

@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import PostItem from './items/PostItem';
-import {colorsSchema} from '../../../shared/SchemaStyles';
+import {colorsSchema} from 'metalife-base';
 import {Text} from 'react-native';
 
 const ItemAgent = ({info: {item}}) => {

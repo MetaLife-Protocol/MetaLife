@@ -3,8 +3,7 @@
  */
 import React, {useState} from 'react';
 import {Alert, Modal, StyleSheet, TextInput, View} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../../../shared/SchemaStyles';
-import RoundBtn from '../../../../shared/comps/RoundBtn';
+import {colorsSchema, RoundBtn, SchemaStyles} from 'metalife-base';
 
 export const ProfileModal = ({
   visible = false,

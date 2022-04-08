@@ -7,18 +7,16 @@ import {
   Text,
   View,
 } from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import {HeadIcon, RoundBtn, SchemaStyles} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
 import {
   friendsGraphParse,
   mutualFriend,
 } from '../../../filters/ContactsFilters';
-import RoundBtn from '../../../shared/comps/RoundBtn';
 import {findRootKey} from '../../../filters/MsgFilters';
 import {PeerIcons} from '../../../shared/Icons';
 import {block, follow} from '../../../remote/ssbOP';
 import {markMsgCBByKey} from '../../../remote/ssb/MsgCB';
-import HeadIcon from '../../../shared/comps/HeadIcon';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
@@ -62,9 +60,7 @@ const PeerDetailsScreen = ({
     <SafeAreaView style={[flex1]}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={[item, row, flex1]}>
-          <HeadIcon
-            image={PeerIcons.peerIcon}
-          />
+          <HeadIcon image={PeerIcons.peerIcon} />
           <Pressable
             onPress={event => {
               setString(feedId);

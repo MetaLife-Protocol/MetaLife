@@ -1,6 +1,6 @@
 import React from 'react';
 import {FlatList, SafeAreaView} from 'react-native';
-import SchemaStyles from '../../shared/SchemaStyles';
+import {SchemaStyles} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
 import ItemAgent from './home/ItemAgent';
 

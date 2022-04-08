@@ -5,11 +5,12 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  Text,
   TextInput,
+  TouchableOpacity,
 } from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
+import {colorsSchema, SchemaStyles, Section} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
-import Section from '../../shared/comps/Section';
 import {
   disconnectPeer,
   getConnectedPeers,

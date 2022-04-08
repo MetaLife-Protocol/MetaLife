@@ -15,12 +15,14 @@ import {
   Text,
   View,
 } from 'react-native';
-import RoundBtn from '../../../shared/comps/RoundBtn';
 import Constants from '../../../shared/Constants';
-import {useStyle} from '../../../shared/ThemeColors';
+import {
+  PhotonSeparator,
+  PureTextInput,
+  RoundBtn,
+  useStyle,
+} from 'metalife-base';
 import {useNavigation} from '@react-navigation/native';
-import PureTextInput from '../../../shared/comps/PureTextInput';
-import {PhotonSeparator} from '../../../shared/comps/PhotonSeparator';
 import {createChannel} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 

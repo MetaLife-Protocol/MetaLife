@@ -8,20 +8,34 @@
 import React, {useCallback, useRef} from 'react';
 import {SafeAreaView, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import {loadChannelList, startPhotonServer} from 'react-native-photon';
+import {loadChannelList} from 'react-native-photon';
+import {ProfileView, useDialog} from 'metalife-base';
 
 const ReceivingCode = ({}) => {
   const svg = useRef();
+  const dialog = useDialog();
 
   let logoFromFile = require('../../../assets/image/contacts/nft_icon.png');
 
   const saveQrToDisk = useCallback(() => {
-    startPhotonServer({
-      privateKey:
-        '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
-      ethRPCEndPoint: '',
-      // ethRPCEndPoint: 'https://jsonapi1.smartmesh.cn',
-    });
+    // dialog.show('custom', <Text style={{color: 'red'}}>test</Text>);
+    dialog.show(
+      <ProfileView
+        value={'testValue'}
+        holderText={'testHolder'}
+        submitHandler={v => {
+          // dialog.dismiss();
+          console.log('submitHandler::', v);
+        }}
+      />,
+    );
+
+    // startPhotonServer({
+    //   privateKey:
+    //     '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
+    //   ethRPCEndPoint: '',
+    //   // ethRPCEndPoint: 'https://jsonapi1.smartmesh.cn',
+    // });
 
     // console.log('svg.current::', svg.current);
     // svg.current &&

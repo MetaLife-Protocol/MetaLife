@@ -7,9 +7,8 @@
  */
 import React from 'react';
 import {FlatList, StyleSheet} from 'react-native';
-import {useStyle, useTheme} from '../../../shared/ThemeColors';
+import {PhotonSeparator, useStyle, useTheme} from 'metalife-base';
 import TransactionRecordItem from './comps/TransactionRecordItem';
-import {PhotonSeparator} from '../../../shared/comps/PhotonSeparator';
 
 const RecordPhoton = () => {
   const styles = useStyle(createSty),

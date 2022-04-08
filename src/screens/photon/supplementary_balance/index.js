@@ -7,10 +7,12 @@
 
 import React, {useMemo, useState} from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import {useStyle} from '../../../shared/ThemeColors';
-import {PhotonSeparator} from '../../../shared/comps/PhotonSeparator';
-import PureTextInput from '../../../shared/comps/PureTextInput';
-import RoundBtn from '../../../shared/comps/RoundBtn';
+import {
+  PhotonSeparator,
+  PureTextInput,
+  RoundBtn,
+  useStyle,
+} from 'metalife-base';
 import Constants from '../../../shared/Constants';
 import {useRoute} from '@react-navigation/native';
 import {depositChannelMethod} from 'react-native-photon';
@@ -58,6 +60,7 @@ const SupplementaryBalance = () => {
               .then(res => {
                 const jsonRes = JSON.parse(res);
                 if (jsonRes.error_code === 0) {
+                  //   TODO 成功
                 }
                 console.log('depositChannelMethod res::', res);
               })

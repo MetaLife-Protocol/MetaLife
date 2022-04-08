@@ -1,9 +1,7 @@
 import React from 'react';
 import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
-import SchemaStyles from '../../shared/SchemaStyles';
+import {SchemaStyles, SearchBar, Section} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
-import Section from '../../shared/comps/Section';
-import SearchBar from '../../shared/comps/SearchBar';
 import FriendItem from './contacts/item/FriendItem';
 
 const iconDic = {

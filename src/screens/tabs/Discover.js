@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import SchemaStyles from '../../shared/SchemaStyles';
+import {SchemaStyles} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation} from '@react-navigation/native';
 

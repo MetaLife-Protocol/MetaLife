@@ -10,10 +10,8 @@ import React, {useMemo, useState} from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 import CoinSelector from '../comps/CoinSelector';
 import SelectDialog from '../comps/SelectDialog';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import {PureTextInput, RoundBtn, SchemaStyles} from 'metalife-base';
 import Constants from '../../../shared/Constants';
-import PureTextInput from '../../../shared/comps/PureTextInput';
-import RoundBtn from '../../../shared/comps/RoundBtn';
 
 const Payment = () => {
   const {flex1, BG, FG} = SchemaStyles(),

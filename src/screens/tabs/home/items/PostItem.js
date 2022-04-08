@@ -3,11 +3,10 @@
  */
 import React from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import {HeadIcon, SchemaStyles} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
 import {localDate} from '../../../../utils';
 import PostMsgPanel from './PostMsgPannel';
-import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {PeerIcons} from '../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
 
@@ -42,9 +41,7 @@ const PostItem = ({
   return (
     <View style={[row, container]}>
       <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
-        <HeadIcon
-          image={PeerIcons.peerIcon}
-        />
+        <HeadIcon image={PeerIcons.peerIcon} />
       </Pressable>
       <View style={[textContainer]}>
         <Text>

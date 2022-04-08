@@ -1,8 +1,7 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import {HeadIcon, SchemaStyles} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
-import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {findRootKey} from '../../../../filters/MsgFilters';
 
@@ -30,9 +29,7 @@ const FriendItem = ({fId, peerInfoDic, privateMsg}) => {
           : push('PeerDetailsScreen', fId)
       }>
       <View style={[item, row, flex1]}>
-        <HeadIcon
-          image={iconDic.peerIcon}
-        />
+        <HeadIcon image={iconDic.peerIcon} />
         <View style={[textContainer]}>
           <Text numberOfLines={1} style={[title, text]}>
             {name || fId}

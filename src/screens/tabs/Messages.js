@@ -1,8 +1,7 @@
 import React from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
+import {colorsSchema, SchemaStyles, SearchBar} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
-import SearchBar from '../../shared/comps/SearchBar';
 import MessageItem from './messages/item/MessageItem';
 
 const iconDic = {

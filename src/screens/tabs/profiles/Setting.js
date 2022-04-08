@@ -3,18 +3,20 @@
  */
 import React, {useCallback, useState} from 'react';
 import {Pressable, SafeAreaView, ScrollView, Switch, Text} from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import {
+  ControllerItem,
+  HeadIcon,
+  NormalSeparator,
+  SchemaStyles,
+  Section,
+} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
-import ControllerItem from '../../../shared/comps/ControllerItem';
 import I18n from '../../../i18n/I18n';
-import Section from '../../../shared/comps/Section';
-import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {setAbout} from '../../../remote/ssbOP';
 import Toast from 'react-native-tiny-toast';
 import {ProfileModal} from './modal/ProfileModal';
 import {checkAndLaunchCamera} from '../../../utils';
-import HeadIcon from '../../../shared/comps/HeadIcon';
 
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
 
@@ -86,11 +88,7 @@ const Setting = ({
             )
           }>
           <Section style={[marginTop10, alignItemsCenter, {marginBottom: -10}]}>
-            <HeadIcon
-              width={90}
-              height={90}
-              image={HolderIcon}
-            />
+            <HeadIcon width={90} height={90} image={HolderIcon} />
           </Section>
         </Pressable>
         <Section separator={NormalSeparator}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import {HeadIcon, SchemaStyles} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
 import {
   connectPeer,
@@ -10,7 +10,6 @@ import {
   persistentConnectPeer,
 } from '../../../../remote/ssbOP';
 import {PeerIcons} from '../../../../shared/Icons';
-import HeadIcon from '../../../../shared/comps/HeadIcon';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation} from '@react-navigation/native';
 

@@ -7,8 +7,8 @@
  */
 
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import SchemaStyles from '../../shared/SchemaStyles';
+import {StyleSheet} from 'react-native';
+import {SchemaStyles} from 'metalife-base';
 import WebView from 'react-native-webview';
 
 const Web = ({}) => {
