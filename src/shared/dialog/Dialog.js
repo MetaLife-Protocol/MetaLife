@@ -26,6 +26,7 @@ const Dialog = ({children}) => {
       value={{
         dismiss: () => {
           setVisible(false);
+          setContent(null);
         },
         show: dialogContent => {
           setVisible(true);
