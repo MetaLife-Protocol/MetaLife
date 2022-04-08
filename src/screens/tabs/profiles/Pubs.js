@@ -25,6 +25,8 @@ import Toast from 'react-native-tiny-toast';
 import {PlusBlack, PlusWhite} from '../../../shared/Icons';
 import ControllerItem from '../../../shared/comps/ControllerItem';
 import PeerItem from '../contacts/item/PeerItem';
+import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
+import RoundBtn from '../../../shared/comps/RoundBtn';
 
 const Pubs = ({darkMode, pubs, addPub}) => {
   const {flex1, row, alignItemsCenter, text, marginTop10} = SchemaStyles(),
@@ -80,9 +82,12 @@ const Pubs = ({darkMode, pubs, addPub}) => {
         </ControllerItem>
       </Section>
       {pubs.length > 0 && (
-        <Section style={[marginTop10, {height: '100%'}]} title={'Your pubs'}>
-          {pubs.map((pObj, i) => (
-            <ControllerItem title={pObj.split(':').pop()} />
+        <Section
+          style={[marginTop10, {height: '100%'}]}
+          title={'Your pubs'}
+          separator={NormalSeparator}>
+          {pubs.map(pObj => (
+            <ControllerItem key={pObj} title={pObj.split(':').pop()} />
           ))}
         </Section>
       )}

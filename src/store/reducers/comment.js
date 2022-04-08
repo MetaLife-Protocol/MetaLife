@@ -10,7 +10,11 @@ export const commentReducer = (state = initState, {type, payload}) => {
       const root = payload.value.content.root;
       return {
         ...state,
-        [root]: state[root] ? [...state[root], payload] : [payload],
+        [root]: state[root]
+          ? [payload, ...state[root]].sort(
+              (a, b) => b.value.timestamp - a.value.timestamp,
+            )
+          : [payload],
       };
     case 'clearComment':
       const ns = {};

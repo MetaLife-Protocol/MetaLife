@@ -46,9 +46,18 @@ const PostMsgEditor = ({commentDic}) => {
               text: content,
               root: key,
               fork: value.root,
-              branch: key,
+              branch: commentArr.length
+                ? commentArr[commentArr.length - 1].key
+                : key,
             }
-          : {type: 'post', text: content, root: key, branch: key}
+          : {
+              type: 'post',
+              text: content,
+              root: key,
+              branch: commentArr.length
+                ? commentArr[commentArr.length - 1].key
+                : key,
+            }
         : {
             type: 'post',
             text: content,
@@ -61,14 +70,14 @@ const PostMsgEditor = ({commentDic}) => {
 
   return (
     <SafeAreaView style={[flex1, FG]}>
-      <ScrollView style={[flex1]} ref={scrollView}>
+      <ScrollView style={[flex1]} ref={scrollView} overScrollMode={'auto'}>
         {shownMsg && (
           <Section title={'Reply to:'}>
             <PostItem item={shownMsg} showPanel={false} />
           </Section>
         )}
         {commentArr.length > 0 && (
-          <Section title={'Replies:'} style={[flex1]}>
+          <Section title={'Replies:'}>
             {/*<FlatList*/}
             {/*  data={commentArr}*/}
             {/*  style={[{height: '100%'}]}*/}
