@@ -5,6 +5,7 @@ import React from 'react';
 import App from './src/App';
 import {persistor, store} from './src/store/configureStore';
 import {PersistGate} from 'redux-persist/integration/react';
+import Dialog from './src/shared/dialog/Dialog';
 
 // setTimeout(() => {
 //   const {start, channel} = nodejs;
@@ -17,7 +18,9 @@ const WrappedApp = () => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <App />
+        <Dialog>
+          <App />
+        </Dialog>
       </PersistGate>
     </Provider>
   );
