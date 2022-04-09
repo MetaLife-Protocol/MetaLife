@@ -69,7 +69,8 @@ export const contactHandler = ({
             payload: batchMsgCB(idFeed),
           }),
         ))
-      : (dispatch({type: 'removeFeed', payload: contact}),
+      : blocking &&
+        (dispatch({type: 'removeFeed', payload: contact}),
         dispatch({type: 'clearPublicMsg', payload: contact}),
         dispatch({type: 'clearComment', payload: contact}));
   }
