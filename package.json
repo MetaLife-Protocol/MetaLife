@@ -29,8 +29,6 @@
     "ios-iPhone SE": "react-native run-ios --verbose --device \"Lonmee’s iPhone SE\"",
     "deploy Lonmee’s iPhone": "ios-deploy --verbose --id 00008101-0016491834E9003A --bundle /Users/lonmee/Library/Developer/Xcode/DerivedData/MetaLife-dlyusnujjtzhbaadfzjhrbfwfqtv/Build/Products/Debug-iphoneos/MetaLife.app",
     "deploy Lonmeeh’s iPhone SE": "ios-deploy --verbose --id 00008030-000635D902F9802E --bundle /Users/lonmee/Library/Developer/Xcode/DerivedData/MetaLife-dlyusnujjtzhbaadfzjhrbfwfqtv/Build/Products/Debug-iphoneos/MetaLife.app",
-    "deploy Huooo’s iPhone": "ios-deploy --id 25b32ab84e5c01d74d2818a376f00570f55b0231 --bundle /Users/lonmee/Library/Developer/Xcode/DerivedData/MetaLife-dlyusnujjtzhbaadfzjhrbfwfqtv/Build/Products/Debug-iphoneos/MetaLife.app",
-    "deploy Qiang’s iPhone": "ios-deploy --id 00008110-000A5D143A39801E --bundle /Users/lonmee/Library/Developer/Xcode/DerivedData/MetaLife-dlyusnujjtzhbaadfzjhrbfwfqtv/Build/Products/Debug-iphoneos/MetaLife.app",
     "metro script": "~~~~~~~~~~~~~~~ metro ~~~~~~~~~~~~~~~~",
     "start": "react-native start",
     "test": "jest",
