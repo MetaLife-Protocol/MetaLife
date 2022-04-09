@@ -23,7 +23,7 @@
     "ios script": "~~~~~~~~~~~~~~~ ios ~~~~~~~~~~~~~~~~",
     "build-backend-ios": "./tools/build-backend.mjs --ios --verbose",
     "build-ios-assets": "npm run lib && npm run propagate-replacements && npm run build-backend-ios",
-    "ios": "react-native run-ios",
+    "ios": "react-native run-ios --device",
     "ios-dev": "npm run build-ios-assets && react-native run-ios --device",
     "ios-iPhone": "react-native run-ios --verbose --device \"Lonmee’s iPhone\"",
     "ios-iPhone SE": "react-native run-ios --verbose --device \"Lonmee’s iPhone SE\"",
