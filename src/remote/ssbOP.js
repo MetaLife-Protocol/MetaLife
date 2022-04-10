@@ -1,7 +1,7 @@
 import nodejs from 'nodejs-mobile-react-native';
 import {makeClient} from './ssb/Client';
 
-export let ssb = window.ssb;
+let ssb = window.ssb;
 
 export const status = cb =>
   ssb.status((e, v) => (e ? console.error(e) : cb(v)));
