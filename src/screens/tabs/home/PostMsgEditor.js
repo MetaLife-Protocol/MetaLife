@@ -40,12 +40,12 @@ const PostMsgEditor = ({commentDic}) => {
   function sendHandler(content) {
     sendMsg(
       key
-        ? value.root
+        ? value.content.root
           ? {
               type: 'post',
               text: content,
               root: key,
-              fork: value.root,
+              fork: value.content.root,
               branch: commentArr.length
                 ? commentArr[commentArr.length - 1].key
                 : key,
