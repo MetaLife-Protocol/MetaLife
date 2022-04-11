@@ -6,7 +6,7 @@ import RoundBtn from '../../shared/comps/RoundBtn';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const Create = ({ name, setName }) => {
+const BackupWallet = ({ name, setName }) => {
   const { barStyle, BG, FG, flex1, input, text, marginTop10 } = SchemaStyles(),
     { textHolder } = colorsSchema;
 
@@ -20,46 +20,22 @@ const Create = ({ name, setName }) => {
       <StatusBar barStyle={barStyle} />
       <View style={[FG, flex1, marginTop10, styles.body]}>
         <View>
-          <View style={[styles.inputBox]}>
-            <TextInput
-              style={[text, styles.inputText]}
-              placeholder={'Account Name'}
-              placeholderTextColor={textHolder}
-              onChangeText={setNick}
-            />
-            <Icon name="heart" size={30} color="#900" />
-          </View>
-          <View style={[styles.inputBox]}>
-            <TextInput
-              style={[text, styles.inputText]}
-              placeholder={'Set Password'}
-              secureTextEntry={true}
-              placeholderTextColor={textHolder}
-              onChangeText={setPwd}
-            />
-            <Icon name="rocket" size={30} color="#900" />
-          </View>
-          <View style={[styles.inputBox]}>
-            <TextInput
-              style={[text, styles.inputText]}
-              placeholder={'Confirm Password'}
-              secureTextEntry={true}
-              placeholderTextColor={textHolder}
-              onChangeText={setConfirm}
-            />
-            <Icon name="rocket" size={30} color="#900" />
-          </View>
-          <View style={[styles.inputBox]}>
-            <TextInput
-              style={[text, styles.inputText]}
-              placeholder={'Password prompt (optional)'}
-              secureTextEntry={true}
-              placeholderTextColor={textHolder}
-              onChangeText={setConfirm}
-            />
-          </View>
-          <Text style={[{
-            fontSize: 16, color: "#4E586E", marginTop: 10,
+          <Text style={[text, {
+            fontSize: 16, marginTop: 10,
+          }]}>
+            The last step:back up your wallet immediately
+          </Text>
+          <Text style={[text, {
+            fontSize: 16, marginTop: 10,
+          }]}>
+
+            We highly recommend you write the Mnemonic
+            words（Backup Phrase）on paper and keep it in
+            a safe place,anyone get it can access or spend your
+            assets.Also get start with a small amount of assets.
+          </Text>
+          <Text style={[text, {
+            fontSize: 16, marginTop: 10,
           }]}>
             Note:MetaLife waller does not save user password
             nor provide backups.All password are required to
@@ -72,8 +48,7 @@ const Create = ({ name, setName }) => {
         <View style={flex1} />
         <RoundBtn
           style={{ marginBottom: 50 }}
-          title={'Create Account'}
-          disabled={!(nick && pwd && confirm)}
+          title={'Backup Account'}
           press={() => replace('Tabs')}
         />
       </View>
@@ -110,4 +85,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(msp, mdp)(Create);
+export default connect(msp, mdp)(BackupWallet);

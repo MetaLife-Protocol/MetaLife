@@ -74,7 +74,7 @@ const Create = ({ name, setName }) => {
           style={{ marginBottom: 50 }}
           title={'Create Account'}
           disabled={!(nick && pwd && confirm)}
-          press={() => replace('Tabs')}
+          press={() => replace('Backup Wallet')}
         />
       </View>
     </View>
