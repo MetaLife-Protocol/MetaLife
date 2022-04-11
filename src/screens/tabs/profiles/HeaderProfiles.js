@@ -41,23 +41,23 @@ const HeaderProfiles = ({feedId, relations, infoDic}) => {
 
   return (
     <ImageBackground style={[container, alignItemsCenter]} source={iconDic.BG}>
-      <HeadIcon
-        style={[photo]}
-        width={90}
-        height={90}
-        image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
-      />
       <Pressable
-        onPress={() => {
+        onPressIn={() => setShowId(true)}
+        onPressOut={() => setShowId(false)}
+        onLongPress={() => {
           setString(feedId);
           Toast.show('ID copied');
-        }}
-        onLongPress={event => setShowId(true)}
-        onPressOut={event => setShowId(false)}>
-        <Text style={[nameFont, marginTop10]}>
-          {showId ? feedId.substring(0, 20) : name || feedId.substring(0, 10)}
-        </Text>
+        }}>
+        <HeadIcon
+          style={[photo]}
+          width={90}
+          height={90}
+          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+        />
       </Pressable>
+      <Text style={[nameFont, marginTop10]}>
+        {showId ? feedId.substring(0, 20) : name || feedId.substring(0, 10)}
+      </Text>
       <Text style={[desc]}>{description}</Text>
       <Text style={[at]}>{feedId.substring(0, 8)}</Text>
       <View

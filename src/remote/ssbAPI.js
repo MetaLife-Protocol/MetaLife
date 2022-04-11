@@ -19,7 +19,7 @@ const trainProfileFeed = (fId, existSequence, cb) => {
       return cb({fId, msgs});
     }
     const {messages} = rMsgs,
-      msg = messages.filter(msg => msg.value.author === fId)[0],
+      msg = messages.filter(msg => msg.value.author === fId).shift(),
       {previous, sequence} = msg.value;
     console.log(
       'fId: ' + fId.substring(1, 6) + ' -> update sequence: ' + sequence,

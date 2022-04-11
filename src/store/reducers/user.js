@@ -8,6 +8,7 @@ const msgInitState = {
   feedId: '',
   pubs: [],
   relations: [[], [], [], [], [], []],
+  // friends, following, follower, block, blocked, other
 };
 
 export const userReducer = (state = msgInitState, {type, payload}) => {

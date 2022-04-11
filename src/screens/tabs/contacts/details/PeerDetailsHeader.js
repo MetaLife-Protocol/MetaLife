@@ -55,27 +55,25 @@ const PeerDetailsHeader = ({
 
   return (
     <View>
-      <Pressable
-        onPress={event => {
-          setString(feedId);
-          Toast.show('ID copied');
-        }}
-        onLongPress={event => setShowId(true)}
-        onPressOut={event => setShowId(false)}>
-        <View style={[item, row, flex1]}>
+      <View style={[item, row, flex1]}>
+        <Pressable
+          onPressIn={() => setShowId(true)}
+          onPressOut={() => setShowId(false)}
+          onLongPress={() => {
+            setString(feedId);
+            Toast.show('ID copied');
+          }}>
           <HeadIcon
             image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
           />
-          <View style={[textContainer]}>
-            <Text numberOfLines={1} style={[title, text]}>
-              {showId ? feedId : name || feedId}
-            </Text>
-            {description !== '' && (
-              <Text style={[desc]}>bio: {description}</Text>
-            )}
-          </View>
+        </Pressable>
+        <View style={[textContainer]}>
+          <Text numberOfLines={1} style={[title, text]}>
+            {showId ? feedId : name || feedId}
+          </Text>
+          {description !== '' && <Text style={[desc]}>bio: {description}</Text>}
         </View>
-      </Pressable>
+      </View>
       <View style={[row, flex1, justifySpaceAround]}>
         <Pressable
           onPress={() =>

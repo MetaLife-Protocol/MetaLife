@@ -8,18 +8,18 @@ export const commentReducer = (state = initState, {type, payload}) => {
   switch (type) {
     case 'addComment':
       const root = payload.value.content.root;
+      // return {
+      //   ...state,
+      //   [root]: state[root] ? [...state[root], payload] : [payload],
+      // };
       return {
         ...state,
-        [root]: state[root] ? [...state[root], payload] : [payload],
+        [root]: state[root]
+          ? [...state[root], payload].sort(
+              (a, b) => a.value.timestamp - b.value.timestamp,
+            )
+          : [payload],
       };
-    // return {
-    //   ...state,
-    //   [root]: state[root]
-    //     ? [...state[root], payload].sort(
-    //         (a, b) => a.value.timestamp - b.value.timestamp,
-    //       )
-    //     : [payload],
-    // };
     case 'clearComment':
       const ns = {};
       for (const stateKey in state) {
