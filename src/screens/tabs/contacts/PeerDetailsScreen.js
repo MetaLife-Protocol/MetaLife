@@ -5,7 +5,6 @@ import {connect} from 'react-redux/lib/exports';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import ItemAgent from '../home/ItemAgent';
 import PeerDetailsHeader from './details/PeerDetailsHeader';
-import {checkAddon} from '../../../remote/SsbListeners';
 import {trainFeed} from '../../../remote/ssbAPI';
 import {batchMsgCB} from '../../../store/MsgCB';
 import {useDispatch} from 'react-redux';
@@ -32,7 +31,7 @@ const PeerDetailsScreen = ({verbose, selfFeedId, relations, info, feed}) => {
           payload: batchMsgCB(idMsgs),
         }),
       );
-  }, []);
+  }, [isMyBlock]);
 
   return (
     <SafeAreaView style={[flex1]}>

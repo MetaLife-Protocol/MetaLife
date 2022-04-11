@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   ImageBackground,
@@ -33,6 +33,8 @@ const HeaderProfiles = ({feedId, relations, infoDic}) => {
   const {name, description, image} = infoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
 
+  const [showId, setShowId] = useState(false);
+
   function peerListHandler(title, list) {
     push('PeersListScreen', {title, list});
   }
@@ -49,9 +51,11 @@ const HeaderProfiles = ({feedId, relations, infoDic}) => {
         onPress={() => {
           setString(feedId);
           Toast.show('ID copied');
-        }}>
+        }}
+        onLongPress={event => setShowId(true)}
+        onPressOut={event => setShowId(false)}>
         <Text style={[nameFont, marginTop10]}>
-          {name || feedId.substring(0, 10)}
+          {showId ? feedId.substring(0, 20) : name || feedId.substring(0, 10)}
         </Text>
       </Pressable>
       <Text style={[desc]}>{description}</Text>

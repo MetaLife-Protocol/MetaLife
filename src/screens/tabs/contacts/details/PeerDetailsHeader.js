@@ -46,6 +46,7 @@ const PeerDetailsHeader = ({
 
   const [disabledBlock, setDisabledBlock] = useState(false);
   const [disabledFollow, setDisabledFollow] = useState(false);
+  const [showId, setShowId] = useState(false);
   const {setString} = nativeClipboard;
 
   function peerListHandler(title, list) {
@@ -54,25 +55,27 @@ const PeerDetailsHeader = ({
 
   return (
     <View>
-      <View style={[item, row, flex1]}>
-        <HeadIcon
-          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
-        />
-        <Pressable
-          onPress={event => {
-            setString(feedId);
-            Toast.show('ID copied');
-          }}>
+      <Pressable
+        onPress={event => {
+          setString(feedId);
+          Toast.show('ID copied');
+        }}
+        onLongPress={event => setShowId(true)}
+        onPressOut={event => setShowId(false)}>
+        <View style={[item, row, flex1]}>
+          <HeadIcon
+            image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+          />
           <View style={[textContainer]}>
             <Text numberOfLines={1} style={[title, text]}>
-              {name || feedId}
+              {showId ? feedId : name || feedId}
             </Text>
             {description !== '' && (
               <Text style={[desc]}>bio: {description}</Text>
             )}
           </View>
-        </Pressable>
-      </View>
+        </View>
+      </Pressable>
       <View style={[row, flex1, justifySpaceAround]}>
         <Pressable
           onPress={() =>

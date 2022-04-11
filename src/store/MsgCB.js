@@ -29,7 +29,7 @@ export const checkMarkedMsgCB = idMsg => {
 export const batchMsgCB = idMsgs => {
   const {msgs} = idMsgs;
   // todo: 'contact' cause multiple executing
-  for (let i = msgs.length - 1; i > 0; i--) {
+  for (let i = msgs.length - 1; i > -1; i--) {
     const msg = msgs[i],
       type = msg.value.content.type;
     type === 'contact' || (typeHandlers[type] && typeHandlers[type](msg));
