@@ -1,4 +1,4 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
@@ -24,6 +24,9 @@ const PeerDetailsScreen = ({verbose, selfFeedId, relations, info, feed}) => {
 
   useLayoutEffect(() => {
     setOptions({title: name || feedId});
+  }, []);
+
+  useEffect(() => {
     isMyBlock ||
       trainFeed(feedId, feed, idMsgs =>
         dispatch({
