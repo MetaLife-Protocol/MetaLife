@@ -83,6 +83,7 @@ const PhotonNetwork = () => {
         </View>
       </View>
       <FlatList
+        contentContainerStyle={styles.listContainer}
         data={channelList}
         renderItem={({item, index}) => <PhotonListItemView data={item} />}
         keyExtractor={(item, index) => `list_${index}`}
@@ -118,5 +119,8 @@ const createSty = theme =>
       borderBottomRightRadius: 50,
     },
     channelText: {fontSize: 14, lineHeight: 20, color: theme.black},
+    listContainer: {
+      paddingBottom: 25,
+    },
   });
 export default PhotonNetwork;

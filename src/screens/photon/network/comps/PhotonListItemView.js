@@ -33,12 +33,12 @@
  *  * 12  StatePartnerWithdrawing  用户收到的了对方发来的withdraw请求并同意后,将通道置为该状态,效果同withdrawing状态
  */
 
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {useStyle} from 'metalife-base';
+import React, {useCallback, useMemo} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useDialog, useStyle} from 'metalife-base';
 import Constants from '../../../../shared/Constants';
 import {ethNumberFixed} from '../../../../shared/numberUtils';
-import {getPhotonTokenSymbol} from '../../PhotonUtils';
+import {getPhotonTokenSymbol, settleChannelDialog} from '../../PhotonUtils';
 import {useNavigation} from '@react-navigation/native';
 import {photonCloseChannel, photonWithDraw} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
@@ -46,6 +46,106 @@ import Toast from 'react-native-tiny-toast';
 const PhotonListItemView = ({data}) => {
   const styles = useStyle(createSty);
   const {navigate} = useNavigation();
+  const dialog = useDialog();
+
+  const replenishAction = useCallback(() => {
+    navigate('SupplementaryBalance', {channelData: data});
+  }, [data, navigate]);
+
+  const closeChannel = useCallback(() => {
+    photonCloseChannel({
+      channelIdentifierHashStr: data.channel_identifier + '',
+      isForced: true,
+    }).then(res => {
+      console.log('photonCloseChannel::res::', res);
+    });
+  }, [data.channel_identifier]);
+
+  const settleAction = useCallback(() => {
+    settleChannelDialog(dialog, data.channel_identifier + '');
+  }, [data.channel_identifier, dialog]);
+
+  const withdrawAction = useCallback(() => {
+    photonWithDraw({
+      channelIdentifierHashStr: data.channel_identifier + '',
+      amountStr: data?.balance + '' ?? '0',
+      op: '',
+    }).then(res => {
+      const resJson = JSON.parse(res);
+      if (resJson.error_code === 0) {
+        //  TODO
+      } else if (resJson.error_code === 2000) {
+        //没有足够的余额支付gas
+        Toast.show('Insufficient balance to pay for gas');
+      } else {
+        console.log('error::::init::::');
+        closeChannel();
+      }
+      console.log('photonWithDraw res:', res);
+    });
+  }, [closeChannel, data?.balance, data.channel_identifier]);
+
+  const [tipsText, isShowForceClose] = useMemo(() => {
+    // let tipsStr = 'Withdrawal, estimated 1~2 minutes';
+    let tipsStr = '';
+    let _showForceClose = false;
+    switch (data.state) {
+      case 4: //4 closing 用户发起了关闭通道的请求,正在处理过程中
+        //str: 通道关闭中,由于是链上交易,需要花费一定时间,请等待.
+        tipsStr =
+          'Channel is closed,Because it is on chain transaction, it takes a certain amount of time, please wait.';
+        break;
+      case 5:
+        // * 5 settling 用户发起了结算请求,正在处理，
+        // * 正常情况下此时不应该还有未完成交易。
+        // * 在这种状态下不能新开交易,正在提交到链上，还没被成功打包;
+        //str: 正在结算中,由于是链上交易,需要花费一段时间,请等待
+        tipsStr =
+          'In settlement,Because it is on chain transaction, it takes a certain amount of time, please wait.';
+        _showForceClose = true;
+        break;
+      case 6: //提现需要一段时间,如果时间过长,可以强制关闭通道来进行提现.
+        _showForceClose = true;
+        tipsStr =
+          'It takes a while to withdraw cash. If the time is too long, you can force the channel to be closed for withdrawal.';
+        break;
+      case 7: //关闭通道需要一段时间,如果时间过长,可以强制关闭通道.
+        _showForceClose = true;
+        tipsStr =
+          'It takes a while to close the channel. If the time is too long, you can forcefully close the channel.';
+        break;
+      case 11: //对方正在关闭通道,如果时间过长,可以强制关闭通道.
+        _showForceClose = true;
+        tipsStr =
+          'The other party is closing the channel. If the time is too long, you can force the channel to be closed.';
+        break;
+      case 12: //对方正在提现,需要一段时间,如果时间过长,可以强制关闭通道.
+        _showForceClose = true;
+        tipsStr =
+          'The other party is withdrawing, it will take a while, If the time is too long, you can forcefully close the channel.';
+        break;
+      case 2: //closed 通道关闭状态，不能再发起交易，还可以接受交易;
+        if (
+          data.block_number_channel_can_settle !== -1 &&
+          data.block_number_now !== -1
+        ) {
+          if (
+            data.block_number_now - data.block_number_channel_can_settle >=
+            0
+          ) {
+            _showForceClose = true;
+            // 结算后通道将关闭,金额将返还至账户地址.
+            tipsStr =
+              'After the settlement, the channel will be closed and the amount will be returned to the account address.';
+          } else {
+            //同步结算块数中,请稍等...%1$d(当前块)/%2$d(结算块)
+            tipsStr = `Settlement is blocks,please wait...${data.block_number_now}(Current block)/${data.block_number_channel_can_settle}(Settle block)`;
+          }
+        }
+        break;
+    }
+    return [tipsStr, _showForceClose];
+  }, [data.block_number_channel_can_settle, data.block_number_now, data.state]);
 
   return (
     <View style={styles.container}>
@@ -72,47 +172,37 @@ const PhotonListItemView = ({data}) => {
           {data.partner_address}
         </Text>
       </View>
-      <Text style={styles.dis}>Withdrawal, estimated 1~2 minutes</Text>
-      <View style={styles.buttonContainer}>
-        <Text
-          style={styles.buttonText}
+      {!!tipsText && <Text style={styles.dis}>{tipsText}</Text>}
+      {data.state === 1 && (
+        <View style={styles.buttonContainer}>
+          <Text style={styles.buttonText} onPress={replenishAction}>
+            Replenish
+          </Text>
+          <Text style={styles.buttonText} onPress={withdrawAction}>
+            withdraw
+          </Text>
+          <Text style={styles.buttonText} onPress={closeChannel}>
+            closure
+          </Text>
+        </View>
+      )}
+      {isShowForceClose && (
+        <TouchableOpacity
+          style={styles.forceCloseContainer}
           onPress={() => {
-            navigate('SupplementaryBalance', {channelData: data});
+            if (data.state === 2) {
+              settleAction();
+            } else {
+              closeChannel();
+            }
           }}>
-          Replenish
-        </Text>
-        <Text
-          style={styles.buttonText}
-          onPress={() => {
-            // console.log('data:::', data);
-            // return;
-            photonWithDraw({
-              channelIdentifierHashStr: data.channel_identifier + '',
-              amountStr: data?.balance + '' ?? '0',
-              op: '',
-            }).then(res => {
-              const resJson = JSON.parse(res);
-              if (resJson.error_code === 0) {
-                //  TODO
-              } else if (resJson.error_code === 2000) {
-                //没有足够的余额支付gas
-                Toast.show('Insufficient balance to pay for gas');
-              } else {
-                console.log('error::::init::::');
-                photonCloseChannel({
-                  channelIdentifierHashStr: data.channel_identifier + '',
-                  isForced: true,
-                }).then(res => {
-                  console.log('photonCloseChannel::res::', res);
-                });
-              }
-              console.log('photonWithDraw res:', res);
-            });
-          }}>
-          withdraw
-        </Text>
-        <Text style={styles.buttonText}>closure</Text>
-      </View>
+          <Text style={styles.forceCloseText}>
+            {data.state === 2
+              ? 'Settle now'
+              : 'Whether to force close the channel？'}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -160,6 +250,19 @@ const createSty = theme =>
     buttonText: {
       fontSize: 14,
       lineHeight: 20,
+      color: theme.primary,
+    },
+    forceCloseContainer: {
+      marginTop: 10,
+      height: 36,
+      width: '100%',
+      backgroundColor: theme.c_FFFFFF_111717,
+      borderRadius: 18,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    forceCloseText: {
+      fontSize: 14,
       color: theme.primary,
     },
   });
