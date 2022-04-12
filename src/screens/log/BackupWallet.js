@@ -22,11 +22,14 @@ const BackupWallet = ({ name, setName }) => {
   const checkPassword = () => {
     setModalVisible(!modalVisible);
     setconfirmModal(!confirmModal);
-  }
-
-  const screenshotConfirm = () => {
-    setconfirmModal(!confirmModal);
-    setpromptModal(!promptModal);
+    replace('Backup Mnemonic');
+    // Alert.alert('Error', 'Incorrect password, please re-enter', [
+    //   {
+    //     text: 'OK',
+    //     onPress: () => reset(),
+    //     style: 'Okay',
+    //   },
+    // ]);
   }
 
   return (
@@ -110,69 +113,6 @@ const BackupWallet = ({ name, setName }) => {
           </View>
         </View>
       </Modal>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={confirmModal}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setconfirmModal(!confirmModal);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={[styles.modalBack]}></View>
-          <View style={[styles.modalView, modalBackground]}>
-            <View style={styles.modalHeader}>
-              <Text style={[text, styles.modalText]}>Don't screenshot</Text>
-              <Text style={[text, styles.modalText]} onPress={() => setconfirmModal(!confirmModal)}>X</Text>
-            </View>
-            <View style={styles.modalBody}>
-              <Text style={{color: "#29DAD7", fontSize: 15}}>Anyone with your mnemonic words can access or spend your assets! Please write down on paper and keep it safe.</Text>
-            </View>
-            <View style={styles.modalFooter}>
-              <RoundBtn
-                style={{ width: "100%", marginHorizontal: 0, }}
-                title={'Confirm'}
-                press={() => screenshotConfirm()}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={promptModal}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setpromptModal(!promptModal);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={[styles.modalBack]}></View>
-          <View style={[styles.modalView, modalBackground]}>
-            <View style={styles.modalHeader}>
-              <Text style={[text, styles.modalText]}>Backup Prompt</Text>
-              <Text style={[text, styles.modalText]} onPress={() => setconfirmModal(!confirmModal)}>X</Text>
-            </View>
-            <View style={styles.modalBody}>
-              <Text style={{color: "#29DAD7", fontSize: 15}}>You have not completed the backup of the mnemonic.Leave the current page,will remove the mnemonic from the MetaLife wallet.Will you leave?</Text>
-            </View>
-            <View style={styles.modalFooter}>
-            <RoundBtn
-                style={{ width: 150, marginHorizontal: 0, }}
-                title={'Cancel'}
-                press={() => setconfirmModal(!modalVisible)}
-              />
-              <RoundBtn
-                style={{ width: 150, marginHorizontal: 0, }}
-                title={'Confirm'}
-                press={() => replace('Backup Mnemonic')}
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 };
@@ -232,22 +172,6 @@ const styles = StyleSheet.create({
   modalBody: {
     width: "100%",
     marginTop: 30,
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
-  },
-  buttonOpen: {
-    backgroundColor: "#F194FF",
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
   },
   modalText: {
     textAlign: "center",

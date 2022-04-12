@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, StatusBar, Alert, View, Text} from 'react-native';
+import {StyleSheet, StatusBar, Alert, View, Text, Modal} from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import RoundBtn from '../../shared/comps/RoundBtn';
@@ -18,12 +18,25 @@ const Backup = ({name, setName}) => {
       marginTop10,
       padding,
       areaBorderColor,
+      modalBackground,
     } = SchemaStyles(),
     {textHolder} = colorsSchema;
 
   const [nick, setNick] = useState('');
   const [pwd, setPwd] = useState('');
   const {replace} = useNavigation();
+
+  const [confirmModal, setconfirmModal] = useState(false);
+  const [promptModal, setpromptModal] = useState(false);
+
+  const screenshotConfirm = () => {
+    setconfirmModal(!confirmModal);
+    setpromptModal(!promptModal);
+  }
+
+  const promtConfirm = () => {
+    setpromptModal(!promptModal);
+  }
 
   const originalMnemoic = [
     'apple',
@@ -65,6 +78,7 @@ const Backup = ({name, setName}) => {
 
   useEffect(() => {
     setTemp(shuffle(originalMnemoic));
+    setconfirmModal(true);
   }, []);
 
   const checkMnemonic = () => {
@@ -182,6 +196,69 @@ const Backup = ({name, setName}) => {
           press={() => checkMnemonic()}
         />
       </View>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={confirmModal}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setconfirmModal(false);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalView, modalBackground]}>
+            <View style={styles.modalHeader}>
+              <Text style={[text, styles.modalText]}>Don't screenshot</Text>
+              <Text style={[text, styles.modalText]} onPress={() => setconfirmModal(false)}>X</Text>
+            </View>
+            <View style={styles.modalBody}>
+              <Text style={{color: "#29DAD7", fontSize: 15}}>Anyone with your mnemonic words can access or spend your assets! Please write down on paper and keep it safe.</Text>
+            </View>
+            <View style={styles.modalFooter}>
+              <RoundBtn
+                style={{ width: "100%", marginHorizontal: 0, }}
+                title={'Confirm'}
+                press={() => screenshotConfirm()}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={promptModal}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setpromptModal(!promptModal);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalView, modalBackground]}>
+            <View style={styles.modalHeader}>
+              <Text style={[text, styles.modalText]}>Backup Prompt</Text>
+              <Text style={[text, styles.modalText]} onPress={() => setpromptModal(false)}>X</Text>
+            </View>
+            <View style={styles.modalBody}>
+              <Text style={{color: "#29DAD7", fontSize: 15}}>You have not completed the backup of the mnemonic.Leave the current page,will remove the mnemonic from the MetaLife wallet.Will you leave?</Text>
+            </View>
+            <View style={styles.modalFooter}>
+            <RoundBtn
+                style={{ width: 150, marginHorizontal: 0, }}
+                title={'Cancel'}
+                press={() => setpromptModal(false)}
+              />
+              <RoundBtn
+                style={{ width: 150, marginHorizontal: 0, }}
+                title={'Confirm'}
+                press={() => promtConfirm()}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -221,6 +298,64 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    margin: 20,
+    borderRadius: 12,
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: "90%",
+    zIndex: 2,
+  },
+  modalBody: {
+    width: "100%",
+    marginTop: 30,
+  },
+  modalText: {
+    textAlign: "center",
+    fontSize: 17,
+  },
+  modalHeader: {
+    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+  },
+  modalTextDesc: {
+    color: "#4E586E",
+    fontSize: 15,
+    marginTop: 10,
+  },
+  modalFooter: {
+    marginTop: 20,
+    display: "flex",
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: 'space-between',
+  },
+  modalBack: {
+    position: 'absolute',
+    top: 0, 
+    left: 0,
+    right: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    zIndex: 1,
+  }
 });
 
 export default connect(msp, mdp)(Backup);
