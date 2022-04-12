@@ -11,7 +11,7 @@ let dispatch, feedId, updatesPeers, feed;
 export const populateListeners = ref => {
   dispatch = ref.dispatch;
   feedId = ref.feedId;
-  updatesPeers = [...ref.relations[0], ...ref.relations[1]];
+  updatesPeers = [feedId, ...ref.relations[0], ...ref.relations[1]];
   feed = ref.feed;
   console.log('populate -> feed & updatesPeers');
 };
