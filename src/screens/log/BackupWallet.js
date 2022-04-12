@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const BackupWallet = ({ name, setName }) => {
-  const { barStyle, BG, FG, flex1, input, text, marginTop10 } = SchemaStyles(),
+  const { barStyle, BG, FG, flex1, input, text, marginTop10, modalBackground } = SchemaStyles(),
     { textHolder } = colorsSchema;
 
   const [nick, setNick] = useState(''),
@@ -76,7 +76,8 @@ const BackupWallet = ({ name, setName }) => {
         }}
       >
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
+          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalView, modalBackground]}>
             <View style={styles.modalHeader}>
               <Text style={[text, styles.modalText]}>Enter Password</Text>
               <Text style={[text, styles.modalText]} onPress={() => setModalVisible(!modalVisible)}>X</Text>
@@ -119,7 +120,8 @@ const BackupWallet = ({ name, setName }) => {
         }}
       >
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
+          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalView, modalBackground]}>
             <View style={styles.modalHeader}>
               <Text style={[text, styles.modalText]}>Don't screenshot</Text>
               <Text style={[text, styles.modalText]} onPress={() => setconfirmModal(!confirmModal)}>X</Text>
@@ -147,7 +149,8 @@ const BackupWallet = ({ name, setName }) => {
         }}
       >
         <View style={styles.centeredView}>
-          <View style={styles.modalView}>
+          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalView, modalBackground]}>
             <View style={styles.modalHeader}>
               <Text style={[text, styles.modalText]}>Backup Prompt</Text>
               <Text style={[text, styles.modalText]} onPress={() => setconfirmModal(!confirmModal)}>X</Text>
@@ -212,7 +215,6 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     borderRadius: 12,
-    backgroundColor: "#232929",
     paddingVertical: 20,
     paddingHorizontal: 15,
     alignItems: "center",
@@ -225,6 +227,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: "90%",
+    zIndex: 2,
   },
   modalBody: {
     width: "100%",
@@ -267,6 +270,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: 'space-between',
+  },
+  modalBack: {
+    position: 'absolute',
+    top: 0, 
+    left: 0,
+    right: 0,
+    width: "100%",
+    height: "100%",
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    zIndex: 1,
   }
 });
 
