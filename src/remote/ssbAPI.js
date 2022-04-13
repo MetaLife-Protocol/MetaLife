@@ -11,9 +11,6 @@ import {
 /*************************** core of retrieve loop ***************************/
 const trainProfileFeed = (fId, existSequence, cb) => {
   let msgs = [];
-  console.log(
-    'fId: ' + fId.substring(1, 6) + ' -> exist sequence: ' + existSequence,
-  );
   profileFeed(fId, (err, rMsgs) => {
     if (err) {
       return cb({fId, msgs});
@@ -24,12 +21,19 @@ const trainProfileFeed = (fId, existSequence, cb) => {
       return cb({fId, msgs});
     }
     const {previous, sequence} = msg.value;
-    console.log(
-      'fId: ' + fId.substring(1, 6) + ' -> update sequence: ' + sequence,
-    );
     // if (sequence < existSequence) {
     //   debugger;
     // }
+    console.info(
+      `%cchecking %c${fId.substring(
+        0,
+        6,
+      )} %caddon: %c${existSequence} -> ${sequence}`,
+      'color: #C97200FF;',
+      'color: #9F6612FF;',
+      'color: #8E14CBFF;',
+      'color: #CD1E1E;',
+    );
     if (sequence <= existSequence) {
       return cb({fId, msgs});
     } else {
@@ -60,11 +64,7 @@ const trainProfileFeed = (fId, existSequence, cb) => {
 
 /****************** API: retrieve all of feed by special id ******************/
 export const trainFeed = (fId, feed, cb) =>
-  trainProfileFeed(
-    fId,
-    (feed[fId] && feed[fId][0].value.sequence) || 0,
-    idMsgs => idMsgs.msgs.length && cb(idMsgs),
-  );
+  trainProfileFeed(fId, (feed[fId] && feed[fId][0].value.sequence) || 0, cb);
 
 /****************** API: retrieve all of feed by special ids ******************/
 export const trainRangeFeed = (loopIds, feed, cb) => {
@@ -74,7 +74,13 @@ export const trainRangeFeed = (loopIds, feed, cb) => {
   }
 
   function stepper(idMsgs) {
-    console.log('msgs: ', idMsgs.fId.substring(1, 6), 'add on: ', idMsgs.msgs);
+    console.info(
+      `%cstep %c${idMsgs.fId.substring(0, 6)} %cleft: %c${loopIds.length}`,
+      'color: #0A9B00FF;',
+      'color: #9F6612FF;',
+      'color: #8E14CBFF;',
+      'color: #CD1E1E;',
+    );
     idMsgs.msgs.length && cb(idMsgs);
     loopIds.length && trainFeed(loopIds.shift(), feed, stepper);
   }

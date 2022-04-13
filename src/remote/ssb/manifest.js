@@ -223,6 +223,7 @@ export default {
     updateShowFollows: 'sync',
     updateDetailedLogs: 'sync',
     updateAllowCheckingNewVersion: 'sync',
+    updateEnableFirewall: 'sync',
   },
   resyncUtils: {
     progress: 'source',

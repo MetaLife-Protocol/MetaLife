@@ -14,13 +14,16 @@ interface SettingsFile {
   showFollows?: boolean;
   blobsStorageLimit?: number;
   allowCheckingNewVersion?: boolean;
+  enableFirewall?: boolean;
 }
 
 function writeSync(data: SettingsFile): void {
   if (!process.env.SSB_DIR) {
     throw new Error('writeSync needs the SSB_DIR env var');
   }
-  if (!fs.existsSync(process.env.SSB_DIR)) mkdirp.sync(process.env.SSB_DIR);
+  if (!fs.existsSync(process.env.SSB_DIR)) {
+    mkdirp.sync(process.env.SSB_DIR);
+  }
 
   const filePath = path.join(process.env.SSB_DIR, FILENAME);
   try {
@@ -35,7 +38,9 @@ function readSync(): SettingsFile & {detailedLogs?: boolean} {
   if (!process.env.SSB_DIR) {
     throw new Error('readSync needs the SSB_DIR env var');
   }
-  if (!fs.existsSync(process.env.SSB_DIR)) mkdirp.sync(process.env.SSB_DIR);
+  if (!fs.existsSync(process.env.SSB_DIR)) {
+    mkdirp.sync(process.env.SSB_DIR);
+  }
 
   const filePath = path.join(process.env.SSB_DIR, FILENAME);
   let settings: ReturnType<typeof readSync>;
@@ -44,7 +49,9 @@ function readSync(): SettingsFile & {detailedLogs?: boolean} {
     const content = fs.readFileSync(filePath, {encoding: 'ascii'});
     settings = JSON.parse(content);
   } catch (err) {
-    if (err.code !== 'ENOENT') console.error(err);
+    if (err.code !== 'ENOENT') {
+      console.error(err);
+    }
     settings = {};
   }
 
@@ -60,7 +67,9 @@ function writeDetailedLogs(detailedLogs: boolean) {
   if (!process.env.SSB_DIR) {
     throw new Error('writeSync needs the SSB_DIR env var');
   }
-  if (!fs.existsSync(process.env.SSB_DIR)) mkdirp.sync(process.env.SSB_DIR);
+  if (!fs.existsSync(process.env.SSB_DIR)) {
+    mkdirp.sync(process.env.SSB_DIR);
+  }
   const filePath = path.join(process.env.SSB_DIR, DETAILED_LOGS);
   try {
     if (detailedLogs) {
@@ -69,7 +78,9 @@ function writeDetailedLogs(detailedLogs: boolean) {
       fs.unlinkSync(filePath);
     }
   } catch (err) {
-    if (err.code !== 'ENOENT') console.error(err);
+    if (err.code !== 'ENOENT') {
+      console.error(err);
+    }
   }
 }
 
@@ -90,6 +101,7 @@ export = {
     updateHops: 'sync',
     updateBlobsPurge: 'sync',
     updateShowFollows: 'sync',
+    updateEnableFirewall: 'sync',
     updateDetailedLogs: 'sync',
     updateAllowCheckingNewVersion: 'sync',
   },
@@ -115,6 +127,12 @@ export = {
       );
     }
 
+    if (!ssb.connFirewall) {
+      throw new Error(
+        '"settingsUtils" is missing required plugin "ssb-conn-firewall"',
+      );
+    }
+
     // TODO: this logic could be moved to the frontend, and the storage of
     // the settings could be put in React Native's async-storage, as long as
     // we have a "global component" in cycle-native-navigation
@@ -136,6 +154,13 @@ export = {
       updateShowFollows(showFollows: boolean) {
         // TODO: like above, this could also be moved to the frontend
         updateField('showFollows', showFollows);
+      },
+
+      updateEnableFirewall(enableFirewall: boolean) {
+        ssb.connFirewall.reconfigure({
+          rejectUnknown: enableFirewall,
+        });
+        updateField('enableFirewall', enableFirewall);
       },
 
       updateBlobsPurge(storageLimit: number) {

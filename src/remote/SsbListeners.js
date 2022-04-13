@@ -13,7 +13,7 @@ export const populateListeners = ref => {
   feedId = ref.feedId;
   updatesPeers = [feedId, ...ref.relations[0], ...ref.relations[1]];
   feed = ref.feed;
-  console.log('populate -> feed & updatesPeers');
+  console.log('feed reduced');
 };
 
 export const checkAddon = active => {
