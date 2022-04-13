@@ -35,9 +35,8 @@
 
 import React, {useCallback, useMemo} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useDialog, useStyle} from 'metalife-base';
+import {ethNumberFixed, NormalDialog, useDialog, useStyle} from 'metalife-base';
 import Constants from '../../../../shared/Constants';
-import {ethNumberFixed} from '../../../../shared/numberUtils';
 import {getPhotonTokenSymbol, settleChannelDialog} from '../../PhotonUtils';
 import {useNavigation} from '@react-navigation/native';
 import {photonCloseChannel, photonWithDraw} from 'react-native-photon';
@@ -52,14 +51,62 @@ const PhotonListItemView = ({data}) => {
     navigate('SupplementaryBalance', {channelData: data});
   }, [data, navigate]);
 
-  const closeChannel = useCallback(() => {
+  const closeFun = useCallback(() => {
     photonCloseChannel({
       channelIdentifierHashStr: data.channel_identifier + '',
       isForced: true,
-    }).then(res => {
-      console.log('photonCloseChannel::res::', res);
-    });
-  }, [data.channel_identifier]);
+    })
+      .then(res => {
+        const resJson = JSON.parse(res);
+        if (resJson.error_code === 0) {
+          //  TODO updateChannelList 刷新列表 跳转到
+          navigate('PhotonTransactionRecord');
+        } else if (resJson.error_code === 2000) {
+          Toast.show('Insufficient balance to pay for gas');
+        } else {
+          //needForced
+          // dialog.show(
+          //   <NormalDialog
+          //     title={'Settle the channel?'}
+          //     content={
+          //       'Cannot withdraw cash normally, whether to close the channel for cash withdrawal?'
+          //     }
+          //     confirm={closeChannel}
+          //   />,
+          // );
+          //  非强制直接弹toast即可
+          Toast.show(resJson.error_message);
+        }
+      })
+      .catch(e => {
+        console.log('closeChannel e::', e);
+      });
+  }, [data.channel_identifier, navigate]);
+
+  const closeChannel = useCallback(
+    ({failReason = ''}) => {
+      dialog.show(
+        <NormalDialog
+          title={'Forced close the channel?'}
+          content={
+            <>
+              <Text style={styles.contentText}>
+                * Forced to close the channel requires approximately Gas:
+                0.002SMT, which takes approximately one week to settle.
+              </Text>
+              {!!failReason && (
+                <Text style={styles.contentText}>
+                  * Failure info: {failReason}, please try again later.
+                </Text>
+              )}
+            </>
+          }
+          onConfirm={closeFun}
+        />,
+      );
+    },
+    [closeFun, dialog, styles.contentText],
+  );
 
   const settleAction = useCallback(() => {
     settleChannelDialog(dialog, data.channel_identifier + '');
@@ -79,7 +126,7 @@ const PhotonListItemView = ({data}) => {
         Toast.show('Insufficient balance to pay for gas');
       } else {
         console.log('error::::init::::');
-        closeChannel();
+        closeChannel({failReason: resJson.error_message});
       }
       console.log('photonWithDraw res:', res);
     });
@@ -264,6 +311,13 @@ const createSty = theme =>
     forceCloseText: {
       fontSize: 14,
       color: theme.primary,
+    },
+    contentText: {
+      fontSize: 15,
+      color: '#8E8E92',
+      lineHeight: 18,
+      marginTop: 20,
+      alignSelf: 'flex-start',
     },
   });
 export default PhotonListItemView;

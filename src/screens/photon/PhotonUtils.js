@@ -27,6 +27,11 @@ export function getPhotonTokenSymbol(photonTokenAddress = '') {
   return tokenSymbol;
 }
 
+/**
+ *
+ * @param dialog
+ * @param channelIdentifier
+ */
 export function settleChannelDialog(dialog, channelIdentifier) {
   dialog.show(
     <NormalDialog
@@ -34,7 +39,7 @@ export function settleChannelDialog(dialog, channelIdentifier) {
       content={
         '*Settle channel consumes Gas：approximately 0.002 SMT,Because it is on chain transaction, it takes a certain amount of time.'
       }
-      confirm={() => {
+      onConfirm={() => {
         photonSettleChannel(channelIdentifier)
           .then(res => {
             const resJson = JSON.parse(res);

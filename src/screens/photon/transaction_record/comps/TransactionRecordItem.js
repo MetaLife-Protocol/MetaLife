@@ -6,27 +6,95 @@
  * @desc:
  */
 
-import React, {useEffect} from 'react';
+import React, {useMemo} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useStyle} from 'metalife-base';
+import {ethNumberFixed, formatDate, useStyle, useTheme} from 'metalife-base';
 import Constants from '../../../../shared/Constants';
 
-const TransactionRecordItem = () => {
-  const styles = useStyle(createSty);
+const TransactionRecordItem = ({data}) => {
+  const styles = useStyle(createSty),
+    theme = useTheme();
 
-  function testFun() {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('ok');
-      }, 1000);
-    });
-  }
+  const [amount, stateDisplay, StateColor] = useMemo(() => {
+    let amount = '',
+      stateDisplay = '',
+      StateColor;
+    switch (data.type) {
+      case 'ChannelDeposit':
+      case 'ApproveDeposit':
+        amount = data.tx_params.amount;
+        if (!data.tx_params.settle_timeout) {
+          //补充
+          if (data.tx_status === 'pending') {
+            stateDisplay = 'Depositing'; //补充中
+          } else if (data.tx_status === 'failed') {
+            stateDisplay = 'Deposit Failed'; //  补充失败
+            StateColor = theme.red;
+          } else {
+            stateDisplay = 'Deposit Success';
+          }
+        } else {
+          //创建
+          if (data.tx_status === 'pending') {
+            stateDisplay = 'Creating';
+          } else if (data.tx_status === 'failed') {
+            stateDisplay = 'Create Failed';
+            StateColor = theme.red;
+          } else {
+            stateDisplay = 'Create Success';
+          }
+        }
+        break;
+      case 'Withdraw':
+        //TODO ,不能确定是在根目录还是tx_params下
+        amount = data.tx_params.p1_balance;
+        if (data.tx_status === 'pending') {
+          stateDisplay = 'Withdrawing';
+        } else if (data.tx_status === 'failed') {
+          stateDisplay = 'Withdraw Failed';
+        } else {
+          stateDisplay = 'Withdraw Success';
+        }
+        break;
+      case 'ChannelClose':
+        amount = data.tx_params.amount;
+        if (data.tx_status === 'pending') {
+          StateColor = theme.primary;
+          stateDisplay = 'shutdown';
+        } else if (data.tx_status === 'failed') {
+          StateColor = theme.red;
+          stateDisplay = 'Close Failed';
+        } else {
+          stateDisplay = 'Close Success';
+        }
+        break;
+      case 'ChannelSettle':
+        amount = data.tx_params.p1_balance;
+        if (data.tx_status === 'pending') {
+          StateColor = theme.primary;
+          stateDisplay = 'In Settlement';
+        } else if (data.tx_status === 'failed') {
+          StateColor = theme.red;
+          stateDisplay = 'Settle Failed';
+        } else {
+          stateDisplay = 'Settle Success';
+        }
+        break;
+      case 'CooperateSettle':
+        amount = data.tx_params.p1_balance;
+        if (data.tx_status === 'pending') {
+          stateDisplay = 'Closing';
+        } else if (data.tx_status === 'failed') {
+          StateColor = theme.red;
+          stateDisplay = 'Close Failed';
+        } else {
+          stateDisplay = 'Close Success';
+        }
+        break;
+    }
 
-  useEffect(() => {
-    // testFun().then(res => {
-    //   console.log(res);
-    // });
-  }, []);
+    return [amount, stateDisplay, StateColor];
+  }, [data, theme]);
 
   return (
     <View style={styles.container}>
@@ -40,11 +108,19 @@ const TransactionRecordItem = () => {
         <Text style={[styles.tabTitle, styles.thirdFlex]}>Time</Text>
       </View>
       <View style={[styles.valueContainer, styles.row]}>
-        <Text style={[styles.tabValue, styles.firstFlex]}>+180.0000 SMT</Text>
-        <Text style={[styles.tabValue, styles.secondFlex]}>Withdrawing</Text>
-        <Text style={[styles.tabValue, styles.thirdFlex]}>14:00 03/10</Text>
+        <Text style={[styles.tabValue, styles.firstFlex]}>
+          +{ethNumberFixed(amount ?? 0)} SMT
+        </Text>
+        <Text style={[styles.tabValue, styles.secondFlex, {color: StateColor}]}>
+          {stateDisplay}
+        </Text>
+        <Text style={[styles.tabValue, styles.thirdFlex]}>
+          {formatDate({time: data?.call_time ?? 0, format: 'hh:mm MM-DD'})}
+        </Text>
       </View>
-      <Text style={styles.address}>地址 0xA761A79a2048…229868BB123406</Text>
+      <Text style={styles.address} numberOfLines={1} ellipsizeMode={'middle'}>
+        Partner:{data?.tx_params?.partner_address ?? ''}
+      </Text>
     </View>
   );
 };

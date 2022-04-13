@@ -8,22 +8,27 @@
 import React from 'react';
 
 import {FlatList, StyleSheet} from 'react-native';
-import {PhotonSeparator, useStyle, useTheme} from 'metalife-base';
+import {EmptyView, PhotonSeparator, useStyle, useTheme} from 'metalife-base';
 import TransactionRecordItem from './comps/TransactionRecordItem';
+import {useContractCallTxQuery} from './hooks';
 
 const RecordSpectrum = () => {
   const styles = useStyle(createSty),
     theme = useTheme();
-
+  const [listData] = useContractCallTxQuery();
+  console.log('RecordSpectrum listData:::', listData);
   return (
     <FlatList
       style={styles.container}
-      data={[0, 1, 2, 3]}
-      renderItem={() => <TransactionRecordItem />}
+      data={listData}
+      renderItem={({item}) => <TransactionRecordItem data={item} />}
       ItemSeparatorComponent={() => (
-        <PhotonSeparator style={{backgroundColor: theme.c_F0F0F0_000000}} />
+        <PhotonSeparator
+          style={{backgroundColor: theme.c_F0F0F0_000000, marginVertical: 0}}
+        />
       )}
-      keyExtractor={(item, index) => `RecordPhoton${index}`}
+      keyExtractor={(item, index) => `RecordPhoton_${item.call_time}`}
+      ListEmptyComponent={<EmptyView />}
     />
   );
 };
@@ -32,7 +37,7 @@ const createSty = theme =>
     container: {
       flex: 1,
       backgroundColor: theme.c_FFFFFF_111717,
-      padding: 15,
+      paddingHorizontal: 15,
     },
   });
 export default RecordSpectrum;

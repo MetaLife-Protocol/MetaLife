@@ -17,12 +17,12 @@ const PhotonTransactionRecord = () => {
   return (
     <Tab.Navigator
       initialRouteName={'RecordPhoton'}
-      lazy={true}
       backBehavior={'none'}
       // tabBar={(props) => {
       //   return <TopTabBar {...props} />;
       // }}
       sceneContainerStyle={{backgroundColor: 'transparent'}}
+      screenOptions={{lazy: true}}
       // style={{ backgroundColor: theme.colorBackground3, paddingTop: Constants.statusBarHeight }}
     >
       <Tab.Screen
