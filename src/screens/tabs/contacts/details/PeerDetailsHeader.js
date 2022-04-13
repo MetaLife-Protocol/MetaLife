@@ -77,26 +77,20 @@ const PeerDetailsHeader = ({
       <View style={[row, flex1, justifySpaceAround]}>
         <Pressable
           onPress={() =>
-            peerListHandler(
-              'following by ' + selfFeedId.substring(0, 6),
-              following,
-            )
+            peerListHandler('following by ' + feedId.substring(0, 6), following)
           }>
           <Text style={[desc]}>following:{following.length}</Text>
         </Pressable>
         <Pressable
           onPress={() =>
-            peerListHandler(
-              'follower of ' + selfFeedId.substring(0, 6),
-              follower,
-            )
+            peerListHandler('follower of ' + feedId.substring(0, 6), follower)
           }>
           <Text style={[desc]}>follower:{follower.length}</Text>
         </Pressable>
         <Pressable
           onPress={() =>
             peerListHandler(
-              'Mutual friends with ' + selfFeedId.substring(0, 6),
+              'Mutual friends with ' + feedId.substring(0, 6),
               mutual,
             )
           }>
