@@ -13,7 +13,7 @@ import {devToolsEnhancer} from 'redux-devtools-extension';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['feed', 'public', 'private', 'vote', 'info'],
+  blacklist: ['public', 'private'],
 };
 const persistedReducer = persistReducer(persistConfig, reducer);
 

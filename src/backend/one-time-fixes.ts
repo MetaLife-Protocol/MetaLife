@@ -6,6 +6,7 @@ import path = require('path');
 import fs = require('fs');
 import util = require('util');
 const rimraf = require('rimraf');
+const mkdirp = require('mkdirp');
 const BIPF = require('bipf');
 const defaults = require('ssb-db2/defaults');
 const AAOL = require('async-append-only-log');
@@ -36,12 +37,14 @@ async function deleteDuplicateRecordsOnLog() {
   const deletables = new Set<number>();
 
   // Find deletables
-  await new Promise<void>((resolve) => {
+  await new Promise<void>(resolve => {
     log.stream({gt: -1}).pipe({
       paused: false,
       write: function (record: {value: Buffer | null; offset: number}) {
         const buffer = record.value;
-        if (!buffer) return;
+        if (!buffer) {
+          return;
+        }
         const pKey = BIPF.seekKey(buffer, 0, B_KEY) as number;
         const shortKey = BIPF.decode(buffer, pKey).slice(1, 33) as string;
         if (existing.has(shortKey)) {
@@ -63,6 +66,27 @@ async function deleteDuplicateRecordsOnLog() {
 
   existing.clear();
   deletables.clear();
+}
+
+function moveJitIndexes() {
+  const files = fs.readdirSync(defaults.indexesPath(SSB_DIR));
+  for (const file of files) {
+    if (file === 'canDecrypt.index') {
+      continue;
+    } // not a jitdb index
+    if (file === 'encrypted.index') {
+      continue;
+    } // not a jitdb index
+    if (
+      file.endsWith('.index') ||
+      file.endsWith('.32prefix') ||
+      file.endsWith('.32prefixmap')
+    ) {
+      const origin = path.join(defaults.indexesPath(SSB_DIR), file);
+      const destination = path.join(defaults.jitIndexesPath(SSB_DIR), file);
+      fs.renameSync(origin, destination);
+    }
+  }
 }
 
 /**
@@ -111,6 +135,12 @@ async function oneTimeFixes() {
   if (!fs.existsSync(ISSUE_1707)) {
     rimraf.sync(defaults.indexesPath(SSB_DIR));
     fs.closeSync(fs.openSync(ISSUE_1707, 'w'));
+  }
+
+  // https://github.com/ssb-ngi-pointer/ssb-db2/blob/master/CHANGELOG.md#400
+  if (!fs.existsSync(defaults.jitIndexesPath(SSB_DIR))) {
+    mkdirp.sync(defaults.jitIndexesPath(SSB_DIR));
+    moveJitIndexes();
   }
 }
 
