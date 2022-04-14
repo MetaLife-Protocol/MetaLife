@@ -6,10 +6,10 @@ const initState = {};
 
 export const infoReducer = (state = initState, {type, payload}) => {
   switch (type) {
-    case 'addPeerInfo':
+    case 'addInfo':
       const [fId, info] = payload;
       return {...state, [fId]: info};
-    case 'clearPeerInfo':
+    case 'clearInfo':
       let s;
       payload && ((s = {...state}), delete s[payload]);
       return s || initState;

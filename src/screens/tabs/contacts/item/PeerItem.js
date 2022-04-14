@@ -18,7 +18,6 @@ import {useNavigation} from '@react-navigation/native';
 const PeerItem = ({
   item: [address, {type, key, state = ''}],
   infoDic,
-  addPeerInfo,
   relations: [friends, following],
 }) => {
   const isFollowing = friends.includes(key) || following.includes(key);
@@ -36,9 +35,7 @@ const PeerItem = ({
   }
 
   function followHandler(v) {
-    const fid = v.value.content.contact;
-    getProfile(fid, v => addPeerInfo([fid, v])),
-      Toast.show('Following: ' + fid.substring(0, 10));
+    Toast.show('Following: ' + v.value.content.contact.substring(0, 10));
   }
 
   return (
@@ -124,9 +121,7 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {
-    addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(PeerItem);

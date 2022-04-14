@@ -16,7 +16,7 @@ export const feedReducer = (state = initState, {type, payload}) => {
           ? [msg]
           : msgs,
       };
-    case 'removeFeed':
+    case 'clearFeed':
       const ns = {...state};
       delete ns[payload];
       return ns;

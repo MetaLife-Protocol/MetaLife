@@ -70,7 +70,8 @@ export const contactHandler = ({
           }),
         ))
       : blocking &&
-        (dispatch({type: 'removeFeed', payload: contact}),
+        (dispatch({type: 'clearInfo', payload: contact}),
+        dispatch({type: 'clearFeed', payload: contact}),
         dispatch({type: 'clearPublicMsg', payload: contact}),
         dispatch({type: 'clearComment', payload: contact}));
   }
@@ -82,9 +83,7 @@ export const aboutHandler = ({
     content: {about},
   },
 }) =>
-  getProfile(about, msg =>
-    dispatch({type: 'addPeerInfo', payload: [about, msg]}),
-  );
+  getProfile(about, msg => dispatch({type: 'addInfo', payload: [about, msg]}));
 
 export const voteHandler = ({value: {author, content}}) =>
   dispatch({type: 'setVote', payload: {author, content}});
