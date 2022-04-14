@@ -7,5 +7,8 @@ export const findRootKey = (feedId, msgs) => {
   return '';
 };
 
-export const voteFilter = msg =>
-  msg.filter(msg => msg.value.content.type === 'vote');
+export const timeForwardSorter = (a, b) =>
+  a.value.timestamp - b.value.timestamp;
+
+export const timeBackwardSorter = (a, b) =>
+  b.value.timestamp - a.value.timestamp;

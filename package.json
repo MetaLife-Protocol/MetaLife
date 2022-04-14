@@ -41,7 +41,6 @@
     "@react-navigation/native-stack": "^6.5.0",
     "buffer": "^6.0.3",
     "nodejs-mobile-react-native": "^0.7.0",
-    "pull-stream": "^3.6.14",
     "react": "17.0.2",
     "react-native": "0.67.3",
     "react-native-i18n": "^2.0.15",

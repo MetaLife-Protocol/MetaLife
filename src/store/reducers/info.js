@@ -9,6 +9,10 @@ export const infoReducer = (state = initState, {type, payload}) => {
     case 'addPeerInfo':
       const [fId, info] = payload;
       return {...state, [fId]: info};
+    case 'clearPeerInfo':
+      let s;
+      payload && ((s = {...state}), delete s[payload]);
+      return s || initState;
     default:
       return state;
   }

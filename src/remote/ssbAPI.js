@@ -7,6 +7,7 @@ import {
   migrationProgress,
   profileFeed,
 } from './ssbOP';
+import {through} from 'pull-stream/throughs';
 
 /*************************** core of retrieve loop ***************************/
 const trainProfileFeed = (fId, existSequence, cb) => {
@@ -47,7 +48,9 @@ const trainProfileFeed = (fId, existSequence, cb) => {
   function loadPrevious(err, rMsgs) {
     if (err) {
       const {previous} = msgs[msgs.length - 1].value;
-      return loadMsg(previous, true, loadPrevious);
+      return loadMsg(previous, true, (e, r) =>
+        e ? console.error(`Broken feed: ${fId}`) : loadPrevious(e, r),
+      );
     }
     const {
         messages: [msg],
