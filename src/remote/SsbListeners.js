@@ -23,6 +23,17 @@ export const checkAddon = active => {
   );
 };
 
+/******** app state listeners ********/
+export const appStateChangeHandler = state => {
+  switch (state) {
+    case 'active':
+      checkAddon('active');
+      break;
+    case 'inactive':
+      break;
+  }
+};
+
 /******** archive msg listeners ********/
 export const publicUpdateHandler = key =>
   loadMsg(key, false, (err, rMsgs) => {
@@ -95,20 +106,10 @@ export const postHandler = msg => {
     },
   } = msg;
 
-  recps ||
-    dispatch({
-      type: branch ? 'addComment' : 'addPublicMsg',
-      payload: msg,
-    });
-};
-
-/******** app state listeners ********/
-export const appStateChangeHandler = state => {
-  switch (state) {
-    case 'active':
-      checkAddon('active');
-      break;
-    case 'inactive':
-      break;
-  }
+  recps
+    ? console.log(msg)
+    : dispatch({
+        type: branch ? 'addComment' : 'addPublicMsg',
+        payload: msg,
+      });
 };
