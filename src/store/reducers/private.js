@@ -13,7 +13,9 @@ export const privateReducer = (state = initState, {type, payload}) => {
         [messages[0].key]: messages,
       };
     case 'clearPrivateMsg':
-      return initState;
+      let s;
+      payload && ((s = {...state}), delete s[payload]);
+      return s || initState;
     default:
       return state;
   }

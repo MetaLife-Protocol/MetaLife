@@ -50,7 +50,7 @@ export const privateUpdateHandler = key =>
   loadMsg(
     key,
     true,
-    (err, msg) => err || dispatch({type: 'setPrivateMsg', payload: msg}),
+    (err, msgs) => err || dispatch({type: 'setPrivateMsg', payload: msgs}),
   );
 
 /******** executable msg listeners ********/
