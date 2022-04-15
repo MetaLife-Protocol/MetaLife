@@ -3,10 +3,10 @@ import {FlatList, SafeAreaView} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ItemAgent from './home/ItemAgent';
-import {initializeHandlers} from '../../remote/SsbHandlers';
+import {initializeHandlers} from '../../remote/SsbListeners';
 import {startSSB} from '../../remote/starter';
 import {useDispatch} from 'react-redux';
-import {checkAddon, populateListeners} from '../../remote/SsbListeners';
+import {checkAddon, populateHandlers} from '../../remote/SsbHandlers';
 
 const Home = ({verbose, feedId, feed, relations, publicMsg}) => {
   const {flex1} = SchemaStyles();
@@ -19,7 +19,7 @@ const Home = ({verbose, feedId, feed, relations, publicMsg}) => {
   });
 
   useMemo(
-    () => populateListeners({dispatch, feedId, feed, relations}),
+    () => populateHandlers({dispatch, feedId, feed, relations}),
     [feedId, feed],
   );
 
