@@ -25,7 +25,7 @@ if (fs.existsSync(path.join(process.env.SSB_DIR, 'DETAILED_LOGS'))) {
 }
 
 // Report JS backend crashes to Java, and in turn, to ACRA
-process.on('unhandledRejection', reason => {
+process.on('unhandledRejection', (reason) => {
   console.error(reason);
   rnBridge.channel.post('exception', reason);
   setTimeout(() => {

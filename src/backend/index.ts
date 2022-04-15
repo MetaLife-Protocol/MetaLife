@@ -48,7 +48,7 @@ if (process.env.MANYVERSE_PLATFORM === 'mobile') {
 }
 
 // Setup initial communication with the frontend, to create or restore identity
-channel.addListener('identity', request => {
+channel.addListener('identity', (request) => {
   let response: string;
   if (request === 'CREATE') {
     startSSB(true);
@@ -59,9 +59,7 @@ channel.addListener('identity', request => {
   } else if (request.startsWith('RESTORE:')) {
     const words = request.split('RESTORE: ')[1].trim();
     response = restore(words);
-    if (response === 'IDENTITY_READY') {
-      startSSB(false);
-    }
+    if (response === 'IDENTITY_READY') startSSB(false);
   } else if (request === 'MIGRATE') {
     migrate(() => startSSB(false));
     response = 'IDENTITY_READY';
