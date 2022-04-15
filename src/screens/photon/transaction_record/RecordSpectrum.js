@@ -23,9 +23,7 @@ const RecordSpectrum = () => {
       data={listData}
       renderItem={({item}) => <TransactionRecordItem data={item} />}
       ItemSeparatorComponent={() => (
-        <PhotonSeparator
-          style={{backgroundColor: theme.c_F0F0F0_000000, marginVertical: 0}}
-        />
+        <PhotonSeparator style={{backgroundColor: theme.c_F0F0F0_000000}} />
       )}
       keyExtractor={(item, index) => `RecordPhoton_${item.call_time}`}
       ListEmptyComponent={<EmptyView />}

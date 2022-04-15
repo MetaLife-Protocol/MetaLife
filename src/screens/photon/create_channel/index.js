@@ -108,7 +108,7 @@ const CreateChannel = ({}) => {
           //TODO 昵称需要本地维护
           createChannel(address, amount).then(res => {
             const resJson = JSON.parse(res);
-            console.log('res::', resJson);
+            console.log('createChannel res::', resJson);
             if (resJson.error_code == 0) {
               Toast.show('create channel success');
             } else {

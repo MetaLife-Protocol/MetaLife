@@ -5,39 +5,49 @@
  * @Date:2022-03-28
  * @desc:
  */
-import React, {useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {EmptyView, PhotonSeparator, useStyle, useTheme} from 'metalife-base';
-import TransactionRecordItem from './comps/TransactionRecordItem';
-import {getSentTransfers} from 'react-native-photon';
-import Toast from 'react-native-tiny-toast';
+import {useRecordPhotonData} from './hooks';
+import RecordItem from './comps/RecordItem';
 
 const RecordPhoton = () => {
   const styles = useStyle(createSty),
     theme = useTheme();
-  const [listData, setListData] = useState([]);
+  const listData = useRecordPhotonData();
 
-  useEffect(() => {
-    getSentTransfers()
-      .then(res => {
-        console.log('getSentTransfers res::', JSON.parse(res));
-        const resJson = JSON.parse(res);
-        if (resJson.error_code === 0) {
-          setListData(resJson.data);
-        } else {
-          Toast.show(resJson.error_message);
-        }
-      })
-      .catch(e => {
-        Toast.show(e.toString());
-      });
+  const stateDisplay = useCallback(item => {
+    let state;
+    switch (item.status) {
+      case 3:
+        state = 'Transfer Success';
+        break;
+      case 4:
+        state = 'Transfer Cancel';
+        break;
+      case 5:
+        state = 'Transfer Failed';
+        break;
+      default:
+        state = 'Transferring';
+        break;
+    }
+    return state;
   }, []);
 
   return (
     <FlatList
       style={styles.container}
       data={listData}
-      renderItem={() => <TransactionRecordItem data={null} />}
+      renderItem={({item, index}) => (
+        <RecordItem
+          address={item.address}
+          amount={item.type === 'send' ? item.amount * -1 : item.amount}
+          time={item.time}
+          stateDisplay={stateDisplay(item)}
+          StateColor={undefined}
+        />
+      )}
       ItemSeparatorComponent={() => (
         <PhotonSeparator style={{backgroundColor: theme.c_F0F0F0_000000}} />
       )}
