@@ -6,95 +6,113 @@
  * @Project:MetaLife
  */
 import React, {useCallback, useRef} from 'react';
-import {SafeAreaView, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import {loadChannelList, startPhotonServer} from 'react-native-photon';
-import {useDialog} from 'metalife-base';
+import {useStyle} from 'metalife-base';
+import {useRoute} from '@react-navigation/native';
+import RNFS from 'react-native-fs';
+import {saveImg} from '../../../utils';
+import Clipboard from '@react-native-clipboard/clipboard';
+import Toast from 'react-native-tiny-toast';
 
-const ReceivingCode = ({}) => {
+const ReceivingCode = () => {
+  const {token} = useRoute().params ?? {};
+  console.log('token::', token);
+
+  const styles = useStyle(styleFun);
   const svg = useRef();
-  const dialog = useDialog();
 
   let logoFromFile = require('../../../assets/image/contacts/nft_icon.png');
 
   const saveQrToDisk = useCallback(() => {
-    // dialog.show('custom', <Text style={{color: 'red'}}>test</Text>);
-    // dialog.show(
-    //   <ProfileView
-    //     value={'testValue'}
-    //     holderText={'testHolder'}
-    //     submitHandler={v => {
-    //       // dialog.dismiss();
-    //       console.log('submitHandler::', v);
-    //     }}
-    //   />,
-    // );
-
-    startPhotonServer({
-      privateKey:
-        '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
-      ethRPCEndPoint: '',
-      // ethRPCEndPoint: 'https://jsonapi1.smartmesh.cn',
-    });
-
-    // console.log('svg.current::', svg.current);
-    // svg.current &&
-    //   svg.current.toDataURL(data => {
-    //     RNFS.writeFile(
-    //       RNFS.CachesDirectoryPath + '/some-name.png',
-    //       data,
-    //       'base64',
-    //     )
-    //       .then(success => {
-    //         // console.log('url:::', RNFS.CachesDirectoryPath + '/some-name.png');
-    //         //保存图片
-    //         saveImg(RNFS.CachesDirectoryPath + '/some-name.png');
-    //       })
-    //       .then(() => {
-    //         // this.setState({busy: false, imageSaved: true});
-    //         // ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
-    //       });
-    //   });
+    console.log('svg.current::', svg.current);
+    svg.current &&
+      svg.current.toDataURL(data => {
+        RNFS.writeFile(
+          RNFS.CachesDirectoryPath + '/some-name.png',
+          data,
+          'base64',
+        ).then(success => {
+          // console.log('url:::', RNFS.CachesDirectoryPath + '/some-name.png');
+          //保存图片
+          saveImg(RNFS.CachesDirectoryPath + '/some-name.png');
+        });
+      });
   }, []);
 
-  const getChannelList = useCallback(() => {
-    loadChannelList();
-  }, []);
+  const copyFunc = useCallback(() => {
+    Clipboard.setString(token);
+    Toast.show('Copy Success');
+  }, [token]);
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <QRCode
-        getRef={r => {
-          svg.current = r;
-        }}
-        size={220}
-        value="Just some string value"
-        // logo={{uri: base64Logo}}
-        logo={logoFromFile}
-        logoSize={50}
-        logoBackgroundColor="transparent"
-      />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.contentContainer}>
+        <View style={styles.qrCodeContainer}>
+          <QRCode
+            getRef={r => {
+              svg.current = r;
+            }}
+            size={220}
+            value={token}
+            logo={logoFromFile}
+            logoSize={50}
+            logoBackgroundColor="transparent"
+          />
+        </View>
 
-      <TouchableOpacity
-        onPress={saveQrToDisk}
-        style={{backgroundColor: 'yellow', marginTop: 40}}>
-        <Text>start photon</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={getChannelList}
-        style={{backgroundColor: 'yellow', marginTop: 15}}>
-        <Text>getChannelList</Text>
-      </TouchableOpacity>
+        <TouchableOpacity onPress={copyFunc} style={styles.buttonContainer}>
+          <Text style={styles.buttonText}>Copy address</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={saveQrToDisk} style={styles.buttonContainer}>
+          <Text style={styles.buttonText}>Save Picture</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
-const styles = StyleSheet.create({
-  container: {},
-});
+const styleFun = theme =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.primary,
+    },
+    contentContainer: {
+      width: 345,
+      marginHorizontal: 15,
+      alignItems: 'center',
+      backgroundColor: theme.c_FFFFFF_111717,
+      justifyContent: 'center',
+      paddingBottom: 50,
+      paddingTop: 55,
+      borderRadius: 12,
+    },
+    qrCodeContainer: {
+      padding: 15,
+      borderRadius: 12,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: '#4E586E',
+    },
+    buttonContainer: {
+      width: 260,
+      height: 44,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme.c_F8F9FD_000000,
+      marginTop: 20,
+      borderRadius: 20,
+    },
+    buttonText: {
+      fontSize: 16,
+      color: theme.c_000000_FFFFFF,
+    },
+  });
 export default ReceivingCode;

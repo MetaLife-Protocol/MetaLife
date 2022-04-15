@@ -26,7 +26,10 @@ const PhotonAccountInfoCard = ({style, balance}) => {
       return (
         <View style={[styles.itemContainer, style]}>
           <Text style={styles.itemTitle}>{title}</Text>
-          <Text style={[styles.itemValue]}>
+          <Text
+            style={[styles.itemValue]}
+            numberOfLines={1}
+            ellipsizeMode={'middle'}>
             {values}
             {!!showUnit && <Text style={styles.unit}>SMT</Text>}
           </Text>
@@ -39,7 +42,11 @@ const PhotonAccountInfoCard = ({style, balance}) => {
   return (
     <View style={[styles.container, style]}>
       {/*storableWallet.getPublicKey()*/}
-      {itemView('Aries', 'TODO wallet 0xcC5D33d…0805810', false)}
+      {itemView(
+        'Aries',
+        'TODO wallet 0x096f7368bc01f438f8de8775dafd71a566413c6f',
+        false,
+      )}
       {itemView(
         'On-chain balance',
         ethNumberFixed(balance?.balance_on_chain),
@@ -68,7 +75,7 @@ const createSty = theme =>
       justifyContent: 'space-between',
     },
     itemTitle: {fontSize: 15, color: theme.primary},
-    itemValue: {fontSize: 15, color: theme.c_000000_FFFFFF},
+    itemValue: {fontSize: 15, color: theme.c_000000_FFFFFF, marginLeft: 15},
     unit: {color: '#8E8E92'},
     marginTop20: {marginTop: 20},
   });

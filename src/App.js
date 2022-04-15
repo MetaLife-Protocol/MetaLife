@@ -26,6 +26,7 @@ import PhotonTransactionRecord from './screens/photon/transaction_record';
 import SupplementaryBalance from './screens/photon/supplementary_balance';
 import PhotonAddressContact from './screens/photon/address_contact';
 import PhotonTokenOption from './screens/photon/token_option';
+import {View} from 'react-native';
 
 const App = () => {
   const {theme, BG} = SchemaStyles();
@@ -103,7 +104,18 @@ const App = () => {
         />
         <Stack.Screen
           name="ReceivingCode"
-          options={{headerTitle: 'ReceivingCode'}}
+          options={{
+            headerTitle: 'ReceivingCode',
+            headerBackground: () => (
+              <View
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: '#29DAD7',
+                }}
+              />
+            ),
+          }}
           component={ReceivingCode}
         />
         <Stack.Screen

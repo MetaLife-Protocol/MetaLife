@@ -19,10 +19,12 @@ export function saveImg(img) {
   const promise = CameraRoll.saveToCameraRoll(img);
   promise
     .then(function (result) {
-      alert('保存成功！地址如下：\n' + result);
+      // alert('保存成功！地址如下：\n' + result);
+      Toast.show('Save Success');
     })
     .catch(function (error) {
-      alert('保存失败！\n' + error);
+      // alert('保存失败！\n' + error);
+      Toast.show('Save Fail');
     });
 }
 
