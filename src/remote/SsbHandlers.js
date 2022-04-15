@@ -74,7 +74,12 @@ export const contactHandler = ({
 }) => {
   if (author === feedId) {
     following || !blocking
-      ? (console.log(`unblocking ${contact.substring(1, 6)} addon ->`),
+      ? (console.log(
+          `${following ? 'following' : 'unblocking'} ${contact.substring(
+            1,
+            6,
+          )} addon ->`,
+        ),
         trainFeed(contact, feed, idFeed =>
           dispatch({
             type: 'appendFeed',
