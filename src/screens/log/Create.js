@@ -196,6 +196,7 @@ const Create = ({ name, setName }) => {
               secureTextEntry={focusedConfirm ? true : false}
               placeholderTextColor={textHolder}
               onChangeText={setConfirm}
+              maxLength={20}
             />
             <TouchableOpacity onPress={() => setfocusedConfirm(!focusedConfirm)}>
               <Image
@@ -210,6 +211,7 @@ const Create = ({ name, setName }) => {
               placeholder={'Password prompt (optional)'}
               placeholderTextColor={textHolder}
               onChangeText={setConfirm}
+              maxLength={20}
             />
           </View>
           <Text style={[{
