@@ -7,7 +7,6 @@ import {
   migrationProgress,
   profileFeed,
 } from './ssbOP';
-import {through} from 'pull-stream/throughs';
 
 /*************************** core of retrieve loop ***************************/
 const trainProfileFeed = (fId, existSequence, cb) => {

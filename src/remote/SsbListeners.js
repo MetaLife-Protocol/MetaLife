@@ -18,9 +18,10 @@ export const populateListeners = ref => {
 
 export const checkAddon = active => {
   console.log(active + ' -> ', 'updatesPeers: ', updatesPeers);
-  trainRangeFeed(updatesPeers, feed, idMsgs =>
-    dispatch({type: 'appendFeed', payload: batchMsgCB(idMsgs)}),
-  );
+  trainRangeFeed(updatesPeers, feed, idMsgs => {
+    const tIdMsgs = batchMsgCB(idMsgs);
+    tIdMsgs.msgs.length && dispatch({type: 'appendFeed', payload: tIdMsgs});
+  });
 };
 
 /******** app state listeners ********/
