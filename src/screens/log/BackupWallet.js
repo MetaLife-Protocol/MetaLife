@@ -1,35 +1,57 @@
-import React, { useState } from 'react';
-import { StatusBar, TextInput, View, StyleSheet, Text, Alert, Modal, Pressable } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StatusBar, TextInput, View, StyleSheet, Text, Alert, Modal, TouchableOpacity, Image } from 'react-native';
 import SchemaStyles, { colorsSchema } from '../../shared/SchemaStyles';
 import { connect } from 'react-redux/lib/exports';
 import RoundBtn from '../../shared/comps/RoundBtn';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const iconDic = {
+  Confirm_icon_default: require('../../assets/image/accountBtn/Confirm_icon_default.png'),
+  Confirm_icon_selected: require('../../assets/image/accountBtn/Confirm_icon_selected.png'),
+};
 
 const BackupWallet = ({ name, setName }) => {
   const { barStyle, BG, FG, flex1, input, text, marginTop10, modalBackground } = SchemaStyles(),
     { textHolder } = colorsSchema;
 
-  const [nick, setNick] = useState(''),
-    [pwd, setPwd] = useState(''),
+  const [pwd, setPwd] = useState(''),
     [confirm, setConfirm] = useState(''),
     { replace } = useNavigation();
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [confirmModal, setconfirmModal] = useState(false);
-  const [promptModal, setpromptModal] = useState(false);
+  const [focusedConfirm, setfocusedConfirm] = useState(true);
+
+  useEffect(() => {
+    _retrieveData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('Account');
+        if (value !== null) {
+          // We have data!!
+          const data = JSON.parse(value);
+          setPwd(data.password);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+    _retrieveData();
+    console.log("account data fetched");
+  }, []);
   
   const checkPassword = () => {
-    setModalVisible(!modalVisible);
-    setconfirmModal(!confirmModal);
-    replace('Backup Mnemonic');
-    // Alert.alert('Error', 'Incorrect password, please re-enter', [
-    //   {
-    //     text: 'OK',
-    //     onPress: () => reset(),
-    //     style: 'Okay',
-    //   },
-    // ]);
+    console.log(pwd, confirm);
+    if(pwd == confirm) {
+      replace('Backup Mnemonic');
+    } else {
+      Alert.alert('Error', 'Incorrect password, please re-enter', [
+      {
+        text: 'OK',
+        onPress: () => setConfirm(''),
+        style: 'Okay',
+      },
+    ]);
+    }
   }
 
   return (
@@ -90,11 +112,17 @@ const BackupWallet = ({ name, setName }) => {
                 <TextInput
                   style={[text, styles.inputText]}
                   placeholder={'Account Password'}
-                  secureTextEntry={true}
+                  secureTextEntry={focusedConfirm ? true : false}
                   placeholderTextColor={textHolder}
+                  value={confirm}
                   onChangeText={setConfirm}
                 />
-                <Text style={[text, styles.modalText]} onPress={() => setModalVisible(!modalVisible)}>X</Text>
+                <TouchableOpacity onPress={() => setfocusedConfirm(!focusedConfirm)}>
+                  <Image
+                    style={styles.icon}
+                    source={iconDic['Confirm_icon_' + (focusedConfirm ? 'selected' : 'default')]}
+                  />
+                </TouchableOpacity>
               </View>
               <Text style={[styles.modalTextDesc]}>To ensure safety of your balance,please do not disclose your privacy to others.</Text>
             </View>
@@ -204,6 +232,10 @@ const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: 'rgba(0,0,0,0.8)',
     zIndex: 1,
+  },
+  icon: {
+    width: 20,
+    height: 20,
   }
 });
 

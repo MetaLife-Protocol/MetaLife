@@ -34,7 +34,7 @@ const App = () => {
         />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Create" component={Create} />
+        <Stack.Screen name="Create Account" component={Create} />
         <Stack.Screen name="Backup Wallet" component={BackupWallet} />
         <Stack.Screen name="Backup Mnemonic" component={Backup} />
         <Stack.Screen
