@@ -6,7 +6,7 @@ import {getProfile, graph, loadMsg} from './ssbOP';
 import {batchMsgCB, checkMarkedMsgCB} from '../store/MsgCB';
 import {trainFeed, trainRangeFeed} from './ssbAPI';
 
-let dispatch, feedId, updatesPeers, feed;
+let dispatch, feedId, updatesPeers, feed, privateMsg;
 export const populateHandlers = store => {
   dispatch = store.dispatch;
   update(store);
@@ -17,10 +17,13 @@ export const populateHandlers = store => {
 
 function update(store) {
   const {
-    user: {feedId, relations},
+    user: {feedId: feedIdRef, relations},
     feed: feedRef,
+    private: privateRef,
   } = store.getState();
+  feedId = feedIdRef;
   feed = feedRef;
+  privateMsg = privateRef;
   updatesPeers = [feedId, ...relations[0], ...relations[1]];
   console.log('populated update');
 }
@@ -38,7 +41,7 @@ export const appStateHandler = state => {
 
 export const checkAddon = active => {
   console.log(active + ' -> addon checker peers: ', updatesPeers);
-  trainRangeFeed([...updatesPeers], feed, idMsgs => {
+  trainRangeFeed(updatesPeers, feed, idMsgs => {
     const tIdMsgs = batchMsgCB(idMsgs);
     tIdMsgs.msgs.length && dispatch({type: 'appendFeed', payload: tIdMsgs});
   });
@@ -112,13 +115,16 @@ export const voteHandler = ({value: {author, content}}) =>
 
 export const postHandler = msg => {
   const {
+    key,
     value: {
       content: {root, fork, branch, recps},
     },
   } = msg;
-
+  // privateMsg avoiding load repeat
   recps
-    ? recps.includes(feedId)
+    ? recps.includes(feedId) &&
+      !privateMsg[root || key] &&
+      ((privateMsg[root || key] = []), privateHandler(root || key))
     : dispatch({
         type: branch ? 'addComment' : 'addPublicMsg',
         payload: msg,

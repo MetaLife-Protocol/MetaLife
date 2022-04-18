@@ -73,7 +73,8 @@ export const trainFeed = (fId, feed, cb) =>
   );
 
 /****************** API: retrieve all of feed by special ids ******************/
-export const trainRangeFeed = (loopIds, feed, cb) => {
+export const trainRangeFeed = (ids, feed, cb) => {
+  const loopIds = [...ids];
   if (loopIds.length) {
     let fId = loopIds.shift();
     trainFeed(fId, feed, stepper);
