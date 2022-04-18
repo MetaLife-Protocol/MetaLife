@@ -24,7 +24,9 @@ const PhotonMoreActionsView = ({visible, onSelect}) => {
         style={styles.text}
         onPress={() => {
           onSelect();
-          navigate('Scan');
+          navigate('ReceivingCode', {
+            token: '0x096f7368bc01f438f8de8775dafd71a566413c6f',
+          });
         }}>
         QR code
       </Text>

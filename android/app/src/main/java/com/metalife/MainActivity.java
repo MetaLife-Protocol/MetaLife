@@ -3,6 +3,7 @@ package com.metalife;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -30,6 +31,11 @@ public class MainActivity extends ReactActivity {
         requestPermissions();
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(null);
+    }
+
 
     private static final int REQUEST_PERMISSION_CODE = 1;
 
@@ -48,12 +54,13 @@ public class MainActivity extends ReactActivity {
             final RxPermissions rxPermissions = new RxPermissions(this);
             rxPermissions
                     .request(
-//                            Manifest.permission.CAMERA,
-//                            Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.READ_PHONE_STATE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE
-//                            Manifest.permission.RECORD_AUDIO,
-//                            Manifest.permission.READ_CONTACTS
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+                            Manifest.permission.RECORD_AUDIO,
+                            Manifest.permission.READ_CONTACTS
                     ).subscribe();
         }
     }

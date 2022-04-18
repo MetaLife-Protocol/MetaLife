@@ -8,8 +8,10 @@
 
 import React, {useEffect, useRef} from 'react';
 import {Animated, View} from 'react-native';
+import {useTheme} from 'metalife-base';
 
 const CameraMarkerView = ({}) => {
+  const theme = useTheme();
   const animatedLine = useRef(new Animated.Value(0));
 
   const startAnimation = () => {
@@ -25,7 +27,7 @@ const CameraMarkerView = ({}) => {
   useEffect(() => {
     startAnimation();
     // eslint-disable-next-line
-	}, []);
+  }, []);
   return (
     <View style={{width: '100%', height: '100%', flexDirection: 'column'}}>
       <View style={{flex: 1, opacity: 0.7, backgroundColor: 'black'}} />
@@ -37,7 +39,7 @@ const CameraMarkerView = ({}) => {
               position: 'absolute',
               top: 0,
               left: 0,
-              backgroundColor: '#5793F1',
+              backgroundColor: theme.primary,
               width: 2,
               height: 10,
             }}
@@ -47,7 +49,7 @@ const CameraMarkerView = ({}) => {
               position: 'absolute',
               top: 0,
               left: 0,
-              backgroundColor: '#5793F1',
+              backgroundColor: theme.primary,
               width: 10,
               height: 2,
             }}
@@ -58,7 +60,7 @@ const CameraMarkerView = ({}) => {
               position: 'absolute',
               top: 0,
               right: 0,
-              backgroundColor: '#5793F1',
+              backgroundColor: theme.primary,
               width: 2,
               height: 10,
             }}
@@ -68,7 +70,7 @@ const CameraMarkerView = ({}) => {
               position: 'absolute',
               top: 0,
               right: 0,
-              backgroundColor: '#5793F1',
+              backgroundColor: theme.primary,
               width: 10,
               height: 2,
             }}
@@ -79,7 +81,7 @@ const CameraMarkerView = ({}) => {
               position: 'absolute',
               bottom: 0,
               left: 0,
-              backgroundColor: '#5793F1',
+              backgroundColor: theme.primary,
               width: 2,
               height: 10,
             }}
@@ -89,7 +91,7 @@ const CameraMarkerView = ({}) => {
               position: 'absolute',
               bottom: 0,
               left: 0,
-              backgroundColor: '#5793F1',
+              backgroundColor: theme.primary,
               width: 10,
               height: 2,
             }}
@@ -100,7 +102,7 @@ const CameraMarkerView = ({}) => {
               position: 'absolute',
               bottom: 0,
               right: 0,
-              backgroundColor: '#5793F1',
+              backgroundColor: theme.primary,
               width: 2,
               height: 10,
             }}
@@ -110,7 +112,7 @@ const CameraMarkerView = ({}) => {
               position: 'absolute',
               bottom: 0,
               right: 0,
-              backgroundColor: '#5793F1',
+              backgroundColor: theme.primary,
               width: 10,
               height: 2,
             }}
@@ -119,7 +121,7 @@ const CameraMarkerView = ({}) => {
             style={{
               width: '100%',
               height: 2,
-              backgroundColor: '#5793F1',
+              backgroundColor: theme.primary,
               transform: [{translateY: animatedLine.current}],
             }}
           />

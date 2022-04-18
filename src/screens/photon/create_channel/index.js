@@ -46,7 +46,7 @@ const CreateChannel = ({}) => {
           <Text style={styles.title}>Receiving account</Text>
           <Pressable
             onPress={() => {
-              navigate('Scan');
+              navigate('Scan', {onCallbackData: setAddress});
             }}>
             <Image
               source={require('../../../assets/image/photon/icon_scan.png')}
@@ -65,6 +65,7 @@ const CreateChannel = ({}) => {
           </Pressable>
         </View>
         <PureTextInput
+          defaultValue={address}
           onChangeText={setAddress}
           placeholder={'Type or paste address'}
           style={styles.marginTop10}
