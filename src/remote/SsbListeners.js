@@ -12,6 +12,7 @@ import {
   populateHandlers,
   postHandler,
   privateHandler,
+  pubHandler,
   publicHandler,
   voteHandler,
 } from './SsbHandlers';
@@ -27,6 +28,7 @@ export function initializeHandlers(store) {
   markMsgCBByType('about', aboutHandler);
   markMsgCBByType('post', postHandler);
   markMsgCBByType('vote', voteHandler);
+  markMsgCBByType('pub', pubHandler);
   /******** app state handlers ********/
   AppState.addEventListener('change', appStateHandler);
 }

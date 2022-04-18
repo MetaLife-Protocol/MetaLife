@@ -8,6 +8,7 @@ import {voteReducer} from './vote';
 import {contactReducer} from './contact';
 import {infoReducer} from './info';
 import {commentReducer} from './comment';
+import {pubReducer} from './pub';
 
 const reducer = combineReducers({
   cfg: cfgReducer,
@@ -17,6 +18,7 @@ const reducer = combineReducers({
   public: publicReducer,
   comment: commentReducer,
   private: privateReducer,
+  pubs: pubReducer,
   feed: feedReducer,
   vote: voteReducer,
 });

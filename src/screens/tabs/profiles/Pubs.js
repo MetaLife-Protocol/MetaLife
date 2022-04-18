@@ -3,7 +3,6 @@
  */
 import React, {useState} from 'react';
 import {
-  FlatList,
   Image,
   Keyboard,
   Pressable,
@@ -24,11 +23,9 @@ import {
 import Toast from 'react-native-tiny-toast';
 import {PlusBlack, PlusWhite} from '../../../shared/Icons';
 import ControllerItem from '../../../shared/comps/ControllerItem';
-import PeerItem from '../contacts/item/PeerItem';
 import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
-import RoundBtn from '../../../shared/comps/RoundBtn';
 
-const Pubs = ({darkMode, pubs, addPub}) => {
+const Pubs = ({darkMode, infoDic, pubs}) => {
   const {flex1, row, alignItemsCenter, text, marginTop10} = SchemaStyles(),
     {textHolder} = colorsSchema,
     {invite} = styles;
@@ -48,7 +45,6 @@ const Pubs = ({darkMode, pubs, addPub}) => {
         ) {
           tAddr.pop();
           const tarAddr = tAddr.join(':');
-          addPub(tarAddr);
           disconnectPeer(addr, () => persistentConnectPeer(tarAddr, {type}));
         }
       });
@@ -86,9 +82,19 @@ const Pubs = ({darkMode, pubs, addPub}) => {
           style={[marginTop10, {height: '100%'}]}
           title={'Your pubs'}
           separator={NormalSeparator}>
-          {pubs.map(pObj => (
-            <ControllerItem key={pObj} title={pObj.split(':').pop()} />
-          ))}
+          {pubs.map(
+            ({
+              timestamp,
+              content: {
+                address: {host, key},
+              },
+            }) => (
+              <ControllerItem
+                key={key}
+                title={(infoDic[key] && infoDic[key].name) || key}
+              />
+            ),
+          )}
         </Section>
       )}
     </SafeAreaView>
@@ -106,15 +112,14 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     darkMode: s.cfg.darkMode,
-    pubs: s.user.pubs,
+    infoDic: s.info,
+    pubs: s.pubs,
     stagedPeers: s.contact.stagedPeers,
   };
 };
 
 const mdp = d => {
-  return {
-    addPub: v => d({type: 'addPub', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(Pubs);

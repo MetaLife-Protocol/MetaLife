@@ -130,3 +130,9 @@ export const postHandler = msg => {
         payload: msg,
       });
 };
+
+export const pubHandler = msg =>
+  dispatch({
+    type: 'addPub',
+    payload: msg.value,
+  });
