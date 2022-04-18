@@ -7,7 +7,7 @@
  */
 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {useStyle} from 'metalife-base';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
@@ -25,63 +25,27 @@ const Scan = () => {
   const qrRef = useRef();
   const cameraRef = useRef();
 
-  // useEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <Pressable onPress={() => {}}>
-  //         <Image
-  //           source={require('../../../assets/image/photon/photon_more.png')}
-  //           style={styles.moreImg}
-  //         />
-  //       </Pressable>
-  //     ),
-  //   });
-  // }, [navigation, styles.moreImg]);
   useEffect(() => {
     navigation.setOptions({
-      // headerRight: () => (
-      //   <Pressable
-      //     onPress={() => {
-      //       console.log('this.camera:', this.camera);
-      //       cameraRef.current
-      //         .takePhoto({
-      //           flash: 'on',
-      //         })
-      //         .then(res => {
-      //           console.log('res::', res);
-      //         });
-      //     }}
-      //     style={{width: 60, height: 30, backgroundColor: 'yellow'}}>
-      //     <RNCamera
-      //       ref={cameraRef}
-      //       cameraProps={{
-      //         ref: ref => {
-      //           this.camera = ref;
-      //         },
-      //         photo: true,
-      //       }}
-      //       // onRead={async result => {
-      //       //   if (cameraRef.current) {
-      //       //     const options = {
-      //       //       quality: 0.9,
-      //       //       base64: true,
-      //       //       skipProcessing: true,
-      //       //     };
-      //       //     const data = await this.camera.takePictureAsync(options); // this is photo data with file uri and base64
-      //       //   }
-      //       // }}
-      //     />
-      //   </Pressable>
-      // ),
+      headerRight: () => (
+        <Pressable
+          onPress={() => {
+            const options = {quality: 0.9, base64: true, skipProcessing: true};
+            console.log('cameraRef.current:', cameraRef.current);
+            // cameraRef.current &&
+            //   cameraRef.current.takePictureAsync(options).then(res => {
+            //     console.log('camera photo res:', res);
+            //   });
+            // RNCamera.takePictureAsync();
+          }}>
+          <Image
+            source={require('../../../assets/image/icons/icon_scan_photo.png')}
+            style={styles.photoImg}
+          />
+        </Pressable>
+      ),
     });
-  }, [navigation, styles.moreImg]);
-
-  async function onResult(result) {
-    if (this.camera) {
-      const options = {quality: 0.9, base64: true, skipProcessing: true};
-      const data = await this.camera.takePictureAsync(options); // this is photo data with file uri and base64
-    }
-  }
+  }, [navigation, styles.photoImg]);
 
   const onQrCallBack = useCallback(
     res => {
@@ -103,6 +67,7 @@ const Scan = () => {
         customMarker={<CameraMarkerView />}
         fadeIn={false}
         cameraProps={{
+          ref: cameraRef,
           flashMode: flashMode
             ? RNCamera.Constants.FlashMode.torch
             : RNCamera.Constants.FlashMode.off,
@@ -126,6 +91,11 @@ const createSty = theme =>
   StyleSheet.create({
     container: {
       height: Constants.screenHeight,
+    },
+    photoImg: {
+      width: 20,
+      height: 19,
+      tintColor: 'white',
     },
   });
 export default Scan;

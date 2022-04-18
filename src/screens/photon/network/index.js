@@ -50,7 +50,7 @@ const PhotonNetwork = () => {
   useEffect(() => {
     getBalanceFromPhoton().then(res => {
       const jsonRes = JSON.parse(res);
-      // console.log('balance:::', jsonRes);
+      console.log('balance:::', jsonRes);
       if (jsonRes.error_code === 0) {
         const array = jsonRes.data;
         if (array && array.length) {

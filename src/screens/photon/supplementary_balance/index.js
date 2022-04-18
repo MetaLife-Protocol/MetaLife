@@ -20,7 +20,7 @@ import {depositChannelMethod} from 'react-native-photon';
 const SupplementaryBalance = () => {
   const styles = useStyle(createSty);
   const route = useRoute();
-  const {channelData} = route.params;
+  const {channelData} = route.params ?? {};
   // console.log('channelData::', channelData);
 
   const [amount, setAmount] = useState(''),
@@ -32,7 +32,7 @@ const SupplementaryBalance = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.pageContainer}>
         <Text style={styles.address} numberOfLines={1} ellipsizeMode={'middle'}>
-          {channelData.partner_address}
+          {channelData?.partner_address}
         </Text>
         <PhotonSeparator />
         <PureTextInput
@@ -53,8 +53,8 @@ const SupplementaryBalance = () => {
           title={'Create'}
           press={() => {
             depositChannelMethod({
-              photonTokenAddress: channelData.token_address,
-              partnerAddress: channelData.partner_address,
+              photonTokenAddress: channelData?.token_address,
+              partnerAddress: channelData?.partner_address,
               depositBalance: amount,
             })
               .then(res => {
