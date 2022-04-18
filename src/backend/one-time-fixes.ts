@@ -37,12 +37,14 @@ async function deleteDuplicateRecordsOnLog() {
   const deletables = new Set<number>();
 
   // Find deletables
-  await new Promise<void>((resolve) => {
+  await new Promise<void>(resolve => {
     log.stream({gt: -1}).pipe({
       paused: false,
       write: function (record: {value: Buffer | null; offset: number}) {
         const buffer = record.value;
-        if (!buffer) return;
+        if (!buffer) {
+          return;
+        }
         const pKey = BIPF.seekKey(buffer, 0, B_KEY) as number;
         const shortKey = BIPF.decode(buffer, pKey).slice(1, 33) as string;
         if (existing.has(shortKey)) {
@@ -69,8 +71,12 @@ async function deleteDuplicateRecordsOnLog() {
 function moveJitIndexes() {
   const files = fs.readdirSync(defaults.indexesPath(SSB_DIR));
   for (const file of files) {
-    if (file === 'canDecrypt.index') continue; // not a jitdb index
-    if (file === 'encrypted.index') continue; // not a jitdb index
+    if (file === 'canDecrypt.index') {
+      continue;
+    } // not a jitdb index
+    if (file === 'encrypted.index') {
+      continue;
+    } // not a jitdb index
     if (
       file.endsWith('.index') ||
       file.endsWith('.32prefix') ||
@@ -132,7 +138,10 @@ async function oneTimeFixes() {
   }
 
   // https://github.com/ssb-ngi-pointer/ssb-db2/blob/master/CHANGELOG.md#400
-  if (!fs.existsSync(defaults.jitIndexesPath(SSB_DIR))) {
+  if (
+    fs.existsSync(defaults.indexesPath(SSB_DIR)) &&
+    !fs.existsSync(defaults.jitIndexesPath(SSB_DIR))
+  ) {
     mkdirp.sync(defaults.jitIndexesPath(SSB_DIR));
     moveJitIndexes();
   }
