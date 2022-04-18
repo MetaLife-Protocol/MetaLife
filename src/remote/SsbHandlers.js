@@ -132,6 +132,7 @@ export const postHandler = msg => {
 };
 
 export const pubHandler = msg =>
+  msg.value.author === feedId &&
   dispatch({
     type: 'addPub',
     payload: msg.value,
