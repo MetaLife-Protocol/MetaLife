@@ -9,14 +9,16 @@ import {
   aboutHandler,
   appStateHandler,
   contactHandler,
+  populateHandlers,
   postHandler,
   privateHandler,
   publicHandler,
   voteHandler,
 } from './SsbHandlers';
 
-export function initializeHandlers() {
-  console.log('add ssb listeners');
+export function initializeHandlers(store) {
+  console.log('initialize ssb listeners');
+  populateHandlers(store);
   /******** archive msg handlers ********/
   addPublicUpdatesListener(publicHandler);
   addPrivateUpdatesListener(privateHandler);

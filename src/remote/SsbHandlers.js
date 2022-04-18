@@ -7,22 +7,23 @@ import {batchMsgCB, checkMarkedMsgCB} from '../store/MsgCB';
 import {trainFeed, trainRangeFeed} from './ssbAPI';
 
 let dispatch, feedId, updatesPeers, feed;
-
-export const populateHandlers = ref => {
-  dispatch = ref.dispatch;
-  feedId = ref.feedId;
-  updatesPeers = [feedId, ...ref.relations[0], ...ref.relations[1]];
-  feed = ref.feed;
-  console.log('feed reduced');
-};
-
-export const checkAddon = active => {
-  console.log(active + ' -> addon checker peers: ', updatesPeers);
-  trainRangeFeed(updatesPeers, feed, idMsgs => {
-    const tIdMsgs = batchMsgCB(idMsgs);
-    tIdMsgs.msgs.length && dispatch({type: 'appendFeed', payload: tIdMsgs});
+export const populateHandlers = store => {
+  dispatch = store.dispatch;
+  update(store);
+  store.subscribe(() => {
+    update(store);
   });
 };
+
+function update(store) {
+  const {
+    user: {feedId, relations},
+    feed: feedRef,
+  } = store.getState();
+  feed = feedRef;
+  updatesPeers = [feedId, ...relations[0], ...relations[1]];
+  console.log('populated update');
+}
 
 /******** app state listeners ********/
 export const appStateHandler = state => {
@@ -35,6 +36,14 @@ export const appStateHandler = state => {
   }
 };
 
+export const checkAddon = active => {
+  console.log(active + ' -> addon checker peers: ', updatesPeers);
+  trainRangeFeed([...updatesPeers], feed, idMsgs => {
+    const tIdMsgs = batchMsgCB(idMsgs);
+    tIdMsgs.msgs.length && dispatch({type: 'appendFeed', payload: tIdMsgs});
+  });
+};
+
 /******** archive msg listeners ********/
 export const publicHandler = key =>
   loadMsg(key, false, (err, rMsgs) => {
@@ -43,7 +52,9 @@ export const publicHandler = key =>
           messages: [msg],
         } = rMsgs,
         {author, sequence} = msg.value;
-      const feedSeq = (feed[author] && feed[author][0].value.sequence) || 0;
+      const feedSeq =
+        (feed[author] && feed[author][0] && feed[author][0].value.sequence) ||
+        0;
       sequence === feedSeq + 1
         ? dispatch({
             type: 'appendFeed',
@@ -72,26 +83,20 @@ export const contactHandler = ({
     content: {contact, following, blocking},
   },
 }) => {
-  if (author === feedId) {
-    following || !blocking
-      ? (console.log(
-          `${following ? 'following' : 'unblocking'} ${contact.substring(
-            1,
-            6,
-          )} addon ->`,
-        ),
+  author === feedId &&
+    (following !== undefined
+      ? following &&
         trainFeed(contact, feed, idFeed =>
           dispatch({
             type: 'appendFeed',
             payload: batchMsgCB(idFeed),
           }),
-        ))
+        )
       : blocking &&
         (dispatch({type: 'clearInfo', payload: contact}),
         dispatch({type: 'clearFeed', payload: contact}),
         dispatch({type: 'clearPublicMsg', payload: contact}),
-        dispatch({type: 'clearComment', payload: contact}));
-  }
+        dispatch({type: 'clearComment', payload: contact})));
   graph(payload => dispatch({type: 'setFriendsGraph', payload}));
 };
 
@@ -113,7 +118,7 @@ export const postHandler = msg => {
   } = msg;
 
   recps
-    ? console.log(msg)
+    ? recps.includes(feedId)
     : dispatch({
         type: branch ? 'addComment' : 'addPublicMsg',
         payload: msg,

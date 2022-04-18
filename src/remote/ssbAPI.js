@@ -66,7 +66,11 @@ const trainProfileFeed = (fId, existSequence, cb) => {
 
 /****************** API: retrieve all of feed by special id ******************/
 export const trainFeed = (fId, feed, cb) =>
-  trainProfileFeed(fId, (feed[fId] && feed[fId][0].value.sequence) || 0, cb);
+  trainProfileFeed(
+    fId,
+    (feed[fId] && feed[fId][0] && feed[fId][0].value.sequence) || 0,
+    cb,
+  );
 
 /****************** API: retrieve all of feed by special ids ******************/
 export const trainRangeFeed = (loopIds, feed, cb) => {
