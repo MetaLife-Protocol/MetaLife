@@ -28,7 +28,7 @@ function update(store) {
   console.log('populated update');
 }
 
-/******** app state listeners ********/
+/**************************** app state listeners ****************************/
 export const appStateHandler = state => {
   switch (state) {
     case 'active':
@@ -47,7 +47,7 @@ export const checkAddon = active => {
   });
 };
 
-/******** archive msg listeners ********/
+/*************************** archive msg listeners ***************************/
 export const publicHandler = key =>
   loadMsg(key, false, (err, rMsgs) => {
     if (!err) {
@@ -79,7 +79,7 @@ export const privateHandler = key =>
     (err, msgs) => err || dispatch({type: 'setPrivateMsg', payload: msgs}),
   );
 
-/******** executable msg listeners ********/
+/************************** executable msg listeners **************************/
 export const contactHandler = ({
   value: {
     author,
