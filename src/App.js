@@ -13,7 +13,7 @@ import Setting from './screens/tabs/profiles/Setting';
 import PeersScreen from './screens/tabs/contacts/PeersScreen';
 import PeerDetailsScreen from './screens/tabs/contacts/PeerDetailsScreen';
 import MessageDetailsScreen from './screens/tabs/messages/MessageDetailsScreen';
-import PostMsgEditor from './screens/tabs/home/PostMsgEditor';
+import PostMsgEditor from './screens/tabs/home/post/PostMsgEditor';
 import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';

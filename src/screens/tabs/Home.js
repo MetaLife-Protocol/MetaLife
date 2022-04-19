@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {FlatList, SafeAreaView} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import ItemAgent from './home/ItemAgent';
+import ItemAgent from './home/post/ItemAgent';
 import {initializeHandlers} from '../../remote/SsbListeners';
 import {startSSB} from '../../remote/starter';
 import {useStore} from 'react-redux';

@@ -3,13 +3,13 @@
  */
 import React from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import SchemaStyles from '../../../../../shared/SchemaStyles';
 
 const iconDic = {
-  iconForward: require('../../../../assets/image/messages/dongtai_icon_forward.png'),
-  iconComment: require('../../../../assets/image/messages/dongtai_icon_comment.png'),
-  iconLikeNormal: require('../../../../assets/image/messages/dongtai_icon_like_normal.png'),
-  iconLikePress: require('../../../../assets/image/messages/dongtai_icon_like_press.png'),
+  iconForward: require('../../../../../assets/image/messages/dongtai_icon_forward.png'),
+  iconComment: require('../../../../../assets/image/messages/dongtai_icon_comment.png'),
+  iconLikeNormal: require('../../../../../assets/image/messages/dongtai_icon_like_normal.png'),
+  iconLikePress: require('../../../../../assets/image/messages/dongtai_icon_like_press.png'),
 };
 
 const PostMsgPanel = ({

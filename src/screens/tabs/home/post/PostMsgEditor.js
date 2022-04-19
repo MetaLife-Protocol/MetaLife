@@ -5,12 +5,12 @@
 import React, {useEffect, useLayoutEffect, useRef} from 'react';
 import {Keyboard, SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../../../shared/SchemaStyles';
-import MsgInput from '../../../shared/comps/MsgInput';
-import {sendMsg} from '../../../remote/ssbOP';
+import SchemaStyles from '../../../../shared/SchemaStyles';
+import MsgInput from '../../../../shared/comps/MsgInput';
+import {sendMsg} from '../../../../remote/ssbOP';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import ItemAgent from './ItemAgent';
-import Section from '../../../shared/comps/Section';
+import Section from '../../../../shared/comps/Section';
 import PostItem from './items/PostItem';
 
 const PostMsgEditor = ({commentDic}) => {

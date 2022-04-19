@@ -3,7 +3,7 @@ import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import ItemAgent from '../home/ItemAgent';
+import ItemAgent from '../home/post/ItemAgent';
 import PeerDetailsHeader from './details/PeerDetailsHeader';
 import {trainFeed} from '../../../remote/ssbAPI';
 import {batchMsgCB} from '../../../store/MsgCB';

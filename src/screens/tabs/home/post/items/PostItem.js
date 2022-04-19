@@ -3,15 +3,15 @@
  */
 import React, {useCallback} from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import SchemaStyles from '../../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import {localDate} from '../../../../utils';
+import {localDate} from '../../../../../utils';
 import PostMsgPanel from './PostMsgPannel';
-import HeadIcon from '../../../../shared/comps/HeadIcon';
+import HeadIcon from '../../../../../shared/comps/HeadIcon';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
-import {PeerIcons} from '../../../../shared/Icons';
+import {PeerIcons} from '../../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
-import {sendMsg} from '../../../../remote/ssbOP';
+import {sendMsg} from '../../../../../remote/ssbOP';
 
 const PostItem = ({
   item,
