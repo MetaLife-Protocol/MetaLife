@@ -45,6 +45,7 @@ const Setting = ({
   const [pnVisible, setPnVisible] = useState(false),
     [pdVisible, setPdVisible] = useState(false);
 
+  // todo: image upload
   const submit = useCallback(
     (type, value) =>
       setAbout(feedId, {...infoDic[feedId], [type]: value}, () =>
@@ -54,7 +55,7 @@ const Setting = ({
   );
 
   const checkCamera2Launch = useCallback(
-    () => checkAndLaunchCamera(cameraHandler),
+    () => checkAndLaunchCamera(cameraHandler, true),
     [],
   );
 
@@ -88,7 +89,6 @@ const Setting = ({
           onLongPress={() =>
             launchImageLibrary(
               {
-                cameraType: 'front',
                 maxHeight: 1920,
                 maxWidth: 1080,
                 quality: 0.88,

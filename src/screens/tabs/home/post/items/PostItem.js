@@ -58,7 +58,7 @@ const PostItem = ({
 
   const commentHandler = useCallback(
     function () {
-      push('PostMsgEditor', {name, shownMsg: item});
+      push('CommentEditor', {name, shownMsg: item});
     },
     [item],
   );

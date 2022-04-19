@@ -13,12 +13,12 @@ export const localDate = timestamp => {
   return time + ' ' + day;
 };
 
-export const checkAndLaunchCamera = completeHandler => {
+export const checkAndLaunchCamera = (completeHandler, isFront = false) => {
   Platform.select({
     ios: () =>
       launchCamera(
         {
-          cameraType: 'front',
+          cameraType: isFront ? 'front' : 'back',
           maxHeight: 1920,
           maxWidth: 1080,
           quality: 0.88,

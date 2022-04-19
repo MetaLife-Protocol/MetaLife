@@ -2,7 +2,7 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React, {useEffect, useLayoutEffect, useRef} from 'react';
+import React, {useLayoutEffect, useRef, useState} from 'react';
 import {Keyboard, SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../../shared/SchemaStyles';
@@ -16,10 +16,10 @@ import PostItem from './items/PostItem';
 const PostMsgEditor = ({commentDic}) => {
   const {FG, flex1} = SchemaStyles();
 
-  const {goBack, setOptions} = useNavigation();
+  const {setOptions} = useNavigation();
   const {params} = useRoute(),
-    {name, shownMsg} = params || {},
-    {key, value} = shownMsg || {},
+    {name, shownMsg} = params,
+    {key, value} = shownMsg,
     commentArr = commentDic[key] || [];
 
   const scrollView = useRef();
@@ -39,52 +39,37 @@ const PostMsgEditor = ({commentDic}) => {
    */
   function sendHandler(content) {
     sendMsg(
-      key
-        ? value.content.root
-          ? {
-              type: 'post',
-              text: content,
-              root: key,
-              fork: value.content.root,
-              branch: commentArr.length
-                ? commentArr[commentArr.length - 1].key
-                : key,
-            }
-          : {
-              type: 'post',
-              text: content,
-              root: key,
-              branch: commentArr.length
-                ? commentArr[commentArr.length - 1].key
-                : key,
-            }
+      value.content.root
+        ? {
+            type: 'post',
+            text: content,
+            root: key,
+            fork: value.content.root,
+            branch: commentArr.length
+              ? commentArr[commentArr.length - 1].key
+              : key,
+          }
         : {
             type: 'post',
             text: content,
+            root: key,
+            branch: commentArr.length
+              ? commentArr[commentArr.length - 1].key
+              : key,
           },
-      msg => {
-        key ? Keyboard.dismiss() : goBack();
-      },
+      msg => Keyboard.dismiss(),
     );
   }
 
   return (
     <SafeAreaView style={[flex1, FG]}>
       <ScrollView style={[flex1]} ref={scrollView} overScrollMode={'auto'}>
-        {shownMsg && (
-          <Section title={'Reply to:'}>
-            <PostItem item={shownMsg} showPanel={false} />
-          </Section>
-        )}
+        <Section title={'Reply to:'}>
+          <PostItem item={shownMsg} showPanel={false} />
+        </Section>
         {commentArr.length > 0 && (
           <Section title={'Replies:'}>
-            {/*<FlatList*/}
-            {/*  data={commentArr}*/}
-            {/*  style={[{height: '100%'}]}*/}
-            {/*  keyExtractor={item => item.key}*/}
-            {/*  renderItem={info => <ItemAgent info={info} verbose={false} />}*/}
-            {/*/>*/}
-            {commentArr.map((info, i) => (
+            {commentArr.map(info => (
               <ItemAgent info={{item: info}} key={info.key} />
             ))}
           </Section>
@@ -97,8 +82,6 @@ const PostMsgEditor = ({commentDic}) => {
 
 const msp = s => {
   return {
-    feedId: s.user.feedId,
-    publicMsg: s.public,
     commentDic: s.comment,
   };
 };

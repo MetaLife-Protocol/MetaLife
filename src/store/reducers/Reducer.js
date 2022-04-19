@@ -11,7 +11,9 @@ import {commentReducer} from './comment';
 import {pubReducer} from './pub';
 
 const reducer = combineReducers({
+  // app
   cfg: cfgReducer,
+  // user & ssb
   user: userReducer,
   contact: contactReducer,
   info: infoReducer,

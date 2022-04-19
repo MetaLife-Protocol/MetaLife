@@ -2,111 +2,93 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React, {useEffect, useLayoutEffect, useRef} from 'react';
-import {Keyboard, SafeAreaView, ScrollView} from 'react-native';
+import React, {useCallback, useRef, useState} from 'react';
+import {Keyboard, SafeAreaView, ScrollView, TextInput} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../../shared/SchemaStyles';
-import MsgInput from '../../../../shared/comps/MsgInput';
-import {sendMsg} from '../../../../remote/ssbOP';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import ItemAgent from './ItemAgent';
-import Section from '../../../../shared/comps/Section';
-import PostItem from './items/PostItem';
+import {sendMsg, setAbout} from '../../../../remote/ssbOP';
+import {useNavigation, useTheme} from '@react-navigation/native';
+import MultimediaPanel from './MultimediaPanel';
+import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
+import {launchImageLibrary} from 'react-native-image-picker';
+import Toast from 'react-native-tiny-toast';
+import {checkAndLaunchCamera} from '../../../../utils';
 
-const PostMsgEditor = ({commentDic}) => {
-  const {FG, flex1} = SchemaStyles();
-
-  const {goBack, setOptions} = useNavigation();
-  const {params} = useRoute(),
-    {name, shownMsg} = params || {},
-    {key, value} = shownMsg || {},
-    commentArr = commentDic[key] || [];
-
+const PostMsgEditor = () => {
+  const {FG, flex1, placeholderTextColor, text} = SchemaStyles();
+  const {goBack} = useNavigation();
+  const [content, setContent] = useState(''),
+    [offset, setOffset] = useState(0);
+  const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
   const scrollView = useRef();
-
-  useLayoutEffect(() => {
-    name && setOptions({title: `comment to ${name}`});
-  }, []);
-
-  /**
-   * // toReplyPostContent({
-   * //   text: state.replyText,
-   * //   root: state.rootMsgId,
-   * //   fork: state.higherRootMsgId,
-   * //   branch: messages[messages.length - 1].key,
-   * // });
-   * @param content
-   */
-  function sendHandler(content) {
+  function sendHandler() {
     sendMsg(
-      key
-        ? value.content.root
-          ? {
-              type: 'post',
-              text: content,
-              root: key,
-              fork: value.content.root,
-              branch: commentArr.length
-                ? commentArr[commentArr.length - 1].key
-                : key,
-            }
-          : {
-              type: 'post',
-              text: content,
-              root: key,
-              branch: commentArr.length
-                ? commentArr[commentArr.length - 1].key
-                : key,
-            }
-        : {
-            type: 'post',
-            text: content,
-          },
-      msg => {
-        key ? Keyboard.dismiss() : goBack();
+      {
+        type: 'post',
+        text: content,
       },
+      goBack,
     );
+  }
+
+  function submit(type, value) {
+    // todo: image upload
+    console.log('type:', type, 'url:', value);
+  }
+
+  function cameraHandler({didCancel, errorCode, errorMessage, assets}) {
+    if (errorCode || didCancel) {
+      return errorCode && Toast.show(errorMessage);
+    }
+    const [file] = assets;
+    submit('image', file.uri.replace('file://', ''));
+  }
+
+  function photoHandler() {
+    Keyboard.dismiss();
+    launchImageLibrary(
+      {
+        maxHeight: 1920,
+        maxWidth: 1080,
+        quality: 0.88,
+        mediaType: 'photo',
+        selectionLimit: 1,
+      },
+      cameraHandler,
+    ).then(console.log);
   }
 
   return (
     <SafeAreaView style={[flex1, FG]}>
       <ScrollView style={[flex1]} ref={scrollView} overScrollMode={'auto'}>
-        {shownMsg && (
-          <Section title={'Reply to:'}>
-            <PostItem item={shownMsg} showPanel={false} />
-          </Section>
-        )}
-        {commentArr.length > 0 && (
-          <Section title={'Replies:'}>
-            {/*<FlatList*/}
-            {/*  data={commentArr}*/}
-            {/*  style={[{height: '100%'}]}*/}
-            {/*  keyExtractor={item => item.key}*/}
-            {/*  renderItem={info => <ItemAgent info={info} verbose={false} />}*/}
-            {/*/>*/}
-            {commentArr.map((info, i) => (
-              <ItemAgent info={{item: info}} key={info.key} />
-            ))}
-          </Section>
-        )}
+        <TextInput
+          style={[text, {paddingHorizontal: 15}]}
+          autoFocus={true}
+          onBlur={() => setOffset(isIPhoneX_deprecated ? 94 : 64)}
+          multiline={true}
+          placeholder={'write a public message'}
+          placeholderTextColor={placeholderTextColor.color}
+          onChangeText={setContent}
+          value={content}
+        />
       </ScrollView>
-      <MsgInput sendHandler={sendHandler} />
+      <MultimediaPanel
+        offset={offset}
+        voiceHandler={null}
+        cameraHandler={() => checkAndLaunchCamera(cameraHandler)}
+        photoHandler={photoHandler}
+        sendHandler={sendHandler}
+      />
     </SafeAreaView>
   );
 };
 
 const msp = s => {
-  return {
-    feedId: s.user.feedId,
-    publicMsg: s.public,
-    commentDic: s.comment,
-  };
+  return {};
 };
 
 const mdp = d => {
-  return {
-    setDarkMode: v => d({type: 'setDarkMode', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(PostMsgEditor);
