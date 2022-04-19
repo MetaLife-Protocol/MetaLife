@@ -15,6 +15,8 @@ import CameraMarkerView from './comps/CameraMarkerView';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import Constants from '../../../shared/Constants';
 import FlashLightButton from './comps/FlashLightButton';
+import {launchImageLibrary} from 'react-native-image-picker';
+import LocalBarcodeRecognizer from 'react-native-local-barcode-recognizer';
 
 const Scan = () => {
   const {onCallbackData} = useRoute().params ?? {};
@@ -30,13 +32,42 @@ const Scan = () => {
       headerRight: () => (
         <Pressable
           onPress={() => {
-            const options = {quality: 0.9, base64: true, skipProcessing: true};
-            console.log('cameraRef.current:', cameraRef.current);
+            // const options = {quality: 0.9, base64: true, skipProcessing: true};
+            // console.log('cameraRef.current:', cameraRef.current);
             // cameraRef.current &&
             //   cameraRef.current.takePictureAsync(options).then(res => {
             //     console.log('camera photo res:', res);
             //   });
             // RNCamera.takePictureAsync();
+            launchImageLibrary({
+              maxHeight: 1920,
+              maxWidth: 1080,
+              quality: 0.88,
+              mediaType: 'photo',
+              includeBase64: true,
+              selectionLimit: 1,
+            }).then(res => {
+              const base64 = res?.assets?.[0]?.base64 ?? '';
+              console.log('res uri::', res);
+              // QRreader(uri)
+              //   .then(data => {
+              //     console.log('QRreader::', data);
+              //   })
+              //   .catch(err => {
+              //     console.log('识别失败');
+              //   });
+              LocalBarcodeRecognizer.decode(
+                base64.replace('data:image/jpeg;base64,', ''),
+                {codeTypes: ['ean13', 'qr']},
+              ).then(qrUri => {
+                console.log('qrUri uri::', qrUri);
+                if (qrUri) {
+                  onCallbackData && onCallbackData(qrUri);
+                  navigation.goBack();
+                }
+              });
+              // alert('识别结果：'+result);
+            });
           }}>
           <Image
             source={require('../../../assets/image/icons/icon_scan_photo.png')}
