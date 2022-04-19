@@ -19,6 +19,7 @@ import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import Pubs from './screens/tabs/profiles/Pubs';
 import {StatusBar} from 'react-native';
+import CommentEditor from './screens/tabs/home/post/CommentEditor';
 
 const App = () => {
   const {barStyle, theme} = SchemaStyles();
@@ -47,9 +48,25 @@ const App = () => {
           options={{headerShown: false}}
           component={Tabs}
         />
+        {/* Posts */}
+        <Stack.Screen
+          name="PostMsgEditor"
+          options={{title: 'Post'}}
+          component={PostMsgEditor}
+        />
+        <Stack.Screen
+          name="CommentEditor"
+          options={{title: 'Reply'}}
+          component={CommentEditor}
+        />
         {/* Messages */}
-        <Stack.Screen name="FriendList" component={FriendList} />
+        <Stack.Screen
+          name="MessageDetailsScreen"
+          options={{title: 'Message'}}
+          component={MessageDetailsScreen}
+        />
         {/* Contacts */}
+        <Stack.Screen name="FriendList" component={FriendList} />
         <Stack.Screen
           name="PeersScreen"
           //fixme: large title causes twinkle unusually
@@ -58,18 +75,8 @@ const App = () => {
         />
         <Stack.Screen name="PeersListScreen" component={PeersListScreen} />
         <Stack.Screen
-          name="PostMsgEditor"
-          options={{title: 'Post' /*headerLargeTitle: true*/}}
-          component={PostMsgEditor}
-        />
-        <Stack.Screen
-          name="MessageDetailsScreen"
-          options={{title: 'Message' /*headerLargeTitle: true*/}}
-          component={MessageDetailsScreen}
-        />
-        <Stack.Screen
           name="PeerDetailsScreen"
-          options={{title: 'Peers' /*headerLargeTitle: true*/}}
+          options={{title: 'Peers'}}
           component={PeerDetailsScreen}
         />
         {/* Profiles */}
