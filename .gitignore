@@ -27,7 +27,6 @@ build/
 /android/app/release/
 .idea
 .gradle
-local.properties
 *.iml
 *.hprof
 /Gemfile.lock
