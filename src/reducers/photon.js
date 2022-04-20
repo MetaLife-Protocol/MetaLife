@@ -5,8 +5,8 @@
 export const initValue = {};
 export const photonReducer = (state = initValue, {type, payload}) => {
   switch (type) {
-    case 'setLogFile':
-      return {...state, logFile: payload};
+    case 'setPhotonLogin':
+      return {...state, logFile: payload, isPhotonLogin: true};
     case 'reset':
       return initValue;
     default:

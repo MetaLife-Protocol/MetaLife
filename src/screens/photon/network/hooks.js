@@ -37,6 +37,6 @@ function showErrorDialog(dialog) {
 }
 
 function getLogFile() {
-  const photon = store.getState().photon;
-  return photon.logFile || '';
+  const photon = store.getState()?.photon;
+  return photon?.logFile || '';
 }

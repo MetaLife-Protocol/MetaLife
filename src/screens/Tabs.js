@@ -15,8 +15,7 @@ import HeaderProfiles from './tabs/profiles/HeaderProfiles';
 import HeaderRightBtn from './tabs/HeaderRightBtn';
 import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import {startPhotonServer} from 'react-native-photon';
-import {store} from '../store/configureStore';
+import {initPhoton} from './photon/PhotonUtils';
 
 const iconDic = {
   Home_icon_Default: require('../assets/image/tabBtn/Home_icon_Default.png'),
@@ -55,20 +54,8 @@ const Tabs = ({darkMode}) => {
   const Tab = createBottomTabNavigator();
 
   useEffect(() => {
-    //TODO isLogin,wallet
-    startPhotonServer({
-      privateKey:
-        '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
-      ethRPCEndPoint: '',
-      // ethRPCEndPoint: 'https://jsonapi1.smartmesh.cn',
-    }).then(res => {
-      console.log('res:::', res.result);
-      console.log('res:::', res.logFile);
-      if (res.logFile) {
-        store.dispatch({type: 'setLogFile', payload: res.logFile});
-      }
-    });
-  }, []);
+    initPhoton();
+  });
   return (
     <Tab.Navigator
       initialRouteName={'Home'}

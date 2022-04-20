@@ -6,11 +6,31 @@
  * @Project:MetaLife
  */
 import React from 'react';
-
 import PhotonUrl from './PhotonUrl';
 import {NormalDialog} from 'metalife-base';
-import {photonSettleChannel} from 'react-native-photon';
+import {photonSettleChannel, startPhotonServer} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
+import {store} from '../../store/configureStore';
+
+export function initPhoton() {
+  //TODO isLogin  & has wallet
+  startPhotonServer({
+    privateKey:
+      '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
+    ethRPCEndPoint: '',
+    // ethRPCEndPoint: 'https://jsonapi1.smartmesh.cn',
+  })
+    .then(res => {
+      console.log('res:::', res?.result);
+      console.log('res:::', res?.logFile);
+      if (res?.logFile) {
+        store.dispatch({type: 'setPhotonLogin', payload: res.logFile});
+      }
+    })
+    .catch(e => {
+      Toast.show(e.toString());
+    });
+}
 
 /**
  * photon token symbol
