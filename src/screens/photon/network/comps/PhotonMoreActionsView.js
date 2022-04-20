@@ -6,14 +6,21 @@
  * @desc:
  */
 
-import React, {memo} from 'react';
+import React, {memo, useCallback} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useStyle} from 'metalife-base';
+import {useDialog, useStyle} from 'metalife-base';
 import {useNavigation} from '@react-navigation/native';
+import {uploadPhotonLogDialog} from '../hooks';
 
 const PhotonMoreActionsView = ({visible, onSelect}) => {
   const styles = useStyle(createSty);
   const {navigate} = useNavigation();
+  const dialog = useDialog();
+
+  const uploadLog = useCallback(() => {
+    onSelect();
+    uploadPhotonLogDialog({dialog: dialog});
+  }, [dialog, onSelect]);
 
   if (!visible) {
     return null;
@@ -46,7 +53,9 @@ const PhotonMoreActionsView = ({visible, onSelect}) => {
         }}>
         Transaction record
       </Text>
-      <Text style={styles.text}>Upload data</Text>
+      <Text style={styles.text} onPress={uploadLog}>
+        Upload data
+      </Text>
     </View>
   );
 };

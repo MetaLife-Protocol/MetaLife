@@ -9,7 +9,7 @@ const TransactionRecordItem = ({data}) => {
   const [amount, stateDisplay, stateColor] = useMemo(() => {
     let amount = '',
       stateDisplay = '',
-      stateColor;
+      stateColor = theme.c_000000_FFFFFF;
     switch (data.type) {
       case 'ChannelDeposit':
       case 'ApproveDeposit':
