@@ -48,8 +48,6 @@ yarn.lock
 # BUCK
 buck-out/
 \.buckd/
-*.keystore
-!debug.keystore
 
 # fastlane
 #
