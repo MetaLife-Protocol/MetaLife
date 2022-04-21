@@ -37,7 +37,7 @@ const Login = ({name, setName}) => {
           style={{marginBottom: 50}}
           title={'Login'}
           disabled={!(nick && pwd)}
-          press={() => replace('Create Account')}
+          press={() => replace('Import Account')}
         />
       </View>
     </View>
