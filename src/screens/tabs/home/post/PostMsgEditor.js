@@ -2,60 +2,99 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React, {useRef, useState} from 'react';
-import {Keyboard, SafeAreaView, ScrollView, TextInput} from 'react-native';
+import React, {useReducer, useRef, useState} from 'react';
+import {
+  Image,
+  Keyboard,
+  SafeAreaView,
+  ScrollView,
+  TextInput,
+} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../../shared/SchemaStyles';
-import {sendMsg} from '../../../../remote/ssbOP';
+import {blobsSetter, sendMsg} from '../../../../remote/ssbOP';
 import {useNavigation} from '@react-navigation/native';
 import MultimediaPanel from './MultimediaPanel';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
-import {launchImageLibrary} from 'react-native-image-picker';
-import Toast from 'react-native-tiny-toast';
-import {checkAndLaunchCamera} from '../../../../utils';
+import * as ImagePicker from 'react-native-image-crop-picker';
+import Section from '../../../../shared/comps/Section';
+import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
+
+const initialState = [],
+  reducer = (state, {type, payload}) => {
+    switch (type) {
+      case 'add':
+        return [...state, payload];
+      case 'remove':
+        return state.filter(p => p.path !== payload);
+    }
+  };
 
 const PostMsgEditor = () => {
   const {FG, flex1, placeholderTextColor, text} = SchemaStyles();
   const {goBack} = useNavigation();
   const [content, setContent] = useState(''),
-    [offset, setOffset] = useState(0);
+    [offset, setOffset] = useState(0),
+    [photo, dispatch] = useReducer(reducer, initialState);
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
   const scrollView = useRef();
+
   function sendHandler() {
+    const mentions = [];
+    if (photo.length) {
+      for (const photoKey in photo) {
+        mentions.push({link: photo[photoKey].id, name: photo[photoKey].path});
+      }
+    }
     sendMsg(
-      {
-        type: 'post',
-        text: content,
-      },
+      mentions.length
+        ? {
+            type: 'post',
+            text: content,
+            mentions,
+          }
+        : {
+            type: 'post',
+            text: content,
+          },
       goBack,
     );
   }
 
-  function submit(type, value) {
-    // todo: image upload
-    console.log('type:', type, 'url:', value);
+  function submit({path}) {
+    blobsSetter(path.replace('file://', ''), id => {
+      dispatch({type: 'add', payload: {path, id}}),
+        setContent(content + `!['image'}](${id})`);
+    });
   }
 
-  function cameraHandler({didCancel, errorCode, errorMessage, assets}) {
-    if (errorCode || didCancel) {
-      return errorCode && Toast.show(errorMessage);
-    }
-    const [file] = assets;
-    submit('image', file.uri.replace('file://', ''));
+  function voiceHandler() {}
+
+  function cameraHandler() {
+    ImagePicker.openCamera({
+      cropping: false,
+      multiple: false,
+      compressImageMaxWidth: 1080,
+      compressImageMaxHeight: 1920,
+      compressImageQuality: 0.88,
+      mediaType: 'photo',
+    })
+      .then(submit)
+      .catch(null);
   }
 
   function photoHandler() {
     Keyboard.dismiss();
-    launchImageLibrary(
-      {
-        maxHeight: 1920,
-        maxWidth: 1080,
-        quality: 0.88,
-        mediaType: 'photo',
-        selectionLimit: 1,
-      },
-      cameraHandler,
-    ).then(console.log);
+    ImagePicker.openPicker({
+      cropping: false,
+      multiple: false,
+      compressImageMaxWidth: 1080,
+      compressImageMaxHeight: 1920,
+      compressImageQuality: 0.88,
+      mediaType: 'photo',
+    })
+      .then(submit)
+      .catch(null);
   }
 
   return (
@@ -71,11 +110,22 @@ const PostMsgEditor = () => {
           onChangeText={setContent}
           value={content}
         />
+        {photo.length > 0 && (
+          <Section>
+            {photo.map(({path, id}) => (
+              <Image
+                style={{width: 100, height: 100}}
+                source={{uri: blobIdToUrl(id)}}
+                key={id}
+              />
+            ))}
+          </Section>
+        )}
       </ScrollView>
       <MultimediaPanel
         offset={offset}
-        voiceHandler={null}
-        cameraHandler={() => checkAndLaunchCamera(cameraHandler)}
+        voiceHandler={voiceHandler}
+        cameraHandler={cameraHandler}
         photoHandler={photoHandler}
         sendHandler={sendHandler}
       />

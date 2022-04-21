@@ -48,6 +48,9 @@ export const getConnectedPeers = cb =>
 export const blobsGetter = (blobId, cb) =>
   ssb.blobs.get(blobId)(null, (e, v) => (e ? console.error(e) : cb(v)));
 
+export const blobsSetter = (path, cb) =>
+  ssb.blobsUtils.addFromPath(path, (e, v) => (e ? console.error(e) : cb(v)));
+
 export const ping = cb =>
   ssb.conn.ping()(null, (e, v) => (e ? console.error(e) : cb && cb(v)));
 
