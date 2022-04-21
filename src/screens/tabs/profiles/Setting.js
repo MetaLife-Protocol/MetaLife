@@ -1,7 +1,7 @@
 /**
  * Created on 08 Nov 2021 by lonmee
  */
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   Pressable,
@@ -16,15 +16,14 @@ import ControllerItem from '../../../shared/comps/ControllerItem';
 import I18n from '../../../i18n/I18n';
 import Section from '../../../shared/comps/Section';
 import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {setAbout} from '../../../remote/ssbOP';
+import {blobsSetter, setAbout} from '../../../remote/ssbOP';
 import Toast from 'react-native-tiny-toast';
 import {ProfileModal} from './modal/ProfileModal';
-import {checkAndLaunchCamera} from '../../../utils';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import {ArrowImage} from '../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
+import {cameraHandler, photoHandler} from '../../../utils';
 
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
 
@@ -45,26 +44,14 @@ const Setting = ({
   const [pnVisible, setPnVisible] = useState(false),
     [pdVisible, setPdVisible] = useState(false);
 
-  // todo: image upload
-  const submit = useCallback(
-    (type, value) =>
-      setAbout(feedId, {...infoDic[feedId], [type]: value}, () =>
-        Toast.show(type + ' submitted'),
-      ),
-    [infoDic],
-  );
+  function headerIconSubmit({path}) {
+    submit('image', path.replace('file://', ''));
+  }
 
-  const checkCamera2Launch = useCallback(
-    () => checkAndLaunchCamera(cameraHandler, true),
-    [],
-  );
-
-  function cameraHandler({didCancel, errorCode, errorMessage, assets}) {
-    if (errorCode || didCancel) {
-      return errorCode && Toast.show(errorMessage);
-    }
-    const [file] = assets;
-    submit('image', file.uri.replace('file://', ''));
+  function submit(type, value) {
+    setAbout(feedId, {...infoDic[feedId], [type]: value}, () =>
+      Toast.show(type + ' submitted'),
+    );
   }
 
   return (
@@ -85,19 +72,8 @@ const Setting = ({
       />
       <ScrollView>
         <Pressable
-          onPress={checkCamera2Launch}
-          onLongPress={() =>
-            launchImageLibrary(
-              {
-                maxHeight: 1920,
-                maxWidth: 1080,
-                quality: 0.88,
-                mediaType: 'photo',
-                selectionLimit: 1,
-              },
-              cameraHandler,
-            )
-          }>
+          onPress={() => cameraHandler(headerIconSubmit)}
+          onLongPress={() => photoHandler(headerIconSubmit)}>
           <Section style={[marginTop10, alignItemsCenter, {marginBottom: -10}]}>
             <HeadIcon
               width={90}

@@ -1,6 +1,7 @@
-import {PermissionsAndroid, Platform} from 'react-native';
+import {Keyboard, PermissionsAndroid, Platform} from 'react-native';
 import {launchCamera} from 'react-native-image-picker';
 import Toast from 'react-native-tiny-toast';
+import ImagePicker from 'react-native-image-crop-picker';
 
 /**
  * Created on 22 Feb 2022 by lonmee
@@ -12,6 +13,33 @@ export const localDate = timestamp => {
     day = date.toLocaleDateString();
   return time + ' ' + day;
 };
+
+export function cameraHandler(submit) {
+  ImagePicker.openCamera({
+    cropping: false,
+    multiple: false,
+    compressImageMaxWidth: 1080,
+    compressImageMaxHeight: 1920,
+    compressImageQuality: 0.88,
+    mediaType: 'photo',
+  })
+    .then(submit)
+    .catch(null);
+}
+
+export function photoHandler(submit) {
+  Keyboard.dismiss();
+  ImagePicker.openPicker({
+    cropping: false,
+    multiple: false,
+    compressImageMaxWidth: 1080,
+    compressImageMaxHeight: 1920,
+    compressImageQuality: 0.88,
+    mediaType: 'photo',
+  })
+    .then(submit)
+    .catch(null);
+}
 
 export const checkAndLaunchCamera = (completeHandler, isFront = false) => {
   Platform.select({
@@ -67,6 +95,28 @@ export const checkAndLaunchCamera = (completeHandler, isFront = false) => {
         .catch(Toast.show),
   })();
 };
+
+// todo: image upload
+// const submit = useCallback(
+//   (type, value) =>
+//     setAbout(feedId, {...infoDic[feedId], [type]: value}, () =>
+//       Toast.show(type + ' submitted'),
+//     ),
+//   [infoDic],
+// );
+//
+// const checkCamera2Launch = useCallback(
+//   () => checkAndLaunchCamera(cameraHandler, true),
+//   [],
+// );
+//
+// function cameraHandler({didCancel, errorCode, errorMessage, assets}) {
+//   if (errorCode || didCancel) {
+//     return errorCode && Toast.show(errorMessage);
+//   }
+//   const [file] = assets;
+//   submit('image', file.uri.replace('file://', ''));
+// }
 
 // if (mentions && mentions.length) {
 //   const cache = [];

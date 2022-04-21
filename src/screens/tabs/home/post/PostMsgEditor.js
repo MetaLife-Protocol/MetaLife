@@ -3,22 +3,16 @@
  */
 
 import React, {useReducer, useRef, useState} from 'react';
-import {
-  Image,
-  Keyboard,
-  SafeAreaView,
-  ScrollView,
-  TextInput,
-} from 'react-native';
+import {Image, SafeAreaView, ScrollView, TextInput} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {blobsSetter, sendMsg} from '../../../../remote/ssbOP';
 import {useNavigation} from '@react-navigation/native';
 import MultimediaPanel from './MultimediaPanel';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
-import * as ImagePicker from 'react-native-image-crop-picker';
 import Section from '../../../../shared/comps/Section';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
+import {cameraHandler, photoHandler} from '../../../../utils';
 
 const initialState = [],
   reducer = (state, {type, payload}) => {
@@ -70,33 +64,6 @@ const PostMsgEditor = () => {
 
   function voiceHandler() {}
 
-  function cameraHandler() {
-    ImagePicker.openCamera({
-      cropping: false,
-      multiple: false,
-      compressImageMaxWidth: 1080,
-      compressImageMaxHeight: 1920,
-      compressImageQuality: 0.88,
-      mediaType: 'photo',
-    })
-      .then(submit)
-      .catch(null);
-  }
-
-  function photoHandler() {
-    Keyboard.dismiss();
-    ImagePicker.openPicker({
-      cropping: false,
-      multiple: false,
-      compressImageMaxWidth: 1080,
-      compressImageMaxHeight: 1920,
-      compressImageQuality: 0.88,
-      mediaType: 'photo',
-    })
-      .then(submit)
-      .catch(null);
-  }
-
   return (
     <SafeAreaView style={[flex1, FG]}>
       <ScrollView style={[flex1]} ref={scrollView} overScrollMode={'auto'}>
@@ -125,8 +92,8 @@ const PostMsgEditor = () => {
       <MultimediaPanel
         offset={offset}
         voiceHandler={voiceHandler}
-        cameraHandler={cameraHandler}
-        photoHandler={photoHandler}
+        cameraHandler={() => cameraHandler(submit)}
+        photoHandler={() => photoHandler(submit)}
         sendHandler={sendHandler}
       />
     </SafeAreaView>
