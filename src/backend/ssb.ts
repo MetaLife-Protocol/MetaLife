@@ -51,7 +51,7 @@ export = async function startSSB(isNewIdentity: boolean) {
       cpuMax: 90, // %
     },
     serveBlobs: {
-      port: 26834, //26835 / 3921
+      port: 26834, //26835
     },
     conn: {
       autostart: false,

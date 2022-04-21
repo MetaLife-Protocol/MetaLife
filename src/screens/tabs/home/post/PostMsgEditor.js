@@ -2,12 +2,12 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React, {useCallback, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Keyboard, SafeAreaView, ScrollView, TextInput} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../../shared/SchemaStyles';
-import {sendMsg, setAbout} from '../../../../remote/ssbOP';
-import {useNavigation, useTheme} from '@react-navigation/native';
+import {sendMsg} from '../../../../remote/ssbOP';
+import {useNavigation} from '@react-navigation/native';
 import MultimediaPanel from './MultimediaPanel';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 import {launchImageLibrary} from 'react-native-image-picker';
