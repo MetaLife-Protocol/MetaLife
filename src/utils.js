@@ -13,6 +13,15 @@ export const localDate = timestamp => {
   return time + ' ' + day;
 };
 
+export const restrict = event =>  {
+  const regex = new RegExp("^[a-zA-Z]+$");
+  const key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+  if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+  }
+}
+
 export const checkAndLaunchCamera = completeHandler => {
   Platform.select({
     ios: () =>

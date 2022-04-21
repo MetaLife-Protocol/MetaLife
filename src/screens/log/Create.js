@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import ethUtil from 'ethereumjs-util';
 import { ethers } from 'ethers';
 import { randomBytes } from 'react-native-randombytes'
+import { restrict } from '../../utils';
 
 const iconDic = {
   Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),
