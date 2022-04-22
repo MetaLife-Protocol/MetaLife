@@ -48,26 +48,40 @@ const Import = ({name, setName}) => {
       <StatusBar barStyle={barStyle} />
       <View style={[FG, flex1, marginTop10]}>
         <View>
-          <View style={[styles.tab, styles.body]}>
+          <View style={[styles.tab]}>
             <View style={[tab == 0 ? styles.active : null]}>
               <TouchableOpacity onPress={() => setTab(0)}>
-                <Text style={[styles.inputText, text]}>Mnemonic</Text>
+                <Text style={[styles.inputText, tab == 0 ? text : null]}>
+                  Mnemonic
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={[tab == 1 ? styles.active : null]}>
               <TouchableOpacity onPress={() => setTab(1)}>
-                <Text style={[styles.inputText]}>Keystore</Text>
+                <Text style={[styles.inputText, tab == 1 ? text : null]}>
+                  Keystore
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={[tab == 2 ? styles.active : null]}>
               <TouchableOpacity onPress={() => setTab(2)}>
-                <Text style={[styles.inputText]}>Private Key</Text>
+                <Text style={[styles.inputText, tab == 2 ? text : null]}>
+                  Private Key
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={[tab == 3 ? styles.active : null]}>
               <TouchableOpacity onPress={() => setTab(3)}>
-                <Text style={[styles.inputText]}>Observe</Text>
+                <Text style={[styles.inputText, tab == 3 ? text : null]}>
+                  Observe
+                </Text>
               </TouchableOpacity>
+            </View>
+          </View>
+          <View style={[styles.body]}>
+            <View style={[styles.area]}>
+              <TextInput textHolder="Please use space to separate the mnemonic words">
+              </TextInput>
             </View>
           </View>
         </View>
@@ -123,7 +137,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     justifyContent: 'space-between',
     paddingTop: 17.5,
-    paddingVertical: 15,
+    paddingHorizontal: 15,
     paddingBottom: 0,
   },
   active: {
@@ -131,6 +145,15 @@ const styles = StyleSheet.create({
     borderBottomColor: '#29DAD7',
     paddingBottom: 10,
   },
+  area: {
+    height: 135,
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#4E586E",
+    borderRadius: 12,
+    paddingHorizontal: 16, 
+    paddingVertical: 10,
+  }
 });
 
 export default connect(msp, mdp)(Import);
