@@ -58,7 +58,7 @@ const PostMsgEditor = () => {
   function submit({path}) {
     blobsSetter(path.replace('file://', ''), id => {
       dispatch({type: 'add', payload: {path, id}}),
-        setContent(content + `!['image'}](${id})`);
+        setContent(content + `!['image'](${id})`);
     });
   }
 
