@@ -30,6 +30,7 @@ const Import = ({name, setName}) => {
   const [nick, setNick] = useState(''),
     [pwd, setPwd] = useState(''),
     [confirm, setConfirm] = useState(''),
+    [tab, setTab] = useState(0),
     {replace} = useNavigation();
 
   const [mnemonic, setMnemonic] = useState('');
@@ -48,17 +49,25 @@ const Import = ({name, setName}) => {
       <View style={[FG, flex1, marginTop10]}>
         <View>
           <View style={[styles.tab, styles.body]}>
-            <View style={[styles.active]}>
-              <Text style={[styles.inputText, text]}>Mnemonic</Text>
+            <View style={[tab == 0 ? styles.active : null]}>
+              <TouchableOpacity onPress={() => setTab(0)}>
+                <Text style={[styles.inputText, text]}>Mnemonic</Text>
+              </TouchableOpacity>
             </View>
-            <View>
-              <Text style={[styles.inputText]}>Keystore</Text>
+            <View style={[tab == 1 ? styles.active : null]}>
+              <TouchableOpacity onPress={() => setTab(1)}>
+                <Text style={[styles.inputText]}>Keystore</Text>
+              </TouchableOpacity>
             </View>
-            <View>
-              <Text style={[styles.inputText]}>Private Key</Text>
+            <View style={[tab == 2 ? styles.active : null]}>
+              <TouchableOpacity onPress={() => setTab(2)}>
+                <Text style={[styles.inputText]}>Private Key</Text>
+              </TouchableOpacity>
             </View>
-            <View>
-              <Text style={[styles.inputText]}>Observe</Text>
+            <View style={[tab == 3 ? styles.active : null]}>
+              <TouchableOpacity onPress={() => setTab(3)}>
+                <Text style={[styles.inputText]}>Observe</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -101,7 +110,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     fontSize: 16,
-    color: "#8E8E92",
+    color: '#8E8E92',
   },
   icon: {
     width: 20,
@@ -114,7 +123,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     justifyContent: 'space-between',
     paddingTop: 17.5,
-    paddingVertical:15,
+    paddingVertical: 15,
     paddingBottom: 0,
   },
   active: {
