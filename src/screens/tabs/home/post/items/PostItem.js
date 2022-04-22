@@ -12,6 +12,8 @@ import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
 import {sendMsg} from '../../../../../remote/ssbOP';
+import {getMessageSSBURIRegex} from '../../../../../../nodejs-assets/nodejs-project/index';
+import {regExp} from '../../../../../store/filters/MsgFilters';
 
 const PostItem = ({
   item,
@@ -77,7 +79,9 @@ const PostItem = ({
             {'\n' + localDate(timestamp)}
           </Text>
         </Text>
-        <Text style={[text, contentContainer]}>{cText}</Text>
+        <Text style={[text, contentContainer]}>
+          {cText.replace(regExp.imageLink, '').trim()}
+        </Text>
         {mentions &&
           mentions.map(({link, name}, i) => (
             <View key={i}>

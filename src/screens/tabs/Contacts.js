@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useEffect, useLayoutEffect} from 'react';
 import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
 import SearchBar from '../../shared/comps/SearchBar';
 import FriendItem from './contacts/item/FriendItem';
+import {useNavigation} from '@react-navigation/native';
 
 const iconDic = {
   fb: require('../../assets/image/profiles/Facebook.png'),
@@ -14,7 +15,11 @@ const iconDic = {
 
 const DATA_sn = [{icon: iconDic.fb}, {icon: iconDic.nf}, {icon: iconDic.tt}];
 
-const Contacts = ({relations: [friends, following, follower]}) => {
+const Contacts = ({
+  friendsGraph,
+  relations: [friends, following, follower],
+  navigation,
+}) => {
   const {BG} = SchemaStyles();
   const {searchBar, item} = styles;
 
@@ -24,17 +29,28 @@ const Contacts = ({relations: [friends, following, follower]}) => {
     </View>
   );
 
+  const {setOptions} = useNavigation();
+
+  useLayoutEffect(() => {
+    setOptions({
+      headerSearchBarOptions: {
+        hideWhenScrolling: true,
+        onChangeText: console.log,
+      },
+    });
+  }, [navigation]);
+
   return (
-    <ScrollView style={BG}>
-      <SearchBar style={[searchBar]} />
-      <FlatList
-        keyExtractor={(_, index) => index}
-        data={DATA_sn}
-        renderItem={snItem}
-        horizontal={true}
-        ItemSeparatorComponent={null}
-        showsHorizontalScrollIndicator={false}
-      />
+    <ScrollView contentInsetAdjustmentBehavior={'automatic'} style={BG}>
+      {/*<SearchBar style={[searchBar]} dataProvider={friendsGraph} />*/}
+      {/*<FlatList*/}
+      {/*  keyExtractor={(_, index) => index}*/}
+      {/*  data={DATA_sn}*/}
+      {/*  renderItem={snItem}*/}
+      {/*  horizontal={true}*/}
+      {/*  ItemSeparatorComponent={null}*/}
+      {/*  showsHorizontalScrollIndicator={false}*/}
+      {/*/>*/}
       {friends.length > 0 && (
         <Section key={0} title={'friends'}>
           {friends.map((key, i) => (
@@ -72,6 +88,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     cfg: s.cfg,
+    graph: s.contact.friendsGraph,
     relations: s.user.relations,
   };
 };

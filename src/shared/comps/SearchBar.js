@@ -1,5 +1,13 @@
 import SchemaStyles from '../SchemaStyles';
-import {Image, Pressable, StyleSheet, TextInput, View} from 'react-native';
+import {
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import React, {useState} from 'react';
 
 /**
@@ -10,12 +18,20 @@ const iconDic = {
   iconClear: require('../../assets/image/icons/search_icon_delete.png'),
 };
 
-const SearchBar = ({style}) => {
+const SearchBar = ({style, dataProvider}) => {
   const {FG, row, alignItemsCenter, flex1, input, text, placeholderTextColor} =
       SchemaStyles(),
     {container, img, inputS, clear} = styles;
 
   const [KW, setKW] = useState('');
+  const searchResult = KW
+    ? Object.keys(dataProvider).filter(k => k.match(KW))
+    : [];
+  const render = key => (
+    <>
+      <Text>key</Text>
+    </>
+  );
   return (
     <View style={[FG]}>
       <View style={[style, row, alignItemsCenter, input, container]}>
@@ -31,6 +47,7 @@ const SearchBar = ({style}) => {
           <Image style={[clear]} source={iconDic.iconClear} />
         </Pressable>
       </View>
+      <FlatList data={searchResult} renderItem={render} />
     </View>
   );
 };
