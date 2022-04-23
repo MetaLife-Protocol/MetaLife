@@ -70,7 +70,14 @@ const App = () => {
         <Stack.Screen
           name="PeersScreen"
           //fixme: large title causes twinkle unusually
-          options={{title: 'Peers' /*, headerLargeTitle: true*/}}
+          options={{
+            title: 'Peers',
+            /*, headerLargeTitle: true*/
+            headerSearchBarOptions: {
+              hideWhenScrolling: true,
+              onChangeText: console.log,
+            },
+          }}
           component={PeersScreen}
         />
         <Stack.Screen name="PeersListScreen" component={PeersListScreen} />

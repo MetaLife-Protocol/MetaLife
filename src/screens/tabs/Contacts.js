@@ -1,11 +1,10 @@
-import React, {useEffect, useLayoutEffect} from 'react';
+import React from 'react';
 import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
-import SearchBar from '../../shared/comps/SearchBar';
 import FriendItem from './contacts/item/FriendItem';
-import {useNavigation} from '@react-navigation/native';
+import {SearchBar} from 'react-native-screens';
 
 const iconDic = {
   fb: require('../../assets/image/profiles/Facebook.png'),
@@ -18,7 +17,6 @@ const DATA_sn = [{icon: iconDic.fb}, {icon: iconDic.nf}, {icon: iconDic.tt}];
 const Contacts = ({
   friendsGraph,
   relations: [friends, following, follower],
-  navigation,
 }) => {
   const {BG} = SchemaStyles();
   const {searchBar, item} = styles;
@@ -29,28 +27,17 @@ const Contacts = ({
     </View>
   );
 
-  const {setOptions} = useNavigation();
-
-  useLayoutEffect(() => {
-    setOptions({
-      headerSearchBarOptions: {
-        hideWhenScrolling: true,
-        onChangeText: console.log,
-      },
-    });
-  }, [navigation]);
-
   return (
     <ScrollView contentInsetAdjustmentBehavior={'automatic'} style={BG}>
-      {/*<SearchBar style={[searchBar]} dataProvider={friendsGraph} />*/}
-      {/*<FlatList*/}
-      {/*  keyExtractor={(_, index) => index}*/}
-      {/*  data={DATA_sn}*/}
-      {/*  renderItem={snItem}*/}
-      {/*  horizontal={true}*/}
-      {/*  ItemSeparatorComponent={null}*/}
-      {/*  showsHorizontalScrollIndicator={false}*/}
-      {/*/>*/}
+      <SearchBar style={[searchBar]} dataProvider={friendsGraph} />
+      <FlatList
+        keyExtractor={(_, index) => index}
+        data={DATA_sn}
+        renderItem={snItem}
+        horizontal={true}
+        ItemSeparatorComponent={null}
+        showsHorizontalScrollIndicator={false}
+      />
       {friends.length > 0 && (
         <Section key={0} title={'friends'}>
           {friends.map((key, i) => (
