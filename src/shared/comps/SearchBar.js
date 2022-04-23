@@ -47,7 +47,7 @@ const SearchBar = ({style, dataProvider}) => {
           <Image style={[clear]} source={iconDic.iconClear} />
         </Pressable>
       </View>
-      <FlatList data={searchResult} renderItem={render} />
+      {/*<FlatList data={searchResult} renderItem={render} />*/}
     </View>
   );
 };

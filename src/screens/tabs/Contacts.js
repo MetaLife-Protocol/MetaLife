@@ -4,7 +4,7 @@ import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
 import FriendItem from './contacts/item/FriendItem';
-import {SearchBar} from 'react-native-screens';
+import SearchBar from '../../shared/comps/SearchBar';
 
 const iconDic = {
   fb: require('../../assets/image/profiles/Facebook.png'),
