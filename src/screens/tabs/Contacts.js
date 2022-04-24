@@ -18,20 +18,21 @@ const Contacts = ({graph, relations: [friends, following, follower]}) => {
   const {BG} = SchemaStyles();
   const {searchBar, item} = styles;
   const [result, setResult] = useState([]);
+  const [KW, setKW] = useState([]);
   const snItem = ({item: {icon}}) => (
     <View style={item}>
       <Image source={icon} />
     </View>
   );
-
   function changeTextHandler(text) {
+    setKW(text);
     setResult(text ? Object.keys(graph).filter(key => key.match(text)) : []);
   }
 
   return (
     <ScrollView contentInsetAdjustmentBehavior={'automatic'} style={BG}>
       <SearchBar style={[searchBar]} changeTextHandler={changeTextHandler} />
-      {result.length > 0 ? (
+      {result.length > 0 || KW !== '' ? (
         <Section key={0} title={'Search'}>
           {result.map((key, i) => (
             <FriendItem fId={key} key={i} />
