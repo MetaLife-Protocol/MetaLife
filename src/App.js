@@ -24,7 +24,7 @@ import CommentEditor from './screens/tabs/home/post/CommentEditor';
 const App = () => {
   const {barStyle, theme} = SchemaStyles();
   const [progress, setProgress] = useState(0);
-  const Stack = createNativeStackNavigator();
+  const {Navigator, Screen} = createNativeStackNavigator();
 
   // todo: loading bar test
   // useEffect(() => {
@@ -34,40 +34,32 @@ const App = () => {
   return (
     <NavigationContainer theme={theme}>
       <StatusBar barStyle={barStyle} />
-      {/*<Stack.Navigator initialRouteName="Guid">*/}
-      <Stack.Navigator initialRouteName="Tabs">
-        <Stack.Screen
-          name="Guid"
-          component={Guid}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen
-          name="Tabs"
-          options={{headerShown: false}}
-          component={Tabs}
-        />
+      {/*<Navigator initialRouteName="Guid">*/}
+      <Navigator initialRouteName="Tabs">
+        <Screen name="Guid" component={Guid} options={{headerShown: false}} />
+        <Screen name="Login" component={Login} />
+        <Screen name="SignUp" component={SignUp} />
+        <Screen name="Tabs" options={{headerShown: false}} component={Tabs} />
         {/* Posts */}
-        <Stack.Screen
+        <Screen
           name="PostMsgEditor"
           options={{title: 'Post'}}
           component={PostMsgEditor}
         />
-        <Stack.Screen
+        <Screen
           name="CommentEditor"
           options={{title: 'Reply'}}
           component={CommentEditor}
         />
         {/* Messages */}
-        <Stack.Screen
+        <Screen
           name="MessageDetailsScreen"
           options={{title: 'Message'}}
           component={MessageDetailsScreen}
         />
         {/* Contacts */}
-        <Stack.Screen name="FriendList" component={FriendList} />
-        <Stack.Screen
+        <Screen name="FriendList" component={FriendList} />
+        <Screen
           name="PeersScreen"
           //fixme: large title causes twinkle unusually
           options={{
@@ -76,23 +68,23 @@ const App = () => {
           }}
           component={PeersScreen}
         />
-        <Stack.Screen name="PeersListScreen" component={PeersListScreen} />
-        <Stack.Screen
+        <Screen name="PeersListScreen" component={PeersListScreen} />
+        <Screen
           name="PeerDetailsScreen"
           options={{title: 'Peers'}}
           component={PeerDetailsScreen}
         />
         {/* Profiles */}
-        <Stack.Screen name="Setting" component={Setting} />
-        <Stack.Screen name="Pubs" component={Pubs} />
-        <Stack.Screen
+        <Screen name="Setting" component={Setting} />
+        <Screen name="Pubs" component={Pubs} />
+        <Screen
           name="TextEditor"
           options={{title: ''}}
           component={TextEditor}
         />
         {/* Screen holder */}
-        <Stack.Screen name="SubScreen" options={{}} component={SubScreen} />
-      </Stack.Navigator>
+        <Screen name="SubScreen" options={{}} component={SubScreen} />
+      </Navigator>
       {/*<LoadingBar style={[{position: 'absolute'}]} loaded={progress} />*/}
     </NavigationContainer>
   );

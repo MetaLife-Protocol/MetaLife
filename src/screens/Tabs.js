@@ -13,7 +13,8 @@ import I18n from '../i18n/I18n';
 import HeaderProfiles from './tabs/profiles/HeaderProfiles';
 import HeaderRightBtn from './tabs/HeaderRightBtn';
 import {connect} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useCallback} from 'react';
 
 const iconDic = {
   Home_icon_Default: require('../assets/image/tabBtn/Home_icon_Default.png'),
@@ -49,9 +50,15 @@ const Tabs = ({darkMode}) => {
     : headerBtnIconDic.addBlack;
   const {navigate} = useNavigation();
   const goScreen = screenName => () => navigate(screenName);
-  const Tab = createBottomTabNavigator();
+  const {Navigator, Screen} = createBottomTabNavigator();
+  const index = useNavigation().getState().routes[0].state?.index || 0;
+  useFocusEffect(
+    useCallback(() => {
+      console.log('index:', index);
+    }, []),
+  );
   return (
-    <Tab.Navigator
+    <Navigator
       initialRouteName={'Home'}
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color, size}) => (
@@ -63,7 +70,7 @@ const Tabs = ({darkMode}) => {
           />
         ),
       })}>
-      <Tab.Screen
+      <Screen
         name={'Home'}
         component={Home}
         options={{
@@ -81,7 +88,7 @@ const Tabs = ({darkMode}) => {
           headerRightContainerStyle: [{right: 19}],
         }}
       />
-      <Tab.Screen
+      <Screen
         name={'Messages'}
         component={Messages}
         options={{
@@ -98,7 +105,7 @@ const Tabs = ({darkMode}) => {
           headerRightContainerStyle: [{right: 19}],
         }}
       />
-      <Tab.Screen
+      <Screen
         name={'Contacts'}
         component={Contacts}
         options={{
@@ -121,7 +128,7 @@ const Tabs = ({darkMode}) => {
           headerRightContainerStyle: [{right: 19}],
         }}
       />
-      <Tab.Screen
+      <Screen
         name={'Discover'}
         component={Discover}
         options={{
@@ -131,7 +138,7 @@ const Tabs = ({darkMode}) => {
           headerTitleStyle: [{fontSize: 34}],
         }}
       />
-      <Tab.Screen
+      <Screen
         name={'Profiles'}
         component={Profiles}
         options={{
@@ -139,7 +146,7 @@ const Tabs = ({darkMode}) => {
           header: () => <HeaderProfiles />,
         }}
       />
-    </Tab.Navigator>
+    </Navigator>
   );
 };
 
