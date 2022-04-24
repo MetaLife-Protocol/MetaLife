@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StatusBar,
   TextInput,
@@ -8,10 +8,10 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
-import {connect} from 'react-redux/lib/exports';
+import SchemaStyles, { colorsSchema } from '../../shared/SchemaStyles';
+import { connect } from 'react-redux/lib/exports';
 import RoundBtn from '../../shared/comps/RoundBtn';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const iconDic = {
@@ -21,17 +21,20 @@ const iconDic = {
   Dark_icon_selected: require('../../assets/image/accountBtn/Dark_icon_selected.png'),
   Confirm_icon_default: require('../../assets/image/accountBtn/Confirm_icon_default.png'),
   Confirm_icon_selected: require('../../assets/image/accountBtn/Confirm_icon_selected.png'),
+  Scan_icon_dark: require('../../assets/image/accountBtn/Scan_icon_black.png'),
+  Scan_icon_white: require('../../assets/image/accountBtn/Scan_icon_white.png'),
 };
 
-const Import = ({name, setName}) => {
-  const {barStyle, BG, FG, flex1, input, text, marginTop10} = SchemaStyles(),
-    {textHolder} = colorsSchema;
+const Import = ({ name, setName, darkMode }) => {
+  const { barStyle, BG, FG, flex1, input, text, marginTop10 } = SchemaStyles(),
+    { textHolder } = colorsSchema;
 
   const [nick, setNick] = useState(''),
     [pwd, setPwd] = useState(''),
     [confirm, setConfirm] = useState(''),
+    [keystorePwd, setKeystorePwd] = useState(''),
     [tab, setTab] = useState(0),
-    {replace} = useNavigation();
+    { replace } = useNavigation();
 
   const [mnemonic, setMnemonic] = useState('');
   const [focusedClear, setfocusedClear] = useState(true);
@@ -78,16 +81,169 @@ const Import = ({name, setName}) => {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={[styles.body]}>
+          {/* Mnemonic */}
+          {tab == 0 ? <View style={[styles.body]}>
             <View style={[styles.area]}>
-              <TextInput textHolder="Please use space to separate the mnemonic words">
-              </TextInput>
+              <TextInput
+                style={[text, styles.inputText, styles.areaText]}
+                placeholder={'Please use space to separate the mnemonic words'}
+                numberOfLines={4}
+                multiline={true}
+                placeholderTextColor={textHolder}
+              />
             </View>
-          </View>
+            <View style={[styles.inputBox]}>
+              <TextInput
+                style={[text, styles.inputText]}
+                placeholder={'Set Password'}
+                secureTextEntry={focusedConfirm ? true : false}
+                placeholderTextColor={textHolder}
+                onChangeText={setPwd}
+              />
+              <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
+                <Image
+                  style={styles.icon}
+                  source={iconDic['Dark_icon_' + (focusedDark ? 'selected' : 'default')]}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.inputBox]}>
+              <TextInput
+                style={[text, styles.inputText]}
+                placeholder={'Confirm Password'}
+                secureTextEntry={focusedConfirm ? true : false}
+                placeholderTextColor={textHolder}
+                onChangeText={setConfirm}
+                maxLength={20}
+              />
+              <TouchableOpacity onPress={() => setfocusedConfirm(!focusedConfirm)}>
+                <Image
+                  style={styles.icon}
+                  source={iconDic['Confirm_icon_' + (focusedConfirm ? 'selected' : 'default')]}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.inputBox]}>
+              <TextInput
+                style={[text, styles.inputText]}
+                placeholder={'Password prompt (optional)'}
+                placeholderTextColor={textHolder}
+                onChangeText={setConfirm}
+                maxLength={20}
+              />
+            </View>
+          </View> : null}
+          {/* Keystore */}
+          {tab == 1 ? <View style={[styles.body]}>
+            <Text style={[{
+              fontSize: 16, color: "#4E586E", marginBottom: 10,
+            }]}>
+              Copy and paste Ether keystore.
+            </Text>
+            <View style={[styles.area]}>
+              <TextInput
+                style={[text, styles.inputText, styles.areaText]}
+                placeholder={'Keystore text content'}
+                numberOfLines={4}
+                multiline={true}
+                placeholderTextColor={textHolder}
+              />
+            </View>
+            <View style={[styles.inputBox]}>
+              <TextInput
+                style={[text, styles.inputText]}
+                placeholder={'Keystore Password'}
+                secureTextEntry={focusedConfirm ? true : false}
+                placeholderTextColor={textHolder}
+                onChangeText={setKeystorePwd}
+              />
+              <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
+                <Image
+                  style={styles.icon}
+                  source={iconDic['Dark_icon_' + (focusedDark ? 'selected' : 'default')]}
+                />
+              </TouchableOpacity>
+            </View>
+          </View> : null}
+          {/* Private Key */}
+          {tab == 2 ? <View style={[styles.body]}>
+            <View style={[styles.area]}>
+              <TextInput
+                style={[text, styles.inputText, styles.areaText]}
+                placeholder={'Please enter the private key in text.'}
+                numberOfLines={4}
+                multiline={true}
+                placeholderTextColor={textHolder}
+              />
+            </View>
+            <View style={[styles.inputBox]}>
+              <TextInput
+                style={[text, styles.inputText]}
+                placeholder={'Set Password'}
+                secureTextEntry={focusedConfirm ? true : false}
+                placeholderTextColor={textHolder}
+                onChangeText={setPwd}
+              />
+              <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
+                <Image
+                  style={styles.icon}
+                  source={iconDic['Dark_icon_' + (focusedDark ? 'selected' : 'default')]}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.inputBox]}>
+              <TextInput
+                style={[text, styles.inputText]}
+                placeholder={'Confirm Password'}
+                secureTextEntry={focusedConfirm ? true : false}
+                placeholderTextColor={textHolder}
+                onChangeText={setConfirm}
+                maxLength={20}
+              />
+              <TouchableOpacity onPress={() => setfocusedConfirm(!focusedConfirm)}>
+                <Image
+                  style={styles.icon}
+                  source={iconDic['Confirm_icon_' + (focusedConfirm ? 'selected' : 'default')]}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.inputBox]}>
+              <TextInput
+                style={[text, styles.inputText]}
+                placeholder={'Password prompt (optional)'}
+                placeholderTextColor={textHolder}
+                onChangeText={setConfirm}
+                maxLength={20}
+              />
+            </View>
+          </View> : null}
+          {/* Observe */}
+          {tab == 3 ? <View style={[styles.body]}>
+            <Text style={[{
+              fontSize: 16, color: "#4E586E", marginBottom: 10,
+            }]}>
+              Observe mode only needs the wallet address
+            </Text>
+            <View style={[styles.inputBox]}>
+              <TextInput
+                style={[text, styles.inputText]}
+                placeholder={'Enter the address'}
+                secureTextEntry={focusedConfirm ? true : false}
+                placeholderTextColor={textHolder}
+                onChangeText={setPwd}
+              />
+              <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
+                <Image
+                  style={styles.icon}
+                  source={iconDic['Scan_icon_' + (darkMode ? 'dark' : 'white')]}
+                />
+              </TouchableOpacity>
+            </View>
+          </View> : null}
         </View>
         <View style={flex1} />
         <RoundBtn
-          style={{marginBottom: 50}}
+          style={{ marginBottom: 50 }}
           title={'Start Importing'}
           disabled={!(nick && pwd && confirm && pwd == confirm)}
           press={() => createWallet()}
@@ -98,13 +254,15 @@ const Import = ({name, setName}) => {
 };
 
 const msp = s => {
-  return {};
+  return {
+    darkMode: s.cfg.darkMode
+  };
 };
 
 const mdp = d => {
   return {
-    setName: name => d({type: 'set', payload: name}),
-    deleteName: name => d({type: 'delete'}),
+    setName: name => d({ type: 'set', payload: name }),
+    deleteName: name => d({ type: 'delete' }),
   };
 };
 
@@ -151,8 +309,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#4E586E",
     borderRadius: 12,
-    paddingHorizontal: 16, 
+    paddingHorizontal: 16,
     paddingVertical: 10,
+  },
+  areaText: {
+    textAlignVertical: 'top',
   }
 });
 
