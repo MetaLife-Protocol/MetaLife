@@ -8,6 +8,7 @@ import SignUp from './screens/log/SignUp';
 import Create from './screens/log/Create';
 import ImportAccount from './screens/log/ImportAccount';
 import BackupWallet from './screens/log/BackupWallet';
+import Wallet from './screens/log/Wallet';
 import Backup from './screens/log/Backup';
 import SubScreen from './screens/SubScreen';
 import {connect} from 'react-redux/lib/exports';
@@ -39,6 +40,7 @@ const App = () => {
         <Stack.Screen name="Backup Wallet" component={BackupWallet} />
         <Stack.Screen name="Backup Mnemonic" component={Backup} />
         <Stack.Screen name="Import Account" component={ImportAccount} />
+        <Stack.Screen name="Wallet" component={Wallet} />
         <Stack.Screen
           name="Tabs"
           options={{headerShown: false}}
