@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useLayoutEffect} from 'react';
 import {SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../shared/SchemaStyles';
@@ -6,6 +6,7 @@ import {useTimer} from '../../../shared/Hooks';
 import Section from '../../../shared/comps/Section';
 import PeerItem from './item/PeerItem';
 import {getConnectedPeers, getStagedPeers} from '../../../remote/ssbOP';
+import {useNavigation} from '@react-navigation/native';
 
 const PeersScreen = ({
   stagedPeers,
@@ -13,8 +14,18 @@ const PeersScreen = ({
   connectedPeers,
   setConnectedPeers,
 }) => {
-  const {BG, flex1} = SchemaStyles();
+  const {BG, flex1, text} = SchemaStyles();
   useTimer(refreshStagedAndConnected, 3000);
+  const navigation = useNavigation(),
+    {setOptions} = navigation;
+  useLayoutEffect(() => {
+    setOptions({
+      headerSearchBarOptions: {
+        onChangeText: event => console.log(event.currentTarget),
+        textColor: text,
+      },
+    });
+  }, [navigation]);
 
   function refreshStagedAndConnected() {
     getStagedPeers(setStagedPeers);

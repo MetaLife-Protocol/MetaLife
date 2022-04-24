@@ -73,10 +73,6 @@ const App = () => {
           options={{
             title: 'Peers',
             /*, headerLargeTitle: true*/
-            headerSearchBarOptions: {
-              hideWhenScrolling: true,
-              onChangeText: console.log,
-            },
           }}
           component={PeersScreen}
         />

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useLayoutEffect} from 'react';
 import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
 import FriendItem from './contacts/item/FriendItem';
 import SearchBar from '../../shared/comps/SearchBar';
+import {useNavigation} from '@react-navigation/native';
 
 const iconDic = {
   fb: require('../../assets/image/profiles/Facebook.png'),
@@ -18,8 +19,18 @@ const Contacts = ({
   friendsGraph,
   relations: [friends, following, follower],
 }) => {
-  const {BG} = SchemaStyles();
+  const {BG, text} = SchemaStyles();
   const {searchBar, item} = styles;
+  const navigation = useNavigation(),
+    {setOptions} = navigation;
+  useLayoutEffect(() => {
+    setOptions({
+      headerSearchBarOptions: {
+        onChangeText: event => console.log(event.currentTarget),
+        textColor: text,
+      },
+    });
+  }, [navigation]);
 
   const snItem = ({item: {icon}}) => (
     <View style={item}>

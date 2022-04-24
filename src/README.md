@@ -8,7 +8,7 @@
 >> brew install nvm  
 >> nvm install 12.19.0  
 >> brew tap homebrew/cask-versions  
->> brew install --cask zulu11 react-native-debugger  
+>> brew install --cask zulu11 react-native-debugger (npm install --save-dev react-devtools@4.14.0 react-devtools-core@4.14.0)  
 >> brew install watchman
 >
 > ### install android sdk
