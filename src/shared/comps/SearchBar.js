@@ -18,20 +18,12 @@ const iconDic = {
   iconClear: require('../../assets/image/icons/search_icon_delete.png'),
 };
 
-const SearchBar = ({style, dataProvider}) => {
+const SearchBar = ({style, changeTextHandler}) => {
   const {FG, row, alignItemsCenter, flex1, input, text, placeholderTextColor} =
       SchemaStyles(),
     {container, img, inputS, clear} = styles;
-
   const [KW, setKW] = useState('');
-  const searchResult = KW
-    ? Object.keys(dataProvider).filter(k => k.match(KW))
-    : [];
-  const render = key => (
-    <>
-      <Text>key</Text>
-    </>
-  );
+
   return (
     <View style={[FG]}>
       <View style={[style, row, alignItemsCenter, input, container]}>
@@ -40,14 +32,21 @@ const SearchBar = ({style, dataProvider}) => {
           style={[flex1, input, inputS, text]}
           placeholder={'Search'}
           value={KW}
-          onChangeText={setKW}
+          autoCapitalize={'none'}
+          onChangeText={text => {
+            changeTextHandler(text);
+            setKW(text);
+          }}
           placeholderTextColor={placeholderTextColor.color}
         />
-        <Pressable onPress={() => setKW('')}>
+        <Pressable
+          onPress={() => {
+            changeTextHandler('');
+            setKW('');
+          }}>
           <Image style={[clear]} source={iconDic.iconClear} />
         </Pressable>
       </View>
-      {/*<FlatList data={searchResult} renderItem={render} />*/}
     </View>
   );
 };

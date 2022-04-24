@@ -1,11 +1,10 @@
-import React, {useLayoutEffect} from 'react';
+import React, {useState} from 'react';
 import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
 import FriendItem from './contacts/item/FriendItem';
 import SearchBar from '../../shared/comps/SearchBar';
-import {useNavigation} from '@react-navigation/native';
 
 const iconDic = {
   fb: require('../../assets/image/profiles/Facebook.png'),
@@ -15,60 +14,61 @@ const iconDic = {
 
 const DATA_sn = [{icon: iconDic.fb}, {icon: iconDic.nf}, {icon: iconDic.tt}];
 
-const Contacts = ({
-  friendsGraph,
-  relations: [friends, following, follower],
-}) => {
-  const {BG, text} = SchemaStyles();
+const Contacts = ({graph, relations: [friends, following, follower]}) => {
+  const {BG} = SchemaStyles();
   const {searchBar, item} = styles;
-  const navigation = useNavigation(),
-    {setOptions} = navigation;
-  useLayoutEffect(() => {
-    setOptions({
-      headerSearchBarOptions: {
-        onChangeText: event => console.log(event.currentTarget),
-        textColor: text,
-      },
-    });
-  }, [navigation]);
-
+  const [result, setResult] = useState([]);
   const snItem = ({item: {icon}}) => (
     <View style={item}>
       <Image source={icon} />
     </View>
   );
 
+  function changeTextHandler(text) {
+    setResult(text ? Object.keys(graph).filter(key => key.match(text)) : []);
+  }
+
   return (
     <ScrollView contentInsetAdjustmentBehavior={'automatic'} style={BG}>
-      <SearchBar style={[searchBar]} dataProvider={friendsGraph} />
-      <FlatList
-        keyExtractor={(_, index) => index}
-        data={DATA_sn}
-        renderItem={snItem}
-        horizontal={true}
-        ItemSeparatorComponent={null}
-        showsHorizontalScrollIndicator={false}
-      />
-      {friends.length > 0 && (
-        <Section key={0} title={'friends'}>
-          {friends.map((key, i) => (
+      <SearchBar style={[searchBar]} changeTextHandler={changeTextHandler} />
+      {result.length > 0 ? (
+        <Section key={0} title={'Search'}>
+          {result.map((key, i) => (
             <FriendItem fId={key} key={i} />
           ))}
         </Section>
-      )}
-      {following.length > 0 && (
-        <Section key={1} title={'following'}>
-          {following.map((key, i) => (
-            <FriendItem fId={key} key={i} />
-          ))}
-        </Section>
-      )}
-      {follower.length > 0 && (
-        <Section key={2} title={'follower'}>
-          {follower.map((key, i) => (
-            <FriendItem fId={key} key={i} />
-          ))}
-        </Section>
+      ) : (
+        <>
+          <FlatList
+            keyExtractor={(_, index) => index}
+            data={DATA_sn}
+            renderItem={snItem}
+            horizontal={true}
+            ItemSeparatorComponent={null}
+            showsHorizontalScrollIndicator={false}
+          />
+          {friends.length > 0 && (
+            <Section key={0} title={'friends'}>
+              {friends.map((key, i) => (
+                <FriendItem fId={key} key={i} />
+              ))}
+            </Section>
+          )}
+          {following.length > 0 && (
+            <Section key={1} title={'following'}>
+              {following.map((key, i) => (
+                <FriendItem fId={key} key={i} />
+              ))}
+            </Section>
+          )}
+          {follower.length > 0 && (
+            <Section key={2} title={'follower'}>
+              {follower.map((key, i) => (
+                <FriendItem fId={key} key={i} />
+              ))}
+            </Section>
+          )}
+        </>
       )}
     </ScrollView>
   );
