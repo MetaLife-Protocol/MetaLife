@@ -41,5 +41,5 @@ export const friendsGraphParse = (graph, id, includeFriend = true) => {
 export const mutualFriend = (fA, fB) => fA.filter(v => fB.includes(v));
 
 export function searchGraphById(graph, kw) {
-  return Object.keys(graph).filter(key => key.match(kw));
+  return Object.keys(graph).filter(key => key.includes(kw));
 }

@@ -40,6 +40,8 @@ const SearchBar = ({style, changeTextHandler}) => {
           placeholderTextColor={placeholderTextColor.color}
         />
         <Pressable
+          hitSlop={10}
+          pressRetentionOffset={10}
           onPress={() => {
             changeTextHandler('');
             setKW('');

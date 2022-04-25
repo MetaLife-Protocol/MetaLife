@@ -17,22 +17,29 @@ const PostMsgPanel = ({
   voted,
   voteArr,
   commentArr,
+  forwardHandler,
   commentHandler,
   likeHandler,
 }) => {
   const {row, text} = SchemaStyles();
   return (
     <View style={style}>
-      <Pressable onPress={null}>
+      <Pressable
+        hitSlop={10}
+        pressRetentionOffset={10}
+        onPress={forwardHandler}>
         <Image source={iconDic.iconForward} />
       </Pressable>
-      <Pressable onPress={commentHandler}>
+      <Pressable
+        hitSlop={10}
+        pressRetentionOffset={10}
+        onPress={commentHandler}>
         <View style={[row]}>
           <Text style={[text, {paddingRight: 6}]}>{commentArr.length}</Text>
           <Image source={iconDic.iconComment} />
         </View>
       </Pressable>
-      <Pressable onPress={likeHandler}>
+      <Pressable hitSlop={10} pressRetentionOffset={10} onPress={likeHandler}>
         <View style={[row]}>
           <Text style={[text, {paddingRight: 6}]}>{voteArr.length}</Text>
           <Image

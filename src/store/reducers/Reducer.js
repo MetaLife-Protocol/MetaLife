@@ -9,10 +9,13 @@ import {contactReducer} from './contact';
 import {infoReducer} from './info';
 import {commentReducer} from './comment';
 import {pubReducer} from './pub';
+import {runtimeReducer} from './runtime';
 
 const reducer = combineReducers({
   // app
   cfg: cfgReducer,
+  // runtime
+  runtime: runtimeReducer,
   // user & ssb
   user: userReducer,
   contact: contactReducer,

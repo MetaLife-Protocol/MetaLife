@@ -34,15 +34,15 @@ export const regExp = {
 // .replace(/\s/g,"")                                          //全局匹配空字符;
 
 export function searchPublicMsgByPostId(msg, kw) {
-  return msg.filter(({key}) => key.match(kw));
+  return msg.filter(({key}) => key.includes(kw));
 }
 
 export function searchPrivateMsgByContentAndRecp(msg, kw) {
   return Object.keys(msg).filter(key =>
     msg[key].some(
       v =>
-        v.value.content.text.match(kw) ||
-        v.value.content.recps.some(r => r.match(kw)),
+        v.value.content.text.includes(kw) ||
+        v.value.content.recps.some(r => r.includes(kw)),
     ),
   );
 }

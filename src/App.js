@@ -20,6 +20,7 @@ import TextEditor from './shared/screens/TextEditor';
 import Pubs from './screens/tabs/profiles/Pubs';
 import {StatusBar} from 'react-native';
 import CommentEditor from './screens/tabs/home/post/CommentEditor';
+import PullMenu from './shared/comps/PullMenu';
 
 const App = () => {
   const {barStyle, theme} = SchemaStyles();
@@ -85,6 +86,7 @@ const App = () => {
         {/* Screen holder */}
         <Screen name="SubScreen" options={{}} component={SubScreen} />
       </Navigator>
+      <PullMenu />
       {/*<LoadingBar style={[{position: 'absolute'}]} loaded={progress} />*/}
     </NavigationContainer>
   );

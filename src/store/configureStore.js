@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import I18n from 'react-native-i18n';
 import {populateStyles} from '../shared/SchemaStyles';
 import {devToolsEnhancer} from 'redux-devtools-extension';
-import {useColorScheme} from 'react-native';
 
 /**
  * Created on 11 Nov 2021 by lonmee
@@ -14,7 +13,7 @@ import {useColorScheme} from 'react-native';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: [],
+  blacklist: ['runtime'],
 };
 const persistedReducer = persistReducer(persistConfig, reducer);
 

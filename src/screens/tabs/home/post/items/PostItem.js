@@ -2,7 +2,16 @@
  * Created on 17 Feb 2022 by lonmee
  */
 import React, {useCallback} from 'react';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  Dimensions,
+  Image,
+  PixelRatio,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import SchemaStyles from '../../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {localDate} from '../../../../../utils';
@@ -12,8 +21,9 @@ import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
 import {sendMsg} from '../../../../../remote/ssbOP';
-import {getMessageSSBURIRegex} from '../../../../../../nodejs-assets/nodejs-project/index';
 import {regExp} from '../../../../../store/filters/MsgFilters';
+import Toast from 'react-native-tiny-toast';
+import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
 const PostItem = ({
   item,
@@ -22,17 +32,20 @@ const PostItem = ({
   commentDic,
   infoDic,
   voteDic,
+  showPullMenu,
 }) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
     {container, textContainer, contentContainer, panel} = styles;
-
+  const {setString} = nativeClipboard;
   const {
     key,
     value: {author, timestamp, content},
   } = item;
 
   const {navigate, push} = useNavigation();
+
+  const {scale} = useWindowDimensions();
 
   const {
       name = author.substring(0, 10),
@@ -61,6 +74,28 @@ const PostItem = ({
   const commentHandler = useCallback(
     function () {
       push('CommentEditor', {name, shownMsg: item});
+    },
+    [item],
+  );
+
+  const forwardHandler = useCallback(
+    function (e) {
+      showPullMenu({
+        position: {
+          x: PixelRatio.getPixelSizeForLayoutSize(e.nativeEvent.pageX / scale),
+          y: PixelRatio.getPixelSizeForLayoutSize(e.nativeEvent.pageY / scale),
+        },
+        buttons: [
+          {
+            title: 'copy message id',
+            handler: () => {
+              setString(key);
+              Toast.show('id copied');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+        ],
+      });
     },
     [item],
   );
@@ -105,6 +140,7 @@ const PostItem = ({
             voted={voted}
             voteArr={voteArr}
             commentArr={commentArr}
+            forwardHandler={forwardHandler}
             commentHandler={commentHandler}
             likeHandler={likeHandler}
           />
@@ -143,7 +179,7 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {};
+  return {showPullMenu: menu => d({type: 'pullMenu', payload: menu})};
 };
 
 export default connect(msp, mdp)(PostItem);
