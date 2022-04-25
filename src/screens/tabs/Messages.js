@@ -55,7 +55,7 @@ const Messages = ({privateMsg}) => {
       {result.length > 0 || KW !== '' ? (
         <Section key={0} title={'Search'}>
           {result.map(key => (
-            <MessageItem fId={key} key={key} msgArr={privateMsg[key]} />
+            <MessageItem fId={key} rootKey={key} msgArr={privateMsg[key]} />
           ))}
         </Section>
       ) : (
