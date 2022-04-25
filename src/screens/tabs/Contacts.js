@@ -5,6 +5,7 @@ import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
 import FriendItem from './contacts/item/FriendItem';
 import SearchBar from '../../shared/comps/SearchBar';
+import {searchGraphById} from '../../store/filters/ContactsFilters';
 
 const iconDic = {
   fb: require('../../assets/image/profiles/Facebook.png'),
@@ -27,7 +28,7 @@ const Contacts = ({graph, relations: [friends, following, follower]}) => {
 
   function changeTextHandler(text) {
     setKW(text);
-    setResult(text ? Object.keys(graph).filter(key => key.match(text)) : []);
+    setResult(text ? searchGraphById(graph, text) : []);
   }
 
   return (

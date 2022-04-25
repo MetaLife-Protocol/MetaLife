@@ -34,14 +34,11 @@ export const regExp = {
 // .replace(/\s/g,"")                                          //全局匹配空字符;
 
 export function searchPrivateMsgByContentAndRecp(msg, kw) {
-  const resultContent = Object.keys(msg).filter(key =>
-    msg[key].some(v => v.value.content.text.match(kw)),
+  return Object.keys(msg).filter(key =>
+    msg[key].some(
+      v =>
+        v.value.content.text.match(kw) ||
+        v.value.content.recps.some(r => r.match(kw)),
+    ),
   );
-  const resultRecp = Object.keys(msg).filter(key =>
-    msg[key].some(v => v.value.content.recps.some(v => v.match(kw))),
-  );
-  resultRecp.forEach(
-    value => !resultContent.includes(value) && resultContent.push(value),
-  );
-  return resultContent;
 }
