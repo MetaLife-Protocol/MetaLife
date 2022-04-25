@@ -21,7 +21,7 @@ const iconDic = {
   Confirm_icon_selected: require('../../assets/image/accountBtn/Confirm_icon_selected.png'),
 };
 
-const Wallet = ({ name, setName }) => {
+const Wallet = ({ name, setName, currentAccount }) => {
   const { barStyle, BG, FG, flex1, input, text, marginTop10 } = SchemaStyles(),
     { textHolder } = colorsSchema;
 
@@ -105,7 +105,9 @@ const Wallet = ({ name, setName }) => {
 };
 
 const msp = s => {
-  return {};
+  return {
+    currentAccount: s.account.currentAccount
+  };
 };
 
 const mdp = d => {

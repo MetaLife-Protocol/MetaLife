@@ -9,7 +9,7 @@ import OriginalBtn from '../../shared/comps/OriginalBtn';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Backup = ({name, setName}) => {
+const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
   const {
       barStyle,
       BG,
@@ -41,22 +41,24 @@ const Backup = ({name, setName}) => {
   const [temp, setTemp] = useState([]);
 
   useEffect(() => {
-    _retrieveData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('Account');
-        if (value !== null) {
-          // We have data!!
-          const data = JSON.parse(value);
-          console.log(data.mnemonic.split(' '));
-          setOriginal(data.mnemonic.split(' '));
-          setTemp(shuffle(data.mnemonic.split(' ')));
-        }
-      } catch (error) {
-        console.log('error', error);
-      }
-    };
-    _retrieveData();
-    console.log('account data fetched');
+    // _retrieveData = async () => {
+    //   try {
+    //     const value = await AsyncStorage.getItem('Account');
+    //     if (value !== null) {
+    //       // We have data!!
+    //       const data = JSON.parse(value);
+    //       console.log(data.mnemonic.split(' '));
+    //       setOriginal(data.mnemonic.split(' '));
+    //       setTemp(shuffle(data.mnemonic.split(' ')));
+    //     }
+    //   } catch (error) {
+    //     console.log('error', error);
+    //   }
+    // };
+    // _retrieveData();
+    // console.log('account data fetched');
+    setOriginal(currentAccount.Mnemonic.split(' '));
+    setTemp(shuffle(currentAccount.Mnemonic.split(' ')));
   }, []);
 
   const shuffle = array => {
@@ -81,7 +83,10 @@ const Backup = ({name, setName}) => {
 
   const checkMnemonic = () => {
     if (isCorrect()) {
-      replace('Tabs');
+      currentAccount.isBackup = true;
+      console.log(currentAccount);
+      setCurrentAccount(currentAccount);
+      replace('Wallet');
     } else {
       Alert.alert('Error', 'The mnemonic sequence is wrong, please try again', [
         {
@@ -324,13 +329,18 @@ const Backup = ({name, setName}) => {
   );
 };
 
-const msp = s => s.cfg;
+const msp = s => {
+  return {
+    currentAccount: s.account.currentAccount
+  };
+};
 
 const mdp = d => {
   return {
     setDarkMode: darkMode => d({type: 'setDarkMode', payload: darkMode}),
     setName: name => d({type: 'set', payload: name}),
     deleteName: name => d({type: 'delete'}),
+    setCurrentAccount: account => d({ type: 'setCurrentAccount', payload: account }),
   };
 };
 

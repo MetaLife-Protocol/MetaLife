@@ -11,7 +11,7 @@ const iconDic = {
   Confirm_icon_selected: require('../../assets/image/accountBtn/Confirm_icon_selected.png'),
 };
 
-const BackupWallet = ({ name, setName }) => {
+const BackupWallet = ({ name, setName, currentAccount }) => {
   const { barStyle, BG, FG, flex1, input, text, marginTop10, modalBackground } = SchemaStyles(),
     { textHolder } = colorsSchema;
 
@@ -23,25 +23,25 @@ const BackupWallet = ({ name, setName }) => {
   const [focusedConfirm, setfocusedConfirm] = useState(true);
 
   useEffect(() => {
-    _retrieveData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('Account');
-        if (value !== null) {
-          // We have data!!
-          const data = JSON.parse(value);
-          setPwd(data.password);
-        }
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
-    _retrieveData();
-    console.log("account data fetched");
+    // _retrieveData = async () => {
+    //   try {
+    //     const value = await AsyncStorage.getItem('Account');
+    //     if (value !== null) {
+    //       // We have data!!
+    //       const data = JSON.parse(value);
+    //       setPwd(data.password);
+    //     }
+    //   } catch (error) {
+    //     console.log("error", error);
+    //   }
+    // };
+    // _retrieveData();
+    // console.log("account data fetched");
   }, []);
   
   const checkPassword = () => {
-    console.log(pwd, confirm);
-    if(pwd == confirm) {
+    console.log(currentAccount);
+    if(currentAccount.Password == confirm) {
       replace('Backup Mnemonic');
     } else {
       Alert.alert('Error', 'Incorrect password, please re-enter', [
@@ -146,7 +146,9 @@ const BackupWallet = ({ name, setName }) => {
 };
 
 const msp = s => {
-  return {};
+  return {
+    currentAccount: s.account.currentAccount
+  };
 };
 
 const mdp = d => {

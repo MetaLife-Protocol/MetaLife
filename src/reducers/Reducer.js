@@ -3,6 +3,7 @@ import {contactsReducer} from './contacts';
 import {msgReducer} from './msg';
 import {daoReducer} from './dao';
 import {userReducer} from './user';
+import {accountReducer} from './account';
 
 export const cfgInitState = {lang: 'en', darkMode: true};
 export const cfgReducer = (state = cfgInitState, {type, payload}) => {
@@ -24,6 +25,7 @@ const reducer = combineReducers({
   msg: msgReducer,
   contacts: contactsReducer,
   dao: daoReducer,
+  account: accountReducer,
 });
 
 export default reducer;
