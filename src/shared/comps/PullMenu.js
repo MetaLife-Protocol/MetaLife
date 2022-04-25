@@ -19,9 +19,11 @@ export default ({style = []}) => {
     buttons.length > 0 && (
       <Pressable
         style={[background]}
-        onPressIn={() =>
-          dispatch({type: 'pullMenu', payload: {position: {}, buttons: []}})
-        }>
+        onPressIn={event => {
+          // todo: use capture
+          // event.preventDefault();
+          dispatch({type: 'pullMenu', payload: {position: {}, buttons: []}});
+        }}>
         <View
           style={[
             flex1,
