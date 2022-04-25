@@ -33,6 +33,10 @@ export const regExp = {
 // .replace(/\n/g,"")                                          //全局匹配换行
 // .replace(/\s/g,"")                                          //全局匹配空字符;
 
+export function searchPublicMsgByPostId(msg, kw) {
+  return msg.filter(({key}) => key.match(kw));
+}
+
 export function searchPrivateMsgByContentAndRecp(msg, kw) {
   return Object.keys(msg).filter(key =>
     msg[key].some(
