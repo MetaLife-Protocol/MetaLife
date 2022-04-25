@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import SearchBar from '../../shared/comps/SearchBar';
 import MessageItem from './messages/item/MessageItem';
+import Section from '../../shared/comps/Section';
+import {searchPrivateMsgByContentAndRecp} from '../../store/filters/MsgFilters';
 
 const iconDic = {
   photo: require('../../assets/image/profiles/photo.png'),
@@ -16,6 +18,8 @@ const Messages = ({privateMsg}) => {
   const {textHolder} = colorsSchema;
   const {FG, row, text, alignItemsCenter} = SchemaStyles();
   const {searchBar, contactItemContainer, textView, nameTF, descTF} = styles;
+  const [result, setResult] = useState([]);
+  const [KW, setKW] = useState('');
 
   const snItem = ({item: {name, icon}}) => (
     <View
@@ -40,12 +44,25 @@ const Messages = ({privateMsg}) => {
     </View>
   );
 
+  function changeTextHandler(text) {
+    setKW(text);
+    setResult(text ? searchPrivateMsgByContentAndRecp(privateMsg, text) : []);
+  }
+
   return (
     <ScrollView style={FG}>
-      <SearchBar style={[searchBar]} />
-      {Object.keys(privateMsg).map(key => (
-        <MessageItem key={key} rootKey={key} msgArr={privateMsg[key]} />
-      ))}
+      <SearchBar style={[searchBar]} changeTextHandler={changeTextHandler} />
+      {result.length > 0 || KW !== '' ? (
+        <Section key={0} title={'Search'}>
+          {result.map(key => (
+            <MessageItem fId={key} key={key} msgArr={privateMsg[key]} />
+          ))}
+        </Section>
+      ) : (
+        Object.keys(privateMsg).map(key => (
+          <MessageItem key={key} rootKey={key} msgArr={privateMsg[key]} />
+        ))
+      )}
     </ScrollView>
   );
 };

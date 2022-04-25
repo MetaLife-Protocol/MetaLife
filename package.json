@@ -17,7 +17,7 @@
     "android script": "~~~~~~~~~~~~~~ android ~~~~~~~~~~~~~~~~~",
     "build-backend-android": "./tools/build-backend.mjs --android",
     "android": "react-native run-android --verbose",
-    "install-android-ide-release": "adb install -r android/app/release/app-release.apk",
+    "install-android-ide-release": "adb install -r android/app/release/app-release0425.apk",
     "build-android-release": "cd android && ./gradlew assembleRelease && cd ..",
     "install-android-release": "adb install -r android/app/build/outputs/apk/release/app-release.apk",
     "ios script": "~~~~~~~~~~~~~~~ ios ~~~~~~~~~~~~~~~~",
