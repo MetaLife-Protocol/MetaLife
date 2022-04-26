@@ -44,7 +44,7 @@ const App = () => {
         {/* Posts */}
         <Screen
           name="PostMsgEditor"
-          options={{title: 'Post', lazy: false}}
+          options={{title: 'Post'}}
           component={PostMsgEditor}
         />
         <Screen
