@@ -15,7 +15,11 @@ export const timeBackwardSorter = (a, b) =>
 
 export const regExp = {
   imageLink: RegExp(/\!\[[\s\S]*?\]\([\s\S]*?\)/g),
-  feedLink: RegExp(/%[a-zA-Z0-9_\-\/]{43}=.sha256/g),
+  peerLink: RegExp(/@[a-zA-Z0-9_\-/+]{43}=.ed25519/g),
+  feedLink: RegExp(/%[a-zA-Z0-9_\-/+]{43}=.sha256/g),
+  peerAndaFee: RegExp(
+    /(@[a-zA-Z0-9_\-/+]{43}=.ed25519)|(%[a-zA-Z0-9_\-/+]{43}=.sha256)/g,
+  ),
 };
 
 // .replace(/(\*\*|__)(.*?)(\*\*|__)/g,'')                     //全局匹配内粗体
@@ -50,5 +54,5 @@ export function searchPrivateMsgByContentAndRecp(msg, kw) {
 
 export function applyFilters(str) {
   str = str.replace(regExp.imageLink, '').trim();
-  return [str.match(regExp.feedLink), str.split(regExp.feedLink)];
+  return str.split(regExp.peerAndaFee);
 }

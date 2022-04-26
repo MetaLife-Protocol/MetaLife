@@ -3,7 +3,6 @@
  */
 import React, {useCallback} from 'react';
 import {
-  Dimensions,
   Image,
   PixelRatio,
   Pressable,
@@ -12,7 +11,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import SchemaStyles from '../../../../../shared/SchemaStyles';
+import SchemaStyles, {colorsBasics} from '../../../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {localDate} from '../../../../../utils';
 import PostMsgPanel from './PostMsgPannel';
@@ -21,7 +20,7 @@ import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
 import {sendMsg} from '../../../../../remote/ssbOP';
-import {applyFilters, regExp} from '../../../../../store/filters/MsgFilters';
+import {applyFilters} from '../../../../../store/filters/MsgFilters';
 import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
@@ -29,6 +28,7 @@ const PostItem = ({
   item,
   showPanel = true,
   feedId,
+  publicMsg,
   commentDic,
   infoDic,
   voteDic,
@@ -58,11 +58,7 @@ const PostItem = ({
     voted = voteArr.includes(feedId);
 
   // apply filters
-  // const [links, texts] = applyFilters(cText);
-  const [links, texts] = applyFilters(
-    '1%beMn7ADrpIQsxF7N5ksYI/YkSL2SQnXoSFfIPjrwhBs=.sha25623%beMn7ADrpIQsxF7N5ksYI/YkSL2SQnXoSFfIPjrwhBs=.sha2564',
-  );
-  console.log(links, texts);
+  const textArr = applyFilters(cText);
 
   const likeHandler = useCallback(
     function () {
@@ -107,6 +103,30 @@ const PostItem = ({
     [item],
   );
 
+  const peerPhase = id => (
+    <Text
+      style={[{color: colorsBasics.primary}]}
+      onPress={() => navigate('PeerDetailsScreen', id)}>
+      👤[${id.substring(1, 8)}...]
+    </Text>
+  );
+  const feedPhase = id => {
+    const {name = author.substring(0, 10)} = infoDic[author] || {},
+      item =
+        publicMsg.filter(v => v.key === id)[0] ||
+        Object.values(commentDic).filter(msgs =>
+          msgs.filter(v => v.key === id),
+        )[0][0];
+
+    return (
+      <Text
+        style={[{color: colorsBasics.primary}]}
+        onPress={() => push('CommentEditor', {name, shownMsg: item})}>
+        💬[${id.substring(1, 8)}...]
+      </Text>
+    );
+  };
+
   return (
     <View style={[row, container]}>
       <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
@@ -121,18 +141,21 @@ const PostItem = ({
             {'\n' + localDate(timestamp)}
           </Text>
         </Text>
-        <Text style={[text, contentContainer]}>{cText}</Text>
-        {texts.length > 0 &&
-          texts.map((phase, i) => (
-            <Text style={[text]} key={i}>
-              <Text>{phase}</Text>
-              {links[i] && (
-                <Text style={[{color: 'blue'}]}>
-                  {links[i].substring(0, 8) + '...'}
-                </Text>
-              )}
-            </Text>
-          ))}
+        <Text style={[text, contentContainer]}>
+          {textArr.length > 0 &&
+            textArr.map(
+              (phase, i) =>
+                phase && (
+                  <Text style={[text]} key={i}>
+                    {phase.charAt(0) === '@'
+                      ? peerPhase(phase)
+                      : phase.charAt(0) === '%'
+                      ? feedPhase(phase)
+                      : phase}
+                  </Text>
+                ),
+            )}
+        </Text>
         {mentions &&
           mentions.map(({link, name}, i) => (
             <View key={i}>
@@ -191,6 +214,7 @@ const msp = s => {
     commentDic: s.comment,
     infoDic: s.info,
     voteDic: s.vote,
+    publicMsg: s.public,
   };
 };
 
