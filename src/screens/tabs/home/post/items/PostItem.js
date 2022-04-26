@@ -112,6 +112,7 @@ const PostItem = ({
   );
   const feedPhase = id => {
     const {name = author.substring(0, 10)} = infoDic[author] || {},
+      // todo: optimize need for finding item when it's comment
       item =
         publicMsg.filter(v => v.key === id)[0] ||
         Object.values(commentDic).filter(msgs =>
