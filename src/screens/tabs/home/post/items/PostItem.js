@@ -21,7 +21,7 @@ import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
 import {sendMsg} from '../../../../../remote/ssbOP';
-import {regExp} from '../../../../../store/filters/MsgFilters';
+import {applyFilters, regExp} from '../../../../../store/filters/MsgFilters';
 import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
@@ -56,6 +56,13 @@ const PostItem = ({
     commentArr = commentDic[key] || [],
     voteArr = voteDic[key] || [],
     voted = voteArr.includes(feedId);
+
+  // apply filters
+  // const [links, texts] = applyFilters(cText);
+  const [links, texts] = applyFilters(
+    '1%beMn7ADrpIQsxF7N5ksYI/YkSL2SQnXoSFfIPjrwhBs=.sha25623%beMn7ADrpIQsxF7N5ksYI/YkSL2SQnXoSFfIPjrwhBs=.sha2564',
+  );
+  console.log(links, texts);
 
   const likeHandler = useCallback(
     function () {
@@ -114,9 +121,18 @@ const PostItem = ({
             {'\n' + localDate(timestamp)}
           </Text>
         </Text>
-        <Text style={[text, contentContainer]}>
-          {cText.replace(regExp.imageLink, '').trim()}
-        </Text>
+        <Text style={[text, contentContainer]}>{cText}</Text>
+        {texts.length > 0 &&
+          texts.map((phase, i) => (
+            <Text style={[text]} key={i}>
+              <Text>{phase}</Text>
+              {links[i] && (
+                <Text style={[{color: 'blue'}]}>
+                  {links[i].substring(0, 8) + '...'}
+                </Text>
+              )}
+            </Text>
+          ))}
         {mentions &&
           mentions.map(({link, name}, i) => (
             <View key={i}>

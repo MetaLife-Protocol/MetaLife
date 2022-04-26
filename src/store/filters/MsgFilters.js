@@ -15,6 +15,7 @@ export const timeBackwardSorter = (a, b) =>
 
 export const regExp = {
   imageLink: RegExp(/\!\[[\s\S]*?\]\([\s\S]*?\)/g),
+  feedLink: RegExp(/%[a-zA-Z0-9_\-\/]{43}=.sha256/g),
 };
 
 // .replace(/(\*\*|__)(.*?)(\*\*|__)/g,'')                     //全局匹配内粗体
@@ -45,4 +46,9 @@ export function searchPrivateMsgByContentAndRecp(msg, kw) {
         v.value.content.recps.some(r => r.includes(kw)),
     ),
   );
+}
+
+export function applyFilters(str) {
+  str = str.replace(regExp.imageLink, '').trim();
+  return [str.match(regExp.feedLink), str.split(regExp.feedLink)];
 }
