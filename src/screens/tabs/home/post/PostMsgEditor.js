@@ -2,7 +2,13 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React, {useReducer, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import {Image, SafeAreaView, ScrollView, TextInput} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../../shared/SchemaStyles';
@@ -19,12 +25,14 @@ const initialState = [],
     switch (type) {
       case 'add':
         return [...state, payload];
+      case 'set':
+        return payload;
       case 'remove':
         return state.filter(p => p.path !== payload);
     }
   };
 
-const PostMsgEditor = () => {
+const PostMsgEditor = ({cachedContent, cachePostContent}) => {
   const {FG, flex1, placeholderTextColor, text} = SchemaStyles();
   const {goBack} = useNavigation();
   const [content, setContent] = useState(''),
@@ -32,6 +40,26 @@ const PostMsgEditor = () => {
     [photo, dispatch] = useReducer(reducer, initialState);
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
   const scrollView = useRef();
+
+  useEffect(() => {
+    restore();
+    return cache;
+  }, []);
+
+  const cache = useCallback(() => {
+    console.log('cache post', {content, photo});
+    cachePostContent({content, photo});
+  }, [content, photo]);
+
+  const restore = useCallback(() => {
+    console.log('restore post', cachedContent);
+    cachePostContent.photo &&
+      dispatch({
+        type: 'set',
+        payload: cachePostContent.photo,
+      });
+    cachePostContent.content && setContent(cachePostContent.content);
+  }, [cachedContent]);
 
   function sendHandler() {
     const mentions = [];
@@ -101,11 +129,14 @@ const PostMsgEditor = () => {
 };
 
 const msp = s => {
-  return {};
+  return {cachedContent: s.runtime.postContent};
 };
 
 const mdp = d => {
-  return {};
+  return {
+    cachePostContent: content =>
+      d({type: 'cachePostContent', payload: content}),
+  };
 };
 
 export default connect(msp, mdp)(PostMsgEditor);

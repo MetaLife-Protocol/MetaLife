@@ -24,7 +24,7 @@ const Home = ({verbose, publicMsg, setFeedId}) => {
         initializeHandlers(store);
         checkAddon('launch');
       });
-  });
+  }, []);
 
   function changeTextHandler(text) {
     setKW(text);

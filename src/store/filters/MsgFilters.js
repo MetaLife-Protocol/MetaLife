@@ -56,3 +56,14 @@ export function applyFilters(str) {
   str = str.replace(regExp.imageLink, '').trim();
   return str.split(regExp.peerAndaFee);
 }
+
+export function findFromComment(cDic, key) {
+  const rArr = Object.values(cDic);
+  for (const rArrElement of rArr) {
+    for (const rArrElementElement of rArrElement) {
+      if (rArrElementElement.key === key) {
+        return rArrElementElement;
+      }
+    }
+  }
+}

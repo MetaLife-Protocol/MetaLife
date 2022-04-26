@@ -20,7 +20,10 @@ import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
 import {sendMsg} from '../../../../../remote/ssbOP';
-import {applyFilters} from '../../../../../store/filters/MsgFilters';
+import {
+  applyFilters,
+  findFromComment,
+} from '../../../../../store/filters/MsgFilters';
 import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
@@ -112,13 +115,9 @@ const PostItem = ({
   );
   const feedPhase = id => {
     const {name = author.substring(0, 10)} = infoDic[author] || {},
-      // todo: optimize need for finding item when it's comment
       item =
         publicMsg.filter(v => v.key === id)[0] ||
-        Object.values(commentDic).filter(msgs =>
-          msgs.filter(v => v.key === id),
-        )[0][0];
-
+        findFromComment(commentDic, id);
     return (
       <Text
         style={[{color: colorsBasics.primary}]}
