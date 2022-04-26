@@ -27,6 +27,7 @@ import SupplementaryBalance from './screens/photon/supplementary_balance';
 import PhotonAddressContact from './screens/photon/address_contact';
 import PhotonTokenOption from './screens/photon/token_option';
 import {View} from 'react-native';
+import CreateNFT from './screens/nft/create_nft';
 
 const App = () => {
   const {theme, BG} = SchemaStyles();
@@ -147,6 +148,12 @@ const App = () => {
           name="PhotonTokenOption"
           options={{headerTitle: 'Token option'}}
           component={PhotonTokenOption}
+        />
+        {/*  NFT*/}
+        <Stack.Screen
+          name="CreateNFT"
+          options={{headerTitle: 'Create NFT'}}
+          component={CreateNFT}
         />
       </Stack.Navigator>
     </NavigationContainer>
