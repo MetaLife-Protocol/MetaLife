@@ -30,9 +30,12 @@ const iconDic = {
   Dark_icon_selected: require('../../assets/image/accountBtn/Dark_icon_selected.png'),
   Confirm_icon_default: require('../../assets/image/accountBtn/Confirm_icon_default.png'),
   Confirm_icon_selected: require('../../assets/image/accountBtn/Confirm_icon_selected.png'),
+  Back_icon_dark: require('../../assets/image/walletBtn/back-black.png'),
+  Back_icon_white: require('../../assets/image/walletBtn/back-white.png'),
+  Tootle_icon: require('../../assets/image/walletBtn/icon_toggle_default.png'),
 };
 
-const Wallet = ({name, setName, currentAccount}) => {
+const Wallet = ({name, setName, currentAccount, darkMode}) => {
   const {barStyle, BG, FG, flex1, input, text, marginTop10, modalBackground} =
       SchemaStyles(),
     {textHolder} = colorsSchema;
@@ -64,6 +67,18 @@ const Wallet = ({name, setName, currentAccount}) => {
   return (
     <View style={[BG, flex1]}>
       <StatusBar barStyle={barStyle} />
+      <View style={[FG, styles.header]}>
+        <TouchableOpacity onPress={() => console.log('back')}>
+          <Image
+            style={{width: 20, height: 20}}
+            source={iconDic['Back_icon_' + (!darkMode ? 'dark' : 'white')]}
+          />
+        </TouchableOpacity>
+        <Text style={[text, {fontSize: 22}]}>Wallet</Text>
+        <TouchableOpacity onPress={() => console.log('toggle')}>
+          <Image style={{width: 20, height: 20}} source={iconDic['Tootle_icon']} />
+        </TouchableOpacity>
+      </View>
       <View style={[FG, flex1, marginTop10, styles.body]}>
         <ImageBackground
           style={{
@@ -210,6 +225,7 @@ const Wallet = ({name, setName, currentAccount}) => {
 const msp = s => {
   return {
     currentAccount: s.account.currentAccount,
+    darkMode: s.cfg.darkMode,
   };
 };
 
@@ -323,6 +339,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.1)',
     padding: 15,
     borderRadius: 8,
+  },
+  header: {
+    height: 50,
+    display: "flex",
+    paddingHorizontal: 20,
+    justifyContent: "space-between",
+    alignItems: "center",
+    flexDirection: "row",
   },
 });
 

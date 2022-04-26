@@ -40,7 +40,7 @@ const App = () => {
         <Stack.Screen name="Backup Wallet" component={BackupWallet} />
         <Stack.Screen name="Backup Mnemonic" component={Backup} />
         <Stack.Screen name="Import Account" component={ImportAccount} />
-        <Stack.Screen name="Wallet" component={Wallet} />
+        <Stack.Screen name="Wallet" component={Wallet} options={{headerShown: false}} />
         <Stack.Screen
           name="Tabs"
           options={{headerShown: false}}

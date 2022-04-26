@@ -5,13 +5,21 @@ import {connect} from 'react-redux/lib/exports';
 import RoundBtn from '../../shared/comps/RoundBtn';
 import {useNavigation} from '@react-navigation/native';
 
-const Login = ({name, setName}) => {
+const Login = ({name, setName, currentAccount}) => {
   const {barStyle, BG, FG, flex1, inputBG, text, marginTop10} = SchemaStyles(),
     {textHolder} = colorsSchema;
 
   const [nick, setNick] = useState('');
   const [pwd, setPwd] = useState('');
   const {replace} = useNavigation();
+
+  const onLogin = () => {
+    console.log(currentAccount);
+    if (currentAccount.name == '') replace('Create Account');
+    else {
+      replace('Wallet');
+    }
+  };
 
   return (
     <View style={[BG, flex1]}>
@@ -37,14 +45,18 @@ const Login = ({name, setName}) => {
           style={{marginBottom: 50}}
           title={'Login'}
           disabled={!(nick && pwd)}
-          press={() => replace('Create Account')}
+          press={() => onLogin()}
         />
       </View>
     </View>
   );
 };
 
-const msp = s => s.cfg;
+const msp = s => {
+  return {
+    currentAccount: s.account.currentAccount,
+  };
+};
 
 const mdp = d => {
   return {
