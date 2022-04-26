@@ -32,36 +32,20 @@ const initialState = [],
     }
   };
 
-const PostMsgEditor = ({cachedContent, cachePostContent}) => {
+const PostMsgEditor = ({cachedContent, cachePostContent, resetPostContent}) => {
   const {FG, flex1, placeholderTextColor, text} = SchemaStyles();
   const {goBack} = useNavigation();
-  const [content, setContent] = useState(''),
+  const [content, setContent] = useState(cachedContent.content),
     [offset, setOffset] = useState(0),
-    [photo, dispatch] = useReducer(reducer, initialState);
+    [photo, dispatch] = useReducer(reducer, cachedContent.photo);
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
-  const scrollView = useRef();
 
   useEffect(() => {
-    restore();
-    return cache;
-  }, []);
-
-  const cache = useCallback(() => {
-    console.log('cache post', {content, photo});
     cachePostContent({content, photo});
   }, [content, photo]);
 
-  const restore = useCallback(() => {
-    console.log('restore post', cachedContent);
-    cachePostContent.photo &&
-      dispatch({
-        type: 'set',
-        payload: cachePostContent.photo,
-      });
-    cachePostContent.content && setContent(cachePostContent.content);
-  }, [cachedContent]);
-
   function sendHandler() {
+    resetPostContent();
     const mentions = [];
     if (photo.length) {
       for (const photoKey in photo) {
@@ -94,7 +78,7 @@ const PostMsgEditor = ({cachedContent, cachePostContent}) => {
 
   return (
     <SafeAreaView style={[flex1, FG]}>
-      <ScrollView style={[flex1]} ref={scrollView} overScrollMode={'auto'}>
+      <ScrollView style={[flex1]} overScrollMode={'auto'}>
         <TextInput
           style={[text, {paddingHorizontal: 15}]}
           autoFocus={true}
@@ -136,6 +120,7 @@ const mdp = d => {
   return {
     cachePostContent: content =>
       d({type: 'cachePostContent', payload: content}),
+    resetPostContent: () => d({type: 'reset'}),
   };
 };
 
