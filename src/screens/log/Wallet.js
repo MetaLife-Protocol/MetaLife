@@ -32,7 +32,7 @@ const iconDic = {
   Confirm_icon_selected: require('../../assets/image/accountBtn/Confirm_icon_selected.png'),
   Back_icon_dark: require('../../assets/image/walletBtn/back-black.png'),
   Back_icon_white: require('../../assets/image/walletBtn/back-white.png'),
-  Tootle_icon: require('../../assets/image/walletBtn/icon_toggle_default.png'),
+  Toogle_icon: require('../../assets/image/walletBtn/icon_toggle_default.png'),
 };
 
 const Wallet = ({name, setName, currentAccount, darkMode}) => {
@@ -50,7 +50,8 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
   const [focusedClear, setfocusedClear] = useState(true);
   const [focusedDark, setfocusedDark] = useState(true);
   const [focusedConfirm, setfocusedConfirm] = useState(true);
-  const [confirmModal, setconfirmModal] = useState(true);
+  const [confirmModal, setconfirmModal] = useState(false);
+  const [menuModal, setmenuModal] = useState(false);
 
   const cleaerPress = () => {
     setfocusedClear(!focusedClear);
@@ -66,6 +67,24 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
 
   return (
     <View style={[BG, flex1]}>
+      {/* {menuModal ? (
+          // <TouchableOpacity onPress={() => setconfirmModal(false)}>
+            <View
+              style={[
+                FG,
+                {
+                  position: 'absolute',
+                  left: 0,
+                  top: 0,
+                  right: 0,
+                  width: "100%",
+                  height: '100%',
+                  opacity: 0.8,
+                  zIndex: 3,
+                },
+              ]}></View>
+          // </TouchableOpacity>
+        ) : null} */}
       <StatusBar barStyle={barStyle} />
       <View style={[FG, styles.header]}>
         <TouchableOpacity onPress={() => console.log('back')}>
@@ -75,9 +94,20 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
           />
         </TouchableOpacity>
         <Text style={[text, {fontSize: 22}]}>Wallet</Text>
-        <TouchableOpacity onPress={() => console.log('toggle')}>
-          <Image style={{width: 20, height: 20}} source={iconDic['Tootle_icon']} />
-        </TouchableOpacity>
+
+        <View
+          style={[
+            styles.toogle,
+            {backgroundColor: darkMode ? '#292E2E' : '#F8F9FD'},
+          ]}>
+          <Text style={{color: '#29DAD7', fontSize: 15, marginLeft: 10}}>
+            SPE
+          </Text>
+          <Image
+            style={{width: 20, height: 20, marginLeft: 2}}
+            source={iconDic['Toogle_icon']}
+          />
+        </View>
       </View>
       <View style={[FG, flex1, marginTop10, styles.body]}>
         <ImageBackground
@@ -88,11 +118,117 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
           source={require('../../assets/image/discover/Discover_backgroud_DAO.png')}>
           <View style={[styles.interface]}>
             <View style={[styles.interfaceHead]}>
-              <Text>asdf</Text>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Text style={{color: '#fff'}}>{currentAccount.Name}</Text>
+                <TouchableOpacity onPress={() => console.log('back')}>
+                  <Image
+                    style={[styles.icon, {marginLeft: 10}]}
+                    source={require('../../assets/image/walletBtn/icon-eye-default.png')}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => console.log('back')}>
+                  <Image
+                    style={[styles.icon, {marginLeft: 10}]}
+                    source={require('../../assets/image/walletBtn/icon-eye-default.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  position: 'relative',
+                }}>
+                {!currentAccount.isBackup ? (
+                  <TouchableOpacity onPress={() => replace('Backup Wallet')}>
+                    <Text style={[styles.backup]}>Backup</Text>
+                  </TouchableOpacity>
+                ) : null}
+                <TouchableOpacity onPress={() => setmenuModal(!menuModal)}>
+                  <Image
+                    style={[styles.icon, {marginLeft: 10, zIndex: 10}]}
+                    source={require('../../assets/image/walletBtn/icon_more_default_white.png')}
+                  />
+                </TouchableOpacity>
+                {menuModal ? (
+                  <View
+                    style={[
+                      FG,
+                      {
+                        position: 'absolute',
+                        right: 0,
+                        top: 25,
+                        width: 148,
+                        height: 210,
+                        padding: 15,
+                        borderRadius: 6,
+                        zIndex: 10,
+                      },
+                    ]}>
+                    <TouchableOpacity
+                      onPress={() => console.log('Switch account')}>
+                      <Text style={[text]}>Switch Account</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => replace("Create")}>
+                      <Text style={[text, {marginTop: 10}]}>
+                        Create Account
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => console.log('Manage account')}>
+                      <Text
+                        style={[
+                          text,
+                          {
+                            marginTop: 10,
+                            paddingBottom: 15,
+                            borderBottomColor: '#0000001a',
+                            borderBottomWidth: 1,
+                          },
+                        ]}>
+                        Manage Account
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => console.log('Scan QR Code')}>
+                      <Text
+                        style={[
+                          text,
+                          {
+                            marginTop: 15,
+                            paddingBottom: 15,
+                            borderBottomColor: '#0000001a',
+                            borderBottomWidth: 1,
+                          },
+                        ]}>
+                        Scan QR Code
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => console.log('Address Contract')}>
+                      <Text style={[text, {marginTop: 10}]}>
+                        Address Contract
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
+              </View>
+            </View>
+            <View style={{marginTop: 16}}>
+              <Text style={{fontSize: 27, fontWeight: 'bold', color: '#fff'}}>
+                $287103.124
+              </Text>
             </View>
             <View style={[styles.interfaceFooter]}>
               <Text style={{color: '#fff', fontSize: 13}}>
-                0x5D30E10741D1954BB5A4e88Ab7b15789b6df3420
+                {currentAccount.Address}
               </Text>
               <TouchableOpacity onPress={() => setconfirmModal(true)}>
                 <Image
@@ -103,6 +239,7 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
             </View>
           </View>
         </ImageBackground>
+
         <View style={[styles.tab]}>
           <View style={[tab == 0 ? styles.active : null]}>
             <TouchableOpacity onPress={() => setTab(0)}>
@@ -266,7 +403,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
-  interfaceFooter: {},
+  interfaceFooter: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   tab: {
     display: 'flex',
     marginTop: 10,
@@ -342,11 +484,32 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 50,
-    display: "flex",
+    display: 'flex',
     paddingHorizontal: 20,
-    justifyContent: "space-between",
-    alignItems: "center",
-    flexDirection: "row",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  toogle: {
+    width: 67.5,
+    height: 22,
+    borderRadius: 12,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  interfaceHead: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  backup: {
+    backgroundColor: '#6A8AEB',
+    fontSize: 13,
+    paddingVertical: 1,
+    paddingHorizontal: 5,
+    borderRadius: 4,
   },
 });
 
