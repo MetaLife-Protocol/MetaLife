@@ -27,7 +27,7 @@ const MessageItem = ({rootKey, feedId, infoDic, msgArr}) => {
       onPress={() => navigate('MessageDetailsScreen', {rootKey, recp})}>
       <View style={[item, row, flex1]}>
         <HeadIcon
-          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGrilIcon}
         />
         <View style={[textContainer]}>
           <Text numberOfLines={1} style={[title, text]}>

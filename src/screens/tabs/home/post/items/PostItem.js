@@ -133,7 +133,7 @@ const PostItem = ({
     <View style={[row, container]}>
       <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
         <HeadIcon
-          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGrilIcon}
         />
       </Pressable>
       <View style={[textContainer]}>
