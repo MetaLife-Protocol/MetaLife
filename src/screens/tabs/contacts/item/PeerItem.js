@@ -46,7 +46,7 @@ const PeerItem = ({
             image
               ? {uri: blobIdToUrl(image)}
               : type == 'lan'
-              ? PeerIcons.peerBoyIcon
+              ? PeerIcons.peerGirlIcon
               : type == 'pub'
               ? PeerIcons.pubIcon
               : PeerIcons.nftIcon
