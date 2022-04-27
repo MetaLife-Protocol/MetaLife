@@ -121,7 +121,9 @@ const PostItem = ({
     return (
       <Text
         style={[{color: colorsBasics.primary}]}
-        onPress={() => push('CommentEditor', {name, shownMsg: item})}>
+        onPress={() =>
+          push('CommentEditor', {name, shownMsg: item || {key: id}})
+        }>
         💬[${id.substring(1, 8)}...]
       </Text>
     );
