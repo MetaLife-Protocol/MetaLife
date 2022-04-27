@@ -87,7 +87,7 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
         ) : null} */}
       <StatusBar barStyle={barStyle} />
       <View style={[FG, styles.header]}>
-        <TouchableOpacity onPress={() => console.log('back')}>
+        <TouchableOpacity onPress={() => replace('Wallet Detail')}>
           <Image
             style={{width: 20, height: 20}}
             source={iconDic['Back_icon_' + (!darkMode ? 'dark' : 'white')]}
