@@ -17,7 +17,7 @@ const Login = ({name, setName, currentAccount}) => {
     console.log(currentAccount);
     if (currentAccount.name == '') replace('Create Account');
     else {
-      replace('Wallet Details');
+      replace('Import Account');
     }
   };
 

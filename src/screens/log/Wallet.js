@@ -176,7 +176,7 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
                       <Text style={[text]}>Switch Account</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => replace("Create")}>
+                      onPress={() => replace("Create Account")}>
                       <Text style={[text, {marginTop: 10}]}>
                         Create Account
                       </Text>

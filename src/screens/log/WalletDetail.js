@@ -7,8 +7,10 @@ import {
   Text,
   Modal,
   Image,
+  TextInput,
   TouchableOpacity,
 } from 'react-native';
+// import Clipboard from '@react-native-community/clipboard';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import RoundBtn from '../../shared/comps/RoundBtn';
@@ -36,10 +38,24 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
   const [next, setNext] = useState(false);
 
   const [confirmModal, setconfirmModal] = useState(true);
-  const [modalVisible, setmodalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [privateKeyModal, setPrivateKeyModal] = useState(false);
+  const [keystoreModal, setKeystoreModal] = useState(false);
+  const [confirm, setConfirm] = useState('');
+
+  const checkPassword = () => {
+    if (currentAccount.Password == confirm) {
+      setModalVisible(false);
+      setPrivateKeyModal(true);
+    }
+  };
 
   const promtConfirm = () => {
     setpromptModal(!promptModal);
+  };
+
+  const copyToClipboard = () => {
+    // Clipboard.setString('hello world');
   };
 
   return (
@@ -92,7 +108,7 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
             style={{marginTop: 14.5, color: '#8E8E92', textAlign: 'center'}}>
             {currentAccount.Address}
           </Text>
-          <TouchableOpacity onPress={() => console.log('export keystore')}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
             <View
               style={{
                 backgroundColor: '#EDEEF1',
@@ -106,7 +122,7 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
               <Text style={[text, {fontSize: 15}]}>Export keystore</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => console.log('Export private key')}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
             <View
               style={{
                 backgroundColor: '#EDEEF1',
@@ -201,8 +217,7 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
                   onChangeText={setConfirm}
                 />
                 {confirm ? (
-                  <TouchableOpacity
-                    onPress={() => setfocusedConfirm(setConfirm(''))}>
+                  <TouchableOpacity onPress={() => setConfirm('')}>
                     <Image
                       style={styles.icon}
                       source={require('../../assets/image/walletDetail/icon_delete_default.png')}
@@ -221,6 +236,45 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
                 style={{width: 150, marginHorizontal: 0}}
                 title={'Confirm'}
                 press={() => checkPassword()}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={privateKeyModal}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setPrivateKeyModal(!privateKeyModal);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalView, modalBackground]}>
+            <View style={styles.modalHeader}>
+              <Text style={[text, styles.modalText]}>Export private key</Text>
+              <Text
+                style={[text, styles.modalText]}
+                onPress={() => setPrivateKeyModal(!privateKeyModal)}>
+                X
+              </Text>
+            </View>
+            <View style={styles.modalBody}>
+              <View style={styles.area}>
+                <Text style={[text, {fontSize: 16}]}>
+                  {currentAccount.PrivateKey}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.modalFooter}>
+              <RoundBtn
+                style={{width: '100%', marginHorizontal: 0}}
+                title={'Copy'}
+                press={() => {
+                  setPrivateKeyModal(false);
+                  copyToClipboard();
+                }}
               />
             </View>
           </View>
@@ -328,6 +382,25 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'rgba(0,0,0,0.8)',
     zIndex: 1,
+  },
+  inputText: {
+    fontSize: 15,
+  },
+  inputBox: {
+    borderColor: '#F0F0F0',
+    borderWidth: 1,
+    borderRadius: 12,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '100%',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+  },
+  area: {
+    padding: 15,
+    backgroundColor: '#F8F9FD',
+    borderRadius: 8,
   },
 });
 
