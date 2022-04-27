@@ -60,6 +60,7 @@ const PostItem = ({
     voteArr = voteDic[key] || [],
     voted = voteArr.includes(feedId);
 
+  mentions && mentions.length > 0 && console.log(mentions[0]);
   // apply filters
   const textArr = applyFilters(cText);
 
@@ -159,22 +160,31 @@ const PostItem = ({
             )}
         </Text>
         {mentions &&
-          mentions.map(({link, name}, i) => (
-            <View key={i}>
-              <Image
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: 10,
-                  alignSelf: i % 2 ? 'flex-end' : 'flex-start',
-                }}
-                height={200}
-                width={200}
-                source={{uri: blobIdToUrl(link)}}
-              />
-              <Text>name</Text>
-            </View>
-          ))}
+          mentions.length > 0 &&
+          mentions.map(({link, name}, i) => {
+            const url = blobIdToUrl(link);
+            console.log(url);
+            // todo: fix photo recycle
+            return (
+              url &&
+              link.charAt(0) === '&' && (
+                <View key={i}>
+                  <Image
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: 10,
+                      alignSelf: i % 2 ? 'flex-end' : 'flex-start',
+                    }}
+                    height={200}
+                    width={200}
+                    source={{uri: blobIdToUrl(link)}}
+                  />
+                  <Text>name</Text>
+                </View>
+              )
+            );
+          })}
         {showPanel && (
           <PostMsgPanel
             style={[row, flex1, justifySpaceBetween, panel]}
