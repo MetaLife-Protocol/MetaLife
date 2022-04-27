@@ -13,6 +13,7 @@ import { connect } from 'react-redux/lib/exports';
 import RoundBtn from '../../shared/comps/RoundBtn';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ethers } from 'ethers';
 
 const iconDic = {
   Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),
@@ -45,6 +46,29 @@ const Import = ({ name, setName, darkMode }) => {
     setfocusedClear(!focusedClear);
     setNick('');
   };
+
+  const importWallet = () => {
+    console.log("import wallet");
+    const idx = 0;
+    let path = `m/44'/60'/${idx}'/0/0`;
+    let account = ethers.Wallet.fromMnemonic(mnemonic, path);
+    let provider = ethers.getDefaultProvider();
+    // const account = provider.eth.accounts.create();
+    // const keystore = encryptKeyStore(provider,  account.privateKey, pwd);
+    console.log(account.address, account.privateKey);
+    // replace('Backup Wallet');
+    let currentAccount = {
+      Name: "sample",
+      Password: pwd,
+      PassPrompt: prompt,
+      isBackup: false,
+      Mnemonic: mnemonic,
+      Address: account.address,
+      PrivateKey: account.privateKey,
+      Keystore: ''
+    };
+    setCurrentAccount(currentAccount);
+  }
 
   return (
     <View style={[BG, flex1]}>
@@ -245,8 +269,8 @@ const Import = ({ name, setName, darkMode }) => {
         <RoundBtn
           style={{ marginBottom: 50 }}
           title={'Start Importing'}
-          disabled={!(nick && pwd && confirm && pwd == confirm)}
-          press={() => createWallet()}
+          disabled={!(mnemonic && pwd && confirm && pwd == confirm)}
+          press={() => importWallet()}
         />
       </View>
     </View>
