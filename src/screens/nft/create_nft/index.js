@@ -16,25 +16,30 @@ import {
   TextInput,
   ScrollView,
 } from 'react-native';
-import {PureTextInput, RoundBtn, useStyle} from 'metalife-base';
+import {PureTextInput, RoundBtn, useDialog, useStyle} from 'metalife-base';
 import StepView from './comps/StepView';
 import {checkAndLaunchCamera} from '../../../utils';
 import Toast from 'react-native-tiny-toast';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {createChannel} from 'react-native-photon';
+import ConfirmNftInformationDialog from './comps/ConfirmNftInformationDialog';
 
 const CreateNFT = ({}) => {
   const styles = useStyle(styleFun);
-  const [nftImage, setNftImage] = useState('');
+  const [nftImage, setNftImage] = useState({}),
+    [name, setName] = useState(''),
+    [description, setDescription] = useState('');
+  const dialog = useDialog();
 
   function cameraHandler({didCancel, errorCode, errorMessage, assets}) {
     if (errorCode || didCancel) {
       return errorCode && Toast.show(errorMessage);
     }
     const [file] = assets;
-    console.log('file::', file);
+    console.log('file assets::', assets);
     // submit('image', file.uri.replace('file://', ''));
-    setNftImage(file.uri.replace('file://', ''));
+    // setNftImage(file.uri.replace('file://', ''));
+    setNftImage(file);
   }
   const uploadNft = useCallback(() => {
     // checkAndLaunchCamera(cameraHandler);
@@ -44,21 +49,37 @@ const CreateNFT = ({}) => {
         maxHeight: 1920,
         maxWidth: 1080,
         quality: 0.88,
-        mediaType: 'photo',
+        mediaType: 'mixed',
         selectionLimit: 1,
       },
       cameraHandler,
     );
   }, []);
 
+  const createFun = useCallback(() => {
+    dialog.show(
+      <ConfirmNftInformationDialog
+        file={nftImage}
+        description={description}
+        name={name}
+      />,
+    );
+  }, [dialog, nftImage]);
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        keyboardDismissMode={'on-drag'}>
         <View style={styles.contentContainer}>
           <StepView style={styles.step} content={'step:1'} />
           <TouchableOpacity onPress={uploadNft}>
             <Image
-              source={require('../../../assets/image/nft/create_nft_add.png')}
+              source={
+                nftImage.uri
+                  ? {uri: nftImage.uri}
+                  : require('../../../assets/image/nft/create_nft_add.png')
+              }
               style={styles.addImg}
             />
           </TouchableOpacity>
@@ -74,9 +95,7 @@ const CreateNFT = ({}) => {
               borderRadius: 12,
             }}
             placeholder={'NFT name:'}
-            onChangeText={v => {
-              console.log('onChangeText::', v);
-            }}
+            onChangeText={setName}
           />
           <Text style={styles.title}>NFT Description:</Text>
           <PureTextInput
@@ -91,16 +110,14 @@ const CreateNFT = ({}) => {
               paddingVertical: 0,
             }}
             placeholder={'NFT Description:'}
-            onChangeText={v => {
-              console.log('onChangeText::', v);
-            }}
+            onChangeText={setDescription}
             inputProps={{multiline: true}}
           />
           <RoundBtn
             style={styles.button}
-            disabled={false}
+            disabled={!(nftImage.uri && name && description)}
             title={'Create'}
-            press={() => {}}
+            press={createFun}
           />
         </View>
       </ScrollView>
