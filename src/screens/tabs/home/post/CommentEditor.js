@@ -7,7 +7,7 @@ import {Keyboard, SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import MsgInput from '../../../../shared/comps/MsgInput';
-import {sendMsg} from '../../../../remote/ssbOP';
+import {loadMsg, sendMsg} from '../../../../remote/ssbOP';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import ItemAgent from './ItemAgent';
 import Section from '../../../../shared/comps/Section';
@@ -18,14 +18,22 @@ const PostMsgEditor = ({commentDic}) => {
 
   const {setOptions} = useNavigation();
   const {params} = useRoute(),
-    {name, shownMsg} = params,
-    {key, value} = shownMsg,
+    {name, shownMsg: shownMsgInit} = params;
+  const [shownMsg, setShownMsg] = useState(shownMsgInit);
+  const {key, value} = shownMsg,
     commentArr = commentDic[key] || [];
 
   const scrollView = useRef();
 
   useLayoutEffect(() => {
     name && setOptions({title: `comment to ${name}`});
+    !value &&
+      key &&
+      loadMsg(
+        key,
+        false,
+        (err, {messages: [shownMsg]}) => err || setShownMsg(shownMsg),
+      );
   }, []);
 
   /**
@@ -63,19 +71,23 @@ const PostMsgEditor = ({commentDic}) => {
 
   return (
     <SafeAreaView style={[flex1, FG]}>
-      <ScrollView style={[flex1]} ref={scrollView} overScrollMode={'auto'}>
-        <Section title={'Reply to:'}>
-          <PostItem item={shownMsg} showPanel={false} />
-        </Section>
-        {commentArr.length > 0 && (
-          <Section title={'Replies:'}>
-            {commentArr.map(info => (
-              <ItemAgent info={{item: info}} key={info.key} />
-            ))}
-          </Section>
-        )}
-      </ScrollView>
-      <MsgInput sendHandler={sendHandler} />
+      {value && (
+        <>
+          <ScrollView style={[flex1]} ref={scrollView} overScrollMode={'auto'}>
+            <Section title={'Reply to:'}>
+              <PostItem item={shownMsg} showPanel={false} />
+            </Section>
+            {commentArr.length > 0 && (
+              <Section title={'Replies:'}>
+                {commentArr.map(info => (
+                  <ItemAgent info={{item: info}} key={info.key} />
+                ))}
+              </Section>
+            )}
+          </ScrollView>
+          <MsgInput sendHandler={sendHandler} />
+        </>
+      )}
     </SafeAreaView>
   );
 };

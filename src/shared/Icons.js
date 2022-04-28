@@ -3,7 +3,9 @@
  */
 
 export const PeerIcons = {
-  peerIcon: require('../assets/image/contacts/peer_icon.png'),
+  peerBoyIcon: require('../assets/image/contacts/peer_boy.png'),
+  peerGirlIcon: require('../assets/image/contacts/peer_girl.png'),
+  pubIcon: require('../assets/image/contacts/pub.png'),
   daoIcon: require('../assets/image/contacts/dao_icon.png'),
   nftIcon: require('../assets/image/contacts/nft_icon.png'),
 };

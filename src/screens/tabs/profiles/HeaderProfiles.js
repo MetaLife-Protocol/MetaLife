@@ -52,7 +52,7 @@ const HeaderProfiles = ({feedId, relations, infoDic}) => {
           style={[photo]}
           width={90}
           height={90}
-          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
         />
       </Pressable>
       <Text style={[nameFont, marginTop10]}>

@@ -14,10 +14,7 @@ import MsgInput from '../../../shared/comps/MsgInput';
 import {sendMsg} from '../../../remote/ssbOP';
 import {localDate} from '../../../utils';
 import HeadIcon from '../../../shared/comps/HeadIcon';
-
-const iconDic = {
-  peerIcon: require('../../../assets/image/contacts/peer_icon.png'),
-};
+import {PeerIcons as iconDic} from '../../../shared/Icons';
 // let scrollView;
 
 const MessageDetailsScreen = ({
@@ -37,7 +34,7 @@ const MessageDetailsScreen = ({
     <HeadIcon
       height={30}
       width={30}
-      image={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
+      image={image ? {uri: blobIdToUrl(image)} : iconDic.peerGirlIcon}
     />
   );
 

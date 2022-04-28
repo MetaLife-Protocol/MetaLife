@@ -64,7 +64,7 @@ const PeerDetailsHeader = ({
             Toast.show('ID copied');
           }}>
           <HeadIcon
-            image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
+            image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
           />
         </Pressable>
         <View style={[textContainer]}>

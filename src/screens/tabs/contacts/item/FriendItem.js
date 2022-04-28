@@ -6,12 +6,7 @@ import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {findRootKey} from '../../../../store/filters/MsgFilters';
-
-const iconDic = {
-  peerIcon: require('../../../../assets/image/contacts/peer_icon.png'),
-  daoIcon: require('../../../../assets/image/contacts/dao_icon.png'),
-  nftIcon: require('../../../../assets/image/contacts/nft_icon.png'),
-};
+import {PeerIcons as iconDic} from '../../../../shared/Icons';
 
 const FriendItem = ({fId, infoDic, privateMsg}) => {
   const {row, flex1, text} = SchemaStyles();
@@ -32,7 +27,7 @@ const FriendItem = ({fId, infoDic, privateMsg}) => {
       }>
       <View style={[item, row, flex1]}>
         <HeadIcon
-          image={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
+          image={image ? {uri: blobIdToUrl(image)} : iconDic.peerGirlIcon}
         />
         <View style={[textContainer]}>
           <Text numberOfLines={1} style={[title, text]}>
