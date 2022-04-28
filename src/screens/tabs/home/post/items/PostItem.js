@@ -4,6 +4,7 @@
 import React, {useCallback} from 'react';
 import {
   Image,
+  Linking,
   PixelRatio,
   Pressable,
   StyleSheet,
@@ -28,6 +29,7 @@ import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
 const PostItem = ({
+  cfg: {verbose},
   item,
   showPanel = true,
   feedId,
@@ -180,7 +182,19 @@ const PostItem = ({
                     width={200}
                     source={{uri: blobIdToUrl(link)}}
                   />
-                  <Text>name</Text>
+                  <Text style={[text]}>{name}</Text>
+                  {verbose && (
+                    <Text>
+                      <Text style={[text]}>{'link: \n'}</Text>
+                      <Text style={[{color: 'yellow'}]}>{link}</Text>
+                      <Text style={[text]}>{'\nurl: \n'}</Text>
+                      <Text
+                        style={[{color: 'pink'}]}
+                        onPress={() => Linking.openURL(url)}>
+                        {url}
+                      </Text>
+                    </Text>
+                  )}
                 </View>
               )
             );
