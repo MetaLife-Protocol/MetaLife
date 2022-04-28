@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
   inputS: {
     marginLeft: 10,
     fontSize: 15,
+    padding: 0,
   },
   clear: {
     marginRight: 10,

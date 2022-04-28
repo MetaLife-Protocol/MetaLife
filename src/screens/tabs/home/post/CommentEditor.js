@@ -74,7 +74,7 @@ const PostMsgEditor = ({commentDic}) => {
       {value && (
         <>
           <ScrollView style={[flex1]} ref={scrollView} overScrollMode={'auto'}>
-            <Section title={'Reply to:'}>
+            <Section>
               <PostItem item={shownMsg} showPanel={false} />
             </Section>
             {commentArr.length > 0 && (

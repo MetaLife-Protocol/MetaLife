@@ -29,16 +29,19 @@ const MsgInput = ({sendHandler}) => {
       <View style={[FG, row, alignItemsCenter, inner]}>
         <View style={[input, flex1, round]}>
           <TextInput
+            style={[flex1, textInput, text]}
             placeholder="Write a comment …"
             autoFocus={true}
             onBlur={() => setOffset(isIPhoneX_deprecated ? 94 : 64)}
-            style={[flex1, textInput, text]}
             value={content}
             onChangeText={setContent}
             placeholderTextColor={placeholderTextColor.color}
           />
         </View>
         <Pressable
+          hitSlop={10}
+          pressRetentionOffset={10}
+          disabled={content === ''}
           onPress={() => {
             sendHandler(content);
             setContent('');
@@ -61,6 +64,8 @@ const styles = StyleSheet.create({
   },
   textInput: {
     marginHorizontal: 15,
+    fontSize: 15,
+    padding: 5,
   },
   sender: {marginLeft: 16, marginRight: 18},
 });
