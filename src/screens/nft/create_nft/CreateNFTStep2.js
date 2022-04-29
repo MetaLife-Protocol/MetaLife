@@ -82,6 +82,7 @@ const CreateNFTStep2 = () => {
           </View>
           <Text style={styles.title}>Creators' share:(Royalties:)</Text>
           <View style={styles.row}>
+            {/*TODO replace Slider module*/}
             <Slider
               minimumTrackTintColor={'#29DAD7'}
               style={{flex: 1}}
