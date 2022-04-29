@@ -8,7 +8,7 @@ import React, {useEffect, useState} from 'react';
  *
  */
 
-export default ({url, verbose = false}) => {
+export default ({link, url, verbose = false}) => {
   const {text} = SchemaStyles();
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -19,9 +19,11 @@ export default ({url, verbose = false}) => {
     );
     const finishedLoadingHandler = SoundPlayer.addEventListener(
       'FinishedLoadingURL',
-      () => {
-        setLoading(false);
-        setPlaying(true);
+      ({success, url: eUrl}) => {
+        if (success && eUrl === url) {
+          setLoading(false);
+          setPlaying(true);
+        }
       },
     );
     return () => {
@@ -43,7 +45,7 @@ export default ({url, verbose = false}) => {
       {verbose && (
         <Text>
           <Text style={[text]}>{'link: \n'}</Text>
-          <Text style={[{color: 'yellow'}]}>{url}</Text>
+          <Text style={[{color: 'yellow'}]}>{link}</Text>
           <Text style={[text]}>{'\nurl: \n'}</Text>
           <Text style={[{color: 'pink'}]} onPress={() => Linking.openURL(url)}>
             {url}

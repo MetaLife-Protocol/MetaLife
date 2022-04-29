@@ -177,10 +177,16 @@ const PostItem = ({
               url &&
               link.charAt(0) === '&' && (
                 <View key={i}>
-                  {name === 'audio:recording.mp3' ? (
-                    <AudioElement url={url} verbose={verbose} />
+                  {name === 'audio:recording.mp3' ||
+                  name === 'audio:recording.mp4' ? (
+                    <AudioElement link={link} url={url} verbose={verbose} />
                   ) : (
-                    <ImageElement index={i} url={url} verbose={verbose} />
+                    <ImageElement
+                      index={i}
+                      link={link}
+                      url={url}
+                      verbose={verbose}
+                    />
                   )}
                 </View>
               )
