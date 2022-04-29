@@ -1,6 +1,6 @@
-import {colorsBasics} from '../../../../../shared/SchemaStyles';
+import SchemaStyles, {colorsBasics} from '../../../../../shared/SchemaStyles';
 import SoundPlayer from 'react-native-sound-player';
-import {Text} from 'react-native';
+import {Linking, Text} from 'react-native';
 import React, {useEffect, useState} from 'react';
 
 /**
@@ -8,7 +8,8 @@ import React, {useEffect, useState} from 'react';
  *
  */
 
-export default ({url}) => {
+export default ({url, verbose = false}) => {
+  const {text} = SchemaStyles();
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -29,14 +30,26 @@ export default ({url}) => {
     };
   }, []);
   return (
-    <Text
-      style={[{color: colorsBasics.primary}]}
-      onPress={() => {
-        SoundPlayer.playUrl(url);
-        setLoading(true);
-      }}>
-      🎧[audio] {loading && 'loading...'}
-      {playing && 'playing...'}
-    </Text>
+    <>
+      <Text
+        style={[{color: colorsBasics.primary}]}
+        onPress={() => {
+          SoundPlayer.playUrl(url);
+          setLoading(true);
+        }}>
+        🎧[audio] {loading && 'loading...'}
+        {playing && 'playing...'}
+      </Text>
+      {verbose && (
+        <Text>
+          <Text style={[text]}>{'link: \n'}</Text>
+          <Text style={[{color: 'yellow'}]}>{url}</Text>
+          <Text style={[text]}>{'\nurl: \n'}</Text>
+          <Text style={[{color: 'pink'}]} onPress={() => Linking.openURL(url)}>
+            {url}
+          </Text>
+        </Text>
+      )}
+    </>
   );
 };

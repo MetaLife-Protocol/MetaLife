@@ -3,8 +3,6 @@
  */
 import React, {useCallback} from 'react';
 import {
-  Image,
-  Linking,
   PixelRatio,
   Pressable,
   StyleSheet,
@@ -13,7 +11,6 @@ import {
   View,
 } from 'react-native';
 import SchemaStyles, {colorsBasics} from '../../../../../shared/SchemaStyles';
-import {connect} from 'react-redux/lib/exports';
 import {localDate} from '../../../../../utils';
 import PostMsgPanel from './PostMsgPannel';
 import HeadIcon from '../../../../../shared/comps/HeadIcon';
@@ -29,6 +26,8 @@ import {
 import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import AudioElement from './AudioElement';
+import ImageElement from './ImageElement';
+import {connect} from 'react-redux';
 
 const PostItem = ({
   cfg: {verbose},
@@ -179,32 +178,9 @@ const PostItem = ({
               link.charAt(0) === '&' && (
                 <View key={i}>
                   {name === 'audio:recording.mp3' ? (
-                    <AudioElement url={url} />
+                    <AudioElement url={url} verbose={verbose} />
                   ) : (
-                    <Image
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: 10,
-                        alignSelf: i % 2 ? 'flex-end' : 'flex-start',
-                      }}
-                      height={200}
-                      width={200}
-                      source={{uri: blobIdToUrl(link)}}
-                    />
-                  )}
-                  {/*<Text style={[text]}>{name}</Text>*/}
-                  {verbose && (
-                    <Text>
-                      <Text style={[text]}>{'link: \n'}</Text>
-                      <Text style={[{color: 'yellow'}]}>{link}</Text>
-                      <Text style={[text]}>{'\nurl: \n'}</Text>
-                      <Text
-                        style={[{color: 'pink'}]}
-                        onPress={() => Linking.openURL(url)}>
-                        {url}
-                      </Text>
-                    </Text>
+                    <ImageElement index={i} url={url} verbose={verbose} />
                   )}
                 </View>
               )
