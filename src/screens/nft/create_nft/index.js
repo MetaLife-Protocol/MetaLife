@@ -23,6 +23,7 @@ import Toast from 'react-native-tiny-toast';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {createChannel} from 'react-native-photon';
 import ConfirmNftInformationDialog from './comps/ConfirmNftInformationDialog';
+import {useNavigation} from '@react-navigation/native';
 
 const CreateNFT = ({}) => {
   const styles = useStyle(styleFun);
@@ -30,6 +31,7 @@ const CreateNFT = ({}) => {
     [name, setName] = useState(''),
     [description, setDescription] = useState('');
   const dialog = useDialog();
+  const {navigate} = useNavigation();
 
   function cameraHandler({didCancel, errorCode, errorMessage, assets}) {
     if (errorCode || didCancel) {
@@ -62,9 +64,10 @@ const CreateNFT = ({}) => {
         file={nftImage}
         description={description}
         name={name}
+        navigate={navigate}
       />,
     );
-  }, [dialog, nftImage]);
+  }, [description, dialog, name, nftImage]);
 
   return (
     <SafeAreaView style={styles.container}>

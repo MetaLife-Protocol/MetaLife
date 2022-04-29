@@ -11,11 +11,13 @@ import {Text, View, StyleSheet, Image} from 'react-native';
 import {DialogTitle, RoundBtn, useDialog, useStyle} from 'metalife-base';
 import Toast from 'react-native-tiny-toast';
 import CreateNFTInformationView from './CreateNFTInfomationView';
+import {useNavigation} from '@react-navigation/native';
 
 const ConfirmNftInformationDialog = ({
   file = {},
   name = '',
   description = '',
+  navigate,
 }) => {
   const styles = useStyle(styleFun);
   const dialog = useDialog();
@@ -58,7 +60,13 @@ const ConfirmNftInformationDialog = ({
         title={'Sell'}
         press={() => {
           //todo
-          Toast.show('todo');
+          dialog.dismiss();
+          navigate('CreateNFTStep2', {
+            file: file,
+            name: name,
+            description: description,
+          });
+          // Toast.show('todo');
         }}
       />
       <Text style={styles.tipsText}>*Save local save is not chained</Text>
