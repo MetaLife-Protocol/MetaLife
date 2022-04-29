@@ -28,7 +28,7 @@ import {
 } from '../../../../../store/filters/MsgFilters';
 import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
-import SoundPlayer from 'react-native-sound-player';
+import AudioElement from './AudioElement';
 
 const PostItem = ({
   cfg: {verbose},
@@ -64,7 +64,6 @@ const PostItem = ({
     voteArr = voteDic[key] || [],
     voted = voteArr.includes(feedId);
 
-  mentions && mentions.length > 0 && console.log(mentions[0]);
   // apply filters
   const textArr = applyFilters(cText);
 
@@ -123,7 +122,7 @@ const PostItem = ({
     <Text
       style={[{color: colorsBasics.primary}]}
       onPress={() => navigate('PeerDetailsScreen', id)}>
-      👤[${id.substring(1, 8)}...]
+      👤[contact]
     </Text>
   );
   const feedPhase = id => {
@@ -137,7 +136,7 @@ const PostItem = ({
         onPress={() =>
           push('CommentEditor', {name, shownMsg: item || {key: id}})
         }>
-        💬[${id.substring(1, 8)}...]
+        💬[post]
       </Text>
     );
   };
@@ -180,11 +179,7 @@ const PostItem = ({
               link.charAt(0) === '&' && (
                 <View key={i}>
                   {name === 'audio:recording.mp3' ? (
-                    <Text
-                      style={[{color: colorsBasics.primary}]}
-                      onPress={() => SoundPlayer.playUrl(url)}>
-                      🎧[audio]
-                    </Text>
+                    <AudioElement url={url} />
                   ) : (
                     <Image
                       style={{

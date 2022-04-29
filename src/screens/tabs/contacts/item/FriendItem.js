@@ -6,9 +6,9 @@ import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {findRootKey} from '../../../../store/filters/MsgFilters';
-import {PeerIcons as iconDic} from '../../../../shared/Icons';
+import {PeerIcons} from '../../../../shared/Icons';
 
-const FriendItem = ({fId, infoDic, privateMsg}) => {
+const FriendItem = ({fId, infoDic, privateMsg, connectedPeers}) => {
   const {row, flex1, text} = SchemaStyles();
   const {textContainer, item, title, desc} = styles;
   const {name = '', description = '', image = ''} = infoDic[fId] || {},
@@ -27,7 +27,8 @@ const FriendItem = ({fId, infoDic, privateMsg}) => {
       }>
       <View style={[item, row, flex1]}>
         <HeadIcon
-          image={image ? {uri: blobIdToUrl(image)} : iconDic.peerGirlIcon}
+          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
+          online={connectedPeers.filter(([_, {key}]) => key === fId)}
         />
         <View style={[textContainer]}>
           <Text numberOfLines={1} style={[title, text]}>
@@ -70,6 +71,7 @@ const msp = s => {
     cfg: s.cfg,
     infoDic: s.info,
     privateMsg: s.private,
+    connectedPeers: s.contact.connectedPeers,
   };
 };
 

@@ -9,8 +9,8 @@ import {getConnectedPeers, getStagedPeers} from '../../../remote/ssbOP';
 
 const PeersScreen = ({
   stagedPeers,
-  setStagedPeers,
   connectedPeers,
+  setStagedPeers,
   setConnectedPeers,
 }) => {
   const {BG, flex1} = SchemaStyles();

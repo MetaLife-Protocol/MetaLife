@@ -9,8 +9,16 @@ import {useStore} from 'react-redux';
 import {checkAddon} from '../../remote/SsbHandlers';
 import SearchBar from '../../shared/comps/SearchBar';
 import {searchPublicMsgByPostId} from '../../store/filters/MsgFilters';
+import {useTimer} from '../../shared/Hooks';
+import {getConnectedPeers, getStagedPeers} from '../../remote/ssbOP';
 
-const Home = ({verbose, publicMsg, setFeedId}) => {
+const Home = ({
+  verbose,
+  publicMsg,
+  setFeedId,
+  setStagedPeers,
+  setConnectedPeers,
+}) => {
   const {flex1} = SchemaStyles(),
     {searchBar} = styles;
   const store = useStore();
@@ -23,8 +31,11 @@ const Home = ({verbose, publicMsg, setFeedId}) => {
         setFeedId(ssb.id);
         initializeHandlers(store);
         checkAddon('launch');
+        getConnectedPeers(setConnectedPeers);
       });
   }, []);
+
+  useTimer(() => getConnectedPeers(setConnectedPeers), 10 * 1000, [], false);
 
   function changeTextHandler(text) {
     setKW(text);
@@ -55,7 +66,11 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {setFeedId: id => d({type: 'setFeedId', payload: id})};
+  return {
+    setFeedId: id => d({type: 'setFeedId', payload: id}),
+    setStagedPeers: v => d({type: 'setStagedPeers', payload: v}),
+    setConnectedPeers: v => d({type: 'setConnectedPeers', payload: v}),
+  };
 };
 
 export default connect(msp, mdp)(Home);
