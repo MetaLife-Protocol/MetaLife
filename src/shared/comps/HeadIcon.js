@@ -6,7 +6,7 @@ import {PeerIcons} from '../Icons';
  * Created on 22 Feb 2022 by lonmee
  */
 
-export default ({style = [], height = 60, width = 60, image, online}) => (
+export default ({style = [], height = 60, width = 60, image, pub, online}) => (
   <View>
     <Image
       style={[
@@ -16,12 +16,7 @@ export default ({style = [], height = 60, width = 60, image, online}) => (
       height={height}
       width={width}
       source={
-        image === PeerIcons.peerGirlIcon &&
-        online &&
-        online[0] &&
-        online[0][1].type === 'pub'
-          ? PeerIcons.pubIcon
-          : image
+        image === PeerIcons.peerGirlIcon && pub ? PeerIcons.pubIcon : image
       }
     />
     {online && online.length > 0 && (

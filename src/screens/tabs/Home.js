@@ -10,7 +10,7 @@ import {checkAddon} from '../../remote/SsbHandlers';
 import SearchBar from '../../shared/comps/SearchBar';
 import {searchPublicMsgByPostId} from '../../store/filters/MsgFilters';
 import {useTimer} from '../../shared/Hooks';
-import {getConnectedPeers, getStagedPeers} from '../../remote/ssbOP';
+import {getConnectedPeers} from '../../remote/ssbOP';
 
 const Home = ({
   verbose,

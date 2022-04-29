@@ -8,7 +8,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {findRootKey} from '../../../../store/filters/MsgFilters';
 import {PeerIcons} from '../../../../shared/Icons';
 
-const FriendItem = ({fId, infoDic, privateMsg, connectedPeers}) => {
+const FriendItem = ({fId, infoDic, privateMsg, pubs, connectedPeers}) => {
   const {row, flex1, text} = SchemaStyles();
   const {textContainer, item, title, desc} = styles;
   const {name = '', description = '', image = ''} = infoDic[fId] || {},
@@ -28,6 +28,15 @@ const FriendItem = ({fId, infoDic, privateMsg, connectedPeers}) => {
       <View style={[item, row, flex1]}>
         <HeadIcon
           image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
+          pub={
+            pubs.filter(
+              ({
+                content: {
+                  address: {key},
+                },
+              }) => key === fId,
+            ).length > 0
+          }
           online={connectedPeers.filter(([_, {key}]) => key === fId)}
         />
         <View style={[textContainer]}>
@@ -71,6 +80,7 @@ const msp = s => {
     cfg: s.cfg,
     infoDic: s.info,
     privateMsg: s.private,
+    pubs: s.pubs,
     connectedPeers: s.contact.connectedPeers,
   };
 };
