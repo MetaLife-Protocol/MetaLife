@@ -49,7 +49,10 @@ const PostMsgEditor = ({cachedContent, cachePostContent, resetPostContent}) => {
     const mentions = [];
     if (photo.length) {
       for (const photoKey in photo) {
-        mentions.push({link: photo[photoKey].id, name: photo[photoKey].path});
+        mentions.push({
+          link: photo[photoKey].id,
+          name: `image:${photo[photoKey].path.split('/').pop()}`,
+        });
       }
     }
     sendMsg(

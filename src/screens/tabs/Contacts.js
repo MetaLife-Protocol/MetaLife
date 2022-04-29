@@ -5,7 +5,10 @@ import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
 import FriendItem from './contacts/item/FriendItem';
 import SearchBar from '../../shared/comps/SearchBar';
-import {searchGraphById} from '../../store/filters/ContactsFilters';
+import {
+  searchGraphById,
+  searchInfoByNick,
+} from '../../store/filters/ContactsFilters';
 
 const iconDic = {
   fb: require('../../assets/image/profiles/Facebook.png'),
@@ -15,7 +18,11 @@ const iconDic = {
 
 const DATA_sn = [{icon: iconDic.fb}, {icon: iconDic.nf}, {icon: iconDic.tt}];
 
-const Contacts = ({graph, relations: [friends, following, follower]}) => {
+const Contacts = ({
+  graph,
+  infoDic,
+  relations: [friends, following, follower],
+}) => {
   const {BG} = SchemaStyles();
   const {searchBar, item} = styles;
   const [result, setResult] = useState([]);
@@ -28,7 +35,11 @@ const Contacts = ({graph, relations: [friends, following, follower]}) => {
 
   function changeTextHandler(text) {
     setKW(text);
-    setResult(text ? searchGraphById(graph, text) : []);
+    setResult(
+      text
+        ? searchGraphById(graph, text).concat(searchInfoByNick(infoDic, text))
+        : [],
+    );
   }
 
   return (
@@ -90,6 +101,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     graph: s.contact.friendsGraph,
+    infoDic: s.info,
     relations: s.user.relations,
   };
 };

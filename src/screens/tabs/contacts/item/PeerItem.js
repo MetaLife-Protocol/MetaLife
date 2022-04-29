@@ -49,7 +49,7 @@ const PeerItem = ({
               ? PeerIcons.peerGirlIcon
               : type == 'pub'
               ? PeerIcons.pubIcon
-              : PeerIcons.nftIcon
+              : PeerIcons.peerGirlIcon
           }
         />
         <View style={[textContainer]}>

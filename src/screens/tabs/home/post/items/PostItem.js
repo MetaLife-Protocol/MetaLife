@@ -24,9 +24,11 @@ import {sendMsg} from '../../../../../remote/ssbOP';
 import {
   applyFilters,
   findFromComment,
+  regExp,
 } from '../../../../../store/filters/MsgFilters';
 import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
+import SoundPlayer from 'react-native-sound-player';
 
 const PostItem = ({
   cfg: {verbose},
@@ -103,6 +105,14 @@ const PostItem = ({
               showPullMenu({position: {}, buttons: []});
             },
           },
+          {
+            title: 'copy message content',
+            handler: () => {
+              setString(cText);
+              Toast.show('content copied');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
         ],
       });
     },
@@ -152,9 +162,9 @@ const PostItem = ({
               (phase, i) =>
                 phase && (
                   <Text style={[text]} key={i}>
-                    {phase.charAt(0) === '@'
+                    {regExp.peerLink.test(phase)
                       ? peerPhase(phase)
-                      : phase.charAt(0) === '%'
+                      : regExp.feedLink.test(phase)
                       ? feedPhase(phase)
                       : phase}
                   </Text>
@@ -165,24 +175,30 @@ const PostItem = ({
           mentions.length > 0 &&
           mentions.map(({link, name}, i) => {
             const url = blobIdToUrl(link);
-            console.log(url);
-            // todo: fix photo recycle
             return (
               url &&
               link.charAt(0) === '&' && (
                 <View key={i}>
-                  <Image
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      borderRadius: 10,
-                      alignSelf: i % 2 ? 'flex-end' : 'flex-start',
-                    }}
-                    height={200}
-                    width={200}
-                    source={{uri: blobIdToUrl(link)}}
-                  />
-                  <Text style={[text]}>{name}</Text>
+                  {name === 'audio:recording.mp3' ? (
+                    <Text
+                      style={[{color: colorsBasics.primary}]}
+                      onPress={() => SoundPlayer.playUrl(url)}>
+                      🎧[audio]
+                    </Text>
+                  ) : (
+                    <Image
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: 10,
+                        alignSelf: i % 2 ? 'flex-end' : 'flex-start',
+                      }}
+                      height={200}
+                      width={200}
+                      source={{uri: blobIdToUrl(link)}}
+                    />
+                  )}
+                  {/*<Text style={[text]}>{name}</Text>*/}
                   {verbose && (
                     <Text>
                       <Text style={[text]}>{'link: \n'}</Text>

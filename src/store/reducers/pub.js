@@ -8,7 +8,7 @@ const initState = [];
 export const pubReducer = (state = initState, {type, payload}) => {
   switch (type) {
     case 'addPub':
-      return [...state, payload];
+      return state.includes(payload) ? state : [...state, payload];
     case 'removePub':
       return state.filter(p => p.content.contact !== payload);
     default:

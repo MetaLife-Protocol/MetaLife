@@ -43,3 +43,7 @@ export const mutualFriend = (fA, fB) => fA.filter(v => fB.includes(v));
 export function searchGraphById(graph, kw) {
   return Object.keys(graph).filter(key => key.includes(kw));
 }
+
+export function searchInfoByNick(info, kw) {
+  return Object.keys(info).filter(key => info[key].name.includes(kw));
+}

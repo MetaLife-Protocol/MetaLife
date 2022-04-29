@@ -2,7 +2,7 @@
  * Created on 25 Apr 2022 by lonmee
  *
  */
-import React from 'react';
+import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../SchemaStyles';
 import {useDispatch, useSelector} from 'react-redux';
@@ -14,6 +14,9 @@ export default ({style = []}) => {
   const {pullMenu} = useSelector(state => state.runtime),
     {position, buttons} = pullMenu,
     dispatch = useDispatch();
+
+  const [highLight, setHighLight] = useState(NaN);
+
   return (
     buttons !== undefined &&
     buttons.length > 0 && (
@@ -31,9 +34,19 @@ export default ({style = []}) => {
             container,
             {top: position.y, left: position.x},
           ]}>
-          {buttons.map(({title, handler}) => (
-            <Pressable key={title} onPress={handler}>
-              <Text style={[text, titleStyle]}>{title}</Text>
+          {buttons.map(({title, handler}, i) => (
+            <Pressable
+              key={title}
+              onPressIn={() => setHighLight(i)}
+              onPressOut={() => setHighLight(NaN)}
+              onPress={() => {
+                handler();
+                setHighLight(NaN);
+              }}>
+              <Text
+                style={[text, titleStyle, highLight === i && {color: 'black'}]}>
+                {title}
+              </Text>
             </Pressable>
           ))}
         </View>
@@ -52,8 +65,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: 'gray',
     padding: 6,
+    margin: 4,
   },
   titleStyle: {
     marginHorizontal: 2,
+    marginVertical: 8,
   },
 });
