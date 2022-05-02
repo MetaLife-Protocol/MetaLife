@@ -17,7 +17,7 @@ import RoundBtn from '../../shared/comps/RoundBtn';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
+const Backup = ({name, setName, currentAccount, setCurrentAccount, deleteAccount, currentPassword}) => {
   const {
       barStyle,
       BG,
@@ -42,9 +42,10 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
   const [privateKeyModal, setPrivateKeyModal] = useState(false);
   const [keystoreModal, setKeystoreModal] = useState(false);
   const [confirm, setConfirm] = useState('');
+  const [exportType, setExportType] = useState('keystore');
 
   const checkPassword = () => {
-    if (currentAccount.Password == confirm) {
+    if (currentPassword == confirm) {
       setModalVisible(false);
       setPrivateKeyModal(true);
     }
@@ -108,7 +109,7 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
             style={{marginTop: 14.5, color: '#8E8E92', textAlign: 'center'}}>
             {currentAccount.Address}
           </Text>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <TouchableOpacity onPress={() => {setModalVisible(true);setExportType('keystore');}}>
             <View
               style={{
                 backgroundColor: '#EDEEF1',
@@ -122,7 +123,7 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
               <Text style={[text, {fontSize: 15}]}>Export keystore</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
+          <TouchableOpacity onPress={() => {setModalVisible(true);setExportType('privatekey');}}>
             <View
               style={{
                 backgroundColor: '#EDEEF1',
@@ -133,10 +134,10 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
                 marginTop: 12,
                 borderRadius: 22,
               }}>
-              <Text style={[text, {fontSize: 15}]}>Export private key</Text>
+              <Text style={[text, {fontSize: 15}]}>Export Private key</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => console.log('Delete')}>
+          <TouchableOpacity onPress={() => {deleteAccount(currentAccount.Address);replace('Wallet');}}>
             <View
               style={{
                 backgroundColor: '#EDEEF1',
@@ -253,7 +254,8 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
           <View style={[styles.modalBack]}></View>
           <View style={[styles.modalView, modalBackground]}>
             <View style={styles.modalHeader}>
-              <Text style={[text, styles.modalText]}>Export private key</Text>
+            {exportType === 'privatekey' && <Text style={[text, styles.modalText]}>Export private key</Text>}
+            {exportType === 'keystore' && <Text style={[text, styles.modalText]}>Export keystore</Text>}
               <Text
                 style={[text, styles.modalText]}
                 onPress={() => setPrivateKeyModal(!privateKeyModal)}>
@@ -263,7 +265,7 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
             <View style={styles.modalBody}>
               <View style={styles.area}>
                 <Text style={[text, {fontSize: 16}]}>
-                  {currentAccount.PrivateKey}
+                  {exportType === 'privatekey'? currentAccount.PrivateKey : currentAccount.Keystore}
                 </Text>
               </View>
             </View>
@@ -287,6 +289,7 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
 const msp = s => {
   return {
     currentAccount: s.account.currentAccount,
+    currentPassword: s.account.currentPassword,
   };
 };
 
@@ -297,7 +300,8 @@ const mdp = d => {
     deleteName: name => d({type: 'delete'}),
     setCurrentAccount: account =>
       d({type: 'setCurrentAccount', payload: account}),
-  };
+    deleteAccount: account => d({type: 'deleteAccount', payload: account}),
+    };
 };
 
 const styles = StyleSheet.create({

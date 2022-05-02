@@ -12,13 +12,27 @@ const accountInitState = {
         Address: '',
         PrivateKey: '',
         Keystore: '',
+        Balance: 0,
     },
-  accountList: [],
-  currentIndex: 0,
+    accountList: [],
+    currentIndex: 0,
+    currentPassword: '',
 };
 
 export const accountReducer = (state = accountInitState, { type, payload }) => {
     switch (type) {
+        case 'setCurrentPassword':
+            return { ...state, currentPassword: payload };
+        case 'deleteAccount':
+            if (state.accountList.length === 1)
+                return;
+            state.accountList.map((one, index) => {
+                if (one.Address === payload) {
+                    state.accountList.splice(index, 1);
+                }
+            });
+        case 'addAccount':
+            state.accountList.push(payload);
         case 'setCurrentAccount':
             return { ...state, currentAccount: payload };
         case 'setCurrenIndex':

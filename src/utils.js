@@ -76,3 +76,51 @@ export const checkAndLaunchCamera = completeHandler => {
         .catch(Toast.show),
   })();
 };
+
+/*
+export const encryptKey = (password, salt)  => {
+  return pbkdf2.pbkdf2Sync(password, salt, 1, 256 / 8, 'sha512')
+}
+
+export const encryptString = (password, hexString) => {
+  const textBytes = aesjs.utils.utf8.toBytes(hexString)
+  const aesCtr = new aesjs.ModeOfOperation.ctr(password)
+  const encrypted = aesCtr.encrypt(textBytes)
+
+  return {
+      bytes: encrypted,
+      hex: aesjs.utils.hex.fromBytes(encrypted),
+  }
+}
+
+export const decryptString = (password, salt, hexString) => {
+  const key = encryptKey(password, salt)
+  const encryptedBytes = aesjs.utils.hex.toBytes(hexString)
+  const aesCtr = new aesjs.ModeOfOperation.ctr(key)
+  const decryptedBytes = aesCtr.decrypt(encryptedBytes)
+
+  return aesjs.utils.utf8.fromBytes(decryptedBytes)
+}
+
+export const validatePrivateKey = (address)  => {
+  try {
+      return Web3.utils.isAddress(address)
+  } catch (e) {
+      return false
+  }
+}
+
+export const encryptKeyStore = (provider, privateKey, password) => {
+  const keystoreV3Json = provider.eth.accounts.encrypt(privateKey, password)
+  return JSON.stringify(keystoreV3Json);
+}
+
+export const decryptKeyStore = (provider, keystoreV3hex, password) => {
+  if (!password) {
+      return false
+  }
+  const keystoreV3Json = JSON.parse(keystoreV3hex)
+  const privateKey = provider.eth.accounts.decrypt(keystoreV3Json, password)
+  return privateKey;
+}
+*/

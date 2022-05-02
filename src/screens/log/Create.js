@@ -21,7 +21,7 @@ const iconDic = {
   Confirm_icon_selected: require('../../assets/image/accountBtn/Confirm_icon_selected.png'),
 };
 
-const Create = ({ name, setName, setCurrentAccount }) => {
+const Create = ({ name, setName, setCurrentAccount, addAccount }) => {
   const { barStyle, BG, FG, flex1, input, text, marginTop10 } = SchemaStyles(),
     { textHolder } = colorsSchema;
 
@@ -35,60 +35,45 @@ const Create = ({ name, setName, setCurrentAccount }) => {
   const [focusedClear, setfocusedClear] = useState(true);
   const [focusedDark, setfocusedDark] = useState(true);
   const [focusedConfirm, setfocusedConfirm] = useState(true);
-
+  // const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161');
+  
   const cleaerPress = () => {
     setfocusedClear(!focusedClear);
     setNick('');
   }
 
-  const genMnemonic = () => {
+  const genMnemonic = (newMnemonic) => {
     while (true) {
-      const randomBytes = ethers.utils.randomBytes(16);
-      const result = ethers.utils.HDNode.entropyToMnemonic(randomBytes);
-      let words = result.split(' ');
+      let words = newMnemonic.split(' ');
       const duplicates = words.filter((word, index) => index !== words.indexOf(word));
-      console.log(words);
       if (duplicates.length === 0)
-        return result;
+        return newMnemonic;
     }
   }
 
-  const createAccount = () => {
-    const mnemonic = genMnemonic();
-    console.log(mnemonic);
+  const createAccount = async () => {
+    // balance = await provider.getBalance("0xa52B964cDE8BD92aAcE42Bec4A19BcDD0f88E1ac");
+    // const formatether = ethers.utils.formatEther(balance);
+    // console.log(formatether, '<<<<<<<<<<<<<<format ether');
 
+    let randomWallet = ethers.Wallet.createRandom();
+    console.log(randomWallet, '<<<<<<<<<<prov');
 
-    // const seed = bip39.mnemonicToSeed(mnemonic);
-    // const root = bip32.fromSeed(seed);
+    const mnemonic = genMnemonic(randomWallet.signingKey.mnemonic);
 
-    // // 이더리움 차일드 개인키 생성
-    // const derivePath = "m/44'/60'/0'/0/0";
-    // const xPrivKey = root.derivePath(derivePath);
-    // const privateKey = xPrivKey.privateKey.toString('hex');
-
-    // // 이더리움 주소 생성
-    // let address = ethUtil.pubToAddress(xPrivKey.publicKey, true).toString('hex');
-    // address = ethUtil.toChecksumAddress(address).toString('hex');
-
-    const idx = 0;
-    let path = `m/44'/60'/${idx}'/0/0`;
-    let account = ethers.Wallet.fromMnemonic(mnemonic, path);
-    let provider = ethers.getDefaultProvider();
-    // const account = provider.eth.accounts.create();
-    // const keystore = encryptKeyStore(provider,  account.privateKey, pwd);
-    console.log(account.address, account.privateKey);
-    // replace('Backup Wallet');
     let currentAccount = {
       Name: nick,
       Password: pwd,
       PassPrompt: prompt,
       isBackup: false,
       Mnemonic: mnemonic,
-      Address: account.address,
-      PrivateKey: account.privateKey,
-      Keystore: ''
+      Address: randomWallet.signingKey.address,
+      PrivateKey: randomWallet.signingKey.privateKey,
+      Keystore: randomWallet.signingKey.publicKey
     };
+    console.log(currentAccount, '<<<<<<<<<<<<<<set currentAccount>>>>>>>>>>>>>>>>');
     setCurrentAccount(currentAccount);
+    addAccount(currentAccount);
   }
 
   const createWallet = () => {
@@ -227,6 +212,7 @@ const mdp = d => {
     setName: name => d({ type: 'set', payload: name }),
     deleteName: name => d({ type: 'delete' }),
     setCurrentAccount: account => d({ type: 'setCurrentAccount', payload: account }),
+    addAccount: account => d({ type: 'addAccount', payload: account }),
   };
 };
 

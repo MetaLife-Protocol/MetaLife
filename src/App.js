@@ -22,6 +22,8 @@ import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import WalletDetail from './screens/log/WalletDetail';
+import ManageAccounts from './screens/log/ManageAccounts';
+import NewAccount from './screens/log/NewAccount';
 
 const App = () => {
   const {theme} = SchemaStyles();
@@ -42,6 +44,8 @@ const App = () => {
         <Stack.Screen name="Backup Mnemonic" component={Backup} />
         <Stack.Screen name="Import Account" component={ImportAccount} />
         <Stack.Screen name="Wallet" component={Wallet} options={{headerShown: false}} />
+        <Stack.Screen name="Address Contact" component={ManageAccounts} options={{headerShown: false}} />
+        <Stack.Screen name="New Account" component={NewAccount} options={{headerShown: false}} />
         <Stack.Screen name="Wallet Details" component={WalletDetail}  />
         <Stack.Screen
           name="Tabs"

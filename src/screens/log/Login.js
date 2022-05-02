@@ -5,7 +5,7 @@ import {connect} from 'react-redux/lib/exports';
 import RoundBtn from '../../shared/comps/RoundBtn';
 import {useNavigation} from '@react-navigation/native';
 
-const Login = ({name, setName, currentAccount}) => {
+const Login = ({name, setName, currentAccount, setCurrentPassword}) => {
   const {barStyle, BG, FG, flex1, inputBG, text, marginTop10} = SchemaStyles(),
     {textHolder} = colorsSchema;
 
@@ -14,9 +14,9 @@ const Login = ({name, setName, currentAccount}) => {
   const {replace} = useNavigation();
 
   const onLogin = () => {
-    console.log(currentAccount);
     if (currentAccount.name == '') replace('Create Account');
     else {
+      setCurrentPassword(pwd);
       replace('Import Account');
     }
   };
@@ -61,6 +61,7 @@ const msp = s => {
 const mdp = d => {
   return {
     setDarkMode: darkMode => d({type: 'setDarkMode', payload: darkMode}),
+    setCurrentPassword: pwd => d({type: 'setCurrentPassword', payload: pwd}),
     setName: name => d({type: 'set', payload: name}),
     deleteName: name => d({type: 'delete'}),
   };

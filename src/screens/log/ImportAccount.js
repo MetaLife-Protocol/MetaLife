@@ -14,6 +14,9 @@ import RoundBtn from '../../shared/comps/RoundBtn';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ethers } from 'ethers';
+// import Web3 from 'web3';
+// const web3 = new Web3();
+// web3.setProvider(new web3.providers.HttpProvider('https://mainnet.infura.io/v3/5209c849762f40ce866e3b1332596997'));
 
 const iconDic = {
   Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),
@@ -26,7 +29,7 @@ const iconDic = {
   Scan_icon_white: require('../../assets/image/accountBtn/Scan_icon_white.png'),
 };
 
-const Import = ({ name, setName, darkMode }) => {
+const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
   const { barStyle, BG, FG, flex1, input, text, marginTop10 } = SchemaStyles(),
     { textHolder } = colorsSchema;
 
@@ -38,36 +41,82 @@ const Import = ({ name, setName, darkMode }) => {
     { replace } = useNavigation();
 
   const [mnemonic, setMnemonic] = useState('');
+  const [pwdPrompt, setPwdPrompt] = useState('');
+  const [privateKey, setPrivateKey] = useState('');
+  const [observe, setObserve] = useState('');
+  const [keystore, setKeystore] = useState('');
   const [focusedClear, setfocusedClear] = useState(true);
   const [focusedDark, setfocusedDark] = useState(true);
   const [focusedConfirm, setfocusedConfirm] = useState(true);
+
+  const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161');
 
   const cleaerPress = () => {
     setfocusedClear(!focusedClear);
     setNick('');
   };
 
-  const importWallet = () => {
-    console.log("import wallet");
-    const idx = 0;
-    let path = `m/44'/60'/${idx}'/0/0`;
-    let account = ethers.Wallet.fromMnemonic(mnemonic, path);
-    let provider = ethers.getDefaultProvider();
-    // const account = provider.eth.accounts.create();
-    // const keystore = encryptKeyStore(provider,  account.privateKey, pwd);
-    console.log(account.address, account.privateKey);
-    // replace('Backup Wallet');
+  const importWallet = async () => {
+    let balance = 0;
     let currentAccount = {
       Name: "sample",
       Password: pwd,
-      PassPrompt: prompt,
+      PassPrompt: pwdPrompt,
       isBackup: false,
-      Mnemonic: mnemonic,
-      Address: account.address,
-      PrivateKey: account.privateKey,
-      Keystore: ''
+      Mnemonic: '',
+      Address: '',
+      PrivateKey: '',
+      Balance: balance,
+      Keystore: '',
     };
-    setCurrentAccount(currentAccount);
+  if(tab == 0) {
+      // const idx = 0;
+      // let path = `m/44'/60'/${idx}'/0/0`;
+      let account = await ethers.Wallet.fromMnemonic(mnemonic);
+      const json = await account.encrypt(pwd, {scrypt: {N: 64}});
+      // ethers.Wallet.fromEncryptedJson(json, pwd).then(async function(wallet) {
+      //   const hex_balance = await provider.getBalance(wallet.address);
+      //   balance = ethers.utils.formatEther(hex_balance);
+      // });
+      currentAccount.Keystore = json;
+      currentAccount.Mnemonic = mnemonic;
+      currentAccount.Address = account.address;
+      currentAccount.PrivateKey = account.privateKey;
+      const hex_balance = await provider.getBalance(account.address);
+      balance = ethers.utils.formatEther(hex_balance);
+      currentAccount.Balance = balance;
+      setCurrentAccount(currentAccount);
+      addAccount(currentAccount);
+    } else if(tab == 1) {
+      ethers.Wallet.fromEncryptedJson(keystore, keystorePwd).then( async function(wallet) {
+        const hex_balance = await provider.getBalance(wallet.address);
+        balance = ethers.utils.formatEther(hex_balance);
+        currentAccount.Address = wallet.address;
+        currentAccount.Balance = balance;
+        currentAccount.Keystore = keystore;
+        setCurrentAccount(currentAccount);
+        addAccount(currentAccount);
+      });
+    } else if(tab == 2) {
+      let account = new ethers.Wallet(privateKey);
+      const hex_balance = await provider.getBalance(account.address);
+      balance = ethers.utils.formatEther(hex_balance);
+      currentAccount.Address = account.address;
+      currentAccount.PrivateKey = privateKey;
+      currentAccount.Balance = balance;
+      const json = await account.encrypt(pwd, {scrypt: {N: 64}});
+      currentAccount.Keystore = json;
+      setCurrentAccount(currentAccount);
+      addAccount(currentAccount);
+    } else if(tab == 3) {
+        const hex_balance = await provider.getBalance(observe);
+        balance = ethers.utils.formatEther(hex_balance);
+        currentAccount.Address = observe;
+        currentAccount.Balance = balance;
+        setCurrentAccount(currentAccount);
+    }
+    console.log(currentAccount, '>>>>>>>>>current account');
+    replace('Wallet');
   }
 
   return (
@@ -114,6 +163,7 @@ const Import = ({ name, setName, darkMode }) => {
                 numberOfLines={4}
                 multiline={true}
                 placeholderTextColor={textHolder}
+                onChangeText={setMnemonic}
               />
             </View>
             <View style={[styles.inputBox]}>
@@ -152,7 +202,7 @@ const Import = ({ name, setName, darkMode }) => {
                 style={[text, styles.inputText]}
                 placeholder={'Password prompt (optional)'}
                 placeholderTextColor={textHolder}
-                onChangeText={setConfirm}
+                onChangeText={setPwdPrompt}
                 maxLength={20}
               />
             </View>
@@ -171,6 +221,7 @@ const Import = ({ name, setName, darkMode }) => {
                 numberOfLines={4}
                 multiline={true}
                 placeholderTextColor={textHolder}
+                onChangeText={setKeystore}
               />
             </View>
             <View style={[styles.inputBox]}>
@@ -198,6 +249,7 @@ const Import = ({ name, setName, darkMode }) => {
                 numberOfLines={4}
                 multiline={true}
                 placeholderTextColor={textHolder}
+                onChangeText={setPrivateKey}
               />
             </View>
             <View style={[styles.inputBox]}>
@@ -236,7 +288,7 @@ const Import = ({ name, setName, darkMode }) => {
                 style={[text, styles.inputText]}
                 placeholder={'Password prompt (optional)'}
                 placeholderTextColor={textHolder}
-                onChangeText={setConfirm}
+                onChangeText={setPwdPrompt}
                 maxLength={20}
               />
             </View>
@@ -254,7 +306,7 @@ const Import = ({ name, setName, darkMode }) => {
                 placeholder={'Enter the address'}
                 secureTextEntry={focusedConfirm ? true : false}
                 placeholderTextColor={textHolder}
-                onChangeText={setPwd}
+                onChangeText={setObserve}
               />
               <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
                 <Image
@@ -269,7 +321,7 @@ const Import = ({ name, setName, darkMode }) => {
         <RoundBtn
           style={{ marginBottom: 50 }}
           title={'Start Importing'}
-          disabled={!(mnemonic && pwd && confirm && pwd == confirm)}
+          disabled={!(((mnemonic || privateKey) && pwd && confirm && pwd == confirm) || observe || (keystore && keystorePwd))}
           press={() => importWallet()}
         />
       </View>
@@ -287,6 +339,8 @@ const mdp = d => {
   return {
     setName: name => d({ type: 'set', payload: name }),
     deleteName: name => d({ type: 'delete' }),
+    setCurrentAccount: account => d({ type: 'setCurrentAccount', payload: account }),
+    addAccount: account => d({ type: 'addAccount', payload: account }),
   };
 };
 

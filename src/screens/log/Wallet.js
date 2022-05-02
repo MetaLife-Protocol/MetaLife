@@ -33,9 +33,18 @@ const iconDic = {
   Back_icon_dark: require('../../assets/image/walletBtn/back-black.png'),
   Back_icon_white: require('../../assets/image/walletBtn/back-white.png'),
   Toogle_icon: require('../../assets/image/walletBtn/icon_toggle_default.png'),
+  Check_icon_white: require('../../assets/image/icons/icon_checked_default_white.png'),
+  Check_icon_black: require('../../assets/image/icons/icon_checked_presses_black.png'),
 };
 
-const Wallet = ({name, setName, currentAccount, darkMode}) => {
+const Wallet = ({
+  name,
+  setName,
+  setCurrentAccount,
+  currentAccount,
+  accountList,
+  darkMode,
+}) => {
   const {barStyle, BG, FG, flex1, input, text, marginTop10, modalBackground} =
       SchemaStyles(),
     {textHolder} = colorsSchema;
@@ -52,11 +61,27 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
   const [focusedConfirm, setfocusedConfirm] = useState(true);
   const [confirmModal, setconfirmModal] = useState(false);
   const [menuModal, setmenuModal] = useState(false);
+  const [switchModal, setSwitchModal] = useState(false);
+
+  const onClickSwitchMenu = () => {
+    if (accountList.length === 0 || (accountList.length === 1 && accountList[0] === null))
+      return;
+    setmenuModal(false);
+    setSwitchModal(true);
+  };
 
   const cleaerPress = () => {
     setfocusedClear(!focusedClear);
     setNick('');
   };
+
+  const onClickManageAccount = () => {
+    if (accountList.length === 1) {
+      setmenuModal(false);
+      return;
+    }
+    replace('Address Contact');
+  }
 
   useEffect(() => {
     // randomBytes(16, (error, bytes) => {
@@ -87,7 +112,7 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
         ) : null} */}
       <StatusBar barStyle={barStyle} />
       <View style={[FG, styles.header]}>
-        <TouchableOpacity onPress={() => replace('Wallet Detail')}>
+        <TouchableOpacity onPress={() => replace('Import Account')}>
           <Image
             style={{width: 20, height: 20}}
             source={iconDic['Back_icon_' + (!darkMode ? 'dark' : 'white')]}
@@ -171,18 +196,16 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
                         zIndex: 10,
                       },
                     ]}>
-                    <TouchableOpacity
-                      onPress={() => console.log('Switch account')}>
+                    <TouchableOpacity onPress={() => onClickSwitchMenu()}>
                       <Text style={[text]}>Switch Account</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => replace("Create Account")}>
+                    <TouchableOpacity onPress={() => replace('Create Account')}>
                       <Text style={[text, {marginTop: 10}]}>
                         Create Account
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => console.log('Manage account')}>
+                      onPress={() => onClickManageAccount()}>
                       <Text
                         style={[
                           text,
@@ -239,6 +262,95 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
             </View>
           </View>
         </ImageBackground>
+        {switchModal ? (
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={switchModal}
+            onRequestClose={() => {
+              Alert.alert('Modal has been closed.');
+              setSwitchModal(false);
+            }}>
+            <View
+              style={[
+                FG,
+                {
+                  position: 'absolute',
+                  left: 0,
+                  bottom: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: '#222222ee',
+                },
+              ]}>
+              <View
+                style={[
+                  FG,
+                  {
+                    position: 'absolute',
+                    left: 0,
+                    bottom: 0,
+                    width: '100%',
+                    height: 300,
+                    padding: 15,
+                    borderTopLeftRadius: 15,
+                    borderTopRightRadius: 15,
+                    borderColor: 'black',
+                    borderWidth: 1,
+                  },
+                ]}>
+                <View style={[styles.switchModalMenu]}>
+                  <Text style={[text, {fontSize: 18, fontWeight: '500'}]}>
+                    Switch Account
+                  </Text>
+                  <TouchableOpacity onPress={() => setSwitchModal(false)}>
+                    <Text style={[text, {fontSize: 18, fontWeight: '500'}]}>
+                      X
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                {accountList.map((each, index) => {
+                  return (
+                    <View
+                      key={index}
+                      style={[styles.oneAccount, {marginVertical: 7}]}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setCurrentAccount(each);
+                          setSwitchModal(false);
+                        }}>
+                        <View style={[styles.switchModalMenu]}>
+                          <View>
+                            <Text
+                              style={[
+                                text,
+                                {
+                                  marginTop: 10,
+                                  fontWeight: '500',
+                                  fontSize: 16,
+                                },
+                              ]}>
+                              {each.Name}
+                            </Text>
+                            <Text style={[text, {fontSize: 12, marginTop: 10}]}>
+                              {each.Address}
+                            </Text>
+                          </View>
+                          <Text>
+                            <Image
+                              style={styles.icon}
+                              source={require('../../assets/image/icons/icon_checked_default_white.png')}
+                            />
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+          </Modal>
+        ) : null}
 
         <View style={[styles.tab]}>
           <View style={[tab == 0 ? styles.active : null]}>
@@ -278,8 +390,22 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
             </TouchableOpacity>
           </View>
         </View>
-        <View style={[styles.main]}>
-          <Text style={[styles.inputText]}>Comming soon...</Text>
+        <View style={[styles.mainTable]}>
+          <View style={[styles.oneToken]}>
+            <Text style={[styles.tokenTitle]}>SMT</Text>
+            <View style={[styles.tableRow]}>
+              <Text style={[styles.inputText]}>Quantity</Text>
+              <Text style={[styles.inputText]}>Price</Text>
+              <Text style={[styles.inputText]}>Amount</Text>
+            </View>
+            <View style={[styles.tableRow]}>
+              <Text style={[styles.inputText, {color: 'black'}]}>
+                {currentAccount.Balance}
+              </Text>
+              <Text style={[styles.inputText, {color: 'black'}]}>$2923.5</Text>
+              <Text style={[styles.inputText, {color: 'black'}]}>$15263.5</Text>
+            </View>
+          </View>
         </View>
       </View>
       <Modal
@@ -362,6 +488,7 @@ const Wallet = ({name, setName, currentAccount, darkMode}) => {
 const msp = s => {
   return {
     currentAccount: s.account.currentAccount,
+    accountList: s.account.accountList,
     darkMode: s.cfg.darkMode,
   };
 };
@@ -370,10 +497,41 @@ const mdp = d => {
   return {
     setName: name => d({type: 'set', payload: name}),
     deleteName: name => d({type: 'delete'}),
+    setCurrentAccount: account =>
+      d({type: 'setCurrentAccount', payload: account}),
   };
 };
 
 const styles = StyleSheet.create({
+  oneAccount: {
+    borderRadius: 5,
+    backgroundColor: '#dddddd',
+    padding: 10,
+  },
+  switchModalMenu: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  tokenTitle: {
+    color: '#29DAD7',
+    fontSize: 22,
+    paddingVertical: 3,
+  },
+  oneToken: {
+    borderBottomColor: '#aaaaaa',
+    borderBottomWidth: 1,
+    paddingVertical: 20,
+  },
+  tableRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    fontSize: 20,
+    paddingVertical: 1,
+  },
   inputBox: {
     display: 'flex',
     flexDirection: 'row',
