@@ -64,7 +64,7 @@ const Wallet = ({
   const [switchModal, setSwitchModal] = useState(false);
 
   const onClickSwitchMenu = () => {
-    if (accountList.length === 0 || (accountList.length === 1 && accountList[0] === null))
+    if (accountList.length === 0)
       return;
     setmenuModal(false);
     setSwitchModal(true);

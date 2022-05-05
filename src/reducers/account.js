@@ -32,6 +32,14 @@ export const accountReducer = (state = accountInitState, { type, payload }) => {
                 }
             });
         case 'addAccount':
+            if (!payload.PrivateKey) {
+                return;
+            }
+            state.accountList.map((one, index) => {
+                if (one.Address === payload.Address) {
+                    return;
+                }
+            });
             state.accountList.push(payload);
         case 'setCurrentAccount':
             return { ...state, currentAccount: payload };

@@ -5,7 +5,7 @@ import {daoReducer} from './dao';
 import {userReducer} from './user';
 import {accountReducer} from './account';
 
-export const cfgInitState = {lang: 'en', darkMode: true};
+export const cfgInitState = {lang: 'en', darkMode: false};
 export const cfgReducer = (state = cfgInitState, {type, payload}) => {
   switch (type) {
     case 'setLang':
