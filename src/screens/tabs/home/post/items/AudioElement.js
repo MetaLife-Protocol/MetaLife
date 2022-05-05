@@ -1,7 +1,7 @@
 import SchemaStyles, {colorsBasics} from '../../../../../shared/SchemaStyles';
 import SoundPlayer from 'react-native-sound-player';
 import {Linking, Text} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 
 /**
  * Created on 29 Apr 2022 by lonmee
@@ -11,36 +11,22 @@ import React, {useEffect, useState} from 'react';
 export default ({link, url, verbose = false}) => {
   const {text} = SchemaStyles();
   const [playing, setPlaying] = useState(false);
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
+  const playHandler = () => {
+    setPlaying(true);
+    SoundPlayer.stop();
     const finishedPlayingHandler = SoundPlayer.addEventListener(
       'FinishedPlaying',
-      () => setPlaying(false),
-    );
-    const finishedLoadingHandler = SoundPlayer.addEventListener(
-      'FinishedLoadingURL',
-      ({success, url: eUrl}) => {
-        if (success && eUrl === url) {
-          setLoading(false);
-          setPlaying(true);
-        }
+      () => {
+        setPlaying(false);
+        finishedPlayingHandler.remove();
       },
     );
-    return () => {
-      finishedPlayingHandler.remove();
-      finishedLoadingHandler.remove();
-    };
-  }, []);
+    SoundPlayer.playUrl(url);
+  };
   return (
     <>
-      <Text
-        style={[{color: colorsBasics.primary}]}
-        onPress={() => {
-          SoundPlayer.playUrl(url);
-          setLoading(true);
-        }}>
-        🎧[audio] {loading && 'loading...'}
-        {playing && 'playing...'}
+      <Text style={[{color: colorsBasics.primary}]} onPress={playHandler}>
+        🎧[audio] {playing && 'playing...'}
       </Text>
       {verbose && (
         <Text>
