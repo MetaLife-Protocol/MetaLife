@@ -57,6 +57,7 @@ const Home = ({
         <ImageViewer
           index={viewImages.index}
           enableSwipeDown={true}
+          useNativeDriver={true}
           onSwipeDown={() => setViewImages({index: 0, imgs: []})}
           imageUrls={viewImages.imgs}
         />

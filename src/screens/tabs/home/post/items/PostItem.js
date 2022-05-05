@@ -191,7 +191,7 @@ const PostItem = ({
               url &&
               link.charAt(0) === '&' && (
                 <View key={i}>
-                  <Text style={[text]}>{name}</Text>
+                  {/*<Text style={[text]}>{name}</Text>*/}
                   {name === 'audio:recording.mp3' ||
                   name === 'audio:recording.mp4' ? (
                     <AudioElement link={link} url={url} verbose={verbose} />
@@ -205,6 +205,20 @@ const PostItem = ({
                       />
                     </Pressable>
                   )}
+                  <Text
+                    style={[
+                      {
+                        color: colorsBasics.primary,
+                        marginVertical: 4,
+                        alignSelf: i % 2 ? 'flex-end' : 'flex-start',
+                      },
+                    ]}
+                    onPress={() => {
+                      setString(link);
+                      Toast.show("Blob's id copied");
+                    }}>
+                    Copy the blob's id
+                  </Text>
                 </View>
               )
             );
