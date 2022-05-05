@@ -39,6 +39,7 @@ const PostItem = ({
   infoDic,
   voteDic,
   showPullMenu,
+  setViewImages,
 }) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
       SchemaStyles(),
@@ -140,6 +141,19 @@ const PostItem = ({
     );
   };
 
+  const viewImagesHandler = i =>
+    setViewImages({
+      index: i,
+      imgs: mentions.map(m => {
+        if (
+          m.name !== 'audio:recording.mp3' &&
+          m.name !== 'audio:recording.mp4'
+        ) {
+          return {url: blobIdToUrl(m.link)};
+        }
+      }),
+    });
+
   return (
     <View style={[row, container]}>
       <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
@@ -182,12 +196,14 @@ const PostItem = ({
                   name === 'audio:recording.mp4' ? (
                     <AudioElement link={link} url={url} verbose={verbose} />
                   ) : (
-                    <ImageElement
-                      index={i}
-                      link={link}
-                      url={url}
-                      verbose={verbose}
-                    />
+                    <Pressable onPress={() => viewImagesHandler(i)}>
+                      <ImageElement
+                        index={i}
+                        link={link}
+                        url={url}
+                        verbose={verbose}
+                      />
+                    </Pressable>
                   )}
                 </View>
               )
@@ -239,7 +255,10 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {showPullMenu: menu => d({type: 'pullMenu', payload: menu})};
+  return {
+    showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
+    setViewImages: imgs => d({type: 'images', payload: imgs}),
+  };
 };
 
 export default connect(msp, mdp)(PostItem);
