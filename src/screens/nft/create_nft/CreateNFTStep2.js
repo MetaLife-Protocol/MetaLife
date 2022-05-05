@@ -18,7 +18,13 @@ import {
   Slider,
 } from 'react-native';
 import StepView from './comps/StepView';
-import {NormalSeparator, RoundBtn, safeDecimal, useStyle} from 'metalife-base';
+import {
+  NormalSeparator,
+  RoundBtn,
+  safeDecimal,
+  useStyle,
+  useTheme,
+} from 'metalife-base';
 import {useRoute} from '@react-navigation/native';
 import CreateNFTInformationView from './comps/CreateNFTInfomationView';
 import Constants from '../../../shared/Constants';
@@ -29,6 +35,8 @@ import Toast from 'react-native-tiny-toast';
 const CreateNFTStep2 = () => {
   const styles = useStyle(styleFun);
   const {file = {}, name = '', description = ''} = useRoute().params ?? {};
+
+  const theme = useTheme();
 
   const [sliderValue, setSliderValue] = useState(0.05),
     [cycleIsCustom, setCycleIsCustom] = useState(false);
@@ -53,7 +61,10 @@ const CreateNFTStep2 = () => {
         <View style={{paddingHorizontal: 15}}>
           <Text style={styles.title}>Initial Price:</Text>
           <View style={[styles.row, {marginTop: 10}]}>
-            <TextInput style={[styles.borderView, {flex: 1}]} />
+            <TextInput
+              style={[styles.borderView, styles.inputText, {flex: 1}]}
+              placeholderTextColor={theme.c_000000_FFFFFF}
+            />
             <CreateSelectItemView title={'MLT'} />
           </View>
 
@@ -152,7 +163,7 @@ const styleFun = theme =>
     },
     borderView: {
       borderWidth: 1,
-      borderColor: 'rgba(0,0,0,0.2)',
+      borderColor: '#4E586E',
       height: 50,
       borderRadius: 12,
       paddingHorizontal: 10,
@@ -171,6 +182,9 @@ const styleFun = theme =>
       lineHeight: 17,
       color: theme.c_4E586E,
       marginTop: 7,
+    },
+    inputText: {
+      color: theme.c_000000_FFFFFF,
     },
   });
 export default CreateNFTStep2;

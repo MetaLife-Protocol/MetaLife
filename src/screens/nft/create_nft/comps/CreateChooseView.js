@@ -43,7 +43,7 @@ const styleFun = theme =>
     },
     borderView: {
       borderWidth: 1,
-      borderColor: 'rgba(0,0,0,0.2)',
+      borderColor: '#4E586E',
       height: 50,
       borderRadius: 12,
       paddingHorizontal: 10,
