@@ -25,7 +25,7 @@ import PullMenu from './shared/comps/PullMenu';
 const App = () => {
   const {barStyle, theme} = SchemaStyles();
   const [progress, setProgress] = useState(0);
-  const {Navigator, Screen} = createNativeStackNavigator();
+  const {Navigator, Screen, Group} = createNativeStackNavigator();
 
   // todo: loading bar test
   // useEffect(() => {
@@ -76,7 +76,9 @@ const App = () => {
           component={PeerDetailsScreen}
         />
         {/* Profiles */}
-        <Screen name="Setting" component={Setting} />
+        <Group screenOptions={{presentation: 'modal'}}>
+          <Screen name="Setting" component={Setting} />
+        </Group>
         <Screen name="Pubs" component={Pubs} />
         <Screen
           name="TextEditor"

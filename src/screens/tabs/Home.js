@@ -12,18 +12,24 @@ import {searchPublicMsgByPostId} from '../../store/filters/MsgFilters';
 import {useTimer} from '../../shared/Hooks';
 import {getConnectedPeers} from '../../remote/ssbOP';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 
 const Home = ({
   verbose,
   publicMsg,
   setFeedId,
-  setStagedPeers,
   setConnectedPeers,
   viewImages,
   setViewImages,
 }) => {
   const {flex1} = SchemaStyles(),
     {searchBar} = styles;
+  const {setOptions, getState} = useNavigation();
+  const route = useRoute();
   const store = useStore();
   const [result, setResult] = useState([]);
   const [KW, setKW] = useState('');
@@ -37,6 +43,14 @@ const Home = ({
         getConnectedPeers(setConnectedPeers);
       });
   }, []);
+
+  useFocusEffect(() => {
+    setOptions({tabBarBadge: null});
+  });
+
+  useEffect(() => {
+    getState().index !== 0 && setOptions({tabBarBadge: ''});
+  }, [publicMsg]);
 
   useTimer(() => getConnectedPeers(setConnectedPeers), 10 * 1000, [], false);
 

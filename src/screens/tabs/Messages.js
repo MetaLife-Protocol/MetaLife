@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
@@ -6,6 +6,7 @@ import SearchBar from '../../shared/comps/SearchBar';
 import MessageItem from './messages/item/MessageItem';
 import Section from '../../shared/comps/Section';
 import {searchPrivateMsgByContentAndRecp} from '../../store/filters/MsgFilters';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 const iconDic = {
   photo: require('../../assets/image/profiles/photo.png'),
@@ -15,11 +16,20 @@ const iconDic = {
 };
 
 const Messages = ({privateMsg}) => {
-  const {textHolder} = colorsSchema;
-  const {FG, row, text, alignItemsCenter} = SchemaStyles();
-  const {searchBar, contactItemContainer, textView, nameTF, descTF} = styles;
+  const {textHolder} = colorsSchema,
+    {FG, row, text, alignItemsCenter} = SchemaStyles(),
+    {searchBar, contactItemContainer, textView, nameTF, descTF} = styles;
+  const {setOptions, getState} = useNavigation();
   const [result, setResult] = useState([]);
   const [KW, setKW] = useState('');
+
+  useFocusEffect(() => {
+    setOptions({tabBarBadge: null});
+  });
+
+  useEffect(() => {
+    getState().index !== 1 && setOptions({tabBarBadge: ''});
+  }, [privateMsg]);
 
   const snItem = ({item: {name, icon}}) => (
     <View

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
@@ -9,6 +9,7 @@ import {
   searchGraphById,
   searchInfoByNick,
 } from '../../store/filters/ContactsFilters';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 const iconDic = {
   fb: require('../../assets/image/profiles/Facebook.png'),
@@ -23,10 +24,20 @@ const Contacts = ({
   infoDic,
   relations: [friends, following, follower],
 }) => {
-  const {BG} = SchemaStyles();
-  const {searchBar, item} = styles;
+  const {BG} = SchemaStyles(),
+    {searchBar, item} = styles;
+  const {setOptions, getState} = useNavigation();
   const [result, setResult] = useState([]);
   const [KW, setKW] = useState('');
+
+  useFocusEffect(() => {
+    setOptions({tabBarBadge: null});
+  });
+
+  useEffect(() => {
+    getState().index !== 2 && setOptions({tabBarBadge: ''});
+  }, [friends, following, follower]);
+
   const snItem = ({item: {icon}}) => (
     <View style={item}>
       <Image source={icon} />
