@@ -1,7 +1,7 @@
 import SchemaStyles, {colorsBasics} from '../../../../../shared/SchemaStyles';
-import SoundPlayer from 'react-native-sound-player';
 import {Linking, Text} from 'react-native';
 import React, {useState} from 'react';
+import {play} from '../../../../../mgrs/AudioMgr';
 
 /**
  * Created on 29 Apr 2022 by lonmee
@@ -13,15 +13,7 @@ export default ({link, url, verbose = false}) => {
   const [playing, setPlaying] = useState(false);
   const playHandler = () => {
     setPlaying(true);
-    SoundPlayer.stop();
-    const finishedPlayingHandler = SoundPlayer.addEventListener(
-      'FinishedPlaying',
-      () => {
-        setPlaying(false);
-        finishedPlayingHandler.remove();
-      },
-    );
-    SoundPlayer.playUrl(url);
+    play(url, () => setPlaying(false));
   };
   return (
     <>

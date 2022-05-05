@@ -177,6 +177,7 @@ const PostItem = ({
               url &&
               link.charAt(0) === '&' && (
                 <View key={i}>
+                  <Text style={[text]}>{name}</Text>
                   {name === 'audio:recording.mp3' ||
                   name === 'audio:recording.mp4' ? (
                     <AudioElement link={link} url={url} verbose={verbose} />
