@@ -55,7 +55,11 @@ const Contacts = ({
 
   return (
     <ScrollView style={BG}>
-      <SearchBar style={[searchBar]} changeTextHandler={changeTextHandler} />
+      <SearchBar
+        style={[searchBar]}
+        placeholder={'contact id or nickname'}
+        changeTextHandler={changeTextHandler}
+      />
       {result.length > 0 || KW !== '' ? (
         <Section key={0} title={'Search'}>
           {result.map((key, i) => (

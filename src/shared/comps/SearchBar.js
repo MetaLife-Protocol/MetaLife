@@ -18,7 +18,7 @@ const iconDic = {
   iconClear: require('../../assets/image/icons/search_icon_delete.png'),
 };
 
-const SearchBar = ({style, changeTextHandler}) => {
+const SearchBar = ({style, changeTextHandler, placeholder}) => {
   const {FG, row, alignItemsCenter, flex1, input, text, placeholderTextColor} =
       SchemaStyles(),
     {container, img, inputS, clear} = styles;
@@ -30,7 +30,7 @@ const SearchBar = ({style, changeTextHandler}) => {
         <Image style={[img]} source={iconDic.iconSearch} />
         <TextInput
           style={[flex1, input, inputS, text]}
-          placeholder={'Search'}
+          placeholder={placeholder}
           value={KW}
           autoCapitalize={'none'}
           onChangeText={text => {

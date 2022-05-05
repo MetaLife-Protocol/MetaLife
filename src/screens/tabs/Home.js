@@ -61,8 +61,14 @@ const Home = ({
 
   return (
     <SafeAreaView style={[flex1]}>
-      <SearchBar style={[searchBar]} changeTextHandler={changeTextHandler} />
       <FlatList
+        ListHeaderComponent={
+          <SearchBar
+            style={[searchBar]}
+            placeholder={'Search with message id'}
+            changeTextHandler={changeTextHandler}
+          />
+        }
         data={result.length > 0 || KW !== '' ? result : publicMsg}
         keyExtractor={(_, index) => index}
         renderItem={info => <ItemAgent info={info} verbose={verbose} />}

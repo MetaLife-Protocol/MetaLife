@@ -41,23 +41,6 @@ const App = () => {
         <Screen name="Login" component={Login} />
         <Screen name="SignUp" component={SignUp} />
         <Screen name="Tabs" options={{headerShown: false}} component={Tabs} />
-        {/* Posts */}
-        <Screen
-          name="PostMsgEditor"
-          options={{title: 'Post'}}
-          component={PostMsgEditor}
-        />
-        <Screen
-          name="CommentEditor"
-          options={{title: 'Reply'}}
-          component={CommentEditor}
-        />
-        {/* Messages */}
-        <Screen
-          name="MessageDetailsScreen"
-          options={{title: 'Message'}}
-          component={MessageDetailsScreen}
-        />
         {/* Contacts */}
         <Screen name="FriendList" component={FriendList} />
         <Screen
@@ -69,14 +52,31 @@ const App = () => {
           }}
           component={PeersScreen}
         />
-        <Screen name="PeersListScreen" component={PeersListScreen} />
-        <Screen
-          name="PeerDetailsScreen"
-          options={{title: 'Peers'}}
-          component={PeerDetailsScreen}
-        />
         {/* Profiles */}
         <Group screenOptions={{presentation: 'modal'}}>
+          <Screen name="PeersListScreen" component={PeersListScreen} />
+          <Screen
+            name="PeerDetailsScreen"
+            options={{title: 'Peers'}}
+            component={PeerDetailsScreen}
+          />
+          {/* Posts */}
+          <Screen
+            name="PostMsgEditor"
+            options={{title: 'Post'}}
+            component={PostMsgEditor}
+          />
+          <Screen
+            name="CommentEditor"
+            options={{title: 'Reply'}}
+            component={CommentEditor}
+          />
+          {/* Messages */}
+          <Screen
+            name="MessageDetailsScreen"
+            options={{title: 'Message'}}
+            component={MessageDetailsScreen}
+          />
           <Screen name="Setting" component={Setting} />
         </Group>
         <Screen name="Pubs" component={Pubs} />

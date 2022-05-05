@@ -45,5 +45,7 @@ export function searchGraphById(graph, kw) {
 }
 
 export function searchInfoByNick(info, kw) {
-  return Object.keys(info).filter(key => info[key].name.includes(kw));
+  return Object.keys(info).filter(
+    key => info[key].name && info[key].name.includes(kw),
+  );
 }
