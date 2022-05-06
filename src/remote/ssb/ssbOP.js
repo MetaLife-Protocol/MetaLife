@@ -21,8 +21,13 @@ export const connStart = cb =>
   ssb.conn.start((e, v) => (e ? console.error(e) : cb(v)));
 
 
-export const bluetoothSearch = (interval, cb) => 
-  ssb.bluetooth.makeDeviceDiscoverable(interval, (e, v) => (e ? console.error(e) : cb(v)));
+export const bluetoothSearch = (interval, cb) =>
+  ssb.bluetooth.makeDeviceDiscoverable(interval, (e, v) => {
+    console.log('bluetoothSearch error', e);
+    console.log('bluetoothSearch result', v);
+
+    e ? console.error(e) : cb(v);
+  });
 
 export const connectPeer = (address, data = {}, cb = null) =>
   ssb.conn.connect(address, data, (e, v) =>
