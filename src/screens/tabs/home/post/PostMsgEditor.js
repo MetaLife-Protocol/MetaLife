@@ -2,14 +2,16 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React, {
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
-import {Image, SafeAreaView, ScrollView, TextInput} from 'react-native';
+import React, {useCallback, useEffect, useReducer, useState} from 'react';
+import {
+  Image,
+  PixelRatio,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  TextInput,
+  useWindowDimensions,
+} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {blobsSetter, sendMsg} from '../../../../remote/ssbOP';
@@ -32,9 +34,15 @@ const initialState = [],
     }
   };
 
-const PostMsgEditor = ({cachedContent, cachePostContent, resetPostContent}) => {
+const PostMsgEditor = ({
+  cachedContent,
+  cachePostContent,
+  resetPostContent,
+  showPullMenu,
+}) => {
   const {FG, flex1, placeholderTextColor, text} = SchemaStyles();
   const {goBack} = useNavigation();
+  const {scale} = useWindowDimensions();
   const [content, setContent] = useState(cachedContent.content),
     [offset, setOffset] = useState(0),
     [photo, dispatch] = useReducer(reducer, cachedContent.photo);
@@ -44,10 +52,16 @@ const PostMsgEditor = ({cachedContent, cachePostContent, resetPostContent}) => {
     cachePostContent({content, photo});
   }, [content, photo]);
 
+  function clearHandler() {
+    resetPostContent();
+    dispatch({type: 'set', payload: []});
+    setContent('');
+  }
+
   function sendHandler() {
     resetPostContent();
     const mentions = [];
-    if (photo.length) {
+    if (photo && photo.length) {
       for (const photoKey in photo) {
         mentions.push({
           link: photo[photoKey].id,
@@ -79,6 +93,29 @@ const PostMsgEditor = ({cachedContent, cachePostContent, resetPostContent}) => {
 
   function voiceHandler() {}
 
+  const deleteHandler = useCallback(
+    function (path, e) {
+      showPullMenu({
+        position: {
+          x: PixelRatio.getPixelSizeForLayoutSize(e.nativeEvent.pageX / scale),
+          y: PixelRatio.getPixelSizeForLayoutSize(e.nativeEvent.pageY / scale),
+        },
+        buttons: [
+          {
+            title: 'delete',
+            handler: () => {
+              const id = photo.filter(p => p.path === path)[0].id;
+              setContent(content.replace(`!['image'](${id})`, ''));
+              dispatch({type: 'remove', payload: path});
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+        ],
+      });
+    },
+    [photo, content],
+  );
+
   return (
     <SafeAreaView style={[flex1, FG]}>
       <ScrollView style={[flex1]} overScrollMode={'auto'}>
@@ -92,14 +129,17 @@ const PostMsgEditor = ({cachedContent, cachePostContent, resetPostContent}) => {
           onChangeText={setContent}
           value={content}
         />
-        {photo.length > 0 && (
+        {photo && photo.length > 0 && (
           <Section>
             {photo.map(({path, id}) => (
-              <Image
-                style={{width: 100, height: 100}}
-                source={{uri: blobIdToUrl(id)}}
+              <Pressable
                 key={id}
-              />
+                onLongPress={event => deleteHandler(path, event)}>
+                <Image
+                  style={{width: 100, height: 100}}
+                  source={{uri: blobIdToUrl(id)}}
+                />
+              </Pressable>
             ))}
           </Section>
         )}
@@ -109,6 +149,7 @@ const PostMsgEditor = ({cachedContent, cachePostContent, resetPostContent}) => {
         voiceHandler={voiceHandler}
         cameraHandler={() => cameraHandler(submit)}
         photoHandler={() => photoHandler(submit)}
+        clearHandler={clearHandler}
         sendHandler={sendHandler}
       />
     </SafeAreaView>
@@ -124,6 +165,7 @@ const mdp = d => {
     cachePostContent: content =>
       d({type: 'cachePostContent', payload: content}),
     resetPostContent: () => d({type: 'reset'}),
+    showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
   };
 };
 

@@ -25,6 +25,7 @@ const MultimediaPanel = ({
   voiceHandler,
   cameraHandler,
   photoHandler,
+  clearHandler,
   sendHandler,
 }) => {
   const {BG, row, alignItemsCenter, justifySpaceBetween} = SchemaStyles(),
@@ -49,9 +50,14 @@ const MultimediaPanel = ({
             <Image style={[funBtn]} source={iconPhoto} />
           </Pressable>
         </View>
-        <Pressable onPress={sendHandler}>
-          <Image style={[reviewBtn]} source={iconDic.review} />
-        </Pressable>
+        <View style={[row]}>
+          <Pressable onPress={clearHandler}>
+            <Image style={[]} source={iconDic.review} />
+          </Pressable>
+          <Pressable onPress={sendHandler}>
+            <Image style={[reviewBtn]} source={iconDic.review} />
+          </Pressable>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
