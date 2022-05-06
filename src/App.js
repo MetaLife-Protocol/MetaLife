@@ -53,33 +53,34 @@ const App = () => {
           component={PeersScreen}
         />
         {/* Profiles */}
+
+        <Screen name="PeersListScreen" component={PeersListScreen} />
+        <Screen
+          name="PeerDetailsScreen"
+          options={{title: 'Peers'}}
+          component={PeerDetailsScreen}
+        />
+        {/* Posts */}
+        <Screen
+          name="PostMsgEditor"
+          options={{title: 'Post'}}
+          component={PostMsgEditor}
+        />
+        <Screen
+          name="CommentEditor"
+          options={{title: 'Reply'}}
+          component={CommentEditor}
+        />
+        {/* Messages */}
+        <Screen
+          name="MessageDetailsScreen"
+          options={{title: 'Message'}}
+          component={MessageDetailsScreen}
+        />
+        <Screen name="Setting" component={Setting} />
         <Group screenOptions={{presentation: 'modal'}}>
-          <Screen name="PeersListScreen" component={PeersListScreen} />
-          <Screen
-            name="PeerDetailsScreen"
-            options={{title: 'Peers'}}
-            component={PeerDetailsScreen}
-          />
-          {/* Posts */}
-          <Screen
-            name="PostMsgEditor"
-            options={{title: 'Post'}}
-            component={PostMsgEditor}
-          />
-          <Screen
-            name="CommentEditor"
-            options={{title: 'Reply'}}
-            component={CommentEditor}
-          />
-          {/* Messages */}
-          <Screen
-            name="MessageDetailsScreen"
-            options={{title: 'Message'}}
-            component={MessageDetailsScreen}
-          />
-          <Screen name="Setting" component={Setting} />
+          <Screen name="Pubs" component={Pubs} />
         </Group>
-        <Screen name="Pubs" component={Pubs} />
         <Screen
           name="TextEditor"
           options={{title: ''}}
