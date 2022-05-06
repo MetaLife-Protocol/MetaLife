@@ -17,7 +17,20 @@ import RoundBtn from '../../shared/comps/RoundBtn';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Backup = ({name, setName, currentAccount, setCurrentAccount, deleteAccount, currentPassword}) => {
+const iconDic = {
+  Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),
+  Clear_icon_selected: require('../../assets/image/accountBtn/Clear_icon_selected.png'),
+  Dark_icon_default: require('../../assets/image/accountBtn/Dark_icon_default.png'),
+  Dark_icon_selected: require('../../assets/image/accountBtn/Dark_icon_selected.png'),
+  Confirm_icon_default: require('../../assets/image/accountBtn/Confirm_icon_default.png'),
+  Confirm_icon_selected: require('../../assets/image/accountBtn/Confirm_icon_selected.png'),
+  Scan_icon_dark: require('../../assets/image/accountBtn/Scan_icon_black.png'),
+  Scan_icon_white: require('../../assets/image/accountBtn/Scan_icon_white.png'),
+  Back_icon_dark: require('../../assets/image/walletBtn/back-black.png'),
+  Back_icon_white: require('../../assets/image/walletBtn/back-white.png'),
+};
+
+const Backup = ({name, setName, darkMode, currentAccount, setCurrentAccount, deleteAccount, currentPassword}) => {
   const {
       barStyle,
       BG,
@@ -45,7 +58,8 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount, deleteAccount
   const [exportType, setExportType] = useState('keystore');
 
   const checkPassword = () => {
-    if (currentPassword == confirm) {
+    console.log(currentAccount.Password, confirm, '>>>>>>>>>>>>>>>>>')
+    if (currentAccount.Password == confirm) {
       setModalVisible(false);
       setPrivateKeyModal(true);
     }
@@ -62,6 +76,17 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount, deleteAccount
   return (
     <View style={[BG, flex1]}>
       <StatusBar barStyle={barStyle} />
+      <View style={[FG, styles.header]}>
+        <TouchableOpacity onPress={() => replace('Wallet')}>
+          <Image
+            style={{width: 15, height: 15}}
+            source={iconDic['Back_icon_' + (!darkMode ? 'dark' : 'white')]}
+          />
+        </TouchableOpacity>
+        <View style={[{paddingLeft: 35}]}>
+          <Text style={[text, {fontSize: 20, fontWeight: '500'}]}>WalletDetails</Text>
+        </View>
+      </View>
       <View style={[FG, marginTop10, {marginLeft: 15, marginRight: 15}]}>
         <View
           style={{
@@ -213,6 +238,7 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount, deleteAccount
                 <TextInput
                   style={[text, styles.inputText]}
                   placeholder={'Wallet Password'}
+                  secureTextEntry={true}
                   placeholderTextColor={textHolder}
                   value={confirm}
                   onChangeText={setConfirm}
@@ -290,6 +316,7 @@ const msp = s => {
   return {
     currentAccount: s.account.currentAccount,
     currentPassword: s.account.currentPassword,
+    darkMode: s.cfg.darkMode,
   };
 };
 
@@ -305,6 +332,14 @@ const mdp = d => {
 };
 
 const styles = StyleSheet.create({
+  header: {
+    height: 50,
+    display: 'flex',
+    paddingHorizontal: 20,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   title: {
     fontSize: 20,
   },

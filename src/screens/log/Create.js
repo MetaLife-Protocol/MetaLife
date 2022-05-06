@@ -65,7 +65,7 @@ const Create = ({ name, setName, setCurrentAccount, addAccount }) => {
       Name: nick,
       Password: pwd,
       PassPrompt: prompt,
-      isBackup: false,
+      isBackup: true,
       Mnemonic: mnemonic,
       Address: randomWallet.signingKey.address,
       PrivateKey: randomWallet.signingKey.privateKey,
@@ -108,7 +108,7 @@ const Create = ({ name, setName, setCurrentAccount, addAccount }) => {
     });
 
     console.log(mnemonic);*/
-    replace('Backup Wallet');
+    replace('BackupWallet');
   }
 
   useEffect(() => {

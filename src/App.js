@@ -39,14 +39,14 @@ const App = () => {
         />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="Create Account" component={Create} />
-        <Stack.Screen name="Backup Wallet" component={BackupWallet} />
-        <Stack.Screen name="Backup Mnemonic" component={Backup} />
-        <Stack.Screen name="Import Account" component={ImportAccount} />
+        <Stack.Screen name="CreateAccount" component={Create} />
+        <Stack.Screen name="BackupWallet" component={BackupWallet} />
+        <Stack.Screen name="BackupMnemonic" component={Backup} />
+        <Stack.Screen name="ImportAccount" component={ImportAccount} options={{headerShown: false}} />
         <Stack.Screen name="Wallet" component={Wallet} options={{headerShown: false}} />
-        <Stack.Screen name="Address Contact" component={ManageAccounts} options={{headerShown: false}} />
-        <Stack.Screen name="New Account" component={NewAccount} options={{headerShown: false}} />
-        <Stack.Screen name="Wallet Details" component={WalletDetail}  />
+        <Stack.Screen name="AddressContact" component={ManageAccounts} options={{headerShown: false}} />
+        <Stack.Screen name="NewAccount" component={NewAccount} options={{headerShown: false}} />
+        <Stack.Screen name="WalletDetails" component={WalletDetail} options={{headerShown: false}} />
         <Stack.Screen
           name="Tabs"
           options={{headerShown: false}}

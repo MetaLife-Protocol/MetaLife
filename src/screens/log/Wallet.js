@@ -22,6 +22,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ethers} from 'ethers';
 import {randomBytes} from 'react-native-randombytes';
 import {restrict} from '../../utils';
+import axios from 'axios';
+const baseUrl = 'https://api.coinmarketcap.com/v1/ticker/ethereum/';
 
 const iconDic = {
   Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),
@@ -62,10 +64,10 @@ const Wallet = ({
   const [confirmModal, setconfirmModal] = useState(false);
   const [menuModal, setmenuModal] = useState(false);
   const [switchModal, setSwitchModal] = useState(false);
+  const [ethPrice, setEthPrice] = useState(0);
 
   const onClickSwitchMenu = () => {
-    if (accountList.length === 0)
-      return;
+    if (accountList.length === 0) return;
     setmenuModal(false);
     setSwitchModal(true);
   };
@@ -76,18 +78,44 @@ const Wallet = ({
   };
 
   const onClickManageAccount = () => {
-    if (accountList.length === 1) {
-      setmenuModal(false);
-      return;
-    }
-    replace('Address Contact');
+    // if (accountList.length === 1) {
+    //   setmenuModal(false);
+    //   return;
+    // }
+    replace('ImportAccount');
+  };
+
+  const onClickAccount = (each) => {
+    setCurrentAccount(each);
+    setSwitchModal(false);
+    getEtherPrice();
+  }
+
+  const getEtherPrice = () => {
+    let qs = `?start=1&limit=50&convert=USD`;
+    axios
+      .get(
+        'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest' +
+          qs,
+        {
+          headers: {
+            'X-CMC_PRO_API_KEY': '60155b5f-0052-411e-96aa-7b8be0f02c32',
+          },
+        },
+      )
+      .then(res => {
+        res.data.data.map(one => {
+          if (one.symbol == 'ETH') {
+            let eth_price = Math.round(one.quote.USD.price * 100) / 100;
+            setEthPrice(eth_price);
+            console.log(eth_price);
+          }
+        });
+      });
   }
 
   useEffect(() => {
-    // randomBytes(16, (error, bytes) => {
-    //   const mnemonic = ethers.utils.HDNode.entropyToMnemonic(bytes, ethers.wordlists.en);
-    //   console.log(mnemonic);
-    // });
+    getEtherPrice();
   }, []);
 
   return (
@@ -112,13 +140,15 @@ const Wallet = ({
         ) : null} */}
       <StatusBar barStyle={barStyle} />
       <View style={[FG, styles.header]}>
-        <TouchableOpacity onPress={() => replace('Import Account')}>
+        {/* <TouchableOpacity onPress={() => replace('ImportAccount')}>
           <Image
             style={{width: 20, height: 20}}
             source={iconDic['Back_icon_' + (!darkMode ? 'dark' : 'white')]}
           />
-        </TouchableOpacity>
-        <Text style={[text, {fontSize: 22}]}>Wallet</Text>
+        </TouchableOpacity> */}
+        <View style={[{paddingLeft: 40}]}>
+          <Text style={[text, {fontSize: 22}]}>Wallet</Text>
+        </View>
 
         <View
           style={[
@@ -170,8 +200,8 @@ const Wallet = ({
                   alignItems: 'center',
                   position: 'relative',
                 }}>
-                {!currentAccount.isBackup ? (
-                  <TouchableOpacity onPress={() => replace('Backup Wallet')}>
+                {currentAccount.isBackup ? (
+                  <TouchableOpacity onPress={() => replace('BackupWallet')}>
                     <Text style={[styles.backup]}>Backup</Text>
                   </TouchableOpacity>
                 ) : null}
@@ -199,13 +229,17 @@ const Wallet = ({
                     <TouchableOpacity onPress={() => onClickSwitchMenu()}>
                       <Text style={[text]}>Switch Account</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => replace('Create Account')}>
+                    <TouchableOpacity onPress={() => replace('CreateAccount')}>
                       <Text style={[text, {marginTop: 10}]}>
                         Create Account
                       </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => onClickManageAccount()}>
+                    <TouchableOpacity onPress={() => replace('WalletDetails')}>
+                      <Text style={[text, {marginTop: 10}]}>
+                        Export Account
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => onClickManageAccount()}>
                       <Text
                         style={[
                           text,
@@ -246,7 +280,7 @@ const Wallet = ({
             </View>
             <View style={{marginTop: 16}}>
               <Text style={{fontSize: 27, fontWeight: 'bold', color: '#fff'}}>
-                $287103.124
+                ${Math.round(currentAccount.Balance ? currentAccount.Balance : 0 * ethPrice * 100) / 100}
               </Text>
             </View>
             <View style={[styles.interfaceFooter]}>
@@ -315,10 +349,7 @@ const Wallet = ({
                       key={index}
                       style={[styles.oneAccount, {marginVertical: 7}]}>
                       <TouchableOpacity
-                        onPress={() => {
-                          setCurrentAccount(each);
-                          setSwitchModal(false);
-                        }}>
+                        onPress={() => onClickAccount(each)}>
                         <View style={[styles.switchModalMenu]}>
                           <View>
                             <Text
@@ -392,18 +423,26 @@ const Wallet = ({
         </View>
         <View style={[styles.mainTable]}>
           <View style={[styles.oneToken]}>
-            <Text style={[styles.tokenTitle]}>SMT</Text>
+            <Text style={[styles.tokenTitle]}>ETH</Text>
             <View style={[styles.tableRow]}>
-              <Text style={[styles.inputText]}>Quantity</Text>
-              <Text style={[styles.inputText]}>Price</Text>
-              <Text style={[styles.inputText]}>Amount</Text>
-            </View>
-            <View style={[styles.tableRow]}>
-              <Text style={[styles.inputText, {color: 'black'}]}>
-                {currentAccount.Balance}
-              </Text>
-              <Text style={[styles.inputText, {color: 'black'}]}>$2923.5</Text>
-              <Text style={[styles.inputText, {color: 'black'}]}>$15263.5</Text>
+              <View>
+                <Text style={[styles.inputText]}>Quantity</Text>
+                <Text style={[styles.inputText, {color: 'black'}]}>
+                  {currentAccount.Balance ? currentAccount.Balance : 0}
+                </Text>
+              </View>
+              <View>
+                <Text style={[styles.inputText, {textAlign: 'center'}]}>Price</Text>
+                <Text style={[styles.inputText, {color: 'black'}]}>
+                  ${ethPrice}
+                </Text>
+              </View>
+              <View>
+                <Text style={[styles.inputText, {textAlign: 'right'}]}>Amount</Text>
+                <Text style={[styles.inputText, {color: 'black'}]}>
+                  ${Math.round(ethPrice * currentAccount.Balance ? currentAccount.Balance : 0 * 100) / 100}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -475,7 +514,7 @@ const Wallet = ({
               <RoundBtn
                 style={{width: '100%', marginHorizontal: 0}}
                 title={'Backup now'}
-                press={() => replace('Backup Wallet')}
+                press={() => replace('BackupWallet')}
               />
             </View>
           </View>

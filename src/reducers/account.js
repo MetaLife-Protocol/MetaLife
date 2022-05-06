@@ -24,11 +24,12 @@ export const accountReducer = (state = accountInitState, { type, payload }) => {
         case 'setCurrentPassword':
             return { ...state, currentPassword: payload };
         case 'deleteAccount':
-            if (state.accountList.length === 0)
-                return;
+            if (state.accountList.length === 1)
+                return state;
             state.accountList.map((one, index) => {
                 if (one.Address === payload) {
                     state.accountList.splice(index, 1);
+                    return state;
                 }
             });
         case 'addAccount':

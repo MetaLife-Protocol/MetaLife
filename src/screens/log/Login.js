@@ -14,10 +14,10 @@ const Login = ({name, setName, currentAccount, setCurrentPassword}) => {
   const {replace} = useNavigation();
 
   const onLogin = () => {
-    if (currentAccount.name == '') replace('Create Account');
+    if (currentAccount.name == '') replace('CreateAccount');
     else {
       setCurrentPassword(pwd);
-      replace('Import Account');
+      replace('Wallet');
     }
   };
 

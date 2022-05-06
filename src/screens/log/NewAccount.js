@@ -83,7 +83,7 @@ const NewAccount = ({
     <View style={[BG, flex1]}>
       <StatusBar barStyle={barStyle} />
       <View style={[FG, styles.header]}>
-        <TouchableOpacity onPress={() => replace('Address Contact')}>
+        <TouchableOpacity onPress={() => replace('AddressContact')}>
           <Image
             style={{width: 20, height: 20}}
             source={iconDic['Back_icon_' + (!darkMode ? 'dark' : 'white')]}

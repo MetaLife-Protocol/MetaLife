@@ -27,6 +27,8 @@ const iconDic = {
   Confirm_icon_selected: require('../../assets/image/accountBtn/Confirm_icon_selected.png'),
   Scan_icon_dark: require('../../assets/image/accountBtn/Scan_icon_black.png'),
   Scan_icon_white: require('../../assets/image/accountBtn/Scan_icon_white.png'),
+  Back_icon_dark: require('../../assets/image/walletBtn/back-black.png'),
+  Back_icon_white: require('../../assets/image/walletBtn/back-white.png'),
 };
 
 const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
@@ -92,8 +94,10 @@ const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
         const hex_balance = await provider.getBalance(wallet.address);
         balance = ethers.utils.formatEther(hex_balance);
         currentAccount.Address = wallet.address;
+        // currentAccount.Mnemonic = wallet.mnemonic;
         currentAccount.Balance = balance;
         currentAccount.Keystore = keystore;
+        currentAccount.PrivateKey = wallet.privateKey;
         setCurrentAccount(currentAccount);
         addAccount(currentAccount);
       });
@@ -122,6 +126,17 @@ const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
   return (
     <View style={[BG, flex1]}>
       <StatusBar barStyle={barStyle} />
+      <View style={[FG, styles.header]}>
+        <TouchableOpacity onPress={() => replace('Wallet')}>
+          <Image
+            style={{width: 15, height: 15}}
+            source={iconDic['Back_icon_' + (!darkMode ? 'dark' : 'white')]}
+          />
+        </TouchableOpacity>
+        <View style={[{paddingLeft: 35}]}>
+          <Text style={[text, {fontSize: 20, fontWeight: '500'}]}>ImportAccount</Text>
+        </View>
+      </View>
       <View style={[FG, flex1, marginTop10]}>
         <View>
           <View style={[styles.tab]}>
@@ -345,6 +360,14 @@ const mdp = d => {
 };
 
 const styles = StyleSheet.create({
+  header: {
+    height: 50,
+    display: 'flex',
+    paddingHorizontal: 20,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
   inputBox: {
     display: 'flex',
     flexDirection: 'row',

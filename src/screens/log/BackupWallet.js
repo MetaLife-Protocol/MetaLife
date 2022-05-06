@@ -42,7 +42,7 @@ const BackupWallet = ({ name, setName, currentAccount }) => {
   const checkPassword = () => {
     console.log(currentAccount);
     if(currentAccount.Password == confirm) {
-      replace('Backup Mnemonic');
+      replace('BackupMnemonic');
     } else {
       Alert.alert('Error', 'Incorrect password, please re-enter', [
       {
