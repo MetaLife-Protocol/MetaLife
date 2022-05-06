@@ -78,9 +78,8 @@ const App = () => {
           component={MessageDetailsScreen}
         />
         <Screen name="Setting" component={Setting} />
-        <Group screenOptions={{presentation: 'modal'}}>
-          <Screen name="Pubs" component={Pubs} />
-        </Group>
+        <Screen name="Pubs" component={Pubs} />
+        <Group screenOptions={{presentation: 'modal'}} />
         <Screen
           name="TextEditor"
           options={{title: ''}}
