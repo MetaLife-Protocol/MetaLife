@@ -4,8 +4,9 @@ import {msgReducer} from './msg';
 import {daoReducer} from './dao';
 import {userReducer} from './user';
 import {photonReducer} from './photon';
+import {accountReducer} from './account';
 
-export const cfgInitState = {lang: 'en', darkMode: true};
+export const cfgInitState = {lang: 'en', darkMode: false};
 export const cfgReducer = (state = cfgInitState, {type, payload}) => {
   switch (type) {
     case 'setLang':
@@ -26,6 +27,7 @@ const reducer = combineReducers({
   contacts: contactsReducer,
   dao: daoReducer,
   photon: photonReducer,
+  account: accountReducer,
 });
 
 export default reducer;

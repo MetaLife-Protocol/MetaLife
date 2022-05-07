@@ -5,6 +5,11 @@ import Tabs from './screens/Tabs';
 import Guid from './screens/Guid';
 import Login from './screens/log/Login';
 import SignUp from './screens/log/SignUp';
+import Create from './screens/log/Create';
+import ImportAccount from './screens/log/ImportAccount';
+import BackupWallet from './screens/log/BackupWallet';
+import Wallet from './screens/log/Wallet';
+import Backup from './screens/log/Backup';
 import SubScreen from './screens/SubScreen';
 import {connect} from 'react-redux/lib/exports';
 import {NavigationBackView, SchemaStyles} from 'metalife-base';
@@ -30,6 +35,9 @@ import {View} from 'react-native';
 import CreateNFT from './screens/nft/create_nft';
 import CreateNFTStep2 from './screens/nft/create_nft/CreateNFTStep2';
 import NFTDetails from './screens/nft/nft_details';
+import WalletDetail from './screens/log/WalletDetail';
+import ManageAccounts from './screens/log/ManageAccounts';
+import NewAccount from './screens/log/NewAccount';
 
 const App = () => {
   const {theme, BG} = SchemaStyles();
@@ -49,6 +57,34 @@ const App = () => {
         />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="CreateAccount" component={Create} />
+        <Stack.Screen name="BackupWallet" component={BackupWallet} />
+        <Stack.Screen name="BackupMnemonic" component={Backup} />
+        <Stack.Screen
+          name="ImportAccount"
+          component={ImportAccount}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Wallet"
+          component={Wallet}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="AddressContact"
+          component={ManageAccounts}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="NewAccount"
+          component={NewAccount}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="WalletDetails"
+          component={WalletDetail}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="Tabs"
           options={{headerShown: false}}

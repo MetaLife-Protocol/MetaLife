@@ -4,13 +4,21 @@ import {colorsSchema, RoundBtn, SchemaStyles} from 'metalife-base';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation} from '@react-navigation/native';
 
-const Login = ({name, setName}) => {
+const Login = ({name, setName, currentAccount, setCurrentPassword}) => {
   const {barStyle, BG, FG, flex1, inputBG, text, marginTop10} = SchemaStyles(),
     {textHolder} = colorsSchema;
 
   const [nick, setNick] = useState('');
   const [pwd, setPwd] = useState('');
   const {replace} = useNavigation();
+
+  const onLogin = () => {
+    if (currentAccount.name == '') replace('CreateAccount');
+    else {
+      setCurrentPassword(pwd);
+      replace('Wallet');
+    }
+  };
 
   return (
     <View style={[BG, flex1]}>
@@ -36,18 +44,23 @@ const Login = ({name, setName}) => {
           style={{marginBottom: 50}}
           title={'Login'}
           disabled={!(nick && pwd)}
-          press={() => replace('Tabs')}
+          press={() => onLogin()}
         />
       </View>
     </View>
   );
 };
 
-const msp = s => s.cfg;
+const msp = s => {
+  return {
+    currentAccount: s.account.currentAccount,
+  };
+};
 
 const mdp = d => {
   return {
     setDarkMode: darkMode => d({type: 'setDarkMode', payload: darkMode}),
+    setCurrentPassword: pwd => d({type: 'setCurrentPassword', payload: pwd}),
     setName: name => d({type: 'set', payload: name}),
     deleteName: name => d({type: 'delete'}),
   };
