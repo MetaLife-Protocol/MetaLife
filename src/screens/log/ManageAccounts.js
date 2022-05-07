@@ -11,7 +11,6 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ethers} from 'ethers';
 import {randomBytes} from 'react-native-randombytes';
 import {restrict} from '../../utils';
+import {colorsSchema, SchemaStyles} from 'metalife-base';
 
 const iconDic = {
   Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),

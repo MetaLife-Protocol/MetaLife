@@ -8,12 +8,11 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ethers} from 'ethers';
-import {RoundBtn} from 'metalife-base';
+import {RoundBtn, SchemaStyles, colorsSchema} from 'metalife-base';
 // import Web3 from 'web3';
 // const web3 = new Web3();
 // web3.setProvider(new web3.providers.HttpProvider('https://mainnet.infura.io/v3/5209c849762f40ce866e3b1332596997'));

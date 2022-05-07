@@ -3,7 +3,7 @@
  */
 import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableNativeFeedback, View} from 'react-native';
-import SchemaStyles from '../SchemaStyles';
+import {SchemaStyles} from 'metalife-base';
 
 const BackupBtn = ({title, press, disabled = false, style = null}) => {
   const [active, setActive] = useState(false);

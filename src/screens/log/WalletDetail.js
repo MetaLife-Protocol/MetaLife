@@ -11,11 +11,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 // import Clipboard from '@react-native-community/clipboard';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {RoundBtn} from 'metalife-base';
+import {SchemaStyles, colorsSchema, RoundBtn} from 'metalife-base';
 
 const iconDic = {
   Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),

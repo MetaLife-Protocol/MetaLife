@@ -11,7 +11,6 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,7 +21,7 @@ import {ethers} from 'ethers';
 import {randomBytes} from 'react-native-randombytes';
 import {restrict} from '../../utils';
 import axios from 'axios';
-import {RoundBtn} from 'metalife-base';
+import {SchemaStyles, colorsSchema, RoundBtn} from 'metalife-base';
 const baseUrl = 'https://api.coinmarketcap.com/v1/ticker/ethereum/';
 
 const iconDic = {

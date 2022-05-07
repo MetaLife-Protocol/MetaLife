@@ -10,11 +10,10 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {RoundBtn} from 'metalife-base';
+import {colorsSchema, RoundBtn, SchemaStyles} from 'metalife-base';
 
 const iconDic = {
   Confirm_icon_default: require('../../assets/image/accountBtn/Confirm_icon_default.png'),

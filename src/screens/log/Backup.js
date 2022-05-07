@@ -1,13 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {StyleSheet, StatusBar, Alert, View, Text, Modal} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import OrderBtn from '../../shared/comps/OrderBtn';
 import BackupBtn from '../../shared/comps/BackupBtn';
 import OriginalBtn from '../../shared/comps/OriginalBtn';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {RoundBtn} from 'metalife-base';
+import {RoundBtn, SchemaStyles, colorsSchema} from 'metalife-base';
 
 const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
   const {

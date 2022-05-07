@@ -73,7 +73,7 @@ const stylesDefault = StyleSheet.create({
     color: '#29DAD7',
   },
   modalBackground: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: '#FFFFFF',
   },
   areaBorderColor: {
     borderColor: '#00000040',
@@ -110,7 +110,7 @@ const stylesDark = StyleSheet.create({
     color: '#29DAD7',
   },
   modalBackground: {
-    backgroundColor: "#232929",
+    backgroundColor: '#232929',
   },
   areaBorderColor: {
     borderColor: '#4E586E',
