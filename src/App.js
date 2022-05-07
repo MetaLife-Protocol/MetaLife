@@ -21,6 +21,7 @@ import Pubs from './screens/tabs/profiles/Pubs';
 import {StatusBar} from 'react-native';
 import CommentEditor from './screens/tabs/home/post/CommentEditor';
 import PullMenu from './shared/comps/PullMenu';
+import Avatar from './shared/screens/Avatar';
 
 const App = () => {
   const {barStyle, theme} = SchemaStyles();
@@ -78,6 +79,7 @@ const App = () => {
           component={MessageDetailsScreen}
         />
         <Screen name="Setting" component={Setting} />
+        <Screen name="Avatar" component={Avatar} />
         <Screen name="Pubs" component={Pubs} />
         <Group screenOptions={{presentation: 'modal'}} />
         <Screen

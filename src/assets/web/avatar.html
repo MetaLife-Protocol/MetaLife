@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="always" name="referrer">
+    <meta name="theme-color" content="#ffffff">
+    <title>Avatar</title>
+    <style>
+        html,
+        body,
+        .frame {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans,
+            Droid Sans, Helvetica Neue, sans-serif;
+            font-size: 14px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+<p id="avatarUrl">Avatar URL:</p>
+<iframe id="frame" class="frame" allow="camera *; microphone *"></iframe>
+<script>
+    const subdomain = 'demo'; // Replace with your custom subdomain
+    const frame = document.getElementById('frame');
+
+    frame.src = `https://${subdomain}.readyplayer.me/avatar?frameApi`;
+
+    window.addEventListener('message', subscribe);
+    document.addEventListener('message', subscribe);
+
+    function subscribe(event) {
+        const json = parse(event);
+
+        if (json?.source !== 'readyplayerme') {
+            return;
+        }
+
+        // Get avatar GLB URL
+        if (json.eventName === 'v1.avatar.exported') {
+            console.log(`Avatar URL: ${json.data.url}`);
+            document.getElementById('avatarUrl').innerHTML = `Avatar URL: ${json.data.url}`;
+            document.getElementById('frame').hidden = true;
+        }
+    }
+
+    function parse(event) {
+        try {
+            return JSON.parse(event.data);
+        } catch (error) {
+            return null;
+        }
+    }
+</script>
+</body>
+</html>

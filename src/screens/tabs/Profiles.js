@@ -1,12 +1,37 @@
-import React from 'react';
-import {SafeAreaView} from 'react-native';
+import React, {useRef} from 'react';
 import {connect} from 'react-redux/lib/exports';
+import {WebView} from 'react-native-webview';
 
-const Profiles = ({}) => {
-  return <SafeAreaView style={[]} />;
+// (Platform.OS === 'ios') ? {uri: './FMDemoBaseMap/FMMapBasic.html'} : {uri: 'file:///android_asset/FMDemoBaseMap/FMMapBasic.html'}
+const Profiles = ({avatar}) => {
+  const webview = useRef();
+
+  function start() {
+    webview.current.postMessage(
+      JSON.stringify({
+        target: 'readyplayerme',
+        type: 'subscribe',
+        eventName: 'v1.avatar.exported',
+        url: avatar,
+      }),
+    );
+  }
+  return (
+    <WebView
+      ref={webview}
+      scrollEnabled={false}
+      source={require('../../assets/web/avatar.html')}
+      onMessage={event => console.log(event)}
+      onLoadEnd={start}
+    />
+  );
 };
 
-const msp = s => s.cfg;
+const msp = s => {
+  return {
+    avatar: s.user.avatar,
+  };
+};
 
 const mdp = d => {
   return {};

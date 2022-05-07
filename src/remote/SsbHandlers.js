@@ -25,7 +25,7 @@ function update(store) {
   feed = feedRef;
   privateMsg = privateRef;
   updatesPeers = [feedId, ...relations[0], ...relations[1]];
-  console.log('populated update');
+  // console.log('populated update');
 }
 
 /**************************** app state listeners ****************************/

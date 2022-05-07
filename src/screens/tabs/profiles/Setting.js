@@ -93,6 +93,11 @@ const Setting = ({
               <Text style={[text]}>{description}</Text>
             </ControllerItem>
           </Pressable>
+          <Pressable onPress={() => navigate('Avatar')}>
+            <ControllerItem title={'Avatar'}>
+              <Image source={ArrowImage} />
+            </ControllerItem>
+          </Pressable>
         </Section>
         <Section style={[marginTop10]} separator={NormalSeparator}>
           <Pressable onPress={() => navigate('Pubs')}>
