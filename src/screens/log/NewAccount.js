@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import RoundBtn from '../../shared/comps/RoundBtn';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import bip39 from 'react-native-bip39';
@@ -93,7 +92,7 @@ const NewAccount = ({
 
         <TouchableOpacity
           style={[{backgroundColor: darkMode ? '#292E2E' : '#F8F9FD'}]}>
-            <Text style={[{color: '#29DAD7'}]}>Save</Text>
+          <Text style={[{color: '#29DAD7'}]}>Save</Text>
         </TouchableOpacity>
       </View>
       <View style={[styles.body]}>

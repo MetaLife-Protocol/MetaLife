@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import RoundBtn from '../../shared/comps/RoundBtn';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import bip39 from 'react-native-bip39';
@@ -23,6 +22,7 @@ import {ethers} from 'ethers';
 import {randomBytes} from 'react-native-randombytes';
 import {restrict} from '../../utils';
 import axios from 'axios';
+import {RoundBtn} from 'metalife-base';
 const baseUrl = 'https://api.coinmarketcap.com/v1/ticker/ethereum/';
 
 const iconDic = {
@@ -67,7 +67,9 @@ const Wallet = ({
   const [ethPrice, setEthPrice] = useState(0);
 
   const onClickSwitchMenu = () => {
-    if (accountList.length === 0) return;
+    if (accountList.length === 0) {
+      return;
+    }
     setmenuModal(false);
     setSwitchModal(true);
   };
@@ -85,14 +87,14 @@ const Wallet = ({
     replace('ImportAccount');
   };
 
-  const onClickAccount = (each) => {
+  const onClickAccount = each => {
     setCurrentAccount(each);
     setSwitchModal(false);
     getEtherPrice();
-  }
+  };
 
   const getEtherPrice = () => {
-    let qs = `?start=1&limit=50&convert=USD`;
+    let qs = '?start=1&limit=50&convert=USD';
     axios
       .get(
         'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest' +
@@ -112,7 +114,7 @@ const Wallet = ({
           }
         });
       });
-  }
+  };
 
   useEffect(() => {
     getEtherPrice();
@@ -160,7 +162,7 @@ const Wallet = ({
           </Text>
           <Image
             style={{width: 20, height: 20, marginLeft: 2}}
-            source={iconDic['Toogle_icon']}
+            source={iconDic.Toogle_icon}
           />
         </View>
       </View>
@@ -280,7 +282,12 @@ const Wallet = ({
             </View>
             <View style={{marginTop: 16}}>
               <Text style={{fontSize: 27, fontWeight: 'bold', color: '#fff'}}>
-                ${Math.round(currentAccount.Balance ? currentAccount.Balance : 0 * ethPrice * 100) / 100}
+                $
+                {Math.round(
+                  currentAccount.Balance
+                    ? currentAccount.Balance
+                    : 0 * ethPrice * 100,
+                ) / 100}
               </Text>
             </View>
             <View style={[styles.interfaceFooter]}>
@@ -348,8 +355,7 @@ const Wallet = ({
                     <View
                       key={index}
                       style={[styles.oneAccount, {marginVertical: 7}]}>
-                      <TouchableOpacity
-                        onPress={() => onClickAccount(each)}>
+                      <TouchableOpacity onPress={() => onClickAccount(each)}>
                         <View style={[styles.switchModalMenu]}>
                           <View>
                             <Text
@@ -432,15 +438,24 @@ const Wallet = ({
                 </Text>
               </View>
               <View>
-                <Text style={[styles.inputText, {textAlign: 'center'}]}>Price</Text>
+                <Text style={[styles.inputText, {textAlign: 'center'}]}>
+                  Price
+                </Text>
                 <Text style={[styles.inputText, {color: 'black'}]}>
                   ${ethPrice}
                 </Text>
               </View>
               <View>
-                <Text style={[styles.inputText, {textAlign: 'right'}]}>Amount</Text>
+                <Text style={[styles.inputText, {textAlign: 'right'}]}>
+                  Amount
+                </Text>
                 <Text style={[styles.inputText, {color: 'black'}]}>
-                  ${Math.round(ethPrice * currentAccount.Balance ? currentAccount.Balance : 0 * 100) / 100}
+                  $
+                  {Math.round(
+                    ethPrice * currentAccount.Balance
+                      ? currentAccount.Balance
+                      : 0 * 100,
+                  ) / 100}
                 </Text>
               </View>
             </View>
@@ -456,7 +471,7 @@ const Wallet = ({
           setconfirmModal(false);
         }}>
         <View style={styles.centeredView}>
-          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalBack]} />
           <View style={[styles.modalView, modalBackground]}>
             <View style={styles.modalHeader}>
               <Text style={[text, styles.modalText]}>

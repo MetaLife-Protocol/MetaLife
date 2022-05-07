@@ -2,12 +2,12 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet, StatusBar, Alert, View, Text, Modal} from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import RoundBtn from '../../shared/comps/RoundBtn';
 import OrderBtn from '../../shared/comps/OrderBtn';
 import BackupBtn from '../../shared/comps/BackupBtn';
 import OriginalBtn from '../../shared/comps/OriginalBtn';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {RoundBtn} from 'metalife-base';
 
 const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
   const {
@@ -258,7 +258,7 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
           setconfirmModal(false);
         }}>
         <View style={styles.centeredView}>
-          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalBack]} />
           <View style={[styles.modalView, modalBackground]}>
             <View style={styles.modalHeader}>
               <Text style={[text, styles.modalText]}>Don't screenshot</Text>
@@ -293,7 +293,7 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
           setpromptModal(!promptModal);
         }}>
         <View style={styles.centeredView}>
-          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalBack]} />
           <View style={[styles.modalView, modalBackground]}>
             <View style={styles.modalHeader}>
               <Text style={[text, styles.modalText]}>Backup Prompt</Text>
@@ -331,7 +331,7 @@ const Backup = ({name, setName, currentAccount, setCurrentAccount}) => {
 
 const msp = s => {
   return {
-    currentAccount: s.account.currentAccount
+    currentAccount: s.account.currentAccount,
   };
 };
 
@@ -340,7 +340,8 @@ const mdp = d => {
     setDarkMode: darkMode => d({type: 'setDarkMode', payload: darkMode}),
     setName: name => d({type: 'set', payload: name}),
     deleteName: name => d({type: 'delete'}),
-    setCurrentAccount: account => d({ type: 'setCurrentAccount', payload: account }),
+    setCurrentAccount: account =>
+      d({type: 'setCurrentAccount', payload: account}),
   };
 };
 

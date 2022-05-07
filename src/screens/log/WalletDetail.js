@@ -13,9 +13,9 @@ import {
 // import Clipboard from '@react-native-community/clipboard';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import RoundBtn from '../../shared/comps/RoundBtn';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {RoundBtn} from 'metalife-base';
 
 const iconDic = {
   Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),
@@ -30,7 +30,15 @@ const iconDic = {
   Back_icon_white: require('../../assets/image/walletBtn/back-white.png'),
 };
 
-const Backup = ({name, setName, darkMode, currentAccount, setCurrentAccount, deleteAccount, currentPassword}) => {
+const Backup = ({
+  name,
+  setName,
+  darkMode,
+  currentAccount,
+  setCurrentAccount,
+  deleteAccount,
+  currentPassword,
+}) => {
   const {
       barStyle,
       BG,
@@ -58,7 +66,7 @@ const Backup = ({name, setName, darkMode, currentAccount, setCurrentAccount, del
   const [exportType, setExportType] = useState('keystore');
 
   const checkPassword = () => {
-    console.log(currentAccount.Password, confirm, '>>>>>>>>>>>>>>>>>')
+    console.log(currentAccount.Password, confirm, '>>>>>>>>>>>>>>>>>');
     if (currentAccount.Password == confirm) {
       setModalVisible(false);
       setPrivateKeyModal(true);
@@ -84,7 +92,9 @@ const Backup = ({name, setName, darkMode, currentAccount, setCurrentAccount, del
           />
         </TouchableOpacity>
         <View style={[{paddingLeft: 35}]}>
-          <Text style={[text, {fontSize: 20, fontWeight: '500'}]}>WalletDetails</Text>
+          <Text style={[text, {fontSize: 20, fontWeight: '500'}]}>
+            WalletDetails
+          </Text>
         </View>
       </View>
       <View style={[FG, marginTop10, {marginLeft: 15, marginRight: 15}]}>
@@ -134,7 +144,11 @@ const Backup = ({name, setName, darkMode, currentAccount, setCurrentAccount, del
             style={{marginTop: 14.5, color: '#8E8E92', textAlign: 'center'}}>
             {currentAccount.Address}
           </Text>
-          <TouchableOpacity onPress={() => {setModalVisible(true);setExportType('keystore');}}>
+          <TouchableOpacity
+            onPress={() => {
+              setModalVisible(true);
+              setExportType('keystore');
+            }}>
             <View
               style={{
                 backgroundColor: '#EDEEF1',
@@ -148,7 +162,11 @@ const Backup = ({name, setName, darkMode, currentAccount, setCurrentAccount, del
               <Text style={[text, {fontSize: 15}]}>Export keystore</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {setModalVisible(true);setExportType('privatekey');}}>
+          <TouchableOpacity
+            onPress={() => {
+              setModalVisible(true);
+              setExportType('privatekey');
+            }}>
             <View
               style={{
                 backgroundColor: '#EDEEF1',
@@ -162,7 +180,11 @@ const Backup = ({name, setName, darkMode, currentAccount, setCurrentAccount, del
               <Text style={[text, {fontSize: 15}]}>Export Private key</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => {deleteAccount(currentAccount.Address);replace('Wallet');}}>
+          <TouchableOpacity
+            onPress={() => {
+              deleteAccount(currentAccount.Address);
+              replace('Wallet');
+            }}>
             <View
               style={{
                 backgroundColor: '#EDEEF1',
@@ -187,7 +209,7 @@ const Backup = ({name, setName, darkMode, currentAccount, setCurrentAccount, del
           setconfirmModal(false);
         }}>
         <View style={styles.centeredView}>
-          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalBack]} />
           <View style={[styles.modalView, modalBackground]}>
             <View style={styles.modalHeader}>
               <Text style={[text, styles.modalText]}>Disclaimer</Text>
@@ -223,7 +245,7 @@ const Backup = ({name, setName, darkMode, currentAccount, setCurrentAccount, del
           setModalVisible(!modalVisible);
         }}>
         <View style={styles.centeredView}>
-          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalBack]} />
           <View style={[styles.modalView, modalBackground]}>
             <View style={styles.modalHeader}>
               <Text style={[text, styles.modalText]}>Enter Password</Text>
@@ -277,11 +299,15 @@ const Backup = ({name, setName, darkMode, currentAccount, setCurrentAccount, del
           setPrivateKeyModal(!privateKeyModal);
         }}>
         <View style={styles.centeredView}>
-          <View style={[styles.modalBack]}></View>
+          <View style={[styles.modalBack]} />
           <View style={[styles.modalView, modalBackground]}>
             <View style={styles.modalHeader}>
-            {exportType === 'privatekey' && <Text style={[text, styles.modalText]}>Export private key</Text>}
-            {exportType === 'keystore' && <Text style={[text, styles.modalText]}>Export keystore</Text>}
+              {exportType === 'privatekey' && (
+                <Text style={[text, styles.modalText]}>Export private key</Text>
+              )}
+              {exportType === 'keystore' && (
+                <Text style={[text, styles.modalText]}>Export keystore</Text>
+              )}
               <Text
                 style={[text, styles.modalText]}
                 onPress={() => setPrivateKeyModal(!privateKeyModal)}>
@@ -291,7 +317,9 @@ const Backup = ({name, setName, darkMode, currentAccount, setCurrentAccount, del
             <View style={styles.modalBody}>
               <View style={styles.area}>
                 <Text style={[text, {fontSize: 16}]}>
-                  {exportType === 'privatekey'? currentAccount.PrivateKey : currentAccount.Keystore}
+                  {exportType === 'privatekey'
+                    ? currentAccount.PrivateKey
+                    : currentAccount.Keystore}
                 </Text>
               </View>
             </View>
@@ -328,7 +356,7 @@ const mdp = d => {
     setCurrentAccount: account =>
       d({type: 'setCurrentAccount', payload: account}),
     deleteAccount: account => d({type: 'deleteAccount', payload: account}),
-    };
+  };
 };
 
 const styles = StyleSheet.create({

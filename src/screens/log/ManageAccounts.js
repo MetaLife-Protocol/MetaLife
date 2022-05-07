@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import RoundBtn from '../../shared/comps/RoundBtn';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import bip39 from 'react-native-bip39';
@@ -63,9 +62,10 @@ const ManageAccounts = ({
     setfocusedClear(!focusedClear);
     setNick('');
   };
-  const deleteOneAccount = (index) => {
-    if (accountList.length === 1)
+  const deleteOneAccount = index => {
+    if (accountList.length === 1) {
       replace('Wallet');
+    }
     deleteAccount(index);
   };
 
@@ -92,7 +92,7 @@ const ManageAccounts = ({
           style={[{backgroundColor: darkMode ? '#292E2E' : '#F8F9FD'}]}>
           <Image
             style={{width: 20, height: 20, marginLeft: 2}}
-            source={iconDic['plus_icon_white']}
+            source={iconDic.plus_icon_white}
           />
         </TouchableOpacity>
       </View>
@@ -100,7 +100,9 @@ const ManageAccounts = ({
         {accountList.map((each, index) => {
           return (
             <View key={index} style={[styles.oneAccount, {marginVertical: 7}]}>
-              <TouchableOpacity style={[styles.accountContent]} onPress={() => setEditIndex(index)}>
+              <TouchableOpacity
+                style={[styles.accountContent]}
+                onPress={() => setEditIndex(index)}>
                 <View>
                   <Text
                     style={[
@@ -114,19 +116,32 @@ const ManageAccounts = ({
                     {each.Name}
                   </Text>
                   <Text style={[{fontSize: 12, marginTop: 10}]}>
-                    {each.Address.slice(0, 10) + '...' + each.Address.slice(each.Address.length - 10, each.Address.length)}
+                    {each.Address.slice(0, 10) +
+                      '...' +
+                      each.Address.slice(
+                        each.Address.length - 10,
+                        each.Address.length,
+                      )}
                   </Text>
                   <Text style={[{marginTop: 10}]}>Friend</Text>
                 </View>
               </TouchableOpacity>
-              { editIndex === index && <View style={[styles.btngroup]}>
-                <TouchableOpacity>
-                  <Text style={[styles.editbtn]} onPress={() => {}}>Edit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Text style={[styles.deletebtn]} onPress={() => deleteOneAccount(index)}>Delete</Text>
-                </TouchableOpacity>
-              </View>}
+              {editIndex === index && (
+                <View style={[styles.btngroup]}>
+                  <TouchableOpacity>
+                    <Text style={[styles.editbtn]} onPress={() => {}}>
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Text
+                      style={[styles.deletebtn]}
+                      onPress={() => deleteOneAccount(index)}>
+                      Delete
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           );
         })}
@@ -147,7 +162,8 @@ const mdp = d => {
   return {
     setName: name => d({type: 'set', payload: name}),
     deleteName: name => d({type: 'delete'}),
-    setCurrentAccount: account => d({type: 'setCurrentAccount', payload: account}),
+    setCurrentAccount: account =>
+      d({type: 'setCurrentAccount', payload: account}),
     deleteAccount: account => d({type: 'deleteAccount', payload: account}),
   };
 };

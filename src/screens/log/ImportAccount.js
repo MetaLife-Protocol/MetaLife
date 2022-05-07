@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StatusBar,
   TextInput,
@@ -8,12 +8,12 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import SchemaStyles, { colorsSchema } from '../../shared/SchemaStyles';
-import { connect } from 'react-redux/lib/exports';
-import RoundBtn from '../../shared/comps/RoundBtn';
-import { useNavigation } from '@react-navigation/native';
+import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
+import {connect} from 'react-redux/lib/exports';
+import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ethers } from 'ethers';
+import {ethers} from 'ethers';
+import {RoundBtn} from 'metalife-base';
 // import Web3 from 'web3';
 // const web3 = new Web3();
 // web3.setProvider(new web3.providers.HttpProvider('https://mainnet.infura.io/v3/5209c849762f40ce866e3b1332596997'));
@@ -31,16 +31,16 @@ const iconDic = {
   Back_icon_white: require('../../assets/image/walletBtn/back-white.png'),
 };
 
-const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
-  const { barStyle, BG, FG, flex1, input, text, marginTop10 } = SchemaStyles(),
-    { textHolder } = colorsSchema;
+const Import = ({name, setName, darkMode, setCurrentAccount, addAccount}) => {
+  const {barStyle, BG, FG, flex1, input, text, marginTop10} = SchemaStyles(),
+    {textHolder} = colorsSchema;
 
   const [nick, setNick] = useState(''),
     [pwd, setPwd] = useState(''),
     [confirm, setConfirm] = useState(''),
     [keystorePwd, setKeystorePwd] = useState(''),
     [tab, setTab] = useState(0),
-    { replace } = useNavigation();
+    {replace} = useNavigation();
 
   const [mnemonic, setMnemonic] = useState('');
   const [pwdPrompt, setPwdPrompt] = useState('');
@@ -51,7 +51,9 @@ const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
   const [focusedDark, setfocusedDark] = useState(true);
   const [focusedConfirm, setfocusedConfirm] = useState(true);
 
-  const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161');
+  const provider = new ethers.providers.JsonRpcProvider(
+    'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+  );
 
   const cleaerPress = () => {
     setfocusedClear(!focusedClear);
@@ -61,7 +63,7 @@ const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
   const importWallet = async () => {
     let balance = 0;
     let currentAccount = {
-      Name: "sample",
+      Name: 'sample',
       Password: pwd,
       PassPrompt: pwdPrompt,
       isBackup: false,
@@ -71,7 +73,7 @@ const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
       Balance: balance,
       Keystore: '',
     };
-  if(tab == 0) {
+    if (tab == 0) {
       // const idx = 0;
       // let path = `m/44'/60'/${idx}'/0/0`;
       let account = await ethers.Wallet.fromMnemonic(mnemonic);
@@ -89,19 +91,21 @@ const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
       currentAccount.Balance = balance;
       setCurrentAccount(currentAccount);
       addAccount(currentAccount);
-    } else if(tab == 1) {
-      ethers.Wallet.fromEncryptedJson(keystore, keystorePwd).then( async function(wallet) {
-        const hex_balance = await provider.getBalance(wallet.address);
-        balance = ethers.utils.formatEther(hex_balance);
-        currentAccount.Address = wallet.address;
-        // currentAccount.Mnemonic = wallet.mnemonic;
-        currentAccount.Balance = balance;
-        currentAccount.Keystore = keystore;
-        currentAccount.PrivateKey = wallet.privateKey;
-        setCurrentAccount(currentAccount);
-        addAccount(currentAccount);
-      });
-    } else if(tab == 2) {
+    } else if (tab == 1) {
+      ethers.Wallet.fromEncryptedJson(keystore, keystorePwd).then(
+        async function (wallet) {
+          const hex_balance = await provider.getBalance(wallet.address);
+          balance = ethers.utils.formatEther(hex_balance);
+          currentAccount.Address = wallet.address;
+          // currentAccount.Mnemonic = wallet.mnemonic;
+          currentAccount.Balance = balance;
+          currentAccount.Keystore = keystore;
+          currentAccount.PrivateKey = wallet.privateKey;
+          setCurrentAccount(currentAccount);
+          addAccount(currentAccount);
+        },
+      );
+    } else if (tab == 2) {
       let account = new ethers.Wallet(privateKey);
       const hex_balance = await provider.getBalance(account.address);
       balance = ethers.utils.formatEther(hex_balance);
@@ -112,16 +116,16 @@ const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
       currentAccount.Keystore = json;
       setCurrentAccount(currentAccount);
       addAccount(currentAccount);
-    } else if(tab == 3) {
-        const hex_balance = await provider.getBalance(observe);
-        balance = ethers.utils.formatEther(hex_balance);
-        currentAccount.Address = observe;
-        currentAccount.Balance = balance;
-        setCurrentAccount(currentAccount);
+    } else if (tab == 3) {
+      const hex_balance = await provider.getBalance(observe);
+      balance = ethers.utils.formatEther(hex_balance);
+      currentAccount.Address = observe;
+      currentAccount.Balance = balance;
+      setCurrentAccount(currentAccount);
     }
     console.log(currentAccount, '>>>>>>>>>current account');
     replace('Wallet');
-  }
+  };
 
   return (
     <View style={[BG, flex1]}>
@@ -134,7 +138,9 @@ const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
           />
         </TouchableOpacity>
         <View style={[{paddingLeft: 35}]}>
-          <Text style={[text, {fontSize: 20, fontWeight: '500'}]}>ImportAccount</Text>
+          <Text style={[text, {fontSize: 20, fontWeight: '500'}]}>
+            ImportAccount
+          </Text>
         </View>
       </View>
       <View style={[FG, flex1, marginTop10]}>
@@ -170,173 +176,225 @@ const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
             </View>
           </View>
           {/* Mnemonic */}
-          {tab == 0 ? <View style={[styles.body]}>
-            <View style={[styles.area]}>
-              <TextInput
-                style={[text, styles.inputText, styles.areaText]}
-                placeholder={'Please use space to separate the mnemonic words'}
-                numberOfLines={4}
-                multiline={true}
-                placeholderTextColor={textHolder}
-                onChangeText={setMnemonic}
-              />
-            </View>
-            <View style={[styles.inputBox]}>
-              <TextInput
-                style={[text, styles.inputText]}
-                placeholder={'Set Password'}
-                secureTextEntry={focusedConfirm ? true : false}
-                placeholderTextColor={textHolder}
-                onChangeText={setPwd}
-              />
-              <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
-                <Image
-                  style={styles.icon}
-                  source={iconDic['Dark_icon_' + (focusedDark ? 'selected' : 'default')]}
+          {tab == 0 ? (
+            <View style={[styles.body]}>
+              <View style={[styles.area]}>
+                <TextInput
+                  style={[text, styles.inputText, styles.areaText]}
+                  placeholder={
+                    'Please use space to separate the mnemonic words'
+                  }
+                  numberOfLines={4}
+                  multiline={true}
+                  placeholderTextColor={textHolder}
+                  onChangeText={setMnemonic}
                 />
-              </TouchableOpacity>
-            </View>
-            <View style={[styles.inputBox]}>
-              <TextInput
-                style={[text, styles.inputText]}
-                placeholder={'Confirm Password'}
-                secureTextEntry={focusedConfirm ? true : false}
-                placeholderTextColor={textHolder}
-                onChangeText={setConfirm}
-                maxLength={20}
-              />
-              <TouchableOpacity onPress={() => setfocusedConfirm(!focusedConfirm)}>
-                <Image
-                  style={styles.icon}
-                  source={iconDic['Confirm_icon_' + (focusedConfirm ? 'selected' : 'default')]}
+              </View>
+              <View style={[styles.inputBox]}>
+                <TextInput
+                  style={[text, styles.inputText]}
+                  placeholder={'Set Password'}
+                  secureTextEntry={focusedConfirm ? true : false}
+                  placeholderTextColor={textHolder}
+                  onChangeText={setPwd}
                 />
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
+                  <Image
+                    style={styles.icon}
+                    source={
+                      iconDic[
+                        'Dark_icon_' + (focusedDark ? 'selected' : 'default')
+                      ]
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.inputBox]}>
+                <TextInput
+                  style={[text, styles.inputText]}
+                  placeholder={'Confirm Password'}
+                  secureTextEntry={focusedConfirm ? true : false}
+                  placeholderTextColor={textHolder}
+                  onChangeText={setConfirm}
+                  maxLength={20}
+                />
+                <TouchableOpacity
+                  onPress={() => setfocusedConfirm(!focusedConfirm)}>
+                  <Image
+                    style={styles.icon}
+                    source={
+                      iconDic[
+                        'Confirm_icon_' +
+                          (focusedConfirm ? 'selected' : 'default')
+                      ]
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.inputBox]}>
+                <TextInput
+                  style={[text, styles.inputText]}
+                  placeholder={'Password prompt (optional)'}
+                  placeholderTextColor={textHolder}
+                  onChangeText={setPwdPrompt}
+                  maxLength={20}
+                />
+              </View>
             </View>
-            <View style={[styles.inputBox]}>
-              <TextInput
-                style={[text, styles.inputText]}
-                placeholder={'Password prompt (optional)'}
-                placeholderTextColor={textHolder}
-                onChangeText={setPwdPrompt}
-                maxLength={20}
-              />
-            </View>
-          </View> : null}
+          ) : null}
           {/* Keystore */}
-          {tab == 1 ? <View style={[styles.body]}>
-            <Text style={[{
-              fontSize: 16, color: "#4E586E", marginBottom: 10,
-            }]}>
-              Copy and paste Ether keystore.
-            </Text>
-            <View style={[styles.area]}>
-              <TextInput
-                style={[text, styles.inputText, styles.areaText]}
-                placeholder={'Keystore text content'}
-                numberOfLines={4}
-                multiline={true}
-                placeholderTextColor={textHolder}
-                onChangeText={setKeystore}
-              />
-            </View>
-            <View style={[styles.inputBox]}>
-              <TextInput
-                style={[text, styles.inputText]}
-                placeholder={'Keystore Password'}
-                secureTextEntry={focusedConfirm ? true : false}
-                placeholderTextColor={textHolder}
-                onChangeText={setKeystorePwd}
-              />
-              <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
-                <Image
-                  style={styles.icon}
-                  source={iconDic['Dark_icon_' + (focusedDark ? 'selected' : 'default')]}
+          {tab == 1 ? (
+            <View style={[styles.body]}>
+              <Text
+                style={[
+                  {
+                    fontSize: 16,
+                    color: '#4E586E',
+                    marginBottom: 10,
+                  },
+                ]}>
+                Copy and paste Ether keystore.
+              </Text>
+              <View style={[styles.area]}>
+                <TextInput
+                  style={[text, styles.inputText, styles.areaText]}
+                  placeholder={'Keystore text content'}
+                  numberOfLines={4}
+                  multiline={true}
+                  placeholderTextColor={textHolder}
+                  onChangeText={setKeystore}
                 />
-              </TouchableOpacity>
+              </View>
+              <View style={[styles.inputBox]}>
+                <TextInput
+                  style={[text, styles.inputText]}
+                  placeholder={'Keystore Password'}
+                  secureTextEntry={focusedConfirm ? true : false}
+                  placeholderTextColor={textHolder}
+                  onChangeText={setKeystorePwd}
+                />
+                <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
+                  <Image
+                    style={styles.icon}
+                    source={
+                      iconDic[
+                        'Dark_icon_' + (focusedDark ? 'selected' : 'default')
+                      ]
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View> : null}
+          ) : null}
           {/* Private Key */}
-          {tab == 2 ? <View style={[styles.body]}>
-            <View style={[styles.area]}>
-              <TextInput
-                style={[text, styles.inputText, styles.areaText]}
-                placeholder={'Please enter the private key in text.'}
-                numberOfLines={4}
-                multiline={true}
-                placeholderTextColor={textHolder}
-                onChangeText={setPrivateKey}
-              />
-            </View>
-            <View style={[styles.inputBox]}>
-              <TextInput
-                style={[text, styles.inputText]}
-                placeholder={'Set Password'}
-                secureTextEntry={focusedConfirm ? true : false}
-                placeholderTextColor={textHolder}
-                onChangeText={setPwd}
-              />
-              <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
-                <Image
-                  style={styles.icon}
-                  source={iconDic['Dark_icon_' + (focusedDark ? 'selected' : 'default')]}
+          {tab == 2 ? (
+            <View style={[styles.body]}>
+              <View style={[styles.area]}>
+                <TextInput
+                  style={[text, styles.inputText, styles.areaText]}
+                  placeholder={'Please enter the private key in text.'}
+                  numberOfLines={4}
+                  multiline={true}
+                  placeholderTextColor={textHolder}
+                  onChangeText={setPrivateKey}
                 />
-              </TouchableOpacity>
-            </View>
-            <View style={[styles.inputBox]}>
-              <TextInput
-                style={[text, styles.inputText]}
-                placeholder={'Confirm Password'}
-                secureTextEntry={focusedConfirm ? true : false}
-                placeholderTextColor={textHolder}
-                onChangeText={setConfirm}
-                maxLength={20}
-              />
-              <TouchableOpacity onPress={() => setfocusedConfirm(!focusedConfirm)}>
-                <Image
-                  style={styles.icon}
-                  source={iconDic['Confirm_icon_' + (focusedConfirm ? 'selected' : 'default')]}
+              </View>
+              <View style={[styles.inputBox]}>
+                <TextInput
+                  style={[text, styles.inputText]}
+                  placeholder={'Set Password'}
+                  secureTextEntry={focusedConfirm ? true : false}
+                  placeholderTextColor={textHolder}
+                  onChangeText={setPwd}
                 />
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
+                  <Image
+                    style={styles.icon}
+                    source={
+                      iconDic[
+                        'Dark_icon_' + (focusedDark ? 'selected' : 'default')
+                      ]
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.inputBox]}>
+                <TextInput
+                  style={[text, styles.inputText]}
+                  placeholder={'Confirm Password'}
+                  secureTextEntry={focusedConfirm ? true : false}
+                  placeholderTextColor={textHolder}
+                  onChangeText={setConfirm}
+                  maxLength={20}
+                />
+                <TouchableOpacity
+                  onPress={() => setfocusedConfirm(!focusedConfirm)}>
+                  <Image
+                    style={styles.icon}
+                    source={
+                      iconDic[
+                        'Confirm_icon_' +
+                          (focusedConfirm ? 'selected' : 'default')
+                      ]
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={[styles.inputBox]}>
+                <TextInput
+                  style={[text, styles.inputText]}
+                  placeholder={'Password prompt (optional)'}
+                  placeholderTextColor={textHolder}
+                  onChangeText={setPwdPrompt}
+                  maxLength={20}
+                />
+              </View>
             </View>
-            <View style={[styles.inputBox]}>
-              <TextInput
-                style={[text, styles.inputText]}
-                placeholder={'Password prompt (optional)'}
-                placeholderTextColor={textHolder}
-                onChangeText={setPwdPrompt}
-                maxLength={20}
-              />
-            </View>
-          </View> : null}
+          ) : null}
           {/* Observe */}
-          {tab == 3 ? <View style={[styles.body]}>
-            <Text style={[{
-              fontSize: 16, color: "#4E586E", marginBottom: 10,
-            }]}>
-              Observe mode only needs the wallet address
-            </Text>
-            <View style={[styles.inputBox]}>
-              <TextInput
-                style={[text, styles.inputText]}
-                placeholder={'Enter the address'}
-                secureTextEntry={focusedConfirm ? true : false}
-                placeholderTextColor={textHolder}
-                onChangeText={setObserve}
-              />
-              <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
-                <Image
-                  style={styles.icon}
-                  source={iconDic['Scan_icon_' + (darkMode ? 'dark' : 'white')]}
+          {tab == 3 ? (
+            <View style={[styles.body]}>
+              <Text
+                style={[
+                  {
+                    fontSize: 16,
+                    color: '#4E586E',
+                    marginBottom: 10,
+                  },
+                ]}>
+                Observe mode only needs the wallet address
+              </Text>
+              <View style={[styles.inputBox]}>
+                <TextInput
+                  style={[text, styles.inputText]}
+                  placeholder={'Enter the address'}
+                  secureTextEntry={focusedConfirm ? true : false}
+                  placeholderTextColor={textHolder}
+                  onChangeText={setObserve}
                 />
-              </TouchableOpacity>
+                <TouchableOpacity onPress={() => setfocusedDark(!focusedDark)}>
+                  <Image
+                    style={styles.icon}
+                    source={
+                      iconDic['Scan_icon_' + (darkMode ? 'dark' : 'white')]
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View> : null}
+          ) : null}
         </View>
         <View style={flex1} />
         <RoundBtn
-          style={{ marginBottom: 50 }}
+          style={{marginBottom: 50}}
           title={'Start Importing'}
-          disabled={!(((mnemonic || privateKey) && pwd && confirm && pwd == confirm) || observe || (keystore && keystorePwd))}
+          disabled={
+            !(
+              ((mnemonic || privateKey) && pwd && confirm && pwd == confirm) ||
+              observe ||
+              (keystore && keystorePwd)
+            )
+          }
           press={() => importWallet()}
         />
       </View>
@@ -346,16 +404,17 @@ const Import = ({ name, setName, darkMode, setCurrentAccount, addAccount }) => {
 
 const msp = s => {
   return {
-    darkMode: s.cfg.darkMode
+    darkMode: s.cfg.darkMode,
   };
 };
 
 const mdp = d => {
   return {
-    setName: name => d({ type: 'set', payload: name }),
-    deleteName: name => d({ type: 'delete' }),
-    setCurrentAccount: account => d({ type: 'setCurrentAccount', payload: account }),
-    addAccount: account => d({ type: 'addAccount', payload: account }),
+    setName: name => d({type: 'set', payload: name}),
+    deleteName: name => d({type: 'delete'}),
+    setCurrentAccount: account =>
+      d({type: 'setCurrentAccount', payload: account}),
+    addAccount: account => d({type: 'addAccount', payload: account}),
   };
 };
 
@@ -406,16 +465,16 @@ const styles = StyleSheet.create({
   },
   area: {
     height: 135,
-    width: "100%",
+    width: '100%',
     borderWidth: 1,
-    borderColor: "#4E586E",
+    borderColor: '#4E586E',
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
   areaText: {
     textAlignVertical: 'top',
-  }
+  },
 });
 
 export default connect(msp, mdp)(Import);
