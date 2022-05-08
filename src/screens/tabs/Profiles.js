@@ -22,7 +22,7 @@ const Profiles = ({avatar}) => {
       scrollEnabled={false}
       source={require('../../assets/web/avatar.html')}
       onMessage={event => console.log(event)}
-      onLoadEnd={start}
+      onLoad={start}
     />
   );
 };
