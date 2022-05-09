@@ -17,7 +17,7 @@ import HeadIcon from '../../../../../shared/comps/HeadIcon';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
-import {sendMsg} from '../../../../../remote/ssbOP';
+import {sendMsg} from '../../../../../remote/ssb/ssbOP';
 import {
   applyFilters,
   findFromComment,

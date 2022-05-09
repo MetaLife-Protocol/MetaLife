@@ -9,7 +9,7 @@ import {
   follow,
   getProfile,
   persistentConnectPeer,
-} from '../../../../remote/ssbOP';
+} from '../../../../remote/ssb/ssbOP';
 import {PeerIcons} from '../../../../shared/Icons';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import Toast from 'react-native-tiny-toast';

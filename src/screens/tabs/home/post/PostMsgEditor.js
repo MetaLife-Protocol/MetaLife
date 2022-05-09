@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../../shared/SchemaStyles';
-import {blobsSetter, sendMsg} from '../../../../remote/ssbOP';
+import {blobsSetter, sendMsg} from '../../../../remote/ssb/ssbOP';
 import {useNavigation} from '@react-navigation/native';
 import MultimediaPanel from './MultimediaPanel';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';

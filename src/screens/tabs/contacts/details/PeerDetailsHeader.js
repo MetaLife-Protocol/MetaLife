@@ -4,7 +4,7 @@ import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
 import Toast from 'react-native-tiny-toast';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
-import {block, follow} from '../../../../remote/ssbOP';
+import {block, follow} from '../../../../remote/ssb/ssbOP';
 import {markMsgCBByKey} from '../../../../store/MsgCB';
 import {findRootKey} from '../../../../store/filters/MsgFilters';
 import React, {useState} from 'react';

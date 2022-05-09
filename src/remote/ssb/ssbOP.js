@@ -1,5 +1,5 @@
 import nodejs from 'nodejs-mobile-react-native';
-import {makeClient} from './ssb/Client';
+import {makeClient} from './Client';
 
 let ssb = window.ssb;
 

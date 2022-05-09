@@ -11,7 +11,7 @@ import SchemaStyles, {colorsBasics} from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import MsgInput from '../../../shared/comps/MsgInput';
-import {sendMsg} from '../../../remote/ssbOP';
+import {sendMsg} from '../../../remote/ssb/ssbOP';
 import {localDate} from '../../../utils';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import {PeerIcons as iconDic} from '../../../shared/Icons';

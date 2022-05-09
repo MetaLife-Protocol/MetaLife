@@ -3,7 +3,7 @@
  */
 
 import {getProfile, graph, loadMsg} from './ssbOP';
-import {batchMsgCB, checkMarkedMsgCB} from '../store/MsgCB';
+import {batchMsgCB, checkMarkedMsgCB} from '../../store/MsgCB';
 import {trainFeed, trainRangeFeed} from './ssbAPI';
 
 let dispatch, feedId, updatesPeers, feed, privateMsg;

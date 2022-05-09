@@ -7,7 +7,7 @@ import {Keyboard, SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import MsgInput from '../../../../shared/comps/MsgInput';
-import {loadMsg, sendMsg} from '../../../../remote/ssbOP';
+import {loadMsg, sendMsg} from '../../../../remote/ssb/ssbOP';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import ItemAgent from './ItemAgent';
 import Section from '../../../../shared/comps/Section';

@@ -3,7 +3,7 @@
  */
 
 import {addPrivateUpdatesListener, addPublicUpdatesListener} from './ssbOP';
-import {markMsgCBByType} from '../store/MsgCB';
+import {markMsgCBByType} from '../../store/MsgCB';
 import {AppState} from 'react-native';
 import {
   aboutHandler,

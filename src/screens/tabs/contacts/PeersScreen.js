@@ -5,7 +5,7 @@ import SchemaStyles from '../../../shared/SchemaStyles';
 import {useTimer} from '../../../shared/Hooks';
 import Section from '../../../shared/comps/Section';
 import PeerItem from './item/PeerItem';
-import {getConnectedPeers, getStagedPeers} from '../../../remote/ssbOP';
+import {getConnectedPeers, getStagedPeers} from '../../../remote/ssb/ssbOP';
 
 const PeersScreen = ({
   stagedPeers,

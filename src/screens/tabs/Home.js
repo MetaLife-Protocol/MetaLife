@@ -3,14 +3,14 @@ import {FlatList, Modal, SafeAreaView, StyleSheet} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ItemAgent from './home/post/ItemAgent';
-import {initializeHandlers} from '../../remote/SsbListeners';
-import {startSSB} from '../../remote/starter';
+import {initializeHandlers} from '../../remote/ssb/SsbListeners';
+import {startSSB} from '../../remote/ssb/starter';
 import {useStore} from 'react-redux';
-import {checkAddon} from '../../remote/SsbHandlers';
+import {checkAddon} from '../../remote/ssb/SsbHandlers';
 import SearchBar from '../../shared/comps/SearchBar';
 import {searchPublicMsgByPostId} from '../../store/filters/MsgFilters';
 import {useTimer} from '../../shared/Hooks';
-import {getConnectedPeers} from '../../remote/ssbOP';
+import {getConnectedPeers} from '../../remote/ssb/ssbOP';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import {
   useFocusEffect,

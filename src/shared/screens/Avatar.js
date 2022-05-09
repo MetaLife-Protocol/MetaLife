@@ -7,7 +7,7 @@ import React, {useRef} from 'react';
 import {WebView} from 'react-native-webview';
 import {connect} from 'react-redux/lib/exports';
 
-const subdomain = 'demo';
+const subdomain = 'metalifesocial';
 
 let isSubscribed = false;
 let count = 0;

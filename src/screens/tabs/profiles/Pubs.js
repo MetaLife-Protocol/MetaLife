@@ -19,7 +19,7 @@ import {
   getConnectedPeers,
   inviteAccept,
   persistentConnectPeer,
-} from '../../../remote/ssbOP';
+} from '../../../remote/ssb/ssbOP';
 import Toast from 'react-native-tiny-toast';
 import {PlusBlack, PlusWhite} from '../../../shared/Icons';
 import ControllerItem from '../../../shared/comps/ControllerItem';
