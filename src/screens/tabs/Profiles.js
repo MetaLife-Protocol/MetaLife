@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux/lib/exports';
 import {XHRImg} from '../../remote/rpm';
-import {Image, Pressable, Text} from 'react-native';
+import {Image, Pressable, Text, View} from 'react-native';
 import LoadingBar from '../../shared/comps/LoadingBar';
 import schemaStyles from '../../shared/SchemaStyles';
 
 // (Platform.OS === 'ios') ? {uri: './FMDemoBaseMap/FMMapBasic.html'} : {uri: 'file:///android_asset/FMDemoBaseMap/FMMapBasic.html'}
 const Profiles = ({avatar}) => {
-  const {text} = schemaStyles();
+  const {text, row} = schemaStyles();
   const [uri, setUri] = useState(null);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState({total: 0, loaded: 0});
@@ -25,7 +25,7 @@ const Profiles = ({avatar}) => {
         armature: 'ArmatureTargetFemale',
         blendShapes: {
           Wolf3D_Head: {
-            mouthSmile: 1.2,
+            mouthSmile: 0.2,
           },
         },
       },
@@ -39,8 +39,6 @@ const Profiles = ({avatar}) => {
 
   return (
     <>
-      <LoadingBar style={[{position: 'absolute'}]} loaded={loading} />
-      <Text style={[text]}>{progress.loaded / progress.total}</Text>
       <Pressable onPress={loadPNG}>
         <Image
           onProgress={event => setProgress(event.nativeEvent)}
@@ -48,6 +46,10 @@ const Profiles = ({avatar}) => {
           source={uri}
         />
       </Pressable>
+      <View style={[row, {position: 'absolute'}]}>
+        <LoadingBar style={[]} loaded={loading} />
+        <Text style={[text]}>{progress.loaded / progress.total}</Text>
+      </View>
     </>
   );
 };
