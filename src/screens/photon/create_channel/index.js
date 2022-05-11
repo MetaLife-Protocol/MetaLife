@@ -6,7 +6,7 @@
  * @Project:MetaLife
  */
 
-import React, {useMemo, useState} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
   Image,
   Pressable,
@@ -38,6 +38,23 @@ const CreateChannel = ({}) => {
     () => !(address && amount && remark),
     [address, amount, remark],
   );
+
+  const onCreateChannel = useCallback(() => {
+    //TODO 昵称需要本地维护
+    createChannel(address, amount)
+      .then(res => {
+        const resJson = JSON.parse(res);
+        console.log('createChannel res::', resJson);
+        if (resJson.error_code == 0) {
+          Toast.show('create channel success');
+        } else {
+          Toast.show(resJson.error_message);
+        }
+      })
+      .catch(e => {
+        Toast.show(e.error_message);
+      });
+  }, [address, amount]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -105,19 +122,7 @@ const CreateChannel = ({}) => {
         style={styles.button}
         disabled={btnDisabled}
         title={'Create'}
-        press={() => {
-          //TODO 昵称需要本地维护
-          createChannel(address, amount).then(res => {
-            const resJson = JSON.parse(res);
-            console.log('createChannel res::', resJson);
-            if (resJson.error_code == 0) {
-              Toast.show('create channel success');
-            } else {
-              Toast.show(resJson.error_message);
-            }
-          });
-          //  TODO create channel
-        }}
+        press={onCreateChannel}
       />
     </SafeAreaView>
   );

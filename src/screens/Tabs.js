@@ -45,7 +45,7 @@ function Ionicons({name, focused, color, size}) {
   );
 }
 
-const Tabs = ({darkMode}) => {
+const Tabs = ({darkMode, currentAccount}) => {
   const addIcon = darkMode
     ? headerBtnIconDic.addWhite
     : headerBtnIconDic.addBlack;
@@ -54,8 +54,16 @@ const Tabs = ({darkMode}) => {
   const Tab = createBottomTabNavigator();
 
   useEffect(() => {
-    initPhoton();
-  });
+    if (currentAccount.PrivateKey) {
+      console.log('currentAccount::', currentAccount);
+      console.log('currentAccount sub::', currentAccount.PrivateKey.substr(2));
+      initPhoton({
+        privateKey: currentAccount.PrivateKey.substr(2),
+        // privateKey: currentAccount.PrivateKey,
+        address: currentAccount.Address,
+      });
+    }
+  }, [currentAccount]);
   return (
     <Tab.Navigator
       initialRouteName={'Home'}
@@ -148,7 +156,12 @@ const Tabs = ({darkMode}) => {
     </Tab.Navigator>
   );
 };
-
-const msp = s => s.cfg;
+const msp = s => {
+  return {
+    cfg: s.cfg,
+    currentAccount: s.account.currentAccount,
+  };
+};
+// const msp = s => s.cfg;
 
 export default connect(msp)(Tabs);

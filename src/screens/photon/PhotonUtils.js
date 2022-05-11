@@ -12,12 +12,14 @@ import {photonSettleChannel, startPhotonServer} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {store} from '../../store/configureStore';
 
-export function initPhoton() {
+export function initPhoton({privateKey, address}) {
   //TODO isLogin  & has wallet
   startPhotonServer({
-    privateKey:
-      '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
-    ethRPCEndPoint: '',
+    // privateKey:
+    //   '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
+    privateKey: privateKey,
+    address: address,
+    ethRPCEndPoint: '', //公链节点host,http协议 默认：http://transport01.smartmesh.cn:44444
     // ethRPCEndPoint: 'https://jsonapi1.smartmesh.cn',
   })
     .then(res => {
@@ -28,6 +30,7 @@ export function initPhoton() {
       }
     })
     .catch(e => {
+      console.log('initPhoton e:::', e);
       Toast.show(e.toString());
     });
 }

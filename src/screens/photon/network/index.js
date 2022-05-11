@@ -22,8 +22,9 @@ import {useNavigation} from '@react-navigation/native';
 import PhotonMoreActionsView from './comps/PhotonMoreActionsView';
 import PhotonListItemView from './comps/PhotonListItemView';
 import {getBalanceFromPhoton, loadChannelList} from 'react-native-photon';
+import {connect} from 'react-redux';
 
-const PhotonNetwork = () => {
+const PhotonNetwork = ({currentAccount}) => {
   const styles = useStyle(createSty);
   const [moreActionsVisible, setMoreActionsVisible] = useState(false),
     [balance, setBalance] = useState({}),
@@ -76,7 +77,11 @@ const PhotonNetwork = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <PhotonAccountInfoCard style={styles.topCard} balance={balance} />
+      <PhotonAccountInfoCard
+        style={styles.topCard}
+        balance={balance}
+        currentAccount={currentAccount}
+      />
       <View style={styles.channelListContainer}>
         <View style={styles.channelListTextContainer}>
           <Text style={styles.channelText}>Channel list</Text>
@@ -123,4 +128,10 @@ const createSty = theme =>
       paddingBottom: 25,
     },
   });
-export default PhotonNetwork;
+
+const msp = s => {
+  return {
+    currentAccount: s.account.currentAccount,
+  };
+};
+export default connect(msp)(PhotonNetwork);

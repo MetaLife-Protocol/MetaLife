@@ -7,21 +7,18 @@
  */
 import React, {useCallback, useState} from 'react';
 import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
   Image,
-  TextInput,
+  SafeAreaView,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import {PureTextInput, RoundBtn, useDialog, useStyle} from 'metalife-base';
 import StepView from './comps/StepView';
-import {checkAndLaunchCamera} from '../../../utils';
 import Toast from 'react-native-tiny-toast';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {createChannel} from 'react-native-photon';
 import ConfirmNftInformationDialog from './comps/ConfirmNftInformationDialog';
 import {useNavigation} from '@react-navigation/native';
 
@@ -67,7 +64,7 @@ const CreateNFT = ({}) => {
         navigate={navigate}
       />,
     );
-  }, [description, dialog, name, nftImage]);
+  }, [description, dialog, name, navigate, nftImage]);
 
   return (
     <SafeAreaView style={styles.container}>

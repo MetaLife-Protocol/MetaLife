@@ -10,7 +10,7 @@ import React, {useCallback} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ethNumberFixed, useStyle} from 'metalife-base';
 
-const PhotonAccountInfoCard = ({style, balance}) => {
+const PhotonAccountInfoCard = ({style, balance, currentAccount}) => {
   const styles = useStyle(createSty);
 
   // useEffect(() => {
@@ -43,8 +43,8 @@ const PhotonAccountInfoCard = ({style, balance}) => {
     <View style={[styles.container, style]}>
       {/*storableWallet.getPublicKey()*/}
       {itemView(
-        'Aries',
-        'TODO wallet 0x096f7368bc01f438f8de8775dafd71a566413c6f',
+        currentAccount?.Name ?? '--',
+        currentAccount?.Address ?? '--',
         false,
       )}
       {itemView(
