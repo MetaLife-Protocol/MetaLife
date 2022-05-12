@@ -21,6 +21,8 @@ import {
   PureTextInput,
   RoundBtn,
   useStyle,
+  ETHER,
+  safeDecimal,
 } from 'metalife-base';
 import {useNavigation} from '@react-navigation/native';
 import {createChannel} from 'react-native-photon';
@@ -41,7 +43,7 @@ const CreateChannel = ({}) => {
 
   const onCreateChannel = useCallback(() => {
     //TODO 昵称需要本地维护
-    createChannel(address, amount)
+    createChannel(address, safeDecimal(amount).mul(ETHER).toString())
       .then(res => {
         const resJson = JSON.parse(res);
         console.log('createChannel res::', resJson);

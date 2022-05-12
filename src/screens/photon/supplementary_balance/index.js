@@ -1,6 +1,7 @@
 'use strict';
 
 /**
+ * 补充
  * @Author: lq
  * @desc:
  */
@@ -12,6 +13,8 @@ import {
   PureTextInput,
   RoundBtn,
   useStyle,
+  safeDecimal,
+  ETHER,
 } from 'metalife-base';
 import Constants from '../../../shared/Constants';
 import {useRoute} from '@react-navigation/native';
@@ -55,7 +58,7 @@ const SupplementaryBalance = () => {
             depositChannelMethod({
               photonTokenAddress: channelData?.token_address,
               partnerAddress: channelData?.partner_address,
-              depositBalance: amount,
+              depositBalance: safeDecimal(amount).mul(ETHER).toString(),
             })
               .then(res => {
                 const jsonRes = JSON.parse(res);

@@ -71,11 +71,18 @@ const createSty = theme =>
       borderRadius: 12,
     },
     itemContainer: {
+      width: '100%',
       flexDirection: 'row',
       justifyContent: 'space-between',
     },
     itemTitle: {fontSize: 15, color: theme.primary},
-    itemValue: {fontSize: 15, color: theme.c_000000_FFFFFF, marginLeft: 15},
+    itemValue: {
+      fontSize: 15,
+      color: theme.c_000000_FFFFFF,
+      marginLeft: 15,
+      flex: 1,
+      textAlign: 'right',
+    },
     unit: {color: '#8E8E92'},
     marginTop20: {marginTop: 20},
   });
