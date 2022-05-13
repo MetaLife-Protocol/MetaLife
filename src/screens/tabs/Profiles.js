@@ -12,7 +12,7 @@ const Profiles = ({avatar}) => {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState({total: 0, loaded: 0});
   useEffect(() => {
-    loadPNG();
+    avatar && loadPNG();
   }, [avatar]);
 
   function loadPNG() {
