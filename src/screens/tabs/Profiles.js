@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {connect} from 'react-redux/lib/exports';
 import {XHRImg} from '../../remote/rpm';
 import {Image, Pressable, Text, View} from 'react-native';
@@ -11,6 +11,7 @@ const Profiles = ({avatar}) => {
   const [uri, setUri] = useState(null);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState({total: 0, loaded: 0});
+  const img = useRef();
   useEffect(() => {
     avatar && loadPNG();
   }, [avatar]);
@@ -39,9 +40,11 @@ const Profiles = ({avatar}) => {
 
   return (
     <>
-      <Pressable onPress={loadPNG}>
+      <Pressable onPress={loadPNG} onLongPress={() => console.log(img.current)}>
         <Image
+          ref={img}
           onProgress={event => setProgress(event.nativeEvent)}
+          onLoadEnd={() => console.log(img.current)}
           style={{width: '100%', height: '100%'}}
           source={uri}
         />
