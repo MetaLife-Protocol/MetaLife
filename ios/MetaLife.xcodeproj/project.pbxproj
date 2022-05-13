@@ -182,11 +182,13 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				B0BCD6F4282E2FD1007C1746 /* Pre-minify Node.js Mobile project */,
 				1D3DA7960CD7791758F5E199 /* [CP] Embed Pods Frameworks */,
 				7F1FB1B4A7722ABD693B4634 /* [CP] Copy Pods Resources */,
 				4E63BAB2A17300693F51CF6A /* [CP-User] [NODEJS MOBILE] Copy Node.js Project files */,
 				388548364D7531595AD86A68 /* [CP-User] [NODEJS MOBILE] Build Native Modules */,
 				0B92359A7F0B9FD533C598E5 /* [CP-User] [NODEJS MOBILE] Sign Native Modules */,
+				B0BCD6F5282E303E007C1746 /* Post-minify Node.js Mobile project */,
 				A92AE65DB88A91BBF83C7FF6 /* [CP-User] [NODEJS MOBILE] Remove Simulator Strip */,
 			);
 			buildRules = (
@@ -381,6 +383,42 @@
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\nif [ -f ~/.cargo/env ]; then\n  source ~/.cargo/env;\nfi\nif [ -f ~/.nvm/nvm.sh ]; then\n  source ~/.nvm/nvm.sh;\nfi\nset -e\nFRAMEWORK_BINARY_PATH=\"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/NodeMobile.framework/NodeMobile\"\nFRAMEWORK_STRIPPED_PATH=\"$FRAMEWORK_BINARY_PATH-strip\"\nif [ \"$PLATFORM_NAME\" != \"iphonesimulator\" ]; then\n  if $(lipo \"$FRAMEWORK_BINARY_PATH\" -verify_arch \"x86_64\") ; then\n    lipo -output \"$FRAMEWORK_STRIPPED_PATH\" -remove \"x86_64\" \"$FRAMEWORK_BINARY_PATH\"\n    rm \"$FRAMEWORK_BINARY_PATH\"\n    mv \"$FRAMEWORK_STRIPPED_PATH\" \"$FRAMEWORK_BINARY_PATH\"\n    echo \"Removed simulator strip from NodeMobile.framework\"\n  fi\nfi\n";
 		};
+		B0BCD6F4282E2FD1007C1746 /* Pre-minify Node.js Mobile project */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Pre-minify Node.js Mobile project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Remove some files we know that won't be used at all\nNODEJS_ASSETS_DIR=\"$( cd \"$PROJECT_DIR\" && cd ../nodejs-assets/ && pwd )\"\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/sodium-native-nodejs-mobile/libsodium/android-toolchain*\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/leveldown\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/ssb-keys-neon/prebuilds\n";
+		};
+		B0BCD6F5282E303E007C1746 /* Post-minify Node.js Mobile project */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Post-minify Node.js Mobile project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Removing all files in node_modules except .node, .so, .a\nfind $CODESIGNING_FOLDER_PATH/nodejs-project/node_modules \\\n  -type f \\\n   ! \\( \\\n    -name \"*.node\" \\\n    \\) \\\n  -print0 | xargs -0 rm -rf\n# We used to keep .so files too, but those are \n# counted as executables by App Store policies\n# -o -name \"*.so\" \\\n# -o -name \"*.a\" \\  \n# Delete symbolic links\nfind $CODESIGNING_FOLDER_PATH/nodejs-project/node_modules -depth -type l -delete\n# Delete empty directories\nfind $CODESIGNING_FOLDER_PATH/nodejs-project/node_modules -depth -type d -empty -delete\n";
+		};
 		E05282EAD703D6B53A6C955A /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -529,9 +567,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5305DE93A00826DD9B9DAB6C /* Pods-MetaLife.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 0.0.1;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UW32LPCQU3;
 				ENABLE_BITCODE = "$(inherited)";
 				INFOPLIST_FILE = MetaLife/Info.plist;
@@ -556,9 +595,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 318104D68A70FF6E510F29E0 /* Pods-MetaLife.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 0.0.1;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UW32LPCQU3;
 				ENABLE_BITCODE = "$(inherited)";
 				INFOPLIST_FILE = MetaLife/Info.plist;
@@ -581,6 +621,7 @@
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -646,6 +687,7 @@
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
