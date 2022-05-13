@@ -21,7 +21,7 @@
     "build-android-release": "cd android && ./gradlew assembleRelease && cd ..",
     "install-android-release": "adb install -r android/app/build/outputs/apk/release/app-release.apk",
     "ios script": "~~~~~~~~~~~~~~~ ios ~~~~~~~~~~~~~~~~",
-    "build-backend-ios": "./tools/build-backend.mjs --ios --verbose",
+    "build-backend-ios": "./tools/build-backend.mjs --ios",
     "build-ios-assets": "npm run lib && npm run propagate-replacements && npm run build-backend-ios",
     "ios": "react-native run-ios --device",
     "ios-dev": "npm run build-ios-assets && react-native run-ios --device",
