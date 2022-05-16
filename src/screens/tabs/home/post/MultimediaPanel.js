@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import SchemaStyles from '../../../../shared/SchemaStyles';
 import {useSelector} from 'react-redux';
+import RoundBtn from '../../../../shared/comps/RoundBtn';
 
 const iconDic = {
   voiceW: require('../../../../assets/image/post/NewPost_voice_icon_white.png'),
@@ -51,12 +52,8 @@ const MultimediaPanel = ({
           </Pressable>
         </View>
         <View style={[row]}>
-          <Pressable onPress={clearHandler}>
-            <Image style={[]} source={iconDic.review} />
-          </Pressable>
-          <Pressable onPress={sendHandler}>
-            <Image style={[reviewBtn]} source={iconDic.review} />
-          </Pressable>
+          <RoundBtn style={[reviewBtn]} title={'Clear'} press={clearHandler} />
+          <RoundBtn style={[reviewBtn]} title={'Send'} press={sendHandler} />
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -66,7 +63,11 @@ const MultimediaPanel = ({
 const styles = StyleSheet.create({
   container: {height: 42},
   funBtn: {marginLeft: 15},
-  reviewBtn: {marginHorizontal: 15},
+  reviewBtn: {
+    width: 65,
+    height: 27,
+    marginHorizontal: 15,
+  },
 });
 
 export default MultimediaPanel;
