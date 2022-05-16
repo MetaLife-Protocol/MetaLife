@@ -50,6 +50,7 @@
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.11.1",
     "react-native-sound-player": "^0.12.0",
+    "react-native-splash-screen": "^3.3.0",
     "react-native-ssb-client": "^7.1.0",
     "react-native-tiny-toast": "^1.0.7",
     "react-native-version": "^4.0.0",

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Tabs from './screens/Tabs';
@@ -22,6 +22,7 @@ import {StatusBar} from 'react-native';
 import CommentEditor from './screens/tabs/home/post/CommentEditor';
 import PullMenu from './shared/comps/PullMenu';
 import Avatar from './shared/screens/Avatar';
+import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
   const {barStyle, theme} = SchemaStyles();
@@ -29,9 +30,10 @@ const App = () => {
   const {Navigator, Screen, Group} = createNativeStackNavigator();
 
   // todo: loading bar test
-  // useEffect(() => {
-  //   setInterval(() => getDBProgress().then(setProgress), 100);
-  // }, []);
+  useEffect(() => {
+    SplashScreen.hide();
+    // setInterval(() => getDBProgress().then(setProgress), 100);
+  }, []);
 
   return (
     <NavigationContainer theme={theme}>
