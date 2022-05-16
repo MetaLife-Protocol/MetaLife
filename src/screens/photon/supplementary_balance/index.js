@@ -17,7 +17,7 @@ import {
   ETHER,
 } from 'metalife-base';
 import Constants from '../../../shared/Constants';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {depositChannelMethod} from 'react-native-photon';
 
 const SupplementaryBalance = () => {
@@ -25,6 +25,7 @@ const SupplementaryBalance = () => {
   const route = useRoute();
   const {channelData} = route.params ?? {};
   // console.log('channelData::', channelData);
+  const navigation = useNavigation();
 
   const [amount, setAmount] = useState(''),
     [remark, setRemark] = useState('');
@@ -64,6 +65,7 @@ const SupplementaryBalance = () => {
                 const jsonRes = JSON.parse(res);
                 if (jsonRes.error_code === 0) {
                   //   TODO 成功
+                  navigation.goBack();
                 }
                 console.log('depositChannelMethod res::', res);
               })

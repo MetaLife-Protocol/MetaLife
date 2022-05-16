@@ -24,7 +24,7 @@ import PhotonListItemView from './comps/PhotonListItemView';
 import {getBalanceFromPhoton, loadChannelList} from 'react-native-photon';
 import {connect} from 'react-redux';
 
-const PhotonNetwork = ({currentAccount}) => {
+const PhotonNetwork = ({currentAccount, channelRemark}) => {
   const styles = useStyle(createSty);
   const [moreActionsVisible, setMoreActionsVisible] = useState(false),
     [balance, setBalance] = useState({}),
@@ -90,7 +90,9 @@ const PhotonNetwork = ({currentAccount}) => {
       <FlatList
         contentContainerStyle={styles.listContainer}
         data={channelList}
-        renderItem={({item, index}) => <PhotonListItemView data={item} />}
+        renderItem={({item, index}) => (
+          <PhotonListItemView data={item} channelRemarks={channelRemark} />
+        )}
         keyExtractor={(item, index) => `list_${index}`}
       />
       <PhotonMoreActionsView
@@ -132,6 +134,7 @@ const createSty = theme =>
 const msp = s => {
   return {
     currentAccount: s.account.currentAccount,
+    channelRemark: s.photon.channelRemark,
   };
 };
 export default connect(msp)(PhotonNetwork);

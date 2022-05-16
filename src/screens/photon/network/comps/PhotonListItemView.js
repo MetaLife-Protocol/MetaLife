@@ -42,7 +42,7 @@ import {useNavigation} from '@react-navigation/native';
 import {photonCloseChannel, photonWithDraw} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 
-const PhotonListItemView = ({data}) => {
+const PhotonListItemView = ({data, channelRemarks}) => {
   const styles = useStyle(createSty);
   const {navigate} = useNavigation();
   const dialog = useDialog();
@@ -194,16 +194,29 @@ const PhotonListItemView = ({data}) => {
     return [tipsStr, _showForceClose];
   }, [data.block_number_channel_can_settle, data.block_number_now, data.state]);
 
+  const remarkDisplay = useMemo(() => {
+    let remark = '';
+    channelRemarks.forEach(item => {
+      if (data.partner_address === item.address) {
+        remark = item.remark;
+        return;
+      }
+    });
+    return remark;
+  }, [channelRemarks, data.partner_address]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.channelName}>
         {getPhotonTokenSymbol(data.token_address)}
       </Text>
-      <View style={styles.itemContainer}>
-        <Text style={styles.itemTitle}>Remark</Text>
-        {/*通道昵称本地存储  TODO*/}
-        <Text style={styles.itemValue}>TODO 小白羊</Text>
-      </View>
+      {!!remarkDisplay && (
+        <View style={styles.itemContainer}>
+          <Text style={styles.itemTitle}>Remark</Text>
+          <Text style={styles.itemValue}>{remarkDisplay}</Text>
+        </View>
+      )}
+
       <View style={styles.itemContainer}>
         <Text style={styles.itemTitle}>Balance</Text>
         <Text style={styles.itemValue}>

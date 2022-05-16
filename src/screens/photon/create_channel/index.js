@@ -27,10 +27,12 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {createChannel} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
+import {connect} from 'react-redux';
 
-const CreateChannel = ({}) => {
+const CreateChannel = ({setChannelRemark}) => {
   const styles = useStyle(createSty);
   const {navigate} = useNavigation();
+  const navigation = useNavigation();
 
   const [address, setAddress] = useState(''),
     [amount, setAmount] = useState(''),
@@ -42,12 +44,15 @@ const CreateChannel = ({}) => {
   );
 
   const onCreateChannel = useCallback(() => {
-    //TODO 昵称需要本地维护
+    setChannelRemark({address, remark});
     createChannel(address, safeDecimal(amount).mul(ETHER).toString())
       .then(res => {
         const resJson = JSON.parse(res);
         console.log('createChannel res::', resJson);
         if (resJson.error_code == 0) {
+          if (remark) {
+            setChannelRemark({address, remark});
+          }
           Toast.show('create channel success');
         } else {
           Toast.show(resJson.error_message);
@@ -56,7 +61,7 @@ const CreateChannel = ({}) => {
       .catch(e => {
         Toast.show(e.error_message);
       });
-  }, [address, amount]);
+  }, [address, amount, remark, setChannelRemark]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -179,4 +184,14 @@ const createSty = theme =>
     },
   });
 
-export default CreateChannel;
+const msp = s => {
+  return {};
+};
+
+const mdp = d => {
+  return {
+    setChannelRemark: channelRemark =>
+      d({type: 'setChannelRemark', payload: channelRemark}),
+  };
+};
+export default connect(msp, mdp)(CreateChannel);
