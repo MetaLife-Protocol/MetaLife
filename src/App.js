@@ -31,7 +31,7 @@ const App = () => {
 
   // todo: loading bar test
   useEffect(() => {
-    // SplashScreen.hide();
+    SplashScreen.hide();
     // setInterval(() => getDBProgress().then(setProgress), 100);
   }, []);
 
