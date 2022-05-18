@@ -17,25 +17,29 @@ const Profiles = ({avatar}) => {
   }, [avatar]);
 
   function loadPNG() {
-    console.log('loading avatar');
-    setLoading(false);
-    XHRImg(
-      {
-        model: avatar,
-        scene: 'halfbody-portrait-v1',
-        armature: 'ArmatureTargetFemale',
-        blendShapes: {
-          Wolf3D_Head: {
-            mouthSmile: 0.2,
+    if (avatar) {
+      console.log('loading avatar');
+      setLoading(false);
+      XHRImg(
+        {
+          model: avatar,
+          scene: 'halfbody-portrait-v1',
+          armature: 'ArmatureTargetFemale',
+          blendShapes: {
+            Wolf3D_Head: {
+              mouthSmile: 0.2,
+            },
           },
         },
-      },
-      res => {
-        console.log('refresh with: ', JSON.parse(res).renders);
-        setLoading(true);
-        setUri({uri: JSON.parse(res).renders[0]});
-      },
-    );
+        res => {
+          if (res) {
+            console.log('refresh with: ', JSON.parse(res).renders);
+            setLoading(true);
+            setUri({uri: JSON.parse(res).renders[0]});
+          }
+        },
+      );
+    }
   }
 
   return (
