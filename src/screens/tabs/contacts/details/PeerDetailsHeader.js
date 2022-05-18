@@ -27,7 +27,7 @@ const PeerDetailsHeader = ({
   relations,
   infoDic,
   privateMsg,
-  setViewImages,
+  setHeaderImages,
 }) => {
   const {row, flex1, justifySpaceAround, text} = SchemaStyles(),
     {textContainer, item, title, desc, btn} = styles;
@@ -55,8 +55,7 @@ const PeerDetailsHeader = ({
   }
 
   const viewImagesHandler = url =>
-    setViewImages({
-      index: 0,
+    setHeaderImages({
       imgs: [url],
     });
 
@@ -64,7 +63,7 @@ const PeerDetailsHeader = ({
     <View>
       <View style={[item, row, flex1]}>
         <Pressable
-          onPress={() => image && viewImagesHandler({uri: blobIdToUrl(image)})}>
+          onPress={() => image && viewImagesHandler({url: blobIdToUrl(image)})}>
           <HeadIcon
             image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
           />
@@ -193,7 +192,7 @@ const msp = s => {
 
 const mdp = d => {
   return {
-    setViewImages: imgs => d({type: 'images', payload: imgs}),
+    setHeaderImages: imgs => d({type: 'header', payload: imgs}),
   };
 };
 

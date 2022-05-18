@@ -6,6 +6,7 @@ const initState = {
   pullMenu: {},
   postContent: {photo: [], content: ''},
   images: {index: 0, imgs: []},
+  header: {index: 0, imgs: []},
 };
 export const runtimeReducer = (state = initState, {type, payload}) => {
   switch (type) {
@@ -15,6 +16,8 @@ export const runtimeReducer = (state = initState, {type, payload}) => {
       return {...state, postContent: payload};
     case 'images':
       return {...state, images: payload};
+    case 'header':
+      return {...state, header: payload};
     case 'reset':
       return initState;
     default:

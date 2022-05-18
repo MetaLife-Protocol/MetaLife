@@ -1,5 +1,5 @@
 import React, {useEffect, useLayoutEffect} from 'react';
-import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
+import {FlatList, Modal, SafeAreaView, StyleSheet} from 'react-native';
 import SchemaStyles from '../../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -8,8 +8,17 @@ import PeerDetailsHeader from './details/PeerDetailsHeader';
 import {trainFeed} from '../../../remote/ssb/ssbAPI';
 import {batchMsgCB} from '../../../store/MsgCB';
 import {useDispatch} from 'react-redux';
+import ImageViewer from 'react-native-image-zoom-viewer';
 
-const PeerDetailsScreen = ({verbose, selfFeedId, relations, info, feed}) => {
+const PeerDetailsScreen = ({
+  verbose,
+  selfFeedId,
+  relations,
+  info,
+  feed,
+  headerImg,
+  setHeaderImages,
+}) => {
   const {flex1} = SchemaStyles(),
     {} = styles;
 
@@ -44,6 +53,15 @@ const PeerDetailsScreen = ({verbose, selfFeedId, relations, info, feed}) => {
         ListHeaderComponent={<PeerDetailsHeader />}
         renderItem={info => <ItemAgent info={info} verbose={verbose} />}
       />
+      <Modal visible={headerImg.imgs.length > 0} transparent={true}>
+        <ImageViewer
+          index={headerImg.index}
+          enableSwipeDown={true}
+          useNativeDriver={true}
+          onSwipeDown={() => setHeaderImages({index: 0, imgs: []})}
+          imageUrls={headerImg.imgs}
+        />
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -57,11 +75,14 @@ const msp = s => {
     relations: s.user.relations,
     info: s.info,
     feed: s.feed,
+    headerImg: s.runtime.header,
   };
 };
 
 const mdp = d => {
-  return {};
+  return {
+    setHeaderImages: imgs => d({type: 'header', payload: imgs}),
+  };
 };
 
 export default connect(msp, mdp)(PeerDetailsScreen);
