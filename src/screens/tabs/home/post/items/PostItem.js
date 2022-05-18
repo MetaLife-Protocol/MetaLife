@@ -28,6 +28,7 @@ import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeC
 import AudioElement from './AudioElement';
 import ImageElement from './ImageElement';
 import {connect} from 'react-redux';
+import {report} from '../../../../../remote/pubOP';
 
 const PostItem = ({
   cfg: {verbose},
@@ -115,6 +116,12 @@ const PostItem = ({
           {
             title: 'report',
             handler: () => {
+              report({
+                plaintiff: feedId,
+                defendant: author,
+                messagekey: key,
+                reasons: 0,
+              });
               Toast.show('reported');
               showPullMenu({position: {}, buttons: []});
             },

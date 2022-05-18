@@ -3,7 +3,8 @@
  *
  */
 
-const url = 'http://{ssb-server-public-ip}:18008/ssb/api/tipped-who-off';
+const pubIp = ['106.52.171.12'];
+const url = `http://${pubIp[0]}:18008/ssb/api/tipped-who-off`;
 
 /**
  * Body:
