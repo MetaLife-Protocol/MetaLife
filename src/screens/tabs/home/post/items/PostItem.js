@@ -116,13 +116,15 @@ const PostItem = ({
           {
             title: 'report',
             handler: () => {
-              report({
-                plaintiff: feedId,
-                defendant: author,
-                messagekey: key,
-                reasons: 0,
-              });
-              Toast.show('reported');
+              report(
+                {
+                  plaintiff: feedId,
+                  defendant: author,
+                  messagekey: key,
+                  reasons: 'sex',
+                },
+                data => Toast.show(data),
+              );
               showPullMenu({position: {}, buttons: []});
             },
           },

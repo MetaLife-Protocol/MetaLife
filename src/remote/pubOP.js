@@ -3,8 +3,8 @@
  *
  */
 
-const pubIp = ['106.52.171.12'];
-const url = `http://${pubIp[0]}:18008/ssb/api/tipped-who-off`;
+const pubIp = ['54.179.3.93'];
+const url = `http://${pubIp[0]}:10008/ssb/api/tipped-who-off`;
 
 /**
  * Body:
@@ -23,7 +23,12 @@ const url = `http://${pubIp[0]}:18008/ssb/api/tipped-who-off`;
  * @param params
  */
 export function report(params, cb) {
-  fetch(url, {method: 'POST', body: JSON.stringify(params)}).then(r =>
-    console.log(r),
-  );
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  }).then(r => cb(JSON.parse(r._bodyText).data));
 }
