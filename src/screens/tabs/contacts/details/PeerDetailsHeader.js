@@ -27,6 +27,7 @@ const PeerDetailsHeader = ({
   relations,
   infoDic,
   privateMsg,
+  setViewImages,
 }) => {
   const {row, flex1, justifySpaceAround, text} = SchemaStyles(),
     {textContainer, item, title, desc, btn} = styles;
@@ -53,9 +54,21 @@ const PeerDetailsHeader = ({
     push('PeersListScreen', {title, list});
   }
 
+  const viewImagesHandler = url =>
+    setViewImages({
+      index: 0,
+      imgs: [url],
+    });
+
   return (
     <View>
       <View style={[item, row, flex1]}>
+        <Pressable
+          onPress={() => image && viewImagesHandler({uri: blobIdToUrl(image)})}>
+          <HeadIcon
+            image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
+          />
+        </Pressable>
         <Pressable
           onPressIn={() => setShowId(true)}
           onPressOut={() => setShowId(false)}
@@ -63,16 +76,15 @@ const PeerDetailsHeader = ({
             setString(feedId);
             Toast.show('ID copied');
           }}>
-          <HeadIcon
-            image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
-          />
+          <View style={[textContainer]}>
+            <Text numberOfLines={1} style={[title, text]}>
+              {showId ? feedId : name || feedId}
+            </Text>
+            {description !== '' && (
+              <Text style={[desc]}>bio: {description}</Text>
+            )}
+          </View>
         </Pressable>
-        <View style={[textContainer]}>
-          <Text numberOfLines={1} style={[title, text]}>
-            {showId ? feedId : name || feedId}
-          </Text>
-          {description !== '' && <Text style={[desc]}>bio: {description}</Text>}
-        </View>
       </View>
       <View style={[row, flex1, justifySpaceAround]}>
         <Pressable
@@ -180,7 +192,9 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {};
+  return {
+    setViewImages: imgs => d({type: 'images', payload: imgs}),
+  };
 };
 
 export default connect(msp, mdp)(PeerDetailsHeader);

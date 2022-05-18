@@ -112,6 +112,13 @@ const PostItem = ({
               showPullMenu({position: {}, buttons: []});
             },
           },
+          {
+            title: 'report',
+            handler: () => {
+              Toast.show('reported');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
         ],
       });
     },
