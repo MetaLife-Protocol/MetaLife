@@ -7,12 +7,18 @@
  */
 
 import React, {memo, useCallback} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useDialog, useStyle} from 'metalife-base';
 import {useNavigation} from '@react-navigation/native';
 import {uploadPhotonLogDialog} from '../hooks';
 
-const PhotonMoreActionsView = ({visible, onSelect}) => {
+const PhotonMoreActionsView = ({visible, onSelect, onClose}) => {
   const styles = useStyle(createSty);
   const {navigate} = useNavigation();
   const dialog = useDialog();
@@ -26,47 +32,52 @@ const PhotonMoreActionsView = ({visible, onSelect}) => {
     return null;
   }
   return (
-    <View style={styles.container}>
-      <Text
-        style={styles.text}
-        onPress={() => {
-          onSelect();
-          navigate('ReceivingCode', {
-            token: '0x096f7368bc01f438f8de8775dafd71a566413c6f',
-          });
-        }}>
-        QR code
-      </Text>
-      <Text
-        style={styles.text}
-        onPress={() => {
-          onSelect();
-          navigate('CreateChannel');
-        }}>
-        Create channel
-      </Text>
-      <Text
-        style={styles.text}
-        onPress={() => {
-          onSelect();
-          navigate('PhotonTransactionRecord');
-        }}>
-        Transaction record
-      </Text>
-      <Text style={styles.text} onPress={uploadLog}>
-        Upload data
-      </Text>
-    </View>
+    <TouchableOpacity
+      style={[styles.fullView, StyleSheet.absoluteFill]}
+      onPress={onClose}>
+      <View style={styles.container}>
+        <Text
+          style={styles.text}
+          onPress={() => {
+            onSelect();
+            navigate('ReceivingCode', {
+              token: '0x096f7368bc01f438f8de8775dafd71a566413c6f',
+            });
+          }}>
+          QR code
+        </Text>
+        <Text
+          style={styles.text}
+          onPress={() => {
+            onSelect();
+            navigate('CreateChannel');
+          }}>
+          Create channel
+        </Text>
+        <Text
+          style={styles.text}
+          onPress={() => {
+            onSelect();
+            navigate('PhotonTransactionRecord');
+          }}>
+          Transaction record
+        </Text>
+        <Text style={styles.text} onPress={uploadLog}>
+          Upload data
+        </Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 const createSty = theme =>
   StyleSheet.create({
+    fullView: {backgroundColor: 'rgba(0, 0, 0, 0.8)'},
     container: {
       position: 'absolute',
       right: 15,
       width: 163,
       height: 144,
-      backgroundColor: '#232929',
+      backgroundColor: theme.c_FFFFFF_232929,
       borderRadius: 6,
       paddingHorizontal: 15,
       paddingVertical: 17,

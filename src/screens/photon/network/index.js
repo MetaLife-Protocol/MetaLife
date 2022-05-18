@@ -100,6 +100,9 @@ const PhotonNetwork = ({currentAccount, channelRemark}) => {
         onSelect={() => {
           setMoreActionsVisible(false);
         }}
+        onClose={() => {
+          setMoreActionsVisible(false);
+        }}
       />
     </SafeAreaView>
   );
