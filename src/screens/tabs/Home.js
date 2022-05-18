@@ -71,6 +71,7 @@ const Home = ({
         }
         data={result.length > 0 || KW !== '' ? result : publicMsg}
         keyExtractor={(_, index) => index}
+        initialNumToRender={10}
         renderItem={info => <ItemAgent info={info} verbose={verbose} />}
       />
       <Modal visible={viewImages.imgs.length > 0} transparent={true}>
