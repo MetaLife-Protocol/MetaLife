@@ -22,7 +22,7 @@ const url = `http://${pubIp[0]}:18008/ssb/api/tipped-who-off`;
  * }
  * @param params
  */
-export function report(params) {
+export function report(params, cb) {
   fetch(url, {method: 'POST', body: JSON.stringify(params)}).then(r =>
     console.log(r),
   );
