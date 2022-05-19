@@ -105,6 +105,11 @@ const Setting = ({
               <Image source={ArrowImage} />
             </ControllerItem>
           </Pressable>
+          <Pressable onPress={() => navigate('Mnemonic')}>
+            <ControllerItem title={'Mnemonic'}>
+              <Image source={ArrowImage} />
+            </ControllerItem>
+          </Pressable>
         </Section>
         <Section
           style={[marginTop10]}

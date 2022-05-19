@@ -18,13 +18,16 @@ import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import Pubs from './screens/tabs/profiles/Pubs';
-import {StatusBar} from 'react-native';
+import {Modal, StatusBar} from 'react-native';
 import CommentEditor from './screens/tabs/home/post/CommentEditor';
 import PullMenu from './shared/comps/PullMenu';
 import Avatar from './shared/screens/Avatar';
 import SplashScreen from 'react-native-splash-screen';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import {getMnemonic} from './remote/ssb/ssbOP';
+import Mnemonic from './shared/screens/Mnemonic';
 
-const App = () => {
+const App = ({viewImages, setViewImages}) => {
   const {barStyle, theme} = SchemaStyles();
   const [progress, setProgress] = useState(0);
   const {Navigator, Screen, Group} = createNativeStackNavigator();
@@ -89,21 +92,39 @@ const App = () => {
           options={{title: ''}}
           component={TextEditor}
         />
+        <Screen
+          name="Mnemonic"
+          options={{title: 'Mnemonic'}}
+          component={Mnemonic}
+        />
         {/* Screen holder */}
         <Screen name="SubScreen" options={{}} component={SubScreen} />
       </Navigator>
       <PullMenu />
+      <Modal visible={viewImages.imgs.length > 0} transparent={true}>
+        <ImageViewer
+          index={viewImages.index}
+          enableSwipeDown={true}
+          useNativeDriver={true}
+          onSwipeDown={() => setViewImages({index: 0, imgs: []})}
+          imageUrls={viewImages.imgs}
+        />
+      </Modal>
       {/*<LoadingBar style={[{position: 'absolute'}]} loaded={progress} />*/}
     </NavigationContainer>
   );
 };
 
-const msp = s => s.cfg;
+const msp = s => {
+  return {
+    cfg: s.cfg,
+    viewImages: s.runtime.images,
+  };
+};
 
 const mdp = d => {
   return {
-    setName: name => d({type: 'set', payload: name}),
-    deleteName: name => d({type: 'delete'}),
+    setViewImages: imgs => d({type: 'images', payload: imgs}),
   };
 };
 

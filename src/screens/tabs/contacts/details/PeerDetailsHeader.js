@@ -27,7 +27,7 @@ const PeerDetailsHeader = ({
   relations,
   infoDic,
   privateMsg,
-  setHeaderImages,
+  setViewImages,
 }) => {
   const {row, flex1, justifySpaceAround, text} = SchemaStyles(),
     {textContainer, item, title, desc, btn} = styles;
@@ -55,7 +55,7 @@ const PeerDetailsHeader = ({
   }
 
   const viewImagesHandler = url =>
-    setHeaderImages({
+    setViewImages({
       imgs: [url],
     });
 
@@ -192,7 +192,7 @@ const msp = s => {
 
 const mdp = d => {
   return {
-    setHeaderImages: imgs => d({type: 'header', payload: imgs}),
+    setViewImages: imgs => d({type: 'images', payload: imgs}),
   };
 };
 

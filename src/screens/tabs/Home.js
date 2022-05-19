@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Modal, SafeAreaView, StyleSheet} from 'react-native';
+import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ItemAgent from './home/post/ItemAgent';
@@ -11,21 +11,13 @@ import SearchBar from '../../shared/comps/SearchBar';
 import {searchPublicMsgByPostId} from '../../store/filters/MsgFilters';
 import {useTimer} from '../../shared/Hooks';
 import {getConnectedPeers} from '../../remote/ssb/ssbOP';
-import ImageViewer from 'react-native-image-zoom-viewer';
 import {
   useFocusEffect,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
 
-const Home = ({
-  verbose,
-  publicMsg,
-  setFeedId,
-  setConnectedPeers,
-  viewImages,
-  setViewImages,
-}) => {
+const Home = ({cfg: {verbose}, publicMsg, setFeedId, setConnectedPeers}) => {
   const {flex1} = SchemaStyles(),
     {searchBar} = styles;
   const {setOptions, getState} = useNavigation();
@@ -74,15 +66,6 @@ const Home = ({
         initialNumToRender={10}
         renderItem={info => <ItemAgent info={info} verbose={verbose} />}
       />
-      <Modal visible={viewImages.imgs.length > 0} transparent={true}>
-        <ImageViewer
-          index={viewImages.index}
-          enableSwipeDown={true}
-          useNativeDriver={true}
-          onSwipeDown={() => setViewImages({index: 0, imgs: []})}
-          imageUrls={viewImages.imgs}
-        />
-      </Modal>
     </SafeAreaView>
   );
 };
@@ -93,9 +76,8 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
-    verbose: s.cfg.verbose,
+    cfg: s.cfg,
     publicMsg: s.public,
-    viewImages: s.runtime.images,
   };
 };
 
@@ -104,7 +86,6 @@ const mdp = d => {
     setFeedId: id => d({type: 'setFeedId', payload: id}),
     setStagedPeers: v => d({type: 'setStagedPeers', payload: v}),
     setConnectedPeers: v => d({type: 'setConnectedPeers', payload: v}),
-    setViewImages: imgs => d({type: 'images', payload: imgs}),
   };
 };
 

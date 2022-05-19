@@ -2,7 +2,7 @@
  * Created on 11/4/21 by lonmee
  */
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableNativeFeedback, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../SchemaStyles';
 
 const RoundBtn = ({title, press, disabled = false, style = null}) => {
@@ -16,7 +16,7 @@ const RoundBtn = ({title, press, disabled = false, style = null}) => {
     btnDisabledFG,
   } = SchemaStyles();
   return (
-    <TouchableNativeFeedback onPress={disabled ? null : press}>
+    <Pressable onPress={disabled ? null : press}>
       <View
         style={[
           styles.border,
@@ -35,7 +35,7 @@ const RoundBtn = ({title, press, disabled = false, style = null}) => {
           {title}
         </Text>
       </View>
-    </TouchableNativeFeedback>
+    </Pressable>
   );
 };
 
