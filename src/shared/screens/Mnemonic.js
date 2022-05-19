@@ -25,14 +25,13 @@ const Mnemonic = () => {
             padding: 10,
             borderColor: colorsBasics.primary,
             marginHorizontal: 30,
-            alignItems: 'center',
-            justifyContent: 'center',
           },
         ]}>
         <Text style={[text, {fontSize: 20}]}>{mnemonic}</Text>
       </View>
+      <View style={[flex1]} />
       <RoundBtn
-        style={[{marginTop: 40}]}
+        style={[{marginBottom: 40}]}
         title={'Copy'}
         press={() => {
           nativeClipboard.setString(mnemonic);

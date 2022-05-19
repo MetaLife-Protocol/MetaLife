@@ -4,8 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Tabs from './screens/Tabs';
 import Guid from './screens/Guid';
-import Login from './screens/log/Login';
-import SignUp from './screens/log/SignUp';
+import Restore from './screens/guid/Restore';
 import SubScreen from './shared/screens/SubScreen';
 import {connect} from 'react-redux/lib/exports';
 import SchemaStyles from './shared/SchemaStyles';
@@ -24,28 +23,46 @@ import PullMenu from './shared/comps/PullMenu';
 import Avatar from './shared/screens/Avatar';
 import SplashScreen from 'react-native-splash-screen';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import {getMnemonic} from './remote/ssb/ssbOP';
 import Mnemonic from './shared/screens/Mnemonic';
+import {startSSB} from './remote/ssb/starter';
+import {initializeHandlers} from './remote/ssb/SsbListeners';
+import {checkAddon} from './remote/ssb/SsbHandlers';
+import {getConnectedPeers} from './remote/ssb/ssbOP';
+import {useStore} from 'react-redux';
 
-const App = ({viewImages, setViewImages}) => {
+const App = ({
+  feedId,
+  setFeedId,
+  setConnectedPeers,
+  viewImages,
+  setViewImages,
+}) => {
   const {barStyle, theme} = SchemaStyles();
+  const store = useStore();
   const [progress, setProgress] = useState(0);
   const {Navigator, Screen, Group} = createNativeStackNavigator();
 
   // todo: loading bar test
   useEffect(() => {
     SplashScreen.hide();
+    window.ssb ||
+      startSSB().then(ssb => {
+        window.ssb = ssb;
+        setFeedId(ssb.id);
+        initializeHandlers(store);
+        checkAddon('launch');
+        getConnectedPeers(setConnectedPeers);
+      });
     // setInterval(() => getDBProgress().then(setProgress), 100);
   }, []);
 
   return (
     <NavigationContainer theme={theme}>
       <StatusBar barStyle={barStyle} />
-      {/*<Navigator initialRouteName="Guid">*/}
-      <Navigator initialRouteName="Tabs">
+      <Navigator initialRouteName={feedId ? 'Guid' : 'Guid'}>
+        {/*<Navigator initialRouteName={feedId ? 'Tabs' : 'Guid'}>*/}
         <Screen name="Guid" component={Guid} options={{headerShown: false}} />
-        <Screen name="Login" component={Login} />
-        <Screen name="SignUp" component={SignUp} />
+        <Screen name="Restore" component={Restore} />
         <Screen name="Tabs" options={{headerShown: false}} component={Tabs} />
         {/* Contacts */}
         <Screen name="FriendList" component={FriendList} />
@@ -59,7 +76,6 @@ const App = ({viewImages, setViewImages}) => {
           component={PeersScreen}
         />
         {/* Profiles */}
-
         <Screen name="PeersListScreen" component={PeersListScreen} />
         <Screen
           name="PeerDetailsScreen"
@@ -119,11 +135,14 @@ const msp = s => {
   return {
     cfg: s.cfg,
     viewImages: s.runtime.images,
+    feedId: s.user.feedId,
   };
 };
 
 const mdp = d => {
   return {
+    setFeedId: id => d({type: 'setFeedId', payload: id}),
+    setConnectedPeers: v => d({type: 'setConnectedPeers', payload: v}),
     setViewImages: imgs => d({type: 'images', payload: imgs}),
   };
 };

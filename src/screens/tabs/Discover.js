@@ -41,9 +41,9 @@ const Discover = () => {
   };
 
   useEffect(() => {
-    // console.log('subscribe');
+    // console.guid('subscribe');
     return () => {
-      // console.log('componentDidUpdate');
+      // console.guid('componentDidUpdate');
     };
   }, []);
 

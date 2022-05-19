@@ -63,9 +63,9 @@ export const follow = (fid, opts, cb) => {
   ssb.friends.follow(fid, opts, (e, v) => (e ? console.error(e) : cb(v)));
 };
 
-// ssb.deweird.source(['threads', 'publicSummary'],{})(null,(e, v)=>console.log(v))
-// ssb.friends.hopStream({old:true, live:true})(null, console.log)
-// ssb.friends.graphStream({ old: true, live: true })(null,console.log)
+// ssb.deweird.source(['threads', 'publicSummary'],{})(null,(e, v)=>console.guid(v))
+// ssb.friends.hopStream({old:true, live:true})(null, console.guid)
+// ssb.friends.graphStream({ old: true, live: true })(null,console.guid)
 export const graph = cb =>
   ssb.friends.graph((e, v) => (e ? console.error(e) : cb(v)));
 
@@ -111,7 +111,7 @@ export const reqStartSSB = setInstance => {
         .then(value => setInstance((ssb = value)))
         .catch(error => console.error('ssb start error: ' + error)),
   );
-  channel.post('identity', 'CREATE');
+  // channel.post('identity', 'CREATE');
   // rn.send('RESTORE: word0 word1...');
   // channel.post('identity', 'RESTORE: word0 word1...');
 };
@@ -160,7 +160,7 @@ export const sendMsg = (opt, cb = null) => {
 
 /************************** retrieve **************************/
 // id相关的消息
-// ssb.threads.profileSummary({id:'@AvWTlEvVCO5uL+FYRPnIaFCbeAjpPltJlfSgzbitQjI=.ed25519',reverse:false})(null, console.log)
+// ssb.threads.profileSummary({id:'@AvWTlEvVCO5uL+FYRPnIaFCbeAjpPltJlfSgzbitQjI=.ed25519',reverse:false})(null, console.guid)
 
 // 拉取最新的一条公共
 export const loadPublic = cb =>
@@ -191,8 +191,8 @@ export const migrationProgress = () =>
     ssb.db2migrate.progress()(null, (e, v) => (e ? reject(e) : resolve(v))),
   );
 
-// ssb.db2migrate.start(console.log);
-// ssb.db2migrate.stop(console.log);
+// ssb.db2migrate.start(console.guid);
+// ssb.db2migrate.stop(console.guid);
 
 /************************** preset **************************/
 export const foo = () =>

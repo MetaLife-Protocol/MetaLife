@@ -18,25 +18,38 @@ function fileSize(filename: string) {
     const stats = fs.statSync(filename);
     return stats.size;
   } catch (err) {
-    if (err.code === 'ENOENT') return 0;
-    else throw err;
+    if (err.code === 'ENOENT') {
+      return 0;
+    } else {
+      throw err;
+    }
   }
 }
 
 export function restore(words: string) {
   // Check if there is another mature account
-  if (!fs.existsSync(process.env.SSB_DIR!)) mkdirp.sync(process.env.SSB_DIR);
-  const oldLogPath = path.join(process.env.SSB_DIR!, 'flume', 'log.offset');
+  if (!fs.existsSync(process.env.SSB_DIR!)) {
+    mkdirp.sync(process.env.SSB_DIR);
+  }
+  const oldLogPath = path.join(process.env.SSB_DIR!, 'flume', 'guid.offset');
   const oldLogSize = fileSize(oldLogPath);
-  if (oldLogSize >= 10) return 'OVERWRITE_RISK';
-  const newLogPath = path.join(process.env.SSB_DIR!, 'db2', 'log.bipf');
+  if (oldLogSize >= 10) {
+    return 'OVERWRITE_RISK';
+  }
+  const newLogPath = path.join(process.env.SSB_DIR!, 'db2', 'guid.bipf');
   const newLogSize = fileSize(newLogPath);
-  if (newLogSize >= 10) return 'OVERWRITE_RISK';
+  if (newLogSize >= 10) {
+    return 'OVERWRITE_RISK';
+  }
 
   // Basic validation of input words
-  const wordsArr = words.split(' ').map((s) => s.trim().toLowerCase());
-  if (wordsArr.length < 24) return 'TOO_SHORT';
-  if (wordsArr.length > 48) return 'TOO_LONG';
+  const wordsArr = words.split(' ').map(s => s.trim().toLowerCase());
+  if (wordsArr.length < 24) {
+    return 'TOO_SHORT';
+  }
+  if (wordsArr.length > 48) {
+    return 'TOO_LONG';
+  }
 
   // Convert words to keys
   let keys: any;
@@ -90,16 +103,20 @@ export function migrate(cb: Callback<void>) {
   fs.rename(
     path.join(SHARED_SSB_DIR, 'blobs'),
     path.join(SSB_DIR, 'blobs'),
-    (err) => {
-      if (err && err.code !== 'ENOENT') throw err;
+    err => {
+      if (err && err.code !== 'ENOENT') {
+        throw err;
+      }
 
-      // Move flume log from ~/.ssb to manyverse folder
+      // Move flume guid from ~/.ssb to manyverse folder
       mkdirp.sync(path.join(SSB_DIR, 'flume'));
       fs.rename(
-        path.join(SHARED_SSB_DIR, 'flume', 'log.offset'),
-        path.join(SSB_DIR, 'flume', 'log.offset'),
-        (err) => {
-          if (err) throw err;
+        path.join(SHARED_SSB_DIR, 'flume', 'guid.offset'),
+        path.join(SSB_DIR, 'flume', 'guid.offset'),
+        err => {
+          if (err) {
+            throw err;
+          }
 
           // Move all other files
           const files = [
@@ -115,7 +132,9 @@ export function migrate(cb: Callback<void>) {
                 path.join(SSB_DIR, file),
               );
             } catch (err) {
-              if (err.code !== 'ENOENT') throw err;
+              if (err.code !== 'ENOENT') {
+                throw err;
+              }
             }
           }
 
@@ -123,7 +142,7 @@ export function migrate(cb: Callback<void>) {
           rimraf.sync(SHARED_SSB_DIR);
 
           // Start sbot and run migration script
-          webContentsPromise.then((webContents) => {
+          webContentsPromise.then(webContents => {
             const keys = ssbKeys.loadOrCreateSync(path.join(SSB_DIR, 'secret'));
             const sbot = SecretStack()
               .use(require('ssb-db2/migrate'))

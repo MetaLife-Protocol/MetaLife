@@ -3,38 +3,18 @@ import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ItemAgent from './home/post/ItemAgent';
-import {initializeHandlers} from '../../remote/ssb/SsbListeners';
-import {startSSB} from '../../remote/ssb/starter';
-import {useStore} from 'react-redux';
-import {checkAddon} from '../../remote/ssb/SsbHandlers';
 import SearchBar from '../../shared/comps/SearchBar';
 import {searchPublicMsgByPostId} from '../../store/filters/MsgFilters';
 import {useTimer} from '../../shared/Hooks';
 import {getConnectedPeers} from '../../remote/ssb/ssbOP';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
-const Home = ({cfg: {verbose}, publicMsg, setFeedId, setConnectedPeers}) => {
+const Home = ({cfg: {verbose}, publicMsg, setConnectedPeers}) => {
   const {flex1} = SchemaStyles(),
     {searchBar} = styles;
   const {setOptions, getState} = useNavigation();
-  const route = useRoute();
-  const store = useStore();
   const [result, setResult] = useState([]);
   const [KW, setKW] = useState('');
-  useEffect(() => {
-    window.ssb ||
-      startSSB().then(ssb => {
-        window.ssb = ssb;
-        setFeedId(ssb.id);
-        initializeHandlers(store);
-        checkAddon('launch');
-        getConnectedPeers(setConnectedPeers);
-      });
-  }, []);
 
   useFocusEffect(() => {
     setOptions({tabBarBadge: null});
@@ -83,8 +63,6 @@ const msp = s => {
 
 const mdp = d => {
   return {
-    setFeedId: id => d({type: 'setFeedId', payload: id}),
-    setStagedPeers: v => d({type: 'setStagedPeers', payload: v}),
     setConnectedPeers: v => d({type: 'setConnectedPeers', payload: v}),
   };
 };
