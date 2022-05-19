@@ -38,6 +38,7 @@ import NFTDetails from './screens/nft/nft_details';
 import WalletDetail from './screens/log/WalletDetail';
 import ManageAccounts from './screens/log/ManageAccounts';
 import NewAccount from './screens/log/NewAccount';
+import CreateNFTV2 from './screens/nft/create_nft/CreateNFTV2';
 
 const App = () => {
   const {theme, BG} = SchemaStyles();
@@ -191,7 +192,7 @@ const App = () => {
         <Stack.Screen
           name="CreateNFT"
           options={{headerTitle: 'Create NFT'}}
-          component={CreateNFT}
+          component={CreateNFTV2}
         />
         <Stack.Screen
           name="CreateNFTStep2"
