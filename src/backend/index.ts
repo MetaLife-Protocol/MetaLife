@@ -49,8 +49,10 @@ if (process.env.MANYVERSE_PLATFORM === 'mobile') {
 
 // Setup initial communication with the frontend, to create or restore identity
 let startedSSB = false;
-channel.addListener('identity', (request) => {
-  if (startedSSB) return;
+channel.addListener('identity', request => {
+  if (startedSSB) {
+    return;
+  }
   let response: string;
   if (request === 'CREATE') {
     startedSSB = true;
