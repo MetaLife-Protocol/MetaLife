@@ -55,15 +55,14 @@ const App = ({
         checkAddon('launch');
         getConnectedPeers(setConnectedPeers);
       });
-    // feedId && channel.post('identity', 'USE');
+    feedId && channel.post('identity', 'USE');
     // setInterval(() => getDBProgress().then(setProgress), 100);
   }, []);
 
   return (
     <NavigationContainer theme={theme}>
       <StatusBar barStyle={barStyle} />
-      <Navigator initialRouteName={feedId ? 'Guid' : 'Guid'}>
-        {/*<Navigator initialRouteName={feedId ? 'Tabs' : 'Guid'}>*/}
+      <Navigator initialRouteName={feedId ? 'Tabs' : 'Guid'}>
         <Screen name="Guid" component={Guid} options={{headerShown: false}} />
         <Screen name="Restore" component={Restore} />
         <Screen name="Tabs" options={{headerShown: false}} component={Tabs} />

@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, ImageBackground, StyleSheet, View} from 'react-native';
 import RoundBtn from '../shared/comps/RoundBtn';
 import SchemaStyles from '../shared/SchemaStyles';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 
 /**

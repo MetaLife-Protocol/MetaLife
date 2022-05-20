@@ -13,7 +13,11 @@ import I18n from '../i18n/I18n';
 import HeaderProfiles from './tabs/profiles/HeaderProfiles';
 import HeaderRightBtn from './tabs/HeaderRightBtn';
 import {connect} from 'react-redux';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {useCallback} from 'react';
 
 const iconDic = {
@@ -57,6 +61,7 @@ const Tabs = ({darkMode}) => {
       console.log('index:', index);
     }, []),
   );
+
   return (
     <Navigator
       initialRouteName={'Home'}
