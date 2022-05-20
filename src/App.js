@@ -29,6 +29,7 @@ import {initializeHandlers} from './remote/ssb/SsbListeners';
 import {checkAddon} from './remote/ssb/SsbHandlers';
 import {getConnectedPeers} from './remote/ssb/ssbOP';
 import {useStore} from 'react-redux';
+import nodejs from 'nodejs-mobile-react-native';
 
 const App = ({
   feedId,
@@ -41,6 +42,7 @@ const App = ({
   const store = useStore();
   const [progress, setProgress] = useState(0);
   const {Navigator, Screen, Group} = createNativeStackNavigator();
+  const {channel} = nodejs;
 
   // todo: loading bar test
   useEffect(() => {
@@ -53,6 +55,7 @@ const App = ({
         checkAddon('launch');
         getConnectedPeers(setConnectedPeers);
       });
+    // feedId && channel.post('identity', 'USE');
     // setInterval(() => getDBProgress().then(setProgress), 100);
   }, []);
 

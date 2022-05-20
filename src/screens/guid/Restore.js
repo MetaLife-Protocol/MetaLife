@@ -2,7 +2,7 @@
  * Created on 07 Mar 2022 by lonmee
  */
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -14,12 +14,32 @@ import SchemaStyles, {colorsBasics} from '../../shared/SchemaStyles';
 import RoundBtn from '../../shared/comps/RoundBtn';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 import nodejs from 'nodejs-mobile-react-native';
+import Toast from 'react-native-tiny-toast';
 
 const Restore = () => {
   const {FG, flex1, marginTop10, text, placeholderTextColor} = SchemaStyles();
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
-  const [mnemonic, setMnemonic] = useState();
+  const [mnemonic, setMnemonic] = useState('');
   const {channel} = nodejs;
+
+  useEffect(() => {
+    const listener = channel.addListener('identity', responseHandler);
+    return () => listener.remove();
+  }, []);
+
+  function responseHandler(res) {
+    console.log(res);
+    switch (res) {
+      case 'OVERWRITE_RISK':
+      case 'TOO_SHORT':
+      case 'TOO_LONG':
+      case 'WRONG_LENGTH':
+      case 'INCORRECT':
+        return Toast.show('Incorrect mnemonic', {position: 0});
+      case 'IDENTITY_READY':
+        return Toast.show('Restore succeed', {position: 0});
+    }
+  }
 
   return (
     <SafeAreaView style={[FG, flex1, marginTop10]}>
@@ -54,8 +74,16 @@ const Restore = () => {
         <RoundBtn
           style={[{marginBottom: 40}]}
           title={'Restore'}
+          disabled={!mnemonic}
           press={() => {
-            channel.post('identity', `RESTORE: ${mnemonic}`);
+            channel.post(
+              'identity',
+              `RESTORE: ${mnemonic
+                .split(' ')
+                .slice(0, 24)
+                .map(s => s.trim().toLowerCase())
+                .join(' ')}`,
+            );
           }}
         />
       </KeyboardAvoidingView>
