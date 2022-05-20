@@ -15,7 +15,8 @@ import RoundBtn from '../../shared/comps/RoundBtn';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 import nodejs from 'nodejs-mobile-react-native';
 import Toast from 'react-native-tiny-toast';
-import {StackActions, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {migrationProgress} from '../../remote/ssb/ssbOP';
 
 const Restore = () => {
   const {FG, flex1, marginTop10, text, placeholderTextColor} = SchemaStyles();
@@ -38,7 +39,10 @@ const Restore = () => {
         return Toast.show('Incorrect mnemonic', {position: 0});
       case 'IDENTITY_READY':
         listener.current.remove();
-        channel.post('identity', 'MIGRATE');
+        setInterval(
+          () => window.ssb && migrationProgress.then(console.log),
+          500,
+        );
       // dispatch({
       //   ...StackActions.replace('Tabs'),
       //   source: getState().routes[0].key,
