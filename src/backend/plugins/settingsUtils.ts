@@ -21,9 +21,7 @@ function writeSync(data: SettingsFile): void {
   if (!process.env.SSB_DIR) {
     throw new Error('writeSync needs the SSB_DIR env var');
   }
-  if (!fs.existsSync(process.env.SSB_DIR)) {
-    mkdirp.sync(process.env.SSB_DIR);
-  }
+  if (!fs.existsSync(process.env.SSB_DIR)) mkdirp.sync(process.env.SSB_DIR);
 
   const filePath = path.join(process.env.SSB_DIR, FILENAME);
   try {
@@ -38,9 +36,7 @@ function readSync(): SettingsFile & {detailedLogs?: boolean} {
   if (!process.env.SSB_DIR) {
     throw new Error('readSync needs the SSB_DIR env var');
   }
-  if (!fs.existsSync(process.env.SSB_DIR)) {
-    mkdirp.sync(process.env.SSB_DIR);
-  }
+  if (!fs.existsSync(process.env.SSB_DIR)) mkdirp.sync(process.env.SSB_DIR);
 
   const filePath = path.join(process.env.SSB_DIR, FILENAME);
   let settings: ReturnType<typeof readSync>;
@@ -49,9 +45,7 @@ function readSync(): SettingsFile & {detailedLogs?: boolean} {
     const content = fs.readFileSync(filePath, {encoding: 'ascii'});
     settings = JSON.parse(content);
   } catch (err) {
-    if (err.code !== 'ENOENT') {
-      console.error(err);
-    }
+    if (err.code !== 'ENOENT') console.error(err);
     settings = {};
   }
 
@@ -67,9 +61,7 @@ function writeDetailedLogs(detailedLogs: boolean) {
   if (!process.env.SSB_DIR) {
     throw new Error('writeSync needs the SSB_DIR env var');
   }
-  if (!fs.existsSync(process.env.SSB_DIR)) {
-    mkdirp.sync(process.env.SSB_DIR);
-  }
+  if (!fs.existsSync(process.env.SSB_DIR)) mkdirp.sync(process.env.SSB_DIR);
   const filePath = path.join(process.env.SSB_DIR, DETAILED_LOGS);
   try {
     if (detailedLogs) {
@@ -78,9 +70,7 @@ function writeDetailedLogs(detailedLogs: boolean) {
       fs.unlinkSync(filePath);
     }
   } catch (err) {
-    if (err.code !== 'ENOENT') {
-      console.error(err);
-    }
+    if (err.code !== 'ENOENT') console.error(err);
   }
 }
 

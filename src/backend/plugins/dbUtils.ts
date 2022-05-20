@@ -14,55 +14,26 @@ const HEART_UNICODE = '\u2764\ufe0f';
 
 function voteExpressionToReaction(expression: string) {
   const lowCase = expression.toLowerCase();
-  if (lowCase === 'like') {
-    return THUMBS_UP_UNICODE;
-  }
-  if (lowCase === 'yup') {
-    return THUMBS_UP_UNICODE;
-  }
-  if (lowCase === 'heart') {
-    return HEART_UNICODE;
-  }
-  if (lowCase === 'dig') {
-    return DIG_UNICODE;
-  }
-  if (expression.codePointAt(0) === 0x270c) {
-    return DIG_UNICODE;
-  }
-  if (expression) {
-    return expression;
-  }
+  if (lowCase === 'like') return THUMBS_UP_UNICODE;
+  if (lowCase === 'yup') return THUMBS_UP_UNICODE;
+  if (lowCase === 'heart') return HEART_UNICODE;
+  if (lowCase === 'dig') return DIG_UNICODE;
+  if (expression.codePointAt(0) === 0x270c) return DIG_UNICODE;
+  if (expression) return expression;
   return THUMBS_UP_UNICODE;
 }
 
 function isValidVoteMsg(msg: Msg<VoteContent>) {
-  if (!msg) {
-    return false;
-  }
-  if (!msg.value) {
-    return false;
-  }
-  if (!msg.value.content) {
-    return false;
-  }
-  if (!msg.value.content.vote) {
-    return false;
-  }
-  if (!msg.value.content.vote.expression) {
-    return false;
-  }
-  if (!msg.value.content.vote.value) {
-    return false;
-  }
-  if (typeof msg.value.content.vote.value !== 'number') {
-    return false;
-  }
-  if (isNaN(msg.value.content.vote.value)) {
-    return false;
-  }
-  if (msg.value.content.vote.value < 0) {
-    return false;
-  }
+  if (!msg) return false;
+  if (!msg.value) return false;
+  if (!msg.value.content) return false;
+  if (!msg.value.content.vote) return false;
+  if (!msg.value.content.vote.expression) return false;
+  if (!msg.value.content.vote.value) return false;
+  if (typeof msg.value.content.vote.value !== 'number') return false;
+  if (isNaN(msg.value.content.vote.value)) return false;
+  if (msg.value.content.vote.value < 0) return false;
+  return true;
 }
 
 export = {
@@ -122,9 +93,7 @@ export = {
         return this._map.size === 0;
       },
       update(msg: Msg<VoteContent>) {
-        if (!isValidVoteMsg(msg)) {
-          return;
-        }
+        if (!isValidVoteMsg(msg)) return;
         const {expression} = msg.value.content.vote;
         const reaction = voteExpressionToReaction(expression);
         const previous = this._map.get(reaction) ?? 0;
@@ -133,7 +102,7 @@ export = {
       toArray() {
         return [...this._map.entries()]
           .sort((a, b) => b[1] - a[1]) // sort by descending count
-          .map(x => x[0]); // pick the emoji string
+          .map((x) => x[0]); // pick the emoji string
       },
     };
 
@@ -226,12 +195,8 @@ export = {
                 ssb.db.query(
                   where(and(type('vote'), author(ssb.id, {dedicated: true}))),
                   toCallback((err: any, msgs: Array<Msg<VoteContent>>) => {
-                    if (err) {
-                      return cb(err);
-                    }
-                    for (const msg of msgs) {
-                      reactionsCount.update(msg);
-                    }
+                    if (err) return cb(err);
+                    for (const msg of msgs) reactionsCount.update(msg);
                     cb(null, reactionsCount.toArray());
                   }),
                 );

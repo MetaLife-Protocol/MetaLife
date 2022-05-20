@@ -18,9 +18,7 @@ export = async function startSSB(isNewIdentity: boolean) {
   if (!process.env.APP_DATA_DIR || !process.env.SSB_DIR) {
     throw new Error('misconfigured default paths for the backend');
   }
-  if (!fs.existsSync(process.env.SSB_DIR)) {
-    mkdirp.sync(process.env.SSB_DIR);
-  }
+  if (!fs.existsSync(process.env.SSB_DIR)) mkdirp.sync(process.env.SSB_DIR);
 
   await oneTimeFixes();
   const KEYS_PATH = path.join(process.env.SSB_DIR!, 'secret');
