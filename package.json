@@ -62,7 +62,7 @@
     "react-native-local-barcode-recognizer": "^0.0.2",
     "react-native-pager-view": "^5.4.15",
     "react-native-permissions": "^3.3.1",
-    "react-native-photon": "file:/Users/qiangliu/project/lingtuan/react-native-photon",
+    "react-native-photon": "git+ssh://git@github.com:MetaLife-Protocol/react-native-photon.git#master",
     "react-native-qrcode-scanner": "^1.5.5",
     "react-native-qrcode-svg": "^6.1.2",
     "react-native-randombytes": "^3.6.1",
