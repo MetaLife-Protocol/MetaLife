@@ -10,6 +10,8 @@ import {
   suggestStart,
 } from './ssbOP';
 
+import {bluetoothBridge} from './bluetoothBridge';
+
 export const startSSB = () =>
   new Promise(resolve => {
     reqStartSSB(ssb => {
@@ -24,6 +26,13 @@ export const startSSB = () =>
           console.log('replicationSchedulerStart: ', v),
         );
         suggestStart(v => console.log('suggestStart: ', v));
+
+        bluetoothBridge({
+          controlPort: 20310,
+          incomingPort: 20311,
+          outgoingPort: 20312,
+        });
+
         resolve(ssb);
       });
     });
