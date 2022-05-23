@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Tabs from './screens/Tabs';
@@ -30,17 +30,19 @@ import {checkAddon} from './remote/ssb/SsbHandlers';
 import {getConnectedPeers} from './remote/ssb/ssbOP';
 import {useStore} from 'react-redux';
 import nodejs from 'nodejs-mobile-react-native';
+import Resync from './screens/guid/Resync';
 
 const App = ({
   feedId,
+  resync,
   setFeedId,
+  setResync,
   setConnectedPeers,
   viewImages,
   setViewImages,
 }) => {
   const {barStyle, theme} = SchemaStyles();
   const store = useStore();
-  const [progress, setProgress] = useState(0);
   const {Navigator, Screen, Group} = createNativeStackNavigator();
   const {channel} = nodejs;
 
@@ -51,20 +53,22 @@ const App = ({
       startSSB().then(ssb => {
         window.ssb = ssb;
         setFeedId(ssb.id);
-        initializeHandlers(store);
-        checkAddon('launch');
-        getConnectedPeers(setConnectedPeers);
+        resync ||
+          (initializeHandlers(store),
+          checkAddon('launch'),
+          getConnectedPeers(setConnectedPeers));
       });
     feedId && channel.post('identity', 'USE');
-    // setInterval(() => getDBProgress().then(setProgress), 100);
   }, []);
 
   return (
     <NavigationContainer theme={theme}>
       <StatusBar barStyle={barStyle} />
-      <Navigator initialRouteName={feedId ? 'Tabs' : 'Guid'}>
+      <Navigator
+        initialRouteName={feedId ? (resync ? 'Resync' : 'Tabs') : 'Guid'}>
         <Screen name="Guid" component={Guid} options={{headerShown: false}} />
         <Screen name="Restore" component={Restore} />
+        <Screen name="Resync" component={Resync} />
         <Screen name="Tabs" options={{headerShown: false}} component={Tabs} />
         {/* Contacts */}
         <Screen name="FriendList" component={FriendList} />
@@ -128,7 +132,6 @@ const App = ({
           imageUrls={viewImages.imgs}
         />
       </Modal>
-      {/*<LoadingBar style={[{position: 'absolute'}]} loaded={progress} />*/}
     </NavigationContainer>
   );
 };
@@ -138,6 +141,7 @@ const msp = s => {
     cfg: s.cfg,
     viewImages: s.runtime.images,
     feedId: s.user.feedId,
+    resync: s.user.resync,
   };
 };
 

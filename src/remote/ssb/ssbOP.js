@@ -111,9 +111,6 @@ export const reqStartSSB = setInstance => {
         .then(value => setInstance((ssb = value)))
         .catch(error => console.error('ssb start error: ' + error)),
   );
-  // channel.post('identity', 'CREATE');
-  // rn.send('RESTORE: word0 word1...');
-  // channel.post('identity', 'RESTORE: word0 word1...');
 };
 
 /************************** listeners **************************/
@@ -189,6 +186,13 @@ export const indexingProgress = () =>
 export const migrationProgress = () =>
   new Promise((resolve, reject) =>
     ssb.db2migrate.progress()(null, (e, v) => (e ? reject(e) : resolve(v))),
+  );
+
+export const ebtRequest = id => ssb.ebt.request({id, requesting: true});
+
+export const resyncProgress = () =>
+  new Promise((resolve, reject) =>
+    ssb.resyncUtils.progress()(null, (e, v) => (e ? reject(e) : resolve(v))),
   );
 
 // ssb.db2migrate.start(console.guid);

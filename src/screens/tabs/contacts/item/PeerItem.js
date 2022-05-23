@@ -7,7 +7,6 @@ import {
   connectPeer,
   disconnectPeer,
   follow,
-  getProfile,
   persistentConnectPeer,
 } from '../../../../remote/ssb/ssbOP';
 import {PeerIcons} from '../../../../shared/Icons';

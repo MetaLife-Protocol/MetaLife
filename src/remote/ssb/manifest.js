@@ -72,6 +72,7 @@ export default {
     graph: 'async',
     graphStream: 'source',
   },
+  // read: https://github.com/ssbc/ssb-ebt
   ebt: {
     replicate: 'duplex',
     replicateFormat: 'duplex',

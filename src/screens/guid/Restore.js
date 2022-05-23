@@ -16,14 +16,14 @@ import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo'
 import nodejs from 'nodejs-mobile-react-native';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation} from '@react-navigation/native';
-import {migrationProgress} from '../../remote/ssb/ssbOP';
+import {connect} from 'react-redux/lib/exports';
 
-const Restore = () => {
+const Restore = ({setResync}) => {
   const {FG, flex1, marginTop10, text, placeholderTextColor} = SchemaStyles();
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
   const [mnemonic, setMnemonic] = useState('');
   const {channel} = nodejs;
-  const {dispatch, popToTop, getState} = useNavigation();
+  const {navigate} = useNavigation();
   const listener = useRef();
   useEffect(() => {
     listener.current = channel.addListener('identity', responseHandler);
@@ -31,26 +31,12 @@ const Restore = () => {
 
   function responseHandler(res) {
     switch (res) {
-      case 'OVERWRITE_RISK':
-      case 'TOO_SHORT':
-      case 'TOO_LONG':
-      case 'WRONG_LENGTH':
-      case 'INCORRECT':
-        return Toast.show('Incorrect mnemonic', {position: 0});
       case 'IDENTITY_READY':
         listener.current.remove();
-        setInterval(
-          () => window.ssb && migrationProgress.then(console.log),
-          500,
-        );
-      // dispatch({
-      //   ...StackActions.replace('Tabs'),
-      //   source: getState().routes[0].key,
-      //   target: getState().key,
-      // });
-      // return popToTop();
+        setResync(true);
+        return navigate('Resync');
       default:
-        return Toast.show('Unknown reason', {position: 0});
+        return Toast.show(res, {position: 0});
     }
   }
 
@@ -104,4 +90,16 @@ const Restore = () => {
   );
 };
 
-export default Restore;
+const msp = s => {
+  return {
+    resync: s.user.resync,
+  };
+};
+
+const mdp = d => {
+  return {
+    setResync: resync => d({type: 'setResync', payload: resync}),
+  };
+};
+
+export default connect(msp, mdp)(Restore);
