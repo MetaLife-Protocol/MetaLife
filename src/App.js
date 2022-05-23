@@ -36,6 +36,8 @@ import CreateNFT from './screens/nft/create_nft';
 import CreateNFTStep2 from './screens/nft/create_nft/CreateNFTStep2';
 import NFTDetails from './screens/nft/nft_details';
 import WalletDetail from './screens/log/WalletDetail';
+import TokenDetails from './screens/log/TokenDetails';
+import TokenTransfer from './screens/log/TokenTransfer';
 import ManageAccounts from './screens/log/ManageAccounts';
 import NewAccount from './screens/log/NewAccount';
 
@@ -46,7 +48,7 @@ const App = () => {
     <NavigationContainer theme={theme}>
       {/*<Stack.Navigator initialRouteName="Guid">*/}
       <Stack.Navigator
-        initialRouteName="Tabs"
+        initialRouteName="Guid"
         screenOptions={{
           headerLeft: props => <NavigationBackView {...props} />,
         }}>
@@ -83,6 +85,16 @@ const App = () => {
         <Stack.Screen
           name="WalletDetails"
           component={WalletDetail}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="TokenDetails"
+          component={TokenDetails}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="TokenTransfer"
+          component={TokenTransfer}
           options={{headerShown: false}}
         />
         <Stack.Screen
