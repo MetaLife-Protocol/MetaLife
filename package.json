@@ -45,6 +45,8 @@
     "react": "17.0.2",
     "react-native": "0.68.2",
     "react-native-fast-image": "^8.5.11",
+    "react-native-ble-manager": "^8.0.2",
+    "react-native-ble-peripheral": "github:heroims/react-native-ble-peripheral",
     "react-native-i18n": "^2.0.15",
     "react-native-image-crop-picker": "^0.37.3",
     "react-native-image-zoom-viewer": "^3.0.1",
