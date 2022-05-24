@@ -43,3 +43,6 @@
      `26835 to 26834` at [`port.js:1`](node_modules/ssb-serve-blobs/port.js)
 > ### keep 8081 debug port on android
 > `adb reverse tcp:8081 tcp:8081`
+ 
+> ### pod spec https://github.com/CocoaPods/Specs.git/
+>> git clone https://github.com/CocoaPods/Specs.git ~/.cocoapods/repos/master
