@@ -34,10 +34,10 @@ const Resync = ({
   }
 
   useEffect(() => {
-    // window.ssb &&
-    //   stagedPeers.map(([addr, data]) =>
-    //     connectPeer(addr, data, (e, v) => console.log(e, v)),
-    //   );
+    window.ssb &&
+      stagedPeers.map(([addr, data]) =>
+        connectPeer(addr, data, (e, v) => console.log(e, v)),
+      );
   }, [stagedPeers]);
 
   //   return channel.post('identity', 'MIGRATE');
