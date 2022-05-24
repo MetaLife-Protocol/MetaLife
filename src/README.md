@@ -44,5 +44,6 @@
 > ### keep 8081 debug port on android
 > `adb reverse tcp:8081 tcp:8081`
  
-> ### pod spec https://github.com/CocoaPods/Specs.git/
->> git clone https://github.com/CocoaPods/Specs.git ~/.cocoapods/repos/master
+> ### pod repos 
+>> pod repo remove trunk  
+>> pod repo update
