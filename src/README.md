@@ -45,5 +45,4 @@
 > `adb reverse tcp:8081 tcp:8081`
  
 > ### pod repos 
->> pod repo remove trunk  
->> pod repo update
+> https://mirrors.tuna.tsinghua.edu.cn/help/CocoaPods/
