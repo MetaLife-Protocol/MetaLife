@@ -5,7 +5,7 @@
   "scripts": {
     "webpack script": "~~~~~~~~~~~~~~ webpack ~~~~~~~~~~~~~~~~~",
     "npm&pod": "npm install && npx pod-install",
-    "pod": "npx pod-install",
+    "pod": "npx pod-install --verbose",
     "postinstall": "patch-package",
     "lib": "tsc",
     "clean script": "~~~~~~~~~~~~~~ cleaners ~~~~~~~~~~~~~~~~~",
