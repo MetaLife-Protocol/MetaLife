@@ -45,4 +45,4 @@
 > `adb reverse tcp:8081 tcp:8081`
  
 > ### pod repos 
-> https://mirrors.tuna.tsinghua.edu.cn/help/CocoaPods/
+>> https://mirrors.tuna.tsinghua.edu.cn/help/CocoaPods/
