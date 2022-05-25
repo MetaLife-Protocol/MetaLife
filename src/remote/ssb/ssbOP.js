@@ -190,12 +190,16 @@ export const migrationProgress = () =>
     ssb.db2migrate.progress()(null, (e, v) => (e ? reject(e) : resolve(v))),
   );
 
-export const ebtRequest = id => ssb.ebt.request({id, requesting: true});
+export const ebtRequest = id =>
+  ssb.ebt.request(id, true, null, e => e && console.error(e.message || e));
 
 export const resyncProgress = () =>
   new Promise((resolve, reject) =>
     ssb.resyncUtils.progress()(null, (e, v) => (e ? reject(e) : resolve(v))),
   );
+
+export const enableFirewall = () =>
+  ssb.resyncUtils.enableFirewall(e => e && console.error(e.message || e));
 
 // ssb.db2migrate.start(console.guid);
 // ssb.db2migrate.stop(console.guid);

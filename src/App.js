@@ -36,7 +36,6 @@ const App = ({
   feedId,
   resync,
   setFeedId,
-  setResync,
   setConnectedPeers,
   viewImages,
   setViewImages,
