@@ -33,7 +33,6 @@ const Resync = ({
 }) => {
   const {FG, flex1, marginTop10, btnInactiveFG, btnInactiveBG} = SchemaStyles(),
     {border, title} = styles;
-  const {channel} = nodejs;
   const {navigate, dispatch, popToTop, getState} = useNavigation();
   const store = useStore();
   const [progress, setProgress] = useState(0);
@@ -51,14 +50,7 @@ const Resync = ({
   }, [stagedPeers]);
 
   function checkProgress() {
-    interval = setInterval(
-      () =>
-        resyncProgress().then(r => {
-          console.log(r);
-          setProgress(r);
-        }),
-      100,
-    );
+    interval = setInterval(() => resyncProgress().then(setProgress), 200);
   }
 
   return (
@@ -76,7 +68,7 @@ const Resync = ({
       <RoundBtn
         style={[marginTop10]}
         title={'Add pub with invite code'}
-        press={null}
+        press={() => navigate('Pubs')}
       />
       <RoundBtn
         style={[marginTop10]}
@@ -87,9 +79,10 @@ const Resync = ({
           ebtRequest(feedId);
         }}
       />
-      {progress > 0 && (
-        <LoadingBar style={[{position: 'absolute'}]} loaded={progress} />
-      )}
+      <LoadingBar
+        style={[marginTop10, {alignSelf: 'center'}]}
+        loaded={progress + '/49888'}
+      />
       <RoundBtn
         style={[marginTop10]}
         title={'Complete'}
