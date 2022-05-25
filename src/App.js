@@ -39,6 +39,7 @@ import WalletDetail from './screens/log/WalletDetail';
 import ManageAccounts from './screens/log/ManageAccounts';
 import NewAccount from './screens/log/NewAccount';
 import CreateNFTV2 from './screens/nft/create_nft/CreateNFTV2';
+import NFTList from './screens/nft/nft_list';
 
 const App = () => {
   const {theme, BG} = SchemaStyles();
@@ -203,6 +204,11 @@ const App = () => {
           name="NFTDetails"
           options={{headerTitle: 'NFT Details'}}
           component={NFTDetails}
+        />
+        <Stack.Screen
+          name="NFTList"
+          options={{headerTitle: 'Open Galaxy'}}
+          component={NFTList}
         />
       </Stack.Navigator>
     </NavigationContainer>
