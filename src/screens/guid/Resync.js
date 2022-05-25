@@ -3,7 +3,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {SafeAreaView} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import RoundBtn from '../../shared/comps/RoundBtn';
 import nodejs from 'nodejs-mobile-react-native';
@@ -22,11 +22,12 @@ const Resync = ({
   setStagedPeers,
   setConnectedPeers,
 }) => {
-  const {FG, flex1, marginTop10} = SchemaStyles();
+  const {FG, flex1, marginTop10, btnInactiveFG, btnInactiveBG} = SchemaStyles(),
+    {border, title} = styles;
   const {channel} = nodejs;
   const {navigate, dispatch, popToTop, getState} = useNavigation();
 
-  useTimer(refreshStagedAndConnected, 10000);
+  useTimer(refreshStagedAndConnected, 2000);
 
   function refreshStagedAndConnected() {
     window.ssb &&
@@ -34,10 +35,7 @@ const Resync = ({
   }
 
   useEffect(() => {
-    window.ssb &&
-      stagedPeers.map(([addr, data]) =>
-        connectPeer(addr, data, (e, v) => console.log(e, v)),
-      );
+    window.ssb && stagedPeers.map(([addr, data]) => connectPeer(addr, data));
   }, [stagedPeers]);
 
   //   return channel.post('identity', 'MIGRATE');
@@ -52,12 +50,42 @@ const Resync = ({
   // setInterval(() => getDBProgress().then(setProgress), 100);
   // <LoadingBar style={[{position: 'absolute'}]} loaded={progress} />
   return (
-    <SafeAreaView style={[FG, flex1, marginTop10]}>
-      <RoundBtn title={'Connect via Wi-Fi'} press={null} />
-      <RoundBtn title={'Past invite code'} press={null} />
-    </SafeAreaView>
+    <View style={[FG, flex1, marginTop10]}>
+      <Text style={[marginTop10, border, title, btnInactiveFG, btnInactiveBG]}>
+        {connectedPeers.length === 0 ? 'Searching' : 'Connected'}
+      </Text>
+      {connectedPeers.map((pObj, i) => (
+        <RoundBtn
+          style={[marginTop10]}
+          key={i}
+          title={`Trans with ${pObj[1].key.substring(0, 10)}`}
+          press={null}
+        />
+      ))}
+      <RoundBtn
+        style={[marginTop10]}
+        title={'Add pub with invite code'}
+        press={null}
+      />
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  border: {
+    borderWidth: 1,
+    borderRadius: 11,
+    height: 44,
+    marginHorizontal: 30,
+    textAlign: 'center',
+    lineHeight: 44,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+});
 
 const msp = s => {
   return {
