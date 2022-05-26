@@ -27,6 +27,7 @@ const Profiles = ({avatar}) => {
     const avatarMesh = useRef(null);
     const [hovered, setHover] = useState(false);
     const [active, setActive] = useState(false);
+    //https://d1a370nemizbjq.cloudfront.net/e72d0bd0-de91-4d38-a7d2-0378823ccfd7.glb
     const gltf = useLoader(GLTFLoader, require('../../assets/glb/avatar.glb'));
     useFrame((state, delta) => (avatarMesh.current.rotation.y += 0.01));
     return (
