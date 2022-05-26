@@ -81,8 +81,7 @@ const Resync = ({
         title={`Transition  (${progress})`}
         disabled={!connectedPeers.length}
         press={() => {
-          checkProgress();
-          ebtRequest(feedId);
+          progress === 0 && (checkProgress(), ebtRequest(feedId));
         }}
       />
       <RoundBtn
