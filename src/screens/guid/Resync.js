@@ -6,7 +6,6 @@ import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, Text} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 import RoundBtn from '../../shared/comps/RoundBtn';
-import nodejs from 'nodejs-mobile-react-native';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {useTimer} from '../../shared/Hooks';
 import {
@@ -21,7 +20,6 @@ import {connect} from 'react-redux/lib/exports';
 import {initializeHandlers} from '../../remote/ssb/SsbListeners';
 import {checkAddon} from '../../remote/ssb/SsbHandlers';
 import {useStore} from 'react-redux';
-import LoadingBar from '../../shared/comps/LoadingBar';
 
 const Resync = ({
   feedId,
@@ -36,6 +34,7 @@ const Resync = ({
   const {navigate, dispatch, popToTop, getState} = useNavigation();
   const store = useStore();
   const [progress, setProgress] = useState(0);
+  const [complete, setComplete] = useState(false);
   let interval;
 
   useTimer(refreshStagedAndConnected, 2000);
@@ -50,7 +49,14 @@ const Resync = ({
   }, [stagedPeers]);
 
   function checkProgress() {
-    interval = setInterval(() => resyncProgress().then(setProgress), 200);
+    let localP = 0;
+    interval = setInterval(
+      () =>
+        resyncProgress().then(p => {
+          p > localP ? setProgress((localP = p)) : setComplete(true);
+        }),
+      200,
+    );
   }
 
   return (
@@ -72,23 +78,18 @@ const Resync = ({
       />
       <RoundBtn
         style={[marginTop10]}
-        title={'Start transition'}
+        title={`Transition  (${progress})`}
         disabled={!connectedPeers.length}
         press={() => {
           checkProgress();
           ebtRequest(feedId);
         }}
       />
-      <LoadingBar
-        style={[marginTop10, {alignSelf: 'center'}]}
-        loaded={progress + '/49888'}
-      />
       <RoundBtn
         style={[marginTop10]}
         title={'Complete'}
-        disabled={progress === 0}
+        disabled={!complete}
         press={() => {
-          clearInterval(interval);
           setResync(false);
           enableFirewall();
           initializeHandlers(store),
