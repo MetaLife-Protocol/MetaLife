@@ -27,7 +27,7 @@ const Profiles = ({avatar}) => {
     const avatarMesh = useRef(null);
     const [hovered, setHover] = useState(false);
     const [active, setActive] = useState(false);
-    const gltf = useLoader(GLTFLoader, avatar);
+    const gltf = useLoader(GLTFLoader, require('../../assets/glb/avatar.glb'));
     useFrame((state, delta) => (avatarMesh.current.rotation.y += 0.01));
     return (
       <mesh
@@ -46,6 +46,8 @@ const Profiles = ({avatar}) => {
   return (
     <Canvas>
       <Suspense fallback={null}>
+        <ambientLight />
+        <pointLight position={[10, 10, 10]} />
         <Avatar />
       </Suspense>
     </Canvas>
