@@ -327,11 +327,14 @@ export const bluetoothBridge = function (options) {
     } else if (command === 'getMetadata') {
       //ssb-mobile-bluetooth-manager need change
       var remoteAddress = cmd_arguments.remoteAddress;
-      var displayName = cmd_arguments.displayName;
+      var displayName = deviceID_Name[remoteAddress];
 
       var jsonData = {
-        error: true,
-        metaData: payloadData,
+        command: 'getMetadata',
+        arguments: {
+          error: true,
+          metaData: payloadData,
+        },
       };
       var jsonString = JSON.stringify(jsonData);
       var sendBuffer = Buffer.from(jsonString);
