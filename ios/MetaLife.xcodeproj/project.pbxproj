@@ -15,6 +15,8 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B045A7A728335D9000193B74 /* launch.png in Resources */ = {isa = PBXBuildFile; fileRef = B045A7A628335D9000193B74 /* launch.png */; };
+		B4ABFC0A64F9F64A9EDB05D6 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 903EF6F2109E40A467F9303A /* ExpoModulesProvider.swift */; };
+		C3C5C0D9033DD1BC0EEF0977 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA94F57321DB518CB354F0E /* ExpoModulesProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,7 +44,9 @@
 		318104D68A70FF6E510F29E0 /* Pods-MetaLife.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLife.release.xcconfig"; path = "Target Support Files/Pods-MetaLife/Pods-MetaLife.release.xcconfig"; sourceTree = "<group>"; };
 		5305DE93A00826DD9B9DAB6C /* Pods-MetaLife.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLife.debug.xcconfig"; path = "Target Support Files/Pods-MetaLife/Pods-MetaLife.debug.xcconfig"; sourceTree = "<group>"; };
 		5BAD4BDBBD97D88C5CD06EB2 /* Pods-MetaLifeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLifeTests.release.xcconfig"; path = "Target Support Files/Pods-MetaLifeTests/Pods-MetaLifeTests.release.xcconfig"; sourceTree = "<group>"; };
+		5DA94F57321DB518CB354F0E /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-MetaLife/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MetaLife/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		903EF6F2109E40A467F9303A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-MetaLifeTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		A1AFA42E43CBEEA5F226191A /* Pods-MetaLife-MetaLifeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLife-MetaLifeTests.debug.xcconfig"; path = "Target Support Files/Pods-MetaLife-MetaLifeTests/Pods-MetaLife-MetaLifeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B045A7A628335D9000193B74 /* launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launch.png; sourceTree = "<group>"; };
 		DCA7A49B98DD35585F9AC84A /* Pods-MetaLifeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLifeTests.debug.xcconfig"; path = "Target Support Files/Pods-MetaLifeTests/Pods-MetaLifeTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -101,6 +105,14 @@
 			name = MetaLife;
 			sourceTree = "<group>";
 		};
+		1CE90391DD799C9C6710D35D /* MetaLifeTests */ = {
+			isa = PBXGroup;
+			children = (
+				903EF6F2109E40A467F9303A /* ExpoModulesProvider.swift */,
+			);
+			name = MetaLifeTests;
+			sourceTree = "<group>";
+		};
 		26D1B59676674A7600A95235 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -124,6 +136,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		648D7E8CEB85310C000DDC45 /* MetaLife */ = {
+			isa = PBXGroup;
+			children = (
+				5DA94F57321DB518CB354F0E /* ExpoModulesProvider.swift */,
+			);
+			name = MetaLife;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,6 +160,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				26D1B59676674A7600A95235 /* Pods */,
+				B6F3FD378BE982C289AD2128 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -153,6 +174,15 @@
 				00E356EE1AD99517003FC87E /* MetaLifeTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B6F3FD378BE982C289AD2128 /* ExpoModulesProviders */ = {
+			isa = PBXGroup;
+			children = (
+				648D7E8CEB85310C000DDC45 /* MetaLife */,
+				1CE90391DD799C9C6710D35D /* MetaLifeTests */,
+			);
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -457,6 +487,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* MetaLifeTests.m in Sources */,
+				B4ABFC0A64F9F64A9EDB05D6 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,6 +497,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				C3C5C0D9033DD1BC0EEF0977 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,7 +524,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = MetaLifeTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -503,6 +535,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MetaLife.app/MetaLife";
@@ -518,7 +551,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 23JJ7VRKJT;
 				INFOPLIST_FILE = MetaLifeTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -529,6 +562,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MetaLife.app/MetaLife";
@@ -558,6 +592,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
 				PRODUCT_BUNDLE_IDENTIFIER = social.metalife.iOS;
 				PRODUCT_NAME = MetaLife;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -589,6 +624,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = social.metalife.iOS;
 				PRODUCT_NAME = MetaLife;
 				SWIFT_VERSION = 5.0;
@@ -646,7 +682,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",
@@ -705,7 +741,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
 					"$(inherited)",

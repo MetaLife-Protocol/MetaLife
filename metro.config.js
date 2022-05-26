@@ -7,7 +7,11 @@
 
 module.exports = {
   resolver: {
+    // for nodejs-mobile
     blockList: [/\/nodejs-assets\/.*/, /\/android\/.*/, /\/ios\/.*/],
+    // for avatar
+    sourceExts: ['js', 'jsx', 'json', 'ts', 'tsx', 'cjs'],
+    assetExts: ['glb', 'png', 'jpg'],
   },
   transformer: {
     getTransformOptions: async () => ({

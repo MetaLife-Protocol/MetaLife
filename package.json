@@ -62,7 +62,9 @@
     "redux": "^4.1.2",
     "redux-persist": "^6.0.0",
     "ssb-serve-blobs": "^3.1.1",
-    "three": "^0.140.2"
+    "three": "^0.140.2",
+    "expo": "^45.0.4",
+    "expo-gl": "^11.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

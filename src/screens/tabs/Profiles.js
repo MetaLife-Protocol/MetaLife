@@ -1,63 +1,54 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useRef, useState, Suspense} from 'react';
 import {connect} from 'react-redux/lib/exports';
-import {XHRImg} from '../../remote/rpm';
-import {Image, Pressable, Text, View} from 'react-native';
-import LoadingBar from '../../shared/comps/LoadingBar';
-import schemaStyles from '../../shared/SchemaStyles';
+import {Canvas, useFrame, useLoader} from '@react-three/fiber/native';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
 
-// (Platform.OS === 'ios') ? {uri: './FMDemoBaseMap/FMMapBasic.html'} : {uri: 'file:///android_asset/FMDemoBaseMap/FMMapBasic.html'}
+function Box(props) {
+  const mesh = useRef(null);
+  const [hovered, setHover] = useState(false);
+  const [active, setActive] = useState(false);
+  useFrame((state, delta) => (mesh.current.rotation.x += 0.01));
+  return (
+    <mesh
+      {...props}
+      ref={mesh}
+      scale={active ? 1.5 : 1}
+      onClick={event => setActive(!active)}
+      onPointerOver={event => setHover(true)}
+      onPointerOut={event => setHover(false)}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+    </mesh>
+  );
+}
+
 const Profiles = ({avatar}) => {
-  const {text, row} = schemaStyles();
-  const [uri, setUri] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [progress, setProgress] = useState({total: 0, loaded: 0});
-  const img = useRef();
-  useEffect(() => {
-    avatar && loadPNG();
-  }, [avatar]);
-
-  function loadPNG() {
-    if (avatar) {
-      console.log('loading avatar');
-      setLoading(false);
-      XHRImg(
-        {
-          model: avatar,
-          scene: 'halfbody-portrait-v1',
-          armature: 'ArmatureTargetFemale',
-          blendShapes: {
-            Wolf3D_Head: {
-              mouthSmile: 0.2,
-            },
-          },
-        },
-        res => {
-          if (res) {
-            console.log('refresh with: ', JSON.parse(res).renders);
-            setLoading(true);
-            setUri({uri: JSON.parse(res).renders[0]});
-          }
-        },
-      );
-    }
+  function Avatar(props) {
+    const avatarMesh = useRef(null);
+    const [hovered, setHover] = useState(false);
+    const [active, setActive] = useState(false);
+    const gltf = useLoader(GLTFLoader, avatar);
+    useFrame((state, delta) => (avatarMesh.current.rotation.y += 0.01));
+    return (
+      <mesh
+        {...props}
+        ref={avatarMesh}
+        scale={active ? 1.5 : 1}
+        onClick={event => setActive(!active)}
+        onPointerOver={event => setHover(true)}
+        onPointerOut={event => setHover(false)}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+      </mesh>
+    );
   }
 
   return (
-    <>
-      <Pressable onPress={loadPNG} onLongPress={() => console.log(img.current)}>
-        <Image
-          ref={img}
-          onProgress={event => setProgress(event.nativeEvent)}
-          onLoadEnd={() => console.log(img.current)}
-          style={{width: '100%', height: '100%'}}
-          source={uri}
-        />
-      </Pressable>
-      <View style={[row, {position: 'absolute'}]}>
-        <LoadingBar style={[]} loaded={loading} />
-        <Text style={[text]}>{progress.loaded / progress.total}</Text>
-      </View>
-    </>
+    <Canvas>
+      <Suspense fallback={null}>
+        <Avatar />
+      </Suspense>
+    </Canvas>
   );
 };
 
