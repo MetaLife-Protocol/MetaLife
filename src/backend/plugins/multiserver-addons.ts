@@ -19,26 +19,12 @@ export = function multiserverAddons(ssb: any, cfg: any) {
     create: () => wsTransportPlugin({}),
   });
 
-  if (process.env.MANYVERSE_PLATFORM === 'mobile') {
-    try {
-      const rnBridge = require('rn-bridge');
-      const rnChannelPlugin = require('multiserver-rn-channel');
-      ssb.multiserver.transport({
-        name: 'channel',
-        create: () => rnChannelPlugin(rnBridge.channel),
-      });
-    } catch (err) {}
-  } else {
-    try {
-      const {ipcMain} = require('electron');
-      const electronIpcPlugin = require('multiserver-electron-ipc');
-      const webContentsPromise = (process as any).webContentsP;
-      ssb.multiserver.transport({
-        name: 'channel',
-        create: () => electronIpcPlugin({ipcMain, webContentsPromise}),
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  }
+  try {
+    const rnBridge = require('rn-bridge');
+    const rnChannelPlugin = require('multiserver-rn-channel');
+    ssb.multiserver.transport({
+      name: 'channel',
+      create: () => rnChannelPlugin(rnBridge.channel),
+    });
+  } catch (err) {}
 };
