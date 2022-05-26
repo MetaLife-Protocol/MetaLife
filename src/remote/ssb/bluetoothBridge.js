@@ -41,6 +41,7 @@ let needAddIsEnableCmd = false;
 
 let IsStartCentral = false;
 let IsStartPeripheral = false;
+let payloadData = {};
 
 export const bluetoothBridge = function (options) {
   var localHost = '127.0.0.1';
@@ -56,6 +57,7 @@ export const bluetoothBridge = function (options) {
       console.log('clientIncoming error:', error);
     });
     clientIncoming.on('data', function (data) {
+      console.log('Received Incoming', data);
       for (let connectedDeviceID in connectedDevices) {
         if (!connectedDevices.hasOwnProperty(connectedDeviceID)) {
           continue;
@@ -86,7 +88,9 @@ export const bluetoothBridge = function (options) {
   BLEWormhole.CreateNativeEventEmitter(centralEmitter, peripheralEmitter);
   BLEWormhole.ReceiveHandler = characteristic => {
     if (characteristic !== undefined) {
-      if (characteristic.uuid === controlCharaUUID) {
+      if (
+        characteristic.uuid.toLowerCase() === controlCharaUUID.toLowerCase()
+      ) {
         console.log('characteristic', characteristic);
         var jsonString = Buffer.from(characteristic.value).toString();
         console.log('json', jsonString);
@@ -115,6 +119,11 @@ export const bluetoothBridge = function (options) {
         if (dataCommand.command === 'incoming') {
           var deviceID = characteristic.device;
           var deviceName = deviceID_Name[deviceID];
+          console.log('command incoming', characteristic);
+          setTimeout(() => {
+            while (deviceName === undefined) {}
+          }, 5000);
+          console.log('command incoming', deviceName, BLEWormhole.deviceUUID);
           if (deviceName !== undefined) {
             if (deviceName === BLEWormhole.deviceUUID) {
             } else {
@@ -152,11 +161,19 @@ export const bluetoothBridge = function (options) {
     }
   };
 
+  BLEWormhole.DiscoverDeviceStopHandler = () => {
+    console.log('stop scan');
+    commandResponseBuffer.push({
+      command: 'discovered',
+      arguments: {devices: deviceProperties},
+    });
+    DeviceEventEmitter.emit('commandPop');
+  };
+
   BLEWormhole.DiscoverDeviceHandler = device => {
-    console.log('device', device);
-    if (deviceID_Name[device.deviceID] === undefined) {
-      deviceID_Name[device.deviceID] = device.name;
-    }
+    deviceID_Name[device.deviceID] = device.name;
+
+    console.log('device', device, deviceID_Name[device.deviceID]);
 
     if (deviceInfos[device.name] === undefined) {
       deviceInfos[device.name] = device;
@@ -167,9 +184,10 @@ export const bluetoothBridge = function (options) {
       deviceProperties.push(deviceProperty);
 
       if (connectedDevices[deviceProperty.remoteAddress] === undefined) {
+        console.log('connecting', device.deviceID);
         BLEWormhole.Connect(device.deviceID, bleServiceUUID, connectCharaUUIDs)
           .then(res => {
-            console.log(res);
+            console.log('connect:' + res.characteristic);
             var commandData = {command: 'incoming', arguments: deviceProperty};
             var jsonString = JSON.stringify(commandData);
             BLEWormhole.SendBuffer(
@@ -184,6 +202,7 @@ export const bluetoothBridge = function (options) {
             console.error(err);
           });
       } else {
+        console.log('connect find', device.deviceID);
         commandResponseBuffer.push({
           command: 'connected',
           arguments: {
@@ -194,14 +213,6 @@ export const bluetoothBridge = function (options) {
         DeviceEventEmitter.emit('commandPop');
       }
     }
-  };
-
-  BLEWormhole.ScanStopHandler = () => {
-    commandResponseBuffer.push({
-      command: 'dicovered',
-      arguments: {devices: deviceProperties},
-    });
-    DeviceEventEmitter.emit('commandPop');
   };
 
   BLEWormhole.BluetoothStateHandler = res => {
@@ -235,7 +246,7 @@ export const bluetoothBridge = function (options) {
 
     var command = jsonData.command;
     var cmd_arguments = jsonData.arguments;
-    var dicoveredSeconds = 3;
+    var dicoveredSeconds = 10;
     if (command === 'connect') {
       var remoteAddress = cmd_arguments.remoteAddress;
 
@@ -288,7 +299,7 @@ export const bluetoothBridge = function (options) {
           arguments: {error: false, availableUntil: -1},
         });
         DeviceEventEmitter.emit('commandPop');
-
+        payloadData = cmd_arguments.payload;
         deviceProperties = [];
         BLEWormhole.Scan([bleServiceUUID], dicoveredSeconds);
       } else {
@@ -317,11 +328,19 @@ export const bluetoothBridge = function (options) {
       //ssb-mobile-bluetooth-manager need change
       var remoteAddress = cmd_arguments.remoteAddress;
       var displayName = cmd_arguments.displayName;
+
+      var jsonData = {
+        error: true,
+        metaData: payloadData,
+      };
+      var jsonString = JSON.stringify(jsonData);
+      var sendBuffer = Buffer.from(jsonString);
       BLEWormhole.SendBuffer(
         displayName,
         remoteAddress,
         bleServiceUUID,
         controlCharaUUID,
+        sendBuffer,
       );
     } else {
     }
