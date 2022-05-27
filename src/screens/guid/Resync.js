@@ -53,7 +53,7 @@ const Resync = ({
     interval = setInterval(
       () =>
         resyncProgress().then(p => {
-          p > localP ? setProgress((localP = p)) : setComplete(true);
+          p > localP ? setProgress((localP = p)) : p > 0 && setComplete(true);
         }),
       200,
     );
