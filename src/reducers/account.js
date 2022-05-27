@@ -17,10 +17,29 @@ const accountInitState = {
     accountList: [],
     currentIndex: 0,
     currentPassword: '',
+    addressBook: [],
+    tokenType: '',
 };
 
 export const accountReducer = (state = accountInitState, { type, payload }) => {
     switch (type) {
+        case 'setTokenType':
+            state.tokenType = payload;
+        case 'addAddressInfo':
+            if (!payload) {
+                return;
+            }
+            if (state.addressBook === undefined) {
+                state.addressBook = [];
+            }
+            state.addressBook.push(payload);
+        case 'deleteAddressInfo':
+            state.addressBook.map((one, index) => {
+                if (index === payload) {
+                    state.addressBook.splice(index, 1);
+                    return state;
+                }
+            })
         case 'setCurrentPassword':
             return { ...state, currentPassword: payload };
         case 'deleteAccount':

@@ -24,7 +24,13 @@ import axios from 'axios';
 import {SchemaStyles, colorsSchema, RoundBtn} from 'metalife-base';
 import FriendList from '../tabs/messages/FriendList';
 import network from '../photon/network';
+
 const baseUrl = 'https://api.coinmarketcap.com/v1/ticker/ethereum/';
+
+import MLT from '../../abi/MLT.json';
+import MESH from '../../abi/MESH.json';
+const MLT_TOKEN_ADDRESS = '0xa27f8f580c01db0682ce185209ffb84121a2f711';
+const MESH_TOKEN_ADDRESS = '0xa4c9af589c07b7539e5fcc45975b995a45e3f379';
 
 const iconDic = {
   Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),
@@ -46,6 +52,7 @@ const Wallet = ({
   setCurrentAccount,
   currentAccount,
   accountList,
+  setTokenType,
   darkMode,
 }) => {
   const {barStyle, BG, FG, flex1, input, text, marginTop10, modalBackground} =
@@ -67,9 +74,13 @@ const Wallet = ({
   const [switchModal, setSwitchModal] = useState(false);
   const [ethPrice, setEthPrice] = useState(0);
   const [smtPrice, setSmtPrice] = useState(0);
+  const [mltPrice, setMltPrice] = useState(0);
+  const [meshPrice, setMeshPrice] = useState(0);
   const [networkSwitch, setNetworkSwitch] = useState(false);
   const [currencySwitch, setCurrencySwitch] = useState(true);
   const [curBalance, setCurBalance] = useState(0);
+  const [mltBalance, setmltBalance] = useState(0);
+  const [meshBalance, setmeshBalance] = useState(0);
   const [cnyRate, setCnyRate] = useState(0);
   const [eyeSelected, setEyeSelected] = useState(true);
   const [isLoadingCNY, setIsLoadingCNY] = useState(true);
@@ -90,22 +101,11 @@ const Wallet = ({
   };
 
   const onClickManageAccount = async () => {
-    // let provider = new ethers.providers.EtherscanProvider();
-    // let cnt = await provider.getTransactionCount('0xB121D0A60Ac9a6Bd1E2E14aCb84800d234F0B977');
-    // console.log(cnt, '<<<<<<<<<<');
-    // let history = await provider.getHistory('0xB121D0A60Ac9a6Bd1E2E14aCb84800d234F0B977');
-    // console.log(history.length);
-
-    // if (accountList.length === 1) {
-    //   setmenuModal(false);
-    //   return;
-    // }
     replace('ImportAccount');
   };
 
   const onClickSwitchNetwork = async () => {
     setNetworkSwitch(!networkSwitch);
-    console.log(currentAccount.Address);
 
     let balance = 0;
     if (!networkSwitch) {
@@ -114,14 +114,28 @@ const Wallet = ({
     } else {
       let mesh_provider = new ethers.providers.JsonRpcProvider('https://jsonapi1.smartmesh.io/');
       balance = await mesh_provider.getBalance(currentAccount.Address);
+
+      let wallet = new ethers.Wallet('0x' + currentAccount.PrivateKey);
+      let walletSigner = wallet.connect(mesh_provider);
+      const mlt = new ethers.Contract(MLT_TOKEN_ADDRESS, MLT, walletSigner);
+      const bal_mlt = await mlt.balanceOf(currentAccount.Address);
+      console.log(ethers.utils.formatEther(bal_mlt), 'MLT token balance<<<<<<<<<<')
+      setmltBalance(ethers.utils.formatEther(bal_mlt));
+
+      const mesh = new ethers.Contract(MESH_TOKEN_ADDRESS, MESH, walletSigner);
+      const bal_mesh = await mesh.balanceOf(currentAccount.Address);
+      console.log(ethers.utils.formatEther(bal_mesh), 'MESH token balance<<<<<<<<<<')
+      setmeshBalance(ethers.utils.formatEther(bal_mesh));
     }
     setCurBalance(ethers.utils.formatEther(balance));
-    console.log(balance, '>>>>>balance');
+    // console.log(balance, '>>>>>balance');
     getPrice();
   };
 
-  const onClickOneToken = () => {
-    replace('TokenDetails');
+  const onClickOneToken = (tokenType) => {
+    console.log(tokenType);
+    setTokenType(tokenType);
+    replace('TokenTransfer');
   }
 
   const onClickAccount = (each) => {
@@ -157,9 +171,21 @@ const Wallet = ({
       .get('http://api.coingecko.com/api/v3/coins/smartmesh/market_chart/range?vs_currency=usd&from=0&to=1600000000000`')
       .then(res => {
         setSmtPrice(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000);
-        setIsLoadingSMT(false);
         console.log(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000);
       }).catch(error => console.log(error, '>>>>>smt'));
+    axios
+      .get('http://api.coingecko.com/api/v3/coins/media-licensing-token/market_chart/range?vs_currency=usd&from=0&to=1600000000000`')
+      .then(res => {
+        setMltPrice(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000);
+        console.log(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000, '>>>>>>mlt');
+      }).catch(error => console.log(error, '>>>>>mlt'));
+    axios
+      .get('http://api.coingecko.com/api/v3/coins/meshbox/market_chart/range?vs_currency=usd&from=0&to=1600000000000`')
+      .then(res => {
+        setMeshPrice(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000);
+        console.log(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000, '>>>>>>mesh');
+        setIsLoadingSMT(false);
+      }).catch(error => console.log(error, '>>>>>mlt'));
   };
 
   useEffect(() => {
@@ -169,32 +195,8 @@ const Wallet = ({
 
   return (
     <View style={[BG, flex1]}>
-      {/* {menuModal ? (
-          // <TouchableOpacity onPress={() => setconfirmModal(false)}>
-            <View
-              style={[
-                FG,
-                {
-                  position: 'absolute',
-                  left: 0,
-                  top: 0,
-                  right: 0,
-                  width: "100%",
-                  height: '100%',
-                  opacity: 0.8,
-                  zIndex: 3,
-                },
-              ]}></View>
-          // </TouchableOpacity>
-        ) : null} */}
       <StatusBar barStyle={barStyle} />
       <View style={[FG, styles.header]}>
-        {/* <TouchableOpacity onPress={() => replace('ImportAccount')}>
-          <Image
-            style={{width: 20, height: 20}}
-            source={iconDic['Back_icon_' + (!darkMode ? 'dark' : 'white')]}
-          />
-        </TouchableOpacity> */}
         <View style={[{paddingLeft: 40}]}>
           <Text style={[text, {fontSize: 22}]}>Wallet</Text>
         </View>
@@ -347,8 +349,8 @@ const Wallet = ({
                   : 0 * ethPrice * 100,
                 ) / 100} */}
                 {currencySwitch ? '$' : '¥'}
-                {eyeSelected ? (currencySwitch ? (networkSwitch ? Math.round(ethPrice * curBalance * 10000) / 10000 : Math.round(smtPrice * curBalance * 10000) / 10000) :
-                  (networkSwitch ? Math.round(ethPrice * curBalance * cnyRate * 10000) / 10000 : Math.round(smtPrice * curBalance * cnyRate * 10000) / 10000))
+                {eyeSelected ? (currencySwitch ? (networkSwitch ? Math.round(ethPrice * curBalance * 10000) / 10000 : parseInt((smtPrice * curBalance + mltPrice * mltBalance + meshPrice * meshBalance) * 10000) / 10000) :
+                  (networkSwitch ? Math.round(ethPrice * curBalance * cnyRate * 10000) / 10000 : Math.round((smtPrice * curBalance + mltPrice * mltBalance + meshPrice * meshBalance) * cnyRate * 10000) / 10000))
                   : '**********'}
               </Text>
             </View>
@@ -490,49 +492,117 @@ const Wallet = ({
           </View>
         </View>
         <View style={[styles.mainTable]}>
-          {(isLoadingETH && isLoadingSMT) ?
-          <View style={[{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}]}>
-          <Image
-          style={[{width: 50, height: 50}]}
-          source={require('../../assets/image/accountBtn/loading.png')}
-          /><Text>Loading...</Text></View> :
-          <TouchableOpacity style={[styles.oneToken]} onPress={() => onClickOneToken()}>
-            {networkSwitch ? <Text style={[styles.tokenTitle]}>ETH</Text>
-            : <Text style={[styles.tokenTitle]}>SMT</Text>}
-            <View style={[styles.tableRow]}>
-              <View>
-                <Text style={[styles.inputText]}>Quantity</Text>
-                <Text style={[styles.inputText, {color: 'black'}]}>
-                  {/* {currentAccount.Balance ? currentAccount.Balance : 0} */}
-                  {Math.round(curBalance * 10000) / 10000}
-                </Text>
+          {(isLoadingSMT) ?
+          <View style={[{paddingTop: 50, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}]}>
+            <Image
+            style={[{width: 50, height: 50}]}
+            source={require('../../assets/image/accountBtn/loading.png')}
+            />
+            <Text>Loading...</Text>
+          </View> :
+          (networkSwitch ?
+            <TouchableOpacity style={[styles.oneToken]} onPress={() => onClickOneToken('eth')}>
+              <Text style={[styles.tokenTitle]}>ETH</Text>
+              <View style={[styles.tableRow]}>
+                <View>
+                  <Text style={[styles.inputText]}>Quantity</Text>
+                  <Text style={[styles.inputText, {color: 'black'}]}>
+                    {/* {currentAccount.Balance ? currentAccount.Balance : 0} */}
+                    {Math.round(curBalance * 10000) / 10000}
+                  </Text>
+                </View>
+                <View>
+                  <Text style={[styles.inputText, {textAlign: 'center'}]}>
+                    Price
+                  </Text>
+                  <Text style={[styles.inputText, {color: 'black'}]}>
+                    {currencySwitch ? '$' : '¥'}
+                    {currencySwitch ? (networkSwitch ? ethPrice : smtPrice) : (networkSwitch ? Math.round(ethPrice * cnyRate * 10000) / 10000 : Math.round(smtPrice * cnyRate * 10000) / 10000)}
+                  </Text>
+                </View>
+                <View>
+                  <Text style={[styles.inputText, {textAlign: 'right'}]}>
+                    Amount
+                  </Text>
+                  <Text style={[styles.inputText, {color: 'black'}]}>
+                    {/* {Math.round(
+                      ethPrice * currentAccount.Balance
+                        ? currentAccount.Balance
+                        : 0 * 100,
+                    ) / 100} */}
+                    {currencySwitch ? '$' : '¥'}
+                    {currencySwitch ? (networkSwitch ? Math.round(ethPrice * curBalance * 10000) / 10000 : Math.round(smtPrice * curBalance * 10000) / 10000) :
+                      (networkSwitch ? Math.round(ethPrice * curBalance * cnyRate * 10000) / 10000 : Math.round(smtPrice * curBalance * cnyRate * 10000) / 10000)}
+                  </Text>
+                </View>
               </View>
-              <View>
-                <Text style={[styles.inputText, {textAlign: 'center'}]}>
-                  Price
-                </Text>
-                <Text style={[styles.inputText, {color: 'black'}]}>
-                  {currencySwitch ? '$' : '¥'}
-                  {currencySwitch ? (networkSwitch ? ethPrice : smtPrice) : (networkSwitch ? Math.round(ethPrice * cnyRate * 10000) / 10000 : Math.round(smtPrice * cnyRate * 10000) / 10000)}
-                </Text>
-              </View>
-              <View>
-                <Text style={[styles.inputText, {textAlign: 'right'}]}>
-                  Amount
-                </Text>
-                <Text style={[styles.inputText, {color: 'black'}]}>
-                  {/* {Math.round(
-                    ethPrice * currentAccount.Balance
-                      ? currentAccount.Balance
-                      : 0 * 100,
-                  ) / 100} */}
-                  {currencySwitch ? '$' : '¥'}
-                  {currencySwitch ? (networkSwitch ? Math.round(ethPrice * curBalance * 10000) / 10000 : Math.round(smtPrice * curBalance * 10000) / 10000) :
-                    (networkSwitch ? Math.round(ethPrice * curBalance * cnyRate * 10000) / 10000 : Math.round(smtPrice * curBalance * cnyRate * 10000) / 10000)}
-                </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity> :
+            <View>
+              <TouchableOpacity style={[styles.oneToken]} onPress={() => onClickOneToken('mlt')}>
+                <Text style={[styles.tokenTitle]}>MLT</Text>
+                <View style={[styles.tableRow]}>
+                  <View>
+                    <Text style={[styles.inputText]}>Quantity</Text>
+                    <Text style={[styles.inputText, {color: 'black'}]}>
+                      {/* {currentAccount.Balance ? currentAccount.Balance : 0} */}
+                      {parseInt(mltBalance * 10000) / 10000}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={[styles.inputText, {textAlign: 'center'}]}>
+                      Price
+                    </Text>
+                    <Text style={[styles.inputText, {color: 'black'}]}>
+                      {currencySwitch ? '$' : '¥'}
+                      {currencySwitch ? Math.round(mltPrice * 10000) / 10000 : Math.round(mltPrice * cnyRate * 10000) / 10000}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={[styles.inputText, {textAlign: 'right'}]}>
+                      Amount
+                    </Text>
+                    <Text style={[styles.inputText, {color: 'black'}]}>
+                      {/* {Math.round(
+                        ethPrice * currentAccount.Balance
+                          ? currentAccount.Balance
+                          : 0 * 100,
+                      ) / 100} */}
+                      {currencySwitch ? '$' : '¥'}
+                      {currencySwitch ? Math.round(mltPrice * mltBalance * 10000) / 10000 : Math.round(mltPrice * mltBalance * cnyRate * 10000) / 10000}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.oneToken]} onPress={() => onClickOneToken('mesh')}>
+                <Text style={[styles.tokenTitle]}>MESH</Text>
+                <View style={[styles.tableRow]}>
+                  <View>
+                    <Text style={[styles.inputText]}>Quantity</Text>
+                    <Text style={[styles.inputText, {color: 'black'}]}>
+                      {parseInt(meshBalance * 10000) / 10000}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={[styles.inputText, {textAlign: 'center'}]}>
+                      Price
+                    </Text>
+                    <Text style={[styles.inputText, {color: 'black'}]}>
+                      {currencySwitch ? '$' : '¥'}
+                      {currencySwitch ? Math.round(meshPrice * 10000) / 10000 : Math.round(meshPrice * cnyRate * 10000) / 10000}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={[styles.inputText, {textAlign: 'right'}]}>
+                      Amount
+                    </Text>
+                    <Text style={[styles.inputText, {color: 'black'}]}>
+                      {currencySwitch ? '$' : '¥'}
+                      {currencySwitch ? Math.round(meshPrice * mltBalance * 10000) / 10000 : Math.round(meshPrice * mltBalance * cnyRate * 10000) / 10000}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>)
           }
       </View>
       </View>
@@ -625,6 +695,8 @@ const mdp = d => {
   return {
     setName: name => d({type: 'set', payload: name}),
     deleteName: name => d({type: 'delete'}),
+    setTokenType: tokenName => 
+      d({type: 'setTokenType', payload: tokenName}),
     setCurrentAccount: account =>
       d({type: 'setCurrentAccount', payload: account}),
   };
