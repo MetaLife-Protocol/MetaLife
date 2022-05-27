@@ -19,6 +19,7 @@ import axios from 'axios';
 import {SchemaStyles, colorsSchema, RoundBtn} from 'metalife-base';
 import ERC20ABI from '../../abi/ERC20.json';
 import MLT from '../../abi/MLT.json';
+import MESH from '../../abi/MESH.json';
 
 const MLT_TOKEN_ADDRESS = '0xa27f8f580c01db0682ce185209ffb84121a2f711';
 const MESH_TOKEN_ADDRESS = '0xa4c9af589c07b7539e5fcc45975b995a45e3f379';
@@ -43,6 +44,7 @@ const TokenTransfer = ({
   setCurrentAccount,
   currentAccount,
   accountList,
+  tokenType,
   darkMode,
 }) => {
   const {barStyle, BG, FG, flex1, input, text, marginTop10, modalBackground} =
@@ -67,38 +69,52 @@ const TokenTransfer = ({
     if (receiveAddress === '' || amount === 0) {
       return;
     }
-    let iface = new ethers.utils.Interface(MLT);
-    const provider = new ethers.providers.JsonRpcProvider('https://jsonapi1.smartmesh.io/');
-    console.log(currentAccount);
-    let wallet = new ethers.Wallet('0x' + currentAccount.PrivateKey);
-    let walletSigner = wallet.connect(provider);
-    const mlt = new ethers.Contract(MLT_TOKEN_ADDRESS, MLT, walletSigner);
-    const bal = await mlt.balanceOf(currentAccount.Address);
-    mlt.transfer(receiveAddress, amount).then((trans) => {
-      console.log(trans, '_________________success');
-    }).catch((error) => {
-      console.log(error, '______________error');
-    });
-
-    // const provider = new ethers.providers.JsonRpcProvider("https://jsonapi1.smartmesh.io/");
-    // const wallet = new ethers.Wallet('0x' + currentAccount.PrivateKey, provider);
-    // const balance = await wallet.getBalance();
-    // const tx = wallet.sendTransaction({
-    //   from : currentAccount.Address,
-    //   to: receiveAddress,
-    //   value: 100000000000,
-    // }).then((trans) => {
-    //   console.log(trans);
-    // }).catch((error) => {
-    //   console.log(error, '??????????????');
-    // });
+    // let iface = new ethers.utils.Interface(MLT);
+    let abi = MLT;
+    let abi_address = MLT_TOKEN_ADDRESS;
+    if (tokenType === 'mesh') {
+      abi = MESH;
+      abi_address = MESH_TOKEN_ADDRESS;
+      const provider = new ethers.providers.JsonRpcProvider('https://jsonapi1.smartmesh.io/');
+      let wallet = new ethers.Wallet('0x' + currentAccount.PrivateKey);
+      let walletSigner = wallet.connect(provider);
+      const mlt = new ethers.Contract(abi_address, abi, walletSigner);
+      const bal = await mlt.balanceOf(currentAccount.Address);
+      if (amount > ethers.utils.formatEther(bal)) {
+        alert('please set transfer amount again.');
+      }
+      mlt.transfer(receiveAddress, amount).then((trans) => {
+        console.log(trans, '_________________success');
+      }).catch((error) => {
+        console.log(error, '______________error');
+      });
+    } else if (tokenType === 'eth') {
+      abi = ERC20ABI;
+      // Native token transfer
+      const provider = new ethers.providers.JsonRpcProvider("https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
+      const wallet = new ethers.Wallet('0x' + currentAccount.PrivateKey, provider);
+      const balance = await wallet.getBalance();
+      if (amount > ethers.utils.formatEther(balance)) {
+        alert('please set transfer amount again.');
+      }
+      wallet.sendTransaction({
+        from : currentAccount.Address,
+        to: receiveAddress,
+        value: amount,
+      }).then((trans) => {
+        console.log(trans);
+      }).catch((error) => {
+        console.log(error, '___________error______native token');
+      });
+      // Native token transfer End
+  }
   };
 
   return (
     <View style={[BG, flex1]}>
       <StatusBar barStyle={barStyle} />
       <View style={[FG, styles.header]}>
-        <TouchableOpacity onPress={() => replace('TokenDetails')}>
+        <TouchableOpacity onPress={() => replace('Wallet')}>
           <Image
             style={{width: 15, height: 15}}
             source={iconDic['Back_icon_' + (!darkMode ? 'dark' : 'white')]}
@@ -123,6 +139,7 @@ const TokenTransfer = ({
                     placeholder={'Type or paste address'}
                     placeholderTextColor={textHolder}
                     onChangeText={onChangeAddress}
+                    // value={receiveAddress}
                     maxLength={20}
                   />
                 </View>
@@ -147,6 +164,7 @@ const TokenTransfer = ({
                     placeholderTextColor={textHolder}
                     onChangeText={onChangeAmount}
                     maxLength={20}
+                    value={amount.toString()}
                   />
                 </View>
               </View>
@@ -207,6 +225,7 @@ const msp = s => {
     currentAccount: s.account.currentAccount,
     accountList: s.account.accountList,
     darkMode: s.cfg.darkMode,
+    tokenType: s.account.tokenType,
   };
 };
 

@@ -42,7 +42,7 @@ const ManageAccounts = ({
   currentAccount,
   accountList,
   darkMode,
-  deleteAccount,
+  deleteAddressInfo,
 }) => {
   const {barStyle, BG, FG, flex1, input, text, marginTop10, modalBackground} =
       SchemaStyles(),
@@ -56,7 +56,7 @@ const ManageAccounts = ({
     if (accountList.length === 1) {
       replace('Wallet');
     }
-    deleteAccount(index);
+    deleteAddressInfo(index);
   };
 
   // useEffect(() => {
@@ -150,7 +150,7 @@ const mdp = d => {
     deleteName: name => d({type: 'delete'}),
     setCurrentAccount: account =>
       d({type: 'setCurrentAccount', payload: account}),
-    deleteAccount: account => d({type: 'deleteAccount', payload: account}),
+    deleteAddressInfo: account => d({type: 'deleteAddressInfo', payload: account}),
   };
 };
 

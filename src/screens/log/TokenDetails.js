@@ -168,7 +168,7 @@ const TokenDetails = ({
               }
             })}
           </View> :
-          <View style={[{height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}]}>
+          <View style={[{paddingTop: 250, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}]}>
           <Image
           style={[{width: 50, height: 50}]}
           source={require('../../assets/image/accountBtn/loading.png')}

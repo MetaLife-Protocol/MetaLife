@@ -39,9 +39,12 @@ const iconDic = {
 const QRCodeScan = ({
   name,
   setName,
+  addAddressInfo, 
+  deleteAddressInfo,
   setCurrentAccount,
   currentAccount,
   accountList,
+  addressBook,
   darkMode,
 }) => {
   const {barStyle, BG, FG, flex1, input, text, marginTop10, modalBackground} =
@@ -51,7 +54,8 @@ const QRCodeScan = ({
   const {replace} = useNavigation();
 
   onSuccess = e => {
-    console.log(e, '>>>>>>>>>>>>>>');
+    addAddressInfo(e.data);
+    console.log(addressBook)
     replace('Wallet');
   };
 
@@ -72,18 +76,6 @@ const QRCodeScan = ({
       <QRCodeScanner
         onRead={this.onSuccess}
         flashMode={RNCamera.Constants.FlashMode.torch}
-        topContent={
-          <Text style={styles.centerText}>
-            Go to{' '}
-            <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
-            your computer and scan the QR code.
-          </Text>
-        }
-        bottomContent={
-          <TouchableOpacity style={styles.buttonTouchable}>
-            <Text style={styles.buttonText}>OK. Got it!</Text>
-          </TouchableOpacity>
-        }
       />
     </View>
   );
@@ -94,6 +86,7 @@ const msp = s => {
     currentAccount: s.account.currentAccount,
     accountList: s.account.accountList,
     darkMode: s.cfg.darkMode,
+    addressBook: s.account.addressBook,
   };
 };
 
@@ -101,6 +94,10 @@ const mdp = d => {
   return {
     setName: name => d({type: 'set', payload: name}),
     deleteName: name => d({type: 'delete'}),
+    addAddressInfo: address => 
+      d({type: 'addAddressInfo', payload: address}),
+    deleteAddressInfo: address => 
+      d({type: 'deleteAddressInfo', payload: address}),
     setCurrentAccount: account =>
       d({type: 'setCurrentAccount', payload: account}),
   };
