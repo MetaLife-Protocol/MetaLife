@@ -293,13 +293,14 @@ export const bluetoothBridge = function (options) {
       BLEWormhole.CheckState();
       needAddIsEnableCmd = true;
     } else if (command === 'startMetadataService') {
+      payloadData = cmd_arguments.payload;
+
       if (IsStartPeripheral) {
         commandResponseBuffer.push({
           command: 'metadataService',
           arguments: {error: false, availableUntil: -1},
         });
         DeviceEventEmitter.emit('commandPop');
-        payloadData = cmd_arguments.payload;
         deviceProperties = [];
         BLEWormhole.Scan([bleServiceUUID], dicoveredSeconds);
       } else {
@@ -326,8 +327,9 @@ export const bluetoothBridge = function (options) {
       }
     } else if (command === 'getMetadata') {
       //ssb-mobile-bluetooth-manager need change
-      var remoteAddress = cmd_arguments.remoteAddress;
+      var remoteAddress = cmd_arguments.remoteDevice;
       var displayName = deviceID_Name[remoteAddress];
+      console.log('payloadData', payloadData);
 
       var jsonData = {
         command: 'getMetadata',
