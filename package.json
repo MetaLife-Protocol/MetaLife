@@ -50,7 +50,7 @@
     "bip39": "^3.0.4",
     "decimal.js": "^10.3.1",
     "ethereumjs-util": "^6.0.0",
-    "ethers": "^4.0.23",
+    "ethers": "5.0.0-beta.191",
     "fbjs": "^3.0.4",
     "node-coinmarketcap-extended-api": "^1.4.1",
     "react": "17.0.2",

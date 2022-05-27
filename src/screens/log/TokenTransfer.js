@@ -17,6 +17,11 @@ import {useNavigation} from '@react-navigation/native';
 import {ethers} from 'ethers';
 import axios from 'axios';
 import {SchemaStyles, colorsSchema, RoundBtn} from 'metalife-base';
+import ERC20ABI from '../../abi/ERC20.json';
+import MLT from '../../abi/MLT.json';
+
+const MLT_TOKEN_ADDRESS = '0xa27f8f580c01db0682ce185209ffb84121a2f711';
+const MESH_TOKEN_ADDRESS = '0xa4c9af589c07b7539e5fcc45975b995a45e3f379';
 
 const iconDic = {
   Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),
@@ -47,116 +52,47 @@ const TokenTransfer = ({
   const {replace} = useNavigation();
 
   const [gas, setGas] = useState(0);
-  const [amount, setAmount] = useState(0);
-  const [receiveAddress, setReceiveAddress] = useState('');
+  const [amount, setAmount] = useState(1);
+  const [receiveAddress, setReceiveAddress] = useState('0xc3FD28772d6734aadCF7B712Fa50DD37E80B2C0A');
 
   const onChangeAddress = (addr) => {
     setReceiveAddress(addr)
   };
 
-  const onChangeAmount = (chg) => {
-    setAmount(chg);
+  const onChangeAmount = (amt) => {
+    setAmount(amt);
   };
 
   const onClickConfirm = async () => {
-    // let eth_provider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161');
-    // window.ethersProvider = new ethers.providers.InfuraProvider("rinkeby");
-    // let wallet = new ethers.Wallet('4f7ccb8af25baad441b99587abe221ef934f806a312fe740373cc1f00656935e');
-    // let walletSigner = wallet.connect(window.ethersProvider);
-    // console.log(walletSigner.provider._network.chainId);
-    // let gasprice = await window.ethersProvider.getGasPrice();
-    // console.log(ethers.utils.formatEther(gasprice), '>>>>>>>>gas price');
+    if (receiveAddress === '' || amount === 0) {
+      return;
+    }
+    let iface = new ethers.utils.Interface(MLT);
+    const provider = new ethers.providers.JsonRpcProvider('https://jsonapi1.smartmesh.io/');
+    console.log(currentAccount);
+    let wallet = new ethers.Wallet('0x' + currentAccount.PrivateKey);
+    let walletSigner = wallet.connect(provider);
+    const mlt = new ethers.Contract(MLT_TOKEN_ADDRESS, MLT, walletSigner);
+    const bal = await mlt.balanceOf(currentAccount.Address);
+    mlt.transfer(receiveAddress, amount).then((trans) => {
+      console.log(trans, '_________________success');
+    }).catch((error) => {
+      console.log(error, '______________error');
+    });
 
-    // const tx = {
-    //   from: '0xa52B964cDE8BD92aAcE42Bec4A19BcDD0f88E1ac',
-    //   to: '0xa52B964cDE8BD92aAcE42Bec4A19BcDD0f88E1ac',
-    //   value: ethers.utils.parseEther("0.01"),
-    //   nonce: window.ethersProvider.getTransactionCount("0xa52B964cDE8BD92aAcE42Bec4A19BcDD0f88E1ac", "latest"),
-    //   gasLimit: ethers.utils.hexlify(0x100000), // 100000
-    //   gasPrice: ethers.utils.hexlify(0x100000),
-    // }
-    // walletSigner.sendTransaction(tx).then((transaction) => {
-    //   console.log('>>>>>>>>>>>finish send transaction');
-    //   console.log(transaction);
-    // })
-    let private_key =
-      "4f7ccb8af25baad441b99587abe221ef934f806a312fe740373cc1f00656935e"
-    let send_token_amount = "0.01"
-    let to_address = "0xa52B964cDE8BD92aAcE42Bec4A19BcDD0f88E1ac"
-    let send_address = "0xa52B964cDE8BD92aAcE42Bec4A19BcDD0f88E1ac"
-    let gas_limit = "0x100000"
-    let wallet = new ethers.Wallet(private_key)
-    let walletSigner = wallet.connect(window.ethersProvider)
-    let contract_address = ""
-    window.ethersProvider = new ethers.providers.InfuraProvider("rinkeby")
-
-    send_token(
-      contract_address,
-      send_token_amount,
-      to_address,
-      send_address,
-      private_key
-    )
-
+    // const provider = new ethers.providers.JsonRpcProvider("https://jsonapi1.smartmesh.io/");
+    // const wallet = new ethers.Wallet('0x' + currentAccount.PrivateKey, provider);
+    // const balance = await wallet.getBalance();
+    // const tx = wallet.sendTransaction({
+    //   from : currentAccount.Address,
+    //   to: receiveAddress,
+    //   value: 100000000000,
+    // }).then((trans) => {
+    //   console.log(trans);
+    // }).catch((error) => {
+    //   console.log(error, '??????????????');
+    // });
   };
-
-  function send_token(
-    contract_address,
-    send_token_amount,
-    to_address,
-    send_account,
-    private_key
-  ) {
-    let wallet = new ethers.Wallet(private_key)
-    let walletSigner = wallet.connect(window.ethersProvider)
-  
-    window.ethersProvider.getGasPrice().then((currentGasPrice) => {
-      let gas_price = ethers.utils.hexlify(parseInt(currentGasPrice))
-      console.log(`gas_price: ${gas_price}`)
-  
-      if (contract_address) {
-        // general token send
-        let contract = new ethers.Contract(
-          contract_address,
-          send_abi,
-          walletSigner
-        )
-  
-        // How many tokens?
-        let numberOfTokens = ethers.utils.parseUnits(send_token_amount, 18)
-        console.log(`numberOfTokens: ${numberOfTokens}`)
-  
-        // Send tokens
-        contract.transfer(to_address, numberOfTokens).then((transferResult) => {
-          console.dir(transferResult)
-          alert("sent token")
-        })
-      } // ether send
-      else {
-        const tx = {
-          from: send_account,
-          to: to_address,
-          value: ethers.utils.parseEther(send_token_amount),
-          nonce: window.ethersProvider.getTransactionCount(
-            send_account,
-            "latest"
-          ),
-          gasLimit: ethers.utils.hexlify(0x100000), // 100000
-          gasPrice: gas_price,
-        }
-        console.log(tx)
-        try {
-          walletSigner.sendTransaction(tx).then((transaction) => {
-            console.log(transaction)
-            alert("Send finished!")
-          })
-        } catch (error) {
-          alert("failed to send!!")
-          console.log(error)
-        }
-      }
-    })
-  }
 
   return (
     <View style={[BG, flex1]}>
@@ -241,11 +177,11 @@ const TokenTransfer = ({
             <View style={[styles.tableRow]}>
               <View style={[styles.tokenInfo, {width: '100%', justifyContent: 'space-between', paddingVertical: 10}]}>
                 <Text style={[{color: darkMode ? 'white' : 'black'}]}>Gas</Text>
-                <Text style={[{color: darkMode ? 'white' : 'black'}]}>{gas * 0.00001} SMT</Text>
+                <Text style={[{color: darkMode ? 'white' : 'black'}]}>{Math.round(gas * 0.00001 * 1000000) / 1000000} SMT</Text>
               </View>
             </View>
         </View>
-        <Slider maximumValue={1} minimumValue={0} step={0.1}
+        <Slider maximumValue={10} minimumValue={0} step={0.1}
           value={gas} onValueChange={sliderValue => {setGas(sliderValue)}} />
       </View>
       <View style={[styles.tokenInfo, {justifyContent: 'center', backgroundColor: '#aaaaaa11', padding: 10}]}>

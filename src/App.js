@@ -38,6 +38,7 @@ import NFTDetails from './screens/nft/nft_details';
 import WalletDetail from './screens/log/WalletDetail';
 import TokenDetails from './screens/log/TokenDetails';
 import TokenTransfer from './screens/log/TokenTransfer';
+import QRCodeScan from './screens/log/QRCodeScan';
 import ManageAccounts from './screens/log/ManageAccounts';
 import NewAccount from './screens/log/NewAccount';
 
@@ -95,6 +96,11 @@ const App = () => {
         <Stack.Screen
           name="TokenTransfer"
           component={TokenTransfer}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="QRCodeScan"
+          component={QRCodeScan}
           options={{headerShown: false}}
         />
         <Stack.Screen

@@ -71,6 +71,10 @@ const Wallet = ({
   const [currencySwitch, setCurrencySwitch] = useState(true);
   const [curBalance, setCurBalance] = useState(0);
   const [cnyRate, setCnyRate] = useState(0);
+  const [eyeSelected, setEyeSelected] = useState(true);
+  const [isLoadingCNY, setIsLoadingCNY] = useState(true);
+  const [isLoadingETH, setIsLoadingETH] = useState(true);
+  const [isLoadingSMT, setIsLoadingSMT] = useState(true);
 
   const onClickSwitchMenu = () => {
     if (accountList.length === 0) {
@@ -101,7 +105,7 @@ const Wallet = ({
 
   const onClickSwitchNetwork = async () => {
     setNetworkSwitch(!networkSwitch);
-    console.log(currentAccount);
+    console.log(currentAccount.Address);
 
     let balance = 0;
     if (!networkSwitch) {
@@ -112,7 +116,7 @@ const Wallet = ({
       balance = await mesh_provider.getBalance(currentAccount.Address);
     }
     setCurBalance(ethers.utils.formatEther(balance));
-    console.log(curBalance, '>>>>>');
+    console.log(balance, '>>>>>balance');
     getPrice();
   };
 
@@ -131,28 +135,35 @@ const Wallet = ({
   };
 
   const getPrice = () => {
+    setIsLoadingCNY(true);
+    setIsLoadingETH(true);
+    setIsLoadingSMT(true);
     axios
       .get('https://www.freeforexapi.com/api/live?pairs=USDCNY')
       .then(res => {
         console.log('>>>>>>>>>>', res.data.rates.USDCNY.rate, '<<<<cny');
         setCnyRate(res.data.rates.USDCNY.rate);
+        setIsLoadingCNY(false);
       }).catch(error => console.log(error, '>>>>>>>forex'));
 
     axios
       .get('https://api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=0&to=1600000000000`')
       .then(res => {
         setEthPrice(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100) / 100);
+        setIsLoadingETH(false);
         console.log(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100) / 100);
       }).catch(error => console.log(error, '>>>>eth'));
     axios
       .get('http://api.coingecko.com/api/v3/coins/smartmesh/market_chart/range?vs_currency=usd&from=0&to=1600000000000`')
       .then(res => {
         setSmtPrice(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000);
+        setIsLoadingSMT(false);
         console.log(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000);
       }).catch(error => console.log(error, '>>>>>smt'));
   };
 
   useEffect(() => {
+    onClickSwitchNetwork();
     getPrice();
   }, []);
 
@@ -222,11 +233,15 @@ const Wallet = ({
                   alignItems: 'center',
                 }}>
                 <Text style={{color: '#fff'}}>{currentAccount.Name}</Text>
-                <TouchableOpacity onPress={() => console.log('eye')}>
-                  <Image
+                <TouchableOpacity onPress={() => setEyeSelected(!eyeSelected)}>
+                  {eyeSelected ? <Image
                     style={[styles.icon, {marginLeft: 10}]}
                     source={require('../../assets/image/walletBtn/icon-eye-default.png')}
-                  />
+                  /> :
+                  <Image
+                    style={[styles.icon, {marginLeft: 10}]}
+                    source={require('../../assets/image/accountBtn/Dark_icon_default.png')}
+                  />}
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => onClickCurrencySwitch()}>
                   {currencySwitch ? <Image
@@ -300,7 +315,7 @@ const Wallet = ({
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => console.log('Scan QR Code')}>
+                      onPress={() => replace('QRCodeScan')}>
                       <Text
                         style={[
                           text,
@@ -315,7 +330,7 @@ const Wallet = ({
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => console.log('Address Contract')}>
+                      onPress={() => replace('AddressContact')}>
                       <Text style={[text, {marginTop: 10}]}>
                         Address Contract
                       </Text>
@@ -331,7 +346,10 @@ const Wallet = ({
                   ? currentAccount.Balance
                   : 0 * ethPrice * 100,
                 ) / 100} */}
-                ${networkSwitch ? ethPrice * curBalance : smtPrice * curBalance}
+                {currencySwitch ? '$' : '¥'}
+                {eyeSelected ? (currencySwitch ? (networkSwitch ? Math.round(ethPrice * curBalance * 10000) / 10000 : Math.round(smtPrice * curBalance * 10000) / 10000) :
+                  (networkSwitch ? Math.round(ethPrice * curBalance * cnyRate * 10000) / 10000 : Math.round(smtPrice * curBalance * cnyRate * 10000) / 10000))
+                  : '**********'}
               </Text>
             </View>
             <View style={[styles.interfaceFooter]}>
@@ -472,14 +490,21 @@ const Wallet = ({
           </View>
         </View>
         <View style={[styles.mainTable]}>
+          {(isLoadingETH && isLoadingSMT) ?
+          <View style={[{width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}]}>
+          <Image
+          style={[{width: 50, height: 50}]}
+          source={require('../../assets/image/accountBtn/loading.png')}
+          /><Text>Loading...</Text></View> :
           <TouchableOpacity style={[styles.oneToken]} onPress={() => onClickOneToken()}>
-            <Text style={[styles.tokenTitle]}>ETH</Text>
+            {networkSwitch ? <Text style={[styles.tokenTitle]}>ETH</Text>
+            : <Text style={[styles.tokenTitle]}>SMT</Text>}
             <View style={[styles.tableRow]}>
               <View>
                 <Text style={[styles.inputText]}>Quantity</Text>
                 <Text style={[styles.inputText, {color: 'black'}]}>
                   {/* {currentAccount.Balance ? currentAccount.Balance : 0} */}
-                  {curBalance}
+                  {Math.round(curBalance * 10000) / 10000}
                 </Text>
               </View>
               <View>
@@ -487,7 +512,8 @@ const Wallet = ({
                   Price
                 </Text>
                 <Text style={[styles.inputText, {color: 'black'}]}>
-                  ${networkSwitch ? ethPrice : smtPrice}
+                  {currencySwitch ? '$' : '¥'}
+                  {currencySwitch ? (networkSwitch ? ethPrice : smtPrice) : (networkSwitch ? Math.round(ethPrice * cnyRate * 10000) / 10000 : Math.round(smtPrice * cnyRate * 10000) / 10000)}
                 </Text>
               </View>
               <View>
@@ -495,18 +521,20 @@ const Wallet = ({
                   Amount
                 </Text>
                 <Text style={[styles.inputText, {color: 'black'}]}>
-                  $
                   {/* {Math.round(
                     ethPrice * currentAccount.Balance
                       ? currentAccount.Balance
                       : 0 * 100,
                   ) / 100} */}
-                  {networkSwitch ? ethPrice * curBalance : smtPrice * curBalance}
+                  {currencySwitch ? '$' : '¥'}
+                  {currencySwitch ? (networkSwitch ? Math.round(ethPrice * curBalance * 10000) / 10000 : Math.round(smtPrice * curBalance * 10000) / 10000) :
+                    (networkSwitch ? Math.round(ethPrice * curBalance * cnyRate * 10000) / 10000 : Math.round(smtPrice * curBalance * cnyRate * 10000) / 10000)}
                 </Text>
               </View>
             </View>
           </TouchableOpacity>
-        </View>
+          }
+      </View>
       </View>
       <Modal
         animationType="fade"

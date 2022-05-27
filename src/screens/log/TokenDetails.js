@@ -17,6 +17,7 @@ import {useNavigation} from '@react-navigation/native';
 import {ethers} from 'ethers';
 import axios from 'axios';
 import {SchemaStyles, colorsSchema, RoundBtn} from 'metalife-base';
+import cacheDefault from 'node-coinmarketcap-extended-api/lib/cache-default';
 
 const iconDic = {
   Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),
@@ -47,15 +48,17 @@ const TokenDetails = ({
   const {replace} = useNavigation();
 
   const [transHistories, setTransHistories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // const myAddress = currentAccount.Address;
   const myAddress = '0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae';
 
   const transUrlPrefix = 'https://api.etherscan.io/api?module=account&action=txlist&address=';
-  const transUrlSuffix = '&startblock=0&endblock=999999&sort=asc&apikey=47I5RB52NG9GZ95TEA38EXNKCAT4DMV5RX';
+  const transUrlSuffix = '&startblock=0&endblock=999999999&sort=asc&apikey=47I5RB52NG9GZ95TEA38EXNKCAT4DMV5RX';
   let transUrl = transUrlPrefix + '0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae' + transUrlSuffix;
 
   const getTransHistory = () => {
+    setIsLoading(true);
     axios
     .get(transUrl)
     .then(res => {
@@ -67,10 +70,11 @@ const TokenDetails = ({
           temp.time = new Date(d).toISOString().split('T')[0];
           trans.push(temp);
           console.log(temp.time);
+          setIsLoading(false);
         }
       });
       setTransHistories(trans);
-      console.log(transHistories.length);
+      console.log(trans.length);
     }).catch(error => console.log(error, '>>>>>>>trans history'));
 
   }
@@ -95,7 +99,7 @@ const TokenDetails = ({
       </View>
       <View style={[FG, flex1, marginTop10, styles.body]}>
         <ScrollView>
-          <View style={[styles.mainTable]}>
+          {!isLoading ? <View style={[styles.mainTable]}>
             {transHistories.map((one) => {
               if (one.from === myAddress) {
                 return (
@@ -163,7 +167,13 @@ const TokenDetails = ({
                 )
               }
             })}
-          </View>
+          </View> :
+          <View style={[{height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}]}>
+          <Image
+          style={[{width: 50, height: 50}]}
+          source={require('../../assets/image/accountBtn/loading.png')}
+          /><Text>Loading...</Text></View>
+          }
         </ScrollView>
       </View>
       <View style={[styles.tokenInfo, {justifyContent: 'space-between', backgroundColor: '#aaaaaa11', padding: 10}]}>
