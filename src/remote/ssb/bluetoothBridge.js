@@ -95,15 +95,15 @@ export const bluetoothBridge = function (options) {
         var jsonString = Buffer.from(characteristic.value).toString();
         console.log('json', jsonString);
         var dataCommand = JSON.parse(jsonString);
-        if (dataCommand.command === 'metaData') {
+        if (dataCommand.command === 'getMetadata') {
           var metaData = dataCommand.arguments.metadata;
           var errInfo = dataCommand.arguments.error;
-          if (errInfo === undefined) {
+          if (errInfo === undefined || errInfo === false) {
             commandResponseBuffer.push({
               command: 'getMetadata',
-              arguments: {metaData: metaData, error: false},
+              arguments: {metadata: metaData, error: false},
+              requestId: dataCommand.requestId,
             });
-            DeviceEventEmitter.emit('commandPop');
           } else {
             commandResponseBuffer.push({
               command: 'getMetadata',
@@ -112,9 +112,44 @@ export const bluetoothBridge = function (options) {
                 error: true,
                 description: errInfo,
               },
+              requestId: dataCommand.requestId,
             });
-            DeviceEventEmitter.emit('commandPop');
           }
+          DeviceEventEmitter.emit('commandPop');
+        }
+        if (dataCommand.command === 'getMetadataBle') {
+          console.log('payloadData', payloadData);
+
+          var remoteAddress = characteristic.device;
+          var displayName = deviceID_Name[remoteAddress];
+
+          var tmpArguments = {};
+          if (payloadData === undefined) {
+            tmpArguments = {
+              errorCode: 'errorGettingMetadata',
+              error: true,
+              description: 'not find payloadData',
+            };
+          } else {
+            tmpArguments = {
+              metadata: payloadData,
+              error: false,
+            };
+          }
+          var jsonData = {
+            command: 'getMetadata',
+            arguments: tmpArguments,
+            requestId: dataCommand.requestId,
+          };
+          var jsonString = JSON.stringify(jsonData);
+          var sendBuffer = Buffer.from(jsonString);
+          BLEWormhole.SendBuffer(
+            displayName,
+            remoteAddress,
+            bleServiceUUID,
+            controlCharaUUID,
+            sendBuffer,
+          );
         }
         if (dataCommand.command === 'incoming') {
           var deviceID = characteristic.device;
@@ -329,14 +364,11 @@ export const bluetoothBridge = function (options) {
       //ssb-mobile-bluetooth-manager need change
       var remoteAddress = cmd_arguments.remoteDevice;
       var displayName = deviceID_Name[remoteAddress];
-      console.log('payloadData', payloadData);
 
       var jsonData = {
-        command: 'getMetadata',
-        arguments: {
-          error: true,
-          metaData: payloadData,
-        },
+        command: 'getMetadataBle',
+        arguments: cmd_arguments,
+        requestId: jsonData.requestId,
       };
       var jsonString = JSON.stringify(jsonData);
       var sendBuffer = Buffer.from(jsonString);
