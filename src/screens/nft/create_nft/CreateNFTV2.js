@@ -21,6 +21,8 @@ import Toast from 'react-native-tiny-toast';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ConfirmNftInformationDialog from './comps/ConfirmNftInformationDialog';
 import {useNavigation} from '@react-navigation/native';
+import {uploadFileToIFPS} from '../nftUtils';
+import DocumentPicker from 'react-native-document-picker';
 
 const CreateNFTV2 = () => {
   const styles = useStyle(styleFun);
@@ -36,23 +38,34 @@ const CreateNFTV2 = () => {
     }
     const [file] = assets;
     console.log('file assets::', assets);
+    uploadFileToIFPS({
+      fileName: file.fileName,
+      filepath: file.uri,
+      fileType: file.type,
+    });
     // submit('image', file.uri.replace('file://', ''));
     // setNftImage(file.uri.replace('file://', ''));
     setNftImage(file);
   }
   const uploadNft = useCallback(() => {
     // checkAndLaunchCamera(cameraHandler);
-    launchImageLibrary(
-      {
-        cameraType: 'front',
-        maxHeight: 1920,
-        maxWidth: 1080,
-        quality: 0.88,
-        mediaType: 'mixed',
-        selectionLimit: 1,
+    DocumentPicker.pickSingle({type: DocumentPicker.types.allFiles}).then(
+      res => {
+        console.log('res::', res);
       },
-      cameraHandler,
     );
+
+    // launchImageLibrary(
+    //   {
+    //     cameraType: 'front',
+    //     maxHeight: 1920,
+    //     maxWidth: 1080,
+    //     quality: 0.88,
+    //     mediaType: 'mixed',
+    //     selectionLimit: 1,
+    //   },
+    //   cameraHandler,
+    // );
   }, []);
 
   const createFun = useCallback(() => {
@@ -107,9 +120,10 @@ const CreateNFTV2 = () => {
         <TouchableOpacity style={styles.contentContainer} onPress={uploadNft}>
           <Image
             source={
-              nftImage.uri
-                ? {uri: nftImage.uri}
-                : require('../../../assets/image/nft/create_nft_add.png')
+              // nftImage.uri
+              //   ? {uri: nftImage.uri}
+              //   :
+              require('../../../assets/image/nft/create_nft_add.png')
             }
             style={styles.addImg}
           />
