@@ -50,18 +50,8 @@ const ManageAccounts = ({
 
   const {replace} = useNavigation();
 
-  const [focusedClear, setfocusedClear] = useState(true);
   const [editIndex, setEditIndex] = useState(-1);
 
-  const onClickSwitchMenu = () => {
-    setmenuModal(false);
-    setSwitchModal(true);
-  };
-
-  const cleaerPress = () => {
-    setfocusedClear(!focusedClear);
-    setNick('');
-  };
   const deleteOneAccount = index => {
     if (accountList.length === 1) {
       replace('Wallet');
@@ -69,12 +59,8 @@ const ManageAccounts = ({
     deleteAccount(index);
   };
 
-  useEffect(() => {
-    // randomBytes(16, (error, bytes) => {
-    //   const mnemonic = ethers.utils.HDNode.entropyToMnemonic(bytes, ethers.wordlists.en);
-    //   console.log(mnemonic);
-    // });
-  }, []);
+  // useEffect(() => {
+  // }, []);
 
   return (
     <View style={[BG, flex1]}>
