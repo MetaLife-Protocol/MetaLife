@@ -34,6 +34,7 @@ let deviceID_Name = {};
 let connectedDevices = {};
 
 let deviceProperties = [];
+let devicePayloads = {};
 
 let commandResponseBuffer = [];
 
@@ -88,16 +89,19 @@ export const bluetoothBridge = function (options) {
   BLEWormhole.CreateNativeEventEmitter(centralEmitter, peripheralEmitter);
   BLEWormhole.ReceiveHandler = characteristic => {
     if (characteristic !== undefined) {
+      console.log('characteristic', characteristic);
       if (
         characteristic.uuid.toLowerCase() === controlCharaUUID.toLowerCase()
       ) {
-        console.log('characteristic', characteristic);
         var jsonString = Buffer.from(characteristic.value).toString();
         console.log('json', jsonString);
         var dataCommand = JSON.parse(jsonString);
         if (dataCommand.command === 'getMetadata') {
           var metaData = dataCommand.arguments.metadata;
           var errInfo = dataCommand.arguments.error;
+
+          devicePayloads[dataCommand.requestId] = metaData;
+
           if (errInfo === undefined || errInfo === false) {
             commandResponseBuffer.push({
               command: 'getMetadata',
@@ -208,11 +212,12 @@ export const bluetoothBridge = function (options) {
   BLEWormhole.DiscoverDeviceHandler = device => {
     deviceID_Name[device.deviceID] = device.name;
 
-    console.log('device', device, deviceID_Name[device.deviceID]);
-
+    var deviceProperty;
     if (deviceInfos[device.name] === undefined) {
+      console.log('device', device);
+
       deviceInfos[device.name] = device;
-      var deviceProperty = {
+      deviceProperty = {
         remoteAddress: device.deviceID,
         displayName: device.name,
       };
@@ -285,6 +290,14 @@ export const bluetoothBridge = function (options) {
     if (command === 'connect') {
       var remoteAddress = cmd_arguments.remoteAddress;
 
+      commandResponseBuffer.push({
+        command: 'connected',
+        arguments: {
+          remoteAddress: remoteAddress,
+          isIncoming: false,
+        },
+      });
+      DeviceEventEmitter.emit('commandPop');
       // awaitingOutgoingConnection.push(remoteAddress);
     } else if (command === 'ownMacAddress') {
       commandResponseBuffer.push({
@@ -293,8 +306,8 @@ export const bluetoothBridge = function (options) {
       });
       DeviceEventEmitter.emit('commandPop');
     } else if (command === 'discoverDevices') {
-      deviceProperties = [];
-      BLEWormhole.Scan([bleServiceUUID], dicoveredSeconds);
+      // deviceProperties = [];
+      BLEWormhole.Scan([bleServiceUUID], dicoveredSeconds, true);
     } else if (command === 'makeDiscoverable') {
       if (IsStartCentral) {
         commandResponseBuffer.push({
@@ -336,8 +349,8 @@ export const bluetoothBridge = function (options) {
           arguments: {error: false, availableUntil: -1},
         });
         DeviceEventEmitter.emit('commandPop');
-        deviceProperties = [];
-        BLEWormhole.Scan([bleServiceUUID], dicoveredSeconds);
+        // deviceProperties = [];
+        BLEWormhole.Scan([bleServiceUUID], dicoveredSeconds, true);
       } else {
         BLEWormhole.StartPeripheral()
           .then(res => {
