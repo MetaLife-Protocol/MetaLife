@@ -8,13 +8,6 @@ import Section from '../../shared/comps/Section';
 import {searchPrivateMsgByContentAndRecp} from '../../store/filters/MsgFilters';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
-const iconDic = {
-  photo: require('../../assets/image/profiles/photo.png'),
-  fb: require('../../assets/image/profiles/Facebook.png'),
-  nf: require('../../assets/image/profiles/NewFriends.png'),
-  tt: require('../../assets/image/profiles/Twitter.png'),
-};
-
 const Messages = ({privateMsg}) => {
   const {textHolder} = colorsSchema,
     {FG, row, text, alignItemsCenter} = SchemaStyles(),
@@ -110,10 +103,7 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {
-    addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
-    setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(Messages);
