@@ -191,9 +191,17 @@ export const bluetoothBridge = function (options) {
           }
         }
       } else if (characteristic.uuid === incomingCharaUUID) {
-        clientIncoming.write(characteristic.data);
+        if (characteristic.data === undefined) {
+          console.log('incoming no data');
+        } else {
+          clientIncoming.write(characteristic.data);
+        }
       } else if (characteristic.uuid === outgoingCharaUUID) {
-        clientOutgoing.write(characteristic.data);
+        if (characteristic.data === undefined) {
+          console.log('outgoing no data');
+        } else {
+          clientOutgoing.write(characteristic.data);
+        }
       } else {
       }
     } else {
@@ -430,10 +438,10 @@ export const bluetoothBridge = function (options) {
           if (!connectedDevices.hasOwnProperty(disconnectedDeviceID)) {
             continue;
           }
-
           let disconnectedDeviceName = connectedDevices[disconnectedDeviceID];
           if (disconnectedDeviceName !== undefined) {
             var sendBuffer = Buffer.from(data);
+
             BLEWormhole.SendBuffer(
               disconnectedDeviceName,
               disconnectedDeviceID,
