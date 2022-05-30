@@ -89,7 +89,7 @@ export const bluetoothBridge = function (options) {
   BLEWormhole.CreateNativeEventEmitter(centralEmitter, peripheralEmitter);
   BLEWormhole.ReceiveHandler = characteristic => {
     if (characteristic !== undefined) {
-      console.log('characteristic', characteristic);
+      console.log('characteristic value', characteristic.value);
       if (
         characteristic.uuid.toLowerCase() === controlCharaUUID.toLowerCase()
       ) {
@@ -191,16 +191,16 @@ export const bluetoothBridge = function (options) {
           }
         }
       } else if (characteristic.uuid === incomingCharaUUID) {
-        if (characteristic.data === undefined) {
+        if (characteristic.value === undefined) {
           console.log('incoming no data');
         } else {
-          clientIncoming.write(characteristic.data);
+          clientIncoming.write(characteristic.value);
         }
       } else if (characteristic.uuid === outgoingCharaUUID) {
-        if (characteristic.data === undefined) {
+        if (characteristic.value === undefined) {
           console.log('outgoing no data');
         } else {
-          clientOutgoing.write(characteristic.data);
+          clientOutgoing.write(characteristic.value);
         }
       } else {
       }
