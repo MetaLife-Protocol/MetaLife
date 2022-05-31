@@ -21,6 +21,7 @@ import LinksView from './comps/LinksView';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 import BlockchainView from './comps/BlockchainView';
 import PaymentTokensView from './comps/PaymentTokensView';
+import DisplayThemeView from './comps/DisplayThemeView';
 
 const CreateCollection = () => {
   const styles = useStyle(createSty);
@@ -123,6 +124,7 @@ const CreateCollection = () => {
             title={'Display theme'}
             tips={'Change how your items are shown.'}
           />
+          <DisplayThemeView />
           <RoundBtn style={styles.buttonContainer} title={'Create'} />
         </ScrollView>
       </KeyboardAvoidingView>
