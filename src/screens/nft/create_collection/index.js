@@ -19,6 +19,8 @@ import ImagePickerView from './comps/ImagePickerView';
 import CategoryView from './comps/CategoryView';
 import LinksView from './comps/LinksView';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
+import BlockchainView from './comps/BlockchainView';
+import PaymentTokensView from './comps/PaymentTokensView';
 
 const CreateCollection = () => {
   const styles = useStyle(createSty);
@@ -111,10 +113,12 @@ const CreateCollection = () => {
               'Select the blockchain where you’s like new items from this  collection to be added by default.'
             }
           />
+          <BlockchainView />
           <TitleAndTips
             title={'Payment tokens'}
             tips={'These tokens can be used to buy and sell your items.'}
           />
+          <PaymentTokensView />
           <TitleAndTips
             title={'Display theme'}
             tips={'Change how your items are shown.'}
