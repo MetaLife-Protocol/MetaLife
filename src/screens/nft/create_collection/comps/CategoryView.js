@@ -50,7 +50,7 @@ const createSty = theme =>
       lineHeight: 18,
       color: theme.c_8E8E92,
     },
-    categoryTypeIcon: {width: 33, height: 35, marginLeft: 12},
+    categoryTypeIcon: {width: 35, height: 35, marginLeft: 12},
     arrow: {width: 16, height: 16, marginLeft: 9},
   });
 export default CategoryView;

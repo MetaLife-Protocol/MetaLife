@@ -65,7 +65,7 @@ const CreateCollection = () => {
             }
           />
           <ImagePickerView
-            style={styles.featuredContainer}
+            style={styles.bannerContainer}
             onImagePicker={setBannerImage}
           />
           <TitleAndTips title={'Name'} />
@@ -150,8 +150,13 @@ const createSty = theme =>
       borderRadius: 45,
     },
     featuredContainer: {
+      width: 263,
+      height: 175,
+      borderRadius: 12,
+    },
+    bannerContainer: {
       width: 345,
-      height: 173,
+      height: 175,
       borderRadius: 12,
     },
     nameContainer: {
