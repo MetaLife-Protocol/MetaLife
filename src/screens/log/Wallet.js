@@ -29,6 +29,8 @@ const baseUrl = 'https://api.coinmarketcap.com/v1/ticker/ethereum/';
 
 import MLT from '../../abi/MLT.json';
 import MESH from '../../abi/MESH.json';
+import SMT from '../../abi/ERC20.json';
+const SMT_TOKEN_ADDRESS = '0x55F93985431Fc9304077687a35A1BA103dC1e081';
 const MLT_TOKEN_ADDRESS = '0xa27f8f580c01db0682ce185209ffb84121a2f711';
 const MESH_TOKEN_ADDRESS = '0xa4c9af589c07b7539e5fcc45975b995a45e3f379';
 
@@ -79,6 +81,7 @@ const Wallet = ({
   const [networkSwitch, setNetworkSwitch] = useState(false);
   const [currencySwitch, setCurrencySwitch] = useState(true);
   const [curBalance, setCurBalance] = useState(0);
+  const [smtBalance, setsmtBalance] = useState(0);
   const [mltBalance, setmltBalance] = useState(0);
   const [meshBalance, setmeshBalance] = useState(0);
   const [cnyRate, setCnyRate] = useState(0);
@@ -117,6 +120,14 @@ const Wallet = ({
 
       let wallet = new ethers.Wallet('0x' + currentAccount.PrivateKey);
       let walletSigner = wallet.connect(mesh_provider);
+
+      const smt = new ethers.Contract(SMT_TOKEN_ADDRESS, SMT, walletSigner);
+      const provider = new ethers.providers.JsonRpcProvider("https://jsonapi1.smartmesh.io/");
+      const wallet_smt = new ethers.Wallet('0x' + currentAccount.PrivateKey, provider);
+      const bal_smt = await wallet_smt.getBalance();
+      console.log(ethers.utils.formatEther(bal_smt), 'SMT token balance<<<<<<<<<<')
+      setsmtBalance(ethers.utils.formatEther(bal_smt));
+
       const mlt = new ethers.Contract(MLT_TOKEN_ADDRESS, MLT, walletSigner);
       const bal_mlt = await mlt.balanceOf(currentAccount.Address);
       console.log(ethers.utils.formatEther(bal_mlt), 'MLT token balance<<<<<<<<<<')
@@ -171,7 +182,7 @@ const Wallet = ({
       .get('http://api.coingecko.com/api/v3/coins/smartmesh/market_chart/range?vs_currency=usd&from=0&to=1600000000000`')
       .then(res => {
         setSmtPrice(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000);
-        console.log(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000);
+        console.log(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000, '>>>>>smt');
       }).catch(error => console.log(error, '>>>>>smt'));
     axios
       .get('http://api.coingecko.com/api/v3/coins/media-licensing-token/market_chart/range?vs_currency=usd&from=0&to=1600000000000`')
@@ -538,6 +549,41 @@ const Wallet = ({
               </View>
             </TouchableOpacity> :
             <View>
+              <TouchableOpacity style={[styles.oneToken]} onPress={() => onClickOneToken('smt')}>
+                <Text style={[styles.tokenTitle]}>SMT</Text>
+                <View style={[styles.tableRow]}>
+                  <View>
+                    <Text style={[styles.inputText]}>Quantity</Text>
+                    <Text style={[styles.inputText, {color: 'black'}]}>
+                      {/* {currentAccount.Balance ? currentAccount.Balance : 0} */}
+                      {parseInt(smtBalance * 10000) / 10000}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={[styles.inputText, {textAlign: 'center'}]}>
+                      Price
+                    </Text>
+                    <Text style={[styles.inputText, {color: 'black'}]}>
+                      {currencySwitch ? '$' : '¥'}
+                      {currencySwitch ? Math.round(smtPrice * 10000) / 10000 : Math.round(smtPrice * cnyRate * 10000) / 10000}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={[styles.inputText, {textAlign: 'right'}]}>
+                      Amount
+                    </Text>
+                    <Text style={[styles.inputText, {color: 'black'}]}>
+                      {/* {Math.round(
+                        ethPrice * currentAccount.Balance
+                          ? currentAccount.Balance
+                          : 0 * 100,
+                      ) / 100} */}
+                      {currencySwitch ? '$' : '¥'}
+                      {currencySwitch ? Math.round(smtPrice * smtBalance * 10000) / 10000 : Math.round(smtPrice * smtBalance * cnyRate * 10000) / 10000}
+                    </Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
               <TouchableOpacity style={[styles.oneToken]} onPress={() => onClickOneToken('mlt')}>
                 <Text style={[styles.tokenTitle]}>MLT</Text>
                 <View style={[styles.tableRow]}>
