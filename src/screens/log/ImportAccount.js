@@ -73,19 +73,24 @@ const Import = ({name, setName, darkMode, setCurrentAccount, addAccount}) => {
       Keystore: '',
     };
     if (tab == 0) {
-      // const idx = 0;
-      // let path = `m/44'/60'/${idx}'/0/0`;
-      let account = await ethers.Wallet.fromMnemonic(mnemonic);
-      const json = await account.encrypt(pwd, {scrypt: {N: 64}});
-      // ethers.Wallet.fromEncryptedJson(json, pwd).then(async function(wallet) {
-      //   const hex_balance = await provider.getBalance(wallet.address);
-      //   balance = ethers.utils.formatEther(hex_balance);
-      // });
-      currentAccount.Keystore = json;
+      let walletMnemonic = ethers.Wallet.fromMnemonic(mnemonic);
+      console.log(walletMnemonic, '>>>>>>>>>>wallet mnemonic');
+      walletPrivateKey = new ethers.Wallet(walletMnemonic.privateKey);
+      walletMnemonic.address === walletPrivateKey.address;
+      const address = await walletMnemonic.getAddress();
+      // let provider = ethers.getDefaultProvider();
+      // const json = await wallet.encrypt(pwd, {scrypt: {N: 64}});
+      // console.log(json, '>>>>>>>>>>>>>>json');
+      // // ethers.Wallet.fromEncryptedJson(json, pwd).then(async function(wallet) {
+      // //   const hex_balance = await provider.getBalance(wallet.address);
+      // //   balance = ethers.utils.formatEther(hex_balance);
+      // // });
+      // currentAccount.Keystore = json;
       currentAccount.Mnemonic = mnemonic;
-      currentAccount.Address = account.address;
-      currentAccount.PrivateKey = account.privateKey;
-      const hex_balance = await provider.getBalance(account.address);
+      currentAccount.Address = address;
+      currentAccount.PrivateKey = walletMnemonic.privateKey;
+      const hex_balance = await provider.getBalance(address);
+      console.log(hex_balance, 'aaaaaaaaaaaaaaaaa');
       balance = ethers.utils.formatEther(hex_balance);
       currentAccount.Balance = balance;
       setCurrentAccount(currentAccount);
@@ -105,14 +110,15 @@ const Import = ({name, setName, darkMode, setCurrentAccount, addAccount}) => {
         },
       );
     } else if (tab == 2) {
-      let account = new ethers.Wallet(privateKey);
+      const account = new ethers.Wallet('0x' + privateKey);
+      // let account = new ethers.Wallet(privateKey);
       const hex_balance = await provider.getBalance(account.address);
       balance = ethers.utils.formatEther(hex_balance);
       currentAccount.Address = account.address;
       currentAccount.PrivateKey = privateKey;
       currentAccount.Balance = balance;
-      const json = await account.encrypt(pwd, {scrypt: {N: 64}});
-      currentAccount.Keystore = json;
+      // const json = await account.encrypt(pwd, {scrypt: {N: 64}});
+      // currentAccount.Keystore = json;
       setCurrentAccount(currentAccount);
       addAccount(currentAccount);
     } else if (tab == 3) {

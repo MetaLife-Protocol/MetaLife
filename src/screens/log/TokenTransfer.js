@@ -53,7 +53,8 @@ const TokenTransfer = ({
 
   const {replace} = useNavigation();
 
-  const [gas, setGas] = useState(0);
+  const [gas, setGas] = useState(1);
+  const [gasString, setGasString] = useState('0.00000001');
   const [amount, setAmount] = useState(1);
   const [receiveAddress, setReceiveAddress] = useState('0xc3FD28772d6734aadCF7B712Fa50DD37E80B2C0A');
 
@@ -65,6 +66,12 @@ const TokenTransfer = ({
     setAmount(amt);
   };
 
+  const gasChanged = (value) => {
+    setGas(value);
+    // let intval = parseInt(gas * 0.00000001 * 100000000) / 100000000;
+    setGasString('0.0000000' + value);
+  }
+
   const onClickConfirm = async () => {
     if (receiveAddress === '' || amount === 0) {
       return;
@@ -72,7 +79,7 @@ const TokenTransfer = ({
     // let iface = new ethers.utils.Interface(MLT);
     let abi = MLT;
     let abi_address = MLT_TOKEN_ADDRESS;
-    if (tokenType === 'mesh') {
+    if (tokenType === 'mesh' || tokenType === 'mlt') {
       abi = MESH;
       abi_address = MESH_TOKEN_ADDRESS;
       const provider = new ethers.providers.JsonRpcProvider('https://jsonapi1.smartmesh.io/');
@@ -80,6 +87,7 @@ const TokenTransfer = ({
       let walletSigner = wallet.connect(provider);
       const mlt = new ethers.Contract(abi_address, abi, walletSigner);
       const bal = await mlt.balanceOf(currentAccount.Address);
+      console.log(amount, ethers.utils.formatEther(bal));
       if (amount > ethers.utils.formatEther(bal)) {
         alert('please set transfer amount again.');
       }
@@ -107,7 +115,7 @@ const TokenTransfer = ({
         console.log(error, '___________error______native token');
       });
       // Native token transfer End
-  }
+    }
   };
 
   return (
@@ -140,7 +148,7 @@ const TokenTransfer = ({
                     placeholderTextColor={textHolder}
                     onChangeText={onChangeAddress}
                     // value={receiveAddress}
-                    maxLength={20}
+                    maxLength={50}
                   />
                 </View>
               </View>
@@ -163,7 +171,7 @@ const TokenTransfer = ({
                     placeholder={'Enter transfer amount'}
                     placeholderTextColor={textHolder}
                     onChangeText={onChangeAmount}
-                    maxLength={20}
+                    maxLength={50}
                     value={amount.toString()}
                   />
                 </View>
@@ -195,12 +203,12 @@ const TokenTransfer = ({
             <View style={[styles.tableRow]}>
               <View style={[styles.tokenInfo, {width: '100%', justifyContent: 'space-between', paddingVertical: 10}]}>
                 <Text style={[{color: darkMode ? 'white' : 'black'}]}>Gas</Text>
-                <Text style={[{color: darkMode ? 'white' : 'black'}]}>{Math.round(gas * 0.00001 * 1000000) / 1000000} SMT</Text>
+                <Text style={[{color: darkMode ? 'white' : 'black'}]}>{gasString} SMT</Text>
               </View>
             </View>
         </View>
-        <Slider maximumValue={10} minimumValue={0} step={0.1}
-          value={gas} onValueChange={sliderValue => {setGas(sliderValue)}} />
+        <Slider maximumValue={10} minimumValue={0} step={1}
+          value={gas} onValueChange={sliderValue => {gasChanged(sliderValue)}} />
       </View>
       <View style={[styles.tokenInfo, {justifyContent: 'center', backgroundColor: '#aaaaaa11', padding: 10}]}>
         <View>
