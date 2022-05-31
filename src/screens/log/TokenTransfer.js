@@ -96,10 +96,11 @@ const TokenTransfer = ({
       }).catch((error) => {
         console.log(error, '______________error');
       });
-    } else if (tokenType === 'eth') {
+    } else if (tokenType === 'smt') {
       abi = ERC20ABI;
       // Native token transfer
-      const provider = new ethers.providers.JsonRpcProvider("https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
+      // const provider = new ethers.providers.JsonRpcProvider("https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161");
+      const provider = new ethers.providers.JsonRpcProvider("https://jsonapi1.smartmesh.io/");
       const wallet = new ethers.Wallet('0x' + currentAccount.PrivateKey, provider);
       const balance = await wallet.getBalance();
       if (amount > ethers.utils.formatEther(balance)) {
