@@ -1,7 +1,6 @@
 import TcpSocket from 'react-native-tcp-socket';
 import {BLEWormhole} from 'react-native-ble-wormhole';
 import {Buffer} from 'buffer';
-import BleManager from 'react-native-ble-manager/BleManager';
 import BLEPeripheral from 'react-native-ble-peripheral';
 import {
   NativeEventEmitter,
@@ -30,6 +29,7 @@ const connectCharaUUIDs = [
 
 let deviceInfos = {};
 let deviceID_Name = {};
+let deviceName_ID = {};
 
 let connectedDevices = {};
 
@@ -89,7 +89,7 @@ export const bluetoothBridge = function (options) {
   BLEWormhole.CreateNativeEventEmitter(centralEmitter, peripheralEmitter);
   BLEWormhole.ReceiveHandler = characteristic => {
     if (characteristic !== undefined) {
-      console.log('characteristic value', characteristic.value);
+      console.log('characteristic', characteristic);
       if (
         characteristic.uuid.toLowerCase() === controlCharaUUID.toLowerCase()
       ) {
@@ -124,8 +124,8 @@ export const bluetoothBridge = function (options) {
         if (dataCommand.command === 'getMetadataBle') {
           console.log('payloadData', payloadData);
 
-          var remoteAddress = characteristic.device;
-          var displayName = deviceID_Name[remoteAddress];
+          var deviceID = characteristic.device;
+          var displayName = deviceID_Name[deviceID];
 
           var tmpArguments = {};
           if (payloadData === undefined) {
@@ -149,7 +149,7 @@ export const bluetoothBridge = function (options) {
           var sendBuffer = Buffer.from(jsonString);
           BLEWormhole.SendBuffer(
             displayName,
-            remoteAddress,
+            deviceID,
             bleServiceUUID,
             controlCharaUUID,
             sendBuffer,
@@ -172,7 +172,7 @@ export const bluetoothBridge = function (options) {
               if (connectedDevices[deviceID] === undefined) {
                 commandResponseBuffer.push({
                   command: 'connected',
-                  arguments: {remoteAddress: deviceID, isIncoming: true},
+                  arguments: {remoteAddress: deviceName, isIncoming: true},
                 });
                 DeviceEventEmitter.emit('commandPop');
                 connectedDevices[deviceID] = deviceName;
@@ -180,7 +180,7 @@ export const bluetoothBridge = function (options) {
                 commandResponseBuffer.push({
                   command: 'connectionFailure',
                   arguments: {
-                    remoteAddress: deviceID,
+                    remoteAddress: deviceName,
                     isIncoming: true,
                     reason: 'Already connected.',
                   },
@@ -219,23 +219,23 @@ export const bluetoothBridge = function (options) {
 
   BLEWormhole.DiscoverDeviceHandler = device => {
     deviceID_Name[device.deviceID] = device.name;
-
+    deviceName_ID[device.name] = device.deviceID;
     var deviceProperty;
     if (deviceInfos[device.name] === undefined) {
       console.log('device', device);
 
       deviceInfos[device.name] = device;
       deviceProperty = {
-        remoteAddress: device.deviceID,
-        displayName: device.name,
+        remoteAddress: device.name,
+        displayName: device.deviceID,
       };
       deviceProperties.push(deviceProperty);
 
-      if (connectedDevices[deviceProperty.remoteAddress] === undefined) {
+      if (connectedDevices[deviceProperty.displayName] === undefined) {
         console.log('connecting', device.deviceID);
         BLEWormhole.Connect(device.deviceID, bleServiceUUID, connectCharaUUIDs)
           .then(res => {
-            console.log('connect:' + res.characteristic);
+            console.log('connect:' + res.characteristic, deviceProperty);
             var commandData = {command: 'incoming', arguments: deviceProperty};
             var jsonString = JSON.stringify(commandData);
             BLEWormhole.SendBuffer(
@@ -384,7 +384,9 @@ export const bluetoothBridge = function (options) {
     } else if (command === 'getMetadata') {
       //ssb-mobile-bluetooth-manager need change
       var remoteAddress = cmd_arguments.remoteDevice;
-      var displayName = deviceID_Name[remoteAddress];
+      var deviceID = deviceName_ID[remoteAddress];
+
+      var displayName = cmd_arguments.remoteDevice;
 
       var jsonData = {
         command: 'getMetadataBle',
@@ -395,7 +397,7 @@ export const bluetoothBridge = function (options) {
       var sendBuffer = Buffer.from(jsonString);
       BLEWormhole.SendBuffer(
         displayName,
-        remoteAddress,
+        deviceID,
         bleServiceUUID,
         controlCharaUUID,
         sendBuffer,
