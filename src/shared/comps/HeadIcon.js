@@ -21,27 +21,26 @@ export default ({style = [], height = 60, width = 60, image, pub, online}) => (
     {/*    image === PeerIcons.peerGirlIcon && pub ? PeerIcons.pubIcon : image*/}
     {/*  }*/}
     {/*/>*/}
-    {/*<FastImage*/}
-    {/*  style={[*/}
-    {/*    {height: height, width: width, borderRadius: height << 1},*/}
-    {/*    ...style,*/}
-    {/*  ]}*/}
-    {/*  source={*/}
-    {/*    image === PeerIcons.peerGirlIcon && pub ? PeerIcons.pubIcon : image*/}
-    {/*  }*/}
-    {/*/>*/}
-    <View
+
+    <FastImage
       style={[
         {height: height, width: width, borderRadius: height << 1},
         ...style,
-      ]}>
-      <WebView
-        containerStyle={[{borderRadius: height << 1}]}
-        source={{
-          uri: 'http://10.13.230.223:3000',
-        }}
-      />
-    </View>
+      ]}
+      source={
+        image === PeerIcons.peerGirlIcon && pub ? PeerIcons.pubIcon : image
+      }
+    />
+
+    {/*<View style={[{height: height, width: width}, ...style]}>*/}
+    {/*  <WebView*/}
+    {/*    containerStyle={[{borderRadius: height << 1}]}*/}
+    {/*    source={{*/}
+    {/*      uri: 'http://10.13.230.223:3000',*/}
+    {/*    }}*/}
+    {/*  />*/}
+    {/*</View>*/}
+
     {online && online.length > 0 && (
       <View
         style={[
