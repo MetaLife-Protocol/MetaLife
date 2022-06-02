@@ -2,6 +2,8 @@ package com.metalife;
 
 import android.app.Application;
 import android.content.Context;
+import android.webkit.WebView;
+
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -57,6 +59,7 @@ public class MainApplication extends Application implements ReactApplication {
   private static void initializeFlipper(
       Context context, ReactInstanceManager reactInstanceManager) {
     if (BuildConfig.DEBUG) {
+        WebView.setWebContentsDebuggingEnabled(true);
       try {
         /*
          We use reflection here to pick up the class that initializes Flipper,
