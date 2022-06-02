@@ -58,7 +58,6 @@ public class MainApplication extends Application implements ReactApplication {
   private static void initializeFlipper(
       Context context, ReactInstanceManager reactInstanceManager) {
     if (BuildConfig.DEBUG) {
-        WebView.setWebContentsDebuggingEnabled(true);
       try {
         /*
          We use reflection here to pick up the class that initializes Flipper,
