@@ -17,7 +17,7 @@ const Avatar = ({setAvatar}) => {
   const webview = useRef();
 
   function onAvatarExported(message) {
-    setAvatar(message.data?.url);
+    setAvatar(message.data?.url + '?' + Math.random());
   }
 
   const subscribe = () => {

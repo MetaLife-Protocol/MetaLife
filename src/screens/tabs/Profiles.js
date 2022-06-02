@@ -1,18 +1,28 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {connect} from 'react-redux/lib/exports';
-import {XHRImg} from '../../remote/rpm';
-import {Image, Pressable, Text, View} from 'react-native';
-import LoadingBar from '../../shared/comps/LoadingBar';
-import schemaStyles from '../../shared/SchemaStyles';
 import {WebView} from 'react-native-webview';
 
 // (Platform.OS === 'ios') ? {uri: './FMDemoBaseMap/FMMapBasic.html'} : {uri: 'file:///android_asset/FMDemoBaseMap/FMMapBasic.html'}
 const Profiles = ({avatar}) => {
   const webview = useRef();
 
+  useEffect(() => {
+    webview.current.postMessage(
+      JSON.stringify({fun: 'setUrl', params: {url: avatar}}),
+    );
+  }, [avatar]);
+
   function loadHandler() {}
 
-  function process(data) {}
+  function loadedHandler() {
+    webview.current.postMessage(
+      JSON.stringify({fun: 'setUrl', params: {url: avatar}}),
+    );
+  }
+
+  function messageHandler({nativeEvent: {data}}) {
+    console.log('processing: ', JSON.parse(data));
+  }
 
   return (
     <WebView
@@ -21,7 +31,8 @@ const Profiles = ({avatar}) => {
         uri: 'http://10.13.230.223:3000',
       }}
       onLoad={loadHandler}
-      onMessage={message => process(message)}
+      onLoadEnd={loadedHandler}
+      onMessage={messageHandler}
     />
   );
 };
