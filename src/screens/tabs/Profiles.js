@@ -34,7 +34,6 @@ const Profiles = ({avatar}) => {
       //     ? require('../../assets/web/render/index.html')
       //     : {uri: 'file:///android_asset/assets/web/render/index.html'}
       // }
-      cacheEnabled={false}
       onLoad={loadHandler}
       onLoadEnd={loadedHandler}
       onMessage={messageHandler}
