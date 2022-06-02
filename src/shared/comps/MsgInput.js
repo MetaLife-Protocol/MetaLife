@@ -25,7 +25,7 @@ const MsgInput = ({sendHandler}) => {
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={offset}
-      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={[FG, row, alignItemsCenter, inner]}>
         <View style={[input, flex1, round]}>
           <TextInput
