@@ -172,31 +172,39 @@ const Wallet = ({
       }).catch(error => console.log(error, '>>>>>>>forex'));
 
     axios
-      .get('https://api.coingecko.com/api/v3/coins/ethereum/market_chart/range?vs_currency=usd&from=0&to=1600000000000`')
+      .get('https://api.hitbtc.com/api/3/public/price/rate?from=ETH&to=USDT')
       .then(res => {
-        setEthPrice(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100) / 100);
         setIsLoadingETH(false);
-        console.log(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100) / 100);
+        setEthPrice(Math.round(res.data.ETH.price));
+        console.log(Math.round(res.data.ETH.price), '>>>>>>eth');
       }).catch(error => console.log(error, '>>>>eth'));
     axios
-      .get('http://api.coingecko.com/api/v3/coins/smartmesh/market_chart/range?vs_currency=usd&from=0&to=1600000000000`')
+      .get('https://api.hitbtc.com/api/3/public/price/rate?from=SMT&to=USDT')
       .then(res => {
-        setSmtPrice(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000);
-        console.log(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000, '>>>>>smt');
+        setSmtPrice(Math.round(res.data.SMT.price));
+        console.log(Math.round(res.data.SMT.price), '>>>>>smt');
       }).catch(error => console.log(error, '>>>>>smt'));
     axios
-      .get('http://api.coingecko.com/api/v3/coins/media-licensing-token/market_chart/range?vs_currency=usd&from=0&to=1600000000000`')
+      .get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/category?id=6053dfb66be1bf5c15e865ee', {
+        headers: {
+          'X-CMC_PRO_API_KEY': '60155b5f-0052-411e-96aa-7b8be0f02c32',
+        },
+      })
       .then(res => {
-        setMltPrice(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000);
-        console.log(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000, '>>>>>>mlt');
+        for (let i = 0; i < res.data.data.coins.length; i++) {
+          if (res.data.data.coins[i].symbol === 'MLT') {
+            setMltPrice(Math.round(res.data.data.coins[i].quote.USD.price * 10000) / 10000);
+            console.log(Math.round(res.data.data.coins[i].quote.USD.price * 10000) / 10000, '>>>>>>mlt');
+          }
+        }
       }).catch(error => console.log(error, '>>>>>mlt'));
     axios
-      .get('http://api.coingecko.com/api/v3/coins/meshbox/market_chart/range?vs_currency=usd&from=0&to=1600000000000`')
+      .get('https://api.hitbtc.com/api/3/public/price/rate?from=MESH&to=USDT')
       .then(res => {
-        setMeshPrice(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000);
-        console.log(Math.round(res.data.prices[res.data.prices.length - 1][1] * 100000) / 100000, '>>>>>>mesh');
         setIsLoadingSMT(false);
-      }).catch(error => console.log(error, '>>>>>mlt'));
+        setMeshPrice(Math.round(res.data.MESH.price));
+        console.log(Math.round(res.data.MESH.price), '>>>>>>mesh');
+      }).catch(error => console.log(error, '>>>>>mesh'));
   };
 
   useEffect(() => {
