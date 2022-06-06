@@ -14,10 +14,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import bip39 from 'react-native-bip39';
 // import bip32 from 'bip32';
 // import ethUtil from 'ethereumjs-util';
+// import 'react-native-get-random-values';
+// import "@ethersproject/shims";
 import {ethers} from 'ethers';
 import {randomBytes} from 'react-native-randombytes';
 import {restrict} from '../../utils';
 import {SchemaStyles, colorsSchema, RoundBtn} from 'metalife-base';
+import RandomBytes from '../../abi/RandomBytes.json';
+import axios from 'axios';
 
 const iconDic = {
   Clear_icon_default: require('../../assets/image/accountBtn/Clear_icon_default.png'),
@@ -42,6 +46,7 @@ const Create = ({name, setName, setCurrentAccount, addAccount}) => {
   const [focusedClear, setfocusedClear] = useState(true);
   const [focusedDark, setfocusedDark] = useState(true);
   const [focusedConfirm, setfocusedConfirm] = useState(true);
+  const Randombyte = RandomBytes[Math.floor(Math.random() * 50)].data;
   // const provider = new ethers.providers.JsonRpcProvider('https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161');
 
   const cleaerPress = () => {
@@ -65,32 +70,63 @@ const Create = ({name, setName, setCurrentAccount, addAccount}) => {
     // balance = await provider.getBalance("0xa52B964cDE8BD92aAcE42Bec4A19BcDD0f88E1ac");
     // const formatether = ethers.utils.formatEther(balance);
     // console.log(formatether, '<<<<<<<<<<<<<<format ether');
+    
+    const mnemonic = genMnemonic(Randombyte);
+    
+    
+  let response = null;
+  new Promise(async (resolve, reject) => {
+    try {
+      response = await axios.get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/category?id=6051a82366fc1b42617d6dc4', {
+        headers: {
+          'X-CMC_PRO_API_KEY': '60155b5f-0052-411e-96aa-7b8be0f02c32',
+        },
+      });
+    } catch(ex) {
+      response = null;
+      // error
+      console.log(ex);
+      reject(ex);
+    }
+    if (response) {
+      // success
+      const json = response.data;
+      console.log(json, '<<<<<<<<<<<<<<JSON DATA');
+      resolve(json);
+    }
+  });
 
-    let randomWallet = ethers.Wallet.createRandom();
-    console.log(randomWallet, '<<<<<<<<<<prov');
 
-    const mnemonic = genMnemonic(randomWallet.signingKey.mnemonic);
+    // let randomWallet = ethers.Wallet.fromMnemonic(mnemonic);
+    // const address = await randomWallet.getAddress();
+    // console.log(randomWallet, '<<<<<<<<<<prov');
 
-    let currentAccount = {
-      Name: nick,
-      Password: pwd,
-      PassPrompt: prompt,
-      isBackup: true,
-      Mnemonic: mnemonic,
-      Address: randomWallet.signingKey.address,
-      PrivateKey: randomWallet.signingKey.privateKey,
-      Keystore: randomWallet.signingKey.publicKey,
-    };
-    console.log(
-      currentAccount,
-      '<<<<<<<<<<<<<<set currentAccount>>>>>>>>>>>>>>>>',
-    );
-    setCurrentAccount(currentAccount);
-    addAccount(currentAccount);
+    // let currentAccount = {
+    //   Name: nick,
+    //   Password: pwd,
+    //   PassPrompt: prompt,
+    //   isBackup: true,
+    //   Mnemonic: mnemonic,
+    //   Address: address,
+    //   PrivateKey: randomWallet.privateKey,
+    //   Keystore: randomWallet.publicKey,
+    // };
+    // console.log(
+    //   currentAccount,
+    //   '<<<<<<<<<<<<<<set currentAccount>>>>>>>>>>>>>>>>',
+    // );
+    // setCurrentAccount(currentAccount);
+    // addAccount(currentAccount);
   };
+
 
   const createWallet = () => {
     createAccount();
+    // randomBytes(16, (error, bytes) => {
+    //   // const mnemonic = ethers.utils.HDNode.entropyToMnemonic(bytes, ethers.wordlists.en);
+    //   const test = ethers.HDNode.entropyToMnemonic(ethers.utils.randomBytes(16));
+    //   console.log(test);
+    // });
     /*
     randomBytes(16, (error, bytes) => {
       const mnemonic = ethers.utils.HDNode.entropyToMnemonic(bytes, ethers.wordlists.en);

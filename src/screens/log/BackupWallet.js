@@ -51,6 +51,7 @@ const BackupWallet = ({name, setName, currentAccount}) => {
 
   const checkPassword = () => {
     console.log(currentAccount);
+    console.log(confirm, '???????confirm');
     if (currentAccount.Password == confirm) {
       replace('BackupMnemonic');
     } else {
