@@ -87,6 +87,12 @@ export const bluetoothBridge = function (options) {
   var peripheralEmitter = new NativeEventEmitter(BLEPeripheral);
   var centralEmitter = new NativeEventEmitter(NativeModules.BleManager);
   BLEWormhole.CreateNativeEventEmitter(centralEmitter, peripheralEmitter);
+  BLEWormhole.DisconnectHandler = deviceID => {
+    console.log('disconnect', deviceID);
+    if (connectedDevices[deviceID] !== undefined) {
+      delete connectedDevices[deviceID];
+    }
+  };
   BLEWormhole.ReceiveHandler = characteristic => {
     if (characteristic !== undefined) {
       console.log('characteristic', characteristic);
