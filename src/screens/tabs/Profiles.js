@@ -15,7 +15,7 @@ const Profiles = ({avatar}) => {
   function loadHandler() {}
 
   function loadedHandler() {
-    webview.current.injectJavaScript(`setUrl('${avatar}');true;`);
+    avatar && webview.current.injectJavaScript(`setUrl('${avatar}');true;`);
   }
 
   function messageHandler({nativeEvent: {data}}) {
@@ -25,12 +25,14 @@ const Profiles = ({avatar}) => {
   return (
     <WebView
       ref={webview}
-      // source={{uri: 'http://10.13.230.223:3000'}}
       source={
-        Platform.OS === 'ios'
+        !__DEV__
+          ? {uri: 'http://10.13.230.223:3000'}
+          : Platform.OS === 'ios'
           ? require('../../assets/web/render/index.html')
-          : {uri: 'file:///android_asset/assets/web/render/index.html'}
+          : {uri: 'file:///android/app/src/main/assets/web/render/index.html'}
       }
+      originWhitelist={['*']}
       onLoad={loadHandler}
       onLoadEnd={loadedHandler}
       onMessage={messageHandler}
