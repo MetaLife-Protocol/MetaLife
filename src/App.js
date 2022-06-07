@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect} from 'react';
+import {useEffect, useRef} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Tabs from './screens/Tabs';
@@ -50,6 +50,8 @@ const App = ({
   const {channel} = nodejs;
   const bluetoothIcon = require('./assets/image/headerBtn/contacts_icon_add_white.png');
 
+  const btBtn = useRef(null);
+
   // todo: loading bar test
   useEffect(() => {
     SplashScreen.hide();
@@ -84,6 +86,7 @@ const App = ({
             /*, headerLargeTitle: true*/
             headerRight: props => (
               <HeaderRightBtn
+                ref={btBtn}
                 btnIcon={bluetoothIcon}
                 btnHandler={() => {
                   console.log('search');
