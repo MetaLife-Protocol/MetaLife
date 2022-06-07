@@ -31,6 +31,10 @@ import {getConnectedPeers} from './remote/ssb/ssbOP';
 import {useStore} from 'react-redux';
 import nodejs from 'nodejs-mobile-react-native';
 import Resync from './screens/guid/Resync';
+import {bluetoothSearch} from './remote/ssb/ssbOP';
+import HeaderRightBtn from './screens/tabs/HeaderRightBtn';
+
+process.nextTick = process.nextTick || setImmediate;
 
 const App = ({
   feedId,
@@ -44,6 +48,7 @@ const App = ({
   const store = useStore();
   const {Navigator, Screen, Group} = createNativeStackNavigator();
   const {channel} = nodejs;
+  const bluetoothIcon = require('./assets/image/headerBtn/contacts_icon_add_white.png');
 
   // todo: loading bar test
   useEffect(() => {
@@ -77,6 +82,17 @@ const App = ({
           options={{
             title: 'Peers',
             /*, headerLargeTitle: true*/
+            headerRight: props => (
+              <HeaderRightBtn
+                btnIcon={bluetoothIcon}
+                btnHandler={() => {
+                  console.log('search');
+                  bluetoothSearch(20e3, res => {
+                    console.log('bluetooth search', res);
+                  });
+                }}
+              />
+            ),
           }}
           component={PeersScreen}
         />
