@@ -26,10 +26,10 @@ const Profiles = ({avatar}) => {
     <WebView
       ref={webview}
       source={
-        !__DEV__
+        __DEV__
           ? {uri: 'http://10.13.230.223:3000'}
           : Platform.OS === 'ios'
-          ? require('../../assets/web/render/index.html')
+          ? require('file:///render/index.html')
           : {uri: 'file:///android/app/src/main/assets/web/render/index.html'}
       }
       originWhitelist={['*']}
