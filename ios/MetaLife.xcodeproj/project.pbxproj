@@ -15,6 +15,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B045A7A728335D9000193B74 /* launch.png in Resources */ = {isa = PBXBuildFile; fileRef = B045A7A628335D9000193B74 /* launch.png */; };
+		B04FE0D128503C7F00158349 /* static.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B04FE0D028503C7F00158349 /* static.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MetaLife/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A1AFA42E43CBEEA5F226191A /* Pods-MetaLife-MetaLifeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLife-MetaLifeTests.debug.xcconfig"; path = "Target Support Files/Pods-MetaLife-MetaLifeTests/Pods-MetaLife-MetaLifeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		B045A7A628335D9000193B74 /* launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launch.png; sourceTree = "<group>"; };
+		B04FE0D028503C7F00158349 /* static.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = static.bundle; path = ../static.bundle; sourceTree = "<group>"; };
 		DCA7A49B98DD35585F9AC84A /* Pods-MetaLifeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLifeTests.debug.xcconfig"; path = "Target Support Files/Pods-MetaLifeTests/Pods-MetaLifeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAE466A0EAB508CEFFF14AD7 /* libPods-MetaLifeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MetaLifeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,6 +136,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				B04FE0D028503C7F00158349 /* static.bundle */,
 				13B07FAE1A68108700A75B9A /* MetaLife */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* MetaLifeTests */,
@@ -255,6 +258,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				B045A7A728335D9000193B74 /* launch.png in Resources */,
+				B04FE0D128503C7F00158349 /* static.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

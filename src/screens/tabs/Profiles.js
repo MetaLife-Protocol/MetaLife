@@ -1,9 +1,14 @@
 import React, {useEffect, useRef} from 'react';
 import {connect} from 'react-redux/lib/exports';
 import {WebView} from 'react-native-webview';
-import {Platform} from 'react-native';
+import {Platform, Text, View} from 'react-native';
+import {Link} from '@react-navigation/native';
+import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
+import RoundBtn from '../../shared/comps/RoundBtn';
 
 const Profiles = ({avatar}) => {
+  const {flex1, alignItemsCenter, justifyCenter, marginTop10, text} =
+    SchemaStyles();
   const runFirst = `
       window.platform = '${Platform.OS}'; 
       true; // note: this is required, or you'll sometimes get silent failures
@@ -22,22 +27,39 @@ const Profiles = ({avatar}) => {
     console.log('processing: ', JSON.parse(data));
   }
 
-  return (
+  return avatar ? (
     <WebView
       ref={webview}
-      source={
-        __DEV__
-          ? {uri: 'http://10.13.230.223:3000'}
+      source={{
+        uri: __DEV__
+          ? 'http://10.13.230.223:3000'
           : Platform.OS === 'ios'
-          ? require('file:///render/index.html')
-          : {uri: 'file:///android/app/src/main/assets/web/render/index.html'}
-      }
+          ? 'static.bundle/web/render/index.html'
+          : 'file:///android/app/src/main/assets/web/render/index.html',
+      }}
       originWhitelist={['*']}
       onLoad={loadHandler}
       onLoadEnd={loadedHandler}
       onMessage={messageHandler}
       injectedJavaScript={runFirst}
     />
+  ) : (
+    <View
+      style={[
+        flex1,
+        text,
+        alignItemsCenter,
+        justifyCenter,
+        {alignContent: 'center'},
+      ]}>
+      <Text style={[text, {fontSize: 20}]}>No avatar available</Text>
+      <View style={[{height: 30}]} />
+      <Link to={'/Avatar'}>
+        <Text style={[{color: colorsSchema.primary, fontSize: 20}]}>
+          Go to create one
+        </Text>
+      </Link>
+    </View>
   );
 };
 
