@@ -39,10 +39,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Online Chat Usage</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Head icon &amp; post image usage</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Online Chat Usage</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Discover peers around</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Take video</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
@@ -61,17 +65,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Head icon &amp; post image usage</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Head icon &amp; post image usage</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Head icon &amp; post image usage</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Take video</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Online Chat Usage</string>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Online Chat Usage</string>
 </dict>
 </plist>

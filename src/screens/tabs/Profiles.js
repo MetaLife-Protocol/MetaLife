@@ -35,7 +35,7 @@ const Profiles = ({avatar}) => {
           ? 'http://10.13.230.223:3000'
           : Platform.OS === 'ios'
           ? 'static.bundle/web/render/index.html'
-          : 'file:///android/app/src/main/assets/web/render/index.html',
+          : 'file:///android_asset/web/render/index.html',
       }}
       originWhitelist={['*']}
       onLoad={loadHandler}
