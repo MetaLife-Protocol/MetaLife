@@ -1,0 +1,9 @@
+diff --git a/node_modules/ssb-serve-blobs/port.js b/node_modules/ssb-serve-blobs/port.js
+index a068303..e20dd7a 100644
+--- a/node_modules/ssb-serve-blobs/port.js
++++ b/node_modules/ssb-serve-blobs/port.js
+@@ -1 +1 @@
+-module.exports = 26835;
+\ No newline at end of file
++module.exports = 26834;
+\ No newline at end of file
