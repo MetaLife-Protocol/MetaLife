@@ -57,6 +57,8 @@
 	<string>Head icon &amp; post image usage</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Social needs</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Social needs</string>
 	<key>NSContactsUsageDescription</key>
 	<string>Social needs</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
