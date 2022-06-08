@@ -45,6 +45,8 @@
 	<string>Head icon &amp; post image usage</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Online Chat Usage</string>
+	<key>NSNearbyInteractionUsageDescription</key>
+	<string>Communication needs</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Discover peers around</string>
 	<key>NSMicrophoneUsageDescription</key>
@@ -53,6 +55,18 @@
 	<string>Head icon &amp; post image usage</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Head icon &amp; post image usage</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Social needs</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Social needs</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Communication needs</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Social needs</string>
+	<key>kTCCServiceMediaLibrary</key>
+	<string>Social needs</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Social needs</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -65,5 +79,16 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<string>Head icon &amp; post image usage</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Head icon &amp; post image usage</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Head icon &amp; post image usage</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Take video</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Online Chat Usage</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Online Chat Usage</string>
 </dict>
 </plist>
