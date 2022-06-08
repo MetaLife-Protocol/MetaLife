@@ -30,7 +30,7 @@ const HeaderProfiles = ({feedId, relations, infoDic}) => {
   const {navigate, push} = useNavigation(),
     {setString} = nativeClipboard;
 
-  const {name, description, image} = infoDic[feedId] || {},
+  const {name, description, image, avatar} = infoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
 
   const [showId, setShowId] = useState(false);
@@ -52,6 +52,7 @@ const HeaderProfiles = ({feedId, relations, infoDic}) => {
           style={[photo]}
           width={90}
           height={90}
+          avatar={avatar}
           image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
         />
       </Pressable>

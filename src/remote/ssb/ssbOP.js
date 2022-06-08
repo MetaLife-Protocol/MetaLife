@@ -20,7 +20,6 @@ export const stage = cb =>
 export const connStart = cb =>
   ssb.conn.start((e, v) => (e ? console.error(e) : cb(v)));
 
-
 export const bluetoothSearch = (interval, cb) =>
   ssb.bluetooth.makeDeviceDiscoverable(interval, (e, v) => {
     console.log('bluetoothSearch error', e);
@@ -91,6 +90,11 @@ export const getProfile = (fid, cb) =>
 export const setAbout = (fid, {name, description, image}, cb) =>
   ssb.publishUtilsBack.publishAbout(
     {type: 'about', about: fid, name, description, image},
+    (e, v) => (e ? console.error(e) : cb(v)),
+  );
+export const setAvatar = (fid, {name, description, image, avatar}, cb) =>
+  ssb.publish(
+    {type: 'about', about: fid, name, description, image, avatar},
     (e, v) => (e ? console.error(e) : cb(v)),
   );
 

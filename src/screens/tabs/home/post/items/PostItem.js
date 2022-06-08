@@ -59,6 +59,7 @@ const PostItem = ({
       name = author.substring(0, 10),
       description = '',
       image = '',
+      avatar = '',
     } = infoDic[author] || {},
     {text: cText, mentions = null} = content,
     commentArr = commentDic[key] || [],
@@ -174,6 +175,7 @@ const PostItem = ({
     <View style={[row, container]}>
       <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
         <HeadIcon
+          avatar={avatar}
           image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
         />
       </Pressable>

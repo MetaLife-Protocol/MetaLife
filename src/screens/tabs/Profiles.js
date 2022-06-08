@@ -5,10 +5,11 @@ import {Platform, Text, View} from 'react-native';
 import {Link} from '@react-navigation/native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import RoundBtn from '../../shared/comps/RoundBtn';
+import {setAvatar} from '../../remote/ssb/ssbOP';
+import Toast from 'react-native-tiny-toast';
 
-const Profiles = ({avatar}) => {
-  const {flex1, alignItemsCenter, justifyCenter, marginTop10, text} =
-    SchemaStyles();
+const Profiles = ({feedId, infoDic, avatar}) => {
+  const {flex1, alignItemsCenter, justifyCenter, text} = SchemaStyles();
   const runFirst = `
       window.platform = '${Platform.OS}'; 
       true; // note: this is required, or you'll sometimes get silent failures
@@ -27,22 +28,45 @@ const Profiles = ({avatar}) => {
     console.log('processing: ', JSON.parse(data));
   }
 
+  function submit(type, value) {
+    setAvatar(feedId, {...infoDic[feedId], [type]: value}, () =>
+      Toast.show(type + ' submitted'),
+    );
+  }
+
+  const onlineRender = false;
   return avatar ? (
-    <WebView
-      ref={webview}
-      source={{
-        uri: __DEV__
-          ? 'http://10.13.230.223:3000'
-          : Platform.OS === 'ios'
-          ? 'static.bundle/web/render/index.html'
-          : 'file:///android_asset/web/render/index.html',
-      }}
-      originWhitelist={['*']}
-      onLoad={loadHandler}
-      onLoadEnd={loadedHandler}
-      onMessage={messageHandler}
-      injectedJavaScript={runFirst}
-    />
+    <>
+      <WebView
+        ref={webview}
+        source={{
+          uri:
+            __DEV__ && onlineRender
+              ? 'http://10.13.230.223:3000'
+              : Platform.OS === 'ios'
+              ? 'static.bundle/web/render/index.html'
+              : 'file:///android_asset/web/render/index.html',
+        }}
+        originWhitelist={['*']}
+        onLoad={loadHandler}
+        onLoadEnd={loadedHandler}
+        onMessage={messageHandler}
+        injectedJavaScript={runFirst}
+      />
+      <RoundBtn
+        style={[
+          {
+            height: 30,
+            width: '40%',
+            position: 'absolute',
+            bottom: 10,
+            right: -20,
+          },
+        ]}
+        title={'Use it as avatar'}
+        press={() => submit('avatar', avatar)}
+      />
+    </>
   ) : (
     <View
       style={[
@@ -65,7 +89,9 @@ const Profiles = ({avatar}) => {
 
 const msp = s => {
   return {
+    feedId: s.user.feedId,
     avatar: s.user.avatar,
+    infoDic: s.info,
   };
 };
 
