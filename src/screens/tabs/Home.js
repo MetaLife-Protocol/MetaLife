@@ -46,20 +46,38 @@ const Home = ({cfg: {verbose}, publicMsg, setConnectedPeers}) => {
           ))}
         </Section>
       ) : (
-        <Section
-          style={[flex1]}
-          title={'Feed'}
-          rightBtn={
-            <Pressable onPress={() => navigate('Post')}>
-              <Text style={[{color: colorsBasics.primary, marginRight: 20}]}>
-                More
-              </Text>
-            </Pressable>
-          }>
-          {publicMsg.splice(0, 5).map(info => (
-            <ItemAgent key={info.key} info={{item: info}} verbose={verbose} />
-          ))}
-        </Section>
+        <>
+          <Section
+            title={'Feed'}
+            rightBtn={
+              <Pressable onPress={() => navigate('Post')}>
+                <Text style={[{color: colorsBasics.primary, marginRight: 20}]}>
+                  More
+                </Text>
+              </Pressable>
+            }>
+            {publicMsg
+              .concat()
+              .splice(0, 5)
+              .map(info => (
+                <ItemAgent
+                  key={info.key}
+                  info={{item: info}}
+                  verbose={verbose}
+                />
+              ))}
+          </Section>
+          <Section
+            title={'NFT'}
+            rightBtn={
+              <Pressable onPress={() => navigate('Post')}>
+                <Text style={[{color: colorsBasics.primary, marginRight: 20}]}>
+                  More
+                </Text>
+              </Pressable>
+            }
+          />
+        </>
       )}
     </ScrollView>
   );
