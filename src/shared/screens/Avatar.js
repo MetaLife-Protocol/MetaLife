@@ -8,6 +8,7 @@ import {WebView} from 'react-native-webview';
 import {connect} from 'react-redux/lib/exports';
 
 const subdomain = 'metalifesocial';
+//uri: `https://metalifesocial.readyplayer.me/avatar?frameApi`,
 
 let isSubscribed = false;
 let count = 0;
