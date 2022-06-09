@@ -8,7 +8,7 @@ import SchemaStyles from '../SchemaStyles';
 import {useDispatch, useSelector} from 'react-redux';
 
 export default ({style = []}) => {
-  const {flex1, text} = SchemaStyles(),
+  const {flex1, text, BG} = SchemaStyles(),
     {background, container, titleStyle} = styles;
 
   const {pullMenu} = useSelector(state => state.runtime),
@@ -32,7 +32,7 @@ export default ({style = []}) => {
             flex1,
             style,
             container,
-            {top: position.y, left: position.x},
+            {top: position.y, left: position.x, backgroundColor: text.color},
           ]}>
           {buttons.map(({title, handler}, i) => (
             <Pressable
@@ -44,7 +44,10 @@ export default ({style = []}) => {
                 setHighLight(NaN);
               }}>
               <Text
-                style={[text, titleStyle, highLight === i && {color: 'black'}]}>
+                style={[
+                  titleStyle,
+                  {color: highLight === i ? 'black' : BG.backgroundColor},
+                ]}>
                 {title}
               </Text>
             </Pressable>
@@ -63,9 +66,9 @@ const styles = StyleSheet.create({
   },
   container: {
     position: 'absolute',
-    backgroundColor: 'gray',
     padding: 6,
     margin: 4,
+    borderRadius: 10,
   },
   titleStyle: {
     marginHorizontal: 2,

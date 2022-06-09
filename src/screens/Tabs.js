@@ -9,7 +9,7 @@ import Profiles from './tabs/Profiles';
 import Messages from './tabs/Messages';
 import Contacts from './tabs/Contacts';
 import Discover from './tabs/Discover';
-import {Image} from 'react-native';
+import {Image, PixelRatio, useWindowDimensions} from 'react-native';
 import I18n from '../i18n/I18n';
 import HeaderProfiles from './tabs/profiles/HeaderProfiles';
 import HeaderRightBtn from './tabs/HeaderRightBtn';
@@ -38,19 +38,56 @@ function Ionicons({name, focused, color, size}) {
   );
 }
 
-const Tabs = ({darkMode}) => {
+const Tabs = ({layout, darkMode, showPullMenu}) => {
+  console.log(layout);
   const contactAddIcon = darkMode
     ? HeaderIcons.contactAddIconWhite
     : HeaderIcons.contactAddIconBlack;
   const {navigate} = useNavigation();
   const goScreen = screenName => () => navigate(screenName);
+  const {scale} = useWindowDimensions();
   const {Navigator, Screen} = createBottomTabNavigator();
-  const index = useNavigation().getState().routes[0].state?.index || 0;
-  useFocusEffect(
-    useCallback(() => {
-      console.log('index:', index);
-    }, []),
-  );
+
+  const menuHandler = useCallback(function (e) {
+    showPullMenu({
+      position: {
+        x:
+          PixelRatio.getPixelSizeForLayoutSize(e.nativeEvent.pageX / scale) -
+          80,
+        y: PixelRatio.getPixelSizeForLayoutSize(e.nativeEvent.pageY / scale),
+      },
+      buttons: [
+        {
+          title: 'Create nft',
+          handler: () => {
+            goScreen('');
+            showPullMenu({position: {}, buttons: []});
+          },
+        },
+        {
+          title: 'Post article',
+          handler: () => {
+            goScreen('');
+            showPullMenu({position: {}, buttons: []});
+          },
+        },
+        {
+          title: 'Add friend',
+          handler: () => {
+            goScreen('');
+            showPullMenu({position: {}, buttons: []});
+          },
+        },
+        {
+          title: 'QR code',
+          handler: () => {
+            goScreen('');
+            showPullMenu({position: {}, buttons: []});
+          },
+        },
+      ],
+    });
+  }, []);
 
   return (
     <Navigator
@@ -77,7 +114,7 @@ const Tabs = ({darkMode}) => {
           headerRight: props => (
             <HeaderRightBtn
               btnIcon={HeaderIcons.home_add}
-              btnHandler={goScreen('PostMsgEditor')}
+              btnHandler={menuHandler}
             />
           ),
           headerRightContainerStyle: [{right: 19}],
@@ -141,4 +178,10 @@ const Tabs = ({darkMode}) => {
 
 const msp = s => s.cfg;
 
-export default connect(msp)(Tabs);
+const mdp = d => {
+  return {
+    showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
+  };
+};
+
+export default connect(msp, mdp)(Tabs);
