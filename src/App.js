@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {useEffect, useRef} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Tabs from './screens/Tabs';
 import Guid from './screens/Guid';
@@ -27,13 +30,17 @@ import Mnemonic from './shared/screens/Mnemonic';
 import {startSSB} from './remote/ssb/starter';
 import {initializeHandlers} from './remote/ssb/SsbListeners';
 import {checkAddon} from './remote/ssb/SsbHandlers';
-import {getConnectedPeers} from './remote/ssb/ssbOP';
+import {bluetoothSearch, getConnectedPeers} from './remote/ssb/ssbOP';
 import {useStore} from 'react-redux';
 import nodejs from 'nodejs-mobile-react-native';
 import Resync from './screens/guid/Resync';
-import {bluetoothSearch} from './remote/ssb/ssbOP';
 import HeaderRightBtn from './screens/tabs/HeaderRightBtn';
 import Post from './screens/tabs/home/Post';
+import {
+  bluetoothIconBlack,
+  bluetoothIconWhite,
+  HeaderIcons,
+} from './shared/Icons';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -44,14 +51,16 @@ const App = ({
   setConnectedPeers,
   viewImages,
   setViewImages,
+  darkMode,
 }) => {
   const {barStyle, theme} = SchemaStyles();
   const store = useStore();
   const {Navigator, Screen, Group} = createNativeStackNavigator();
   const {channel} = nodejs;
-  const bluetoothIcon = require('./assets/image/headerBtn/contacts_icon_add_white.png');
 
   const btBtn = useRef(null);
+
+  const navigationRef = useNavigationContainerRef();
 
   // todo: loading bar test
   useEffect(() => {
@@ -69,7 +78,7 @@ const App = ({
   }, []);
 
   return (
-    <NavigationContainer theme={theme}>
+    <NavigationContainer ref={navigationRef} theme={theme}>
       <StatusBar barStyle={barStyle} />
       <Navigator
         initialRouteName={feedId ? (resync ? 'Resync' : 'Tabs') : 'Guid'}>
@@ -78,7 +87,20 @@ const App = ({
         <Screen name="Resync" component={Resync} />
         <Screen name="Tabs" options={{headerShown: false}} component={Tabs} />
         {/* Home */}
-        <Screen name="Post" component={Post} />
+        <Screen
+          name="Post"
+          component={Post}
+          options={{
+            headerRight: props => (
+              <HeaderRightBtn
+                btnIcon={
+                  darkMode ? HeaderIcons.PlusWhite : HeaderIcons.PlusBlack
+                }
+                btnHandler={() => navigationRef.navigate('PostMsgEditor')}
+              />
+            ),
+          }}
+        />
         {/* Contacts */}
         <Screen name="FriendList" component={FriendList} />
         <Screen
@@ -90,7 +112,7 @@ const App = ({
             headerRight: props => (
               <HeaderRightBtn
                 ref={btBtn}
-                btnIcon={bluetoothIcon}
+                btnIcon={darkMode ? bluetoothIconWhite : bluetoothIconBlack}
                 btnHandler={() => {
                   console.log('search');
                   bluetoothSearch(20e3, res => {
@@ -159,7 +181,7 @@ const App = ({
 
 const msp = s => {
   return {
-    cfg: s.cfg,
+    darkMode: s.cfg.darkMode,
     viewImages: s.runtime.images,
     feedId: s.user.feedId,
     resync: s.user.resync,

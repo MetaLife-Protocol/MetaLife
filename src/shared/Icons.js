@@ -10,6 +10,15 @@ export const PeerIcons = {
   nftIcon: require('../assets/image/contacts/nft_icon.png'),
 };
 
+export const HeaderIcons = {
+  PlusBlack: require('../assets/image/shared/Message_icon_add_black.png'),
+  PlusWhite: require('../assets/image/shared/Message_icon_add_white.png'),
+  messageAdd: require('../assets/image/shared/Message_icon_add.png'),
+  contactAddIconWhite: require('../assets/image/headerBtn/contacts_icon_add_white.png'),
+  contactAddIconBlack: require('../assets/image/headerBtn/contacts_icon_add_black.png'),
+  home_add: require('../assets/image/headerBtn/home_icon_add.png'),
+};
+
 export const ArrowImage = require('../assets/image/shared/back.png');
-export const PlusBlack = require('../assets/image/shared/Message_icon_add_black.png');
-export const PlusWhite = require('../assets/image/shared/Message_icon_add_white.png');
+export const bluetoothIconBlack = require('../assets/image/shared/Bluetooth-black.png');
+export const bluetoothIconWhite = require('../assets/image/shared/Bluetooth-white.png');

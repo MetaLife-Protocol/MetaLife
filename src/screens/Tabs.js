@@ -2,6 +2,7 @@
  * Created on 11/3/21 by lonmee
  */
 import * as React from 'react';
+import {useCallback} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './tabs/Home';
 import Profiles from './tabs/Profiles';
@@ -13,12 +14,8 @@ import I18n from '../i18n/I18n';
 import HeaderProfiles from './tabs/profiles/HeaderProfiles';
 import HeaderRightBtn from './tabs/HeaderRightBtn';
 import {connect} from 'react-redux';
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import {useCallback} from 'react';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {HeaderIcons} from '../shared/Icons';
 
 const iconDic = {
   Home_icon_Default: require('../assets/image/tabBtn/Home_icon_Default.png'),
@@ -33,13 +30,6 @@ const iconDic = {
   Profiles_icon_Selected: require('../assets/image/tabBtn/Profiles_icon_Selected.png'),
 };
 
-const headerBtnIconDic = {
-  addWhite: require('../assets/image/headerBtn/contacts_icon_add_white.png'),
-  addBlack: require('../assets/image/headerBtn/contacts_icon_add_black.png'),
-  home_add: require('../assets/image/headerBtn/home_icon_add.png'),
-  messageAdd: require('../assets/image/headerBtn/Message_icon_add.png'),
-};
-
 function Ionicons({name, focused, color, size}) {
   return (
     <Image
@@ -49,9 +39,9 @@ function Ionicons({name, focused, color, size}) {
 }
 
 const Tabs = ({darkMode}) => {
-  const addIcon = darkMode
-    ? headerBtnIconDic.addWhite
-    : headerBtnIconDic.addBlack;
+  const contactAddIcon = darkMode
+    ? HeaderIcons.contactAddIconWhite
+    : HeaderIcons.contactAddIconBlack;
   const {navigate} = useNavigation();
   const goScreen = screenName => () => navigate(screenName);
   const {Navigator, Screen} = createBottomTabNavigator();
@@ -86,7 +76,7 @@ const Tabs = ({darkMode}) => {
           headerTitleStyle: [{fontSize: 34}],
           headerRight: props => (
             <HeaderRightBtn
-              btnIcon={headerBtnIconDic.home_add}
+              btnIcon={HeaderIcons.home_add}
               btnHandler={goScreen('PostMsgEditor')}
             />
           ),
@@ -103,7 +93,7 @@ const Tabs = ({darkMode}) => {
           headerTitleStyle: [{fontSize: 34}],
           headerRight: props => (
             <HeaderRightBtn
-              btnIcon={headerBtnIconDic.messageAdd}
+              btnIcon={HeaderIcons.messageAdd}
               btnHandler={goScreen('FriendList')}
             />
           ),
@@ -115,18 +105,12 @@ const Tabs = ({darkMode}) => {
         component={Contacts}
         options={{
           title: I18n.t('Contacts'),
-          // header: props =>
-          //   HeaderLargeTitle({
-          //     ...props,
-          //     btnIcon: addIcon,
-          //     btnHandler: goScreen('SubScreen'),
-          //   }),
           headerTitleAlign: 'left',
           headerTitleAllowFontScaling: true,
           headerTitleStyle: [{fontSize: 34}],
           headerRight: props => (
             <HeaderRightBtn
-              btnIcon={addIcon}
+              btnIcon={contactAddIcon}
               btnHandler={goScreen('PeersScreen')}
             />
           ),

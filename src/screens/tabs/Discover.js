@@ -10,7 +10,7 @@ import SchemaStyles from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation} from '@react-navigation/native';
 
-const Discover = () => {
+const Discover = ({darkMode}) => {
   const {justifyCenter, marginTop10} = SchemaStyles();
   const {navigate} = useNavigation();
 
@@ -69,7 +69,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const msp = s => s.cfg;
+const msp = s => {
+  return {
+    darkMode: s.cfg.darkMode,
+  };
+};
 
 const mdp = d => {
   return {
