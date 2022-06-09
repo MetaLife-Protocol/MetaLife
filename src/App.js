@@ -33,6 +33,7 @@ import nodejs from 'nodejs-mobile-react-native';
 import Resync from './screens/guid/Resync';
 import {bluetoothSearch} from './remote/ssb/ssbOP';
 import HeaderRightBtn from './screens/tabs/HeaderRightBtn';
+import Post from './screens/tabs/home/Post';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -76,6 +77,8 @@ const App = ({
         <Screen name="Restore" component={Restore} />
         <Screen name="Resync" component={Resync} />
         <Screen name="Tabs" options={{headerShown: false}} component={Tabs} />
+        {/* Home */}
+        <Screen name="Post" component={Post} />
         {/* Contacts */}
         <Screen name="FriendList" component={FriendList} />
         <Screen

@@ -1,18 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, SafeAreaView, StyleSheet, Text} from 'react-native';
-import SchemaStyles from '../../shared/SchemaStyles';
+import {Pressable, ScrollView, StyleSheet, Text} from 'react-native';
+import SchemaStyles, {colorsBasics} from '../../shared/SchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import ItemAgent from './home/post/ItemAgent';
-import SearchBar from '../../shared/comps/SearchBar';
-import {searchPublicMsgByPostId} from '../../store/filters/MsgFilters';
 import {useTimer} from '../../shared/Hooks';
 import {getConnectedPeers} from '../../remote/ssb/ssbOP';
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import Section from '../../shared/comps/Section';
+import ItemAgent from './home/post/ItemAgent';
+import SearchBar from '../../shared/comps/SearchBar';
+import FriendItem from './contacts/item/FriendItem';
 
 const Home = ({cfg: {verbose}, publicMsg, setConnectedPeers}) => {
-  const {flex1} = SchemaStyles(),
+  const {flex1, BG} = SchemaStyles(),
     {searchBar} = styles;
-  const {setOptions, getState} = useNavigation();
+  const {navigate, setOptions, getState} = useNavigation();
   const [result, setResult] = useState([]);
   const [KW, setKW] = useState('');
 
@@ -28,25 +29,39 @@ const Home = ({cfg: {verbose}, publicMsg, setConnectedPeers}) => {
 
   function changeTextHandler(text) {
     setKW(text);
-    setResult(text ? searchPublicMsgByPostId(publicMsg, text) : []);
+    setResult(text ? [] : []);
   }
 
   return (
-    <SafeAreaView style={[flex1]}>
-      <FlatList
-        ListHeaderComponent={
-          <SearchBar
-            style={[searchBar]}
-            placeholder={'Search with message id'}
-            changeTextHandler={changeTextHandler}
-          />
-        }
-        data={result.length > 0 || KW !== '' ? result : publicMsg}
-        keyExtractor={(_, index) => index}
-        initialNumToRender={10}
-        renderItem={info => <ItemAgent info={info} verbose={verbose} />}
+    <ScrollView style={BG}>
+      <SearchBar
+        style={[searchBar]}
+        placeholder={'contact id or nickname'}
+        changeTextHandler={changeTextHandler}
       />
-    </SafeAreaView>
+      {result.length > 0 || KW !== '' ? (
+        <Section key={0} title={'Search'}>
+          {result.map((key, i) => (
+            <FriendItem fId={key} key={i} />
+          ))}
+        </Section>
+      ) : (
+        <Section
+          style={[flex1]}
+          title={'Feed'}
+          rightBtn={
+            <Pressable onPress={() => navigate('Post')}>
+              <Text style={[{color: colorsBasics.primary, marginRight: 20}]}>
+                More
+              </Text>
+            </Pressable>
+          }>
+          {publicMsg.splice(0, 5).map(info => (
+            <ItemAgent key={info.key} info={{item: info}} verbose={verbose} />
+          ))}
+        </Section>
+      )}
+    </ScrollView>
   );
 };
 

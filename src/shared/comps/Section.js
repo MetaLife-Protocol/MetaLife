@@ -1,11 +1,11 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Button, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import SchemaStyles from '../SchemaStyles';
 
 /**
  * Created on 05 Nov 2021 by lonmee
  */
-const Section = ({children, title, separator, style}) => {
+const Section = ({children, title, separator, style, rightBtn}) => {
   const {FG, BG, text} = SchemaStyles();
   const {titleContainer, ti} = styles;
   children && !Array.isArray(children) && (children = [children]);
@@ -14,6 +14,7 @@ const Section = ({children, title, separator, style}) => {
       {title && (
         <View style={[titleContainer]}>
           <Text style={[text, ti]}>{title}</Text>
+          {rightBtn}
         </View>
       )}
       {children &&
@@ -39,6 +40,8 @@ const styles = StyleSheet.create({
   titleContainer: {
     marginLeft: 15,
     marginVertical: 18,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   ti: {
     fontSize: 20,

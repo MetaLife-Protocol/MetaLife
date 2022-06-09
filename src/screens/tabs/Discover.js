@@ -25,9 +25,9 @@ const Discover = () => {
   const DATA = [
     {title: 'DAO', bgImg: iconDic.DAO},
     {title: 'NFT', bgImg: iconDic.NFT},
-    {title: 'Play to earn', bgImg: iconDic.pte},
-    {title: 'VISwap', bgImg: iconDic.vis},
-    {title: 'Featured Content', bgImg: iconDic.fc},
+    // {title: 'Play to earn', bgImg: iconDic.pte},
+    // {title: 'VISwap', bgImg: iconDic.vis},
+    // {title: 'Featured Content', bgImg: iconDic.fc},
   ];
 
   const Item = ({item: {title, bgImg}}) => {
