@@ -72,51 +72,33 @@ const Create = ({name, setName, setCurrentAccount, addAccount}) => {
     // console.log(formatether, '<<<<<<<<<<<<<<format ether');
     
     const mnemonic = genMnemonic(Randombyte);
-    
-    
-  let response = null;
-  new Promise(async (resolve, reject) => {
-    try {
-      response = await axios.get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/category?id=6051a82366fc1b42617d6dc4', {
-        headers: {
-          'X-CMC_PRO_API_KEY': '60155b5f-0052-411e-96aa-7b8be0f02c32',
-        },
-      });
-    } catch(ex) {
-      response = null;
-      // error
-      console.log(ex);
-      reject(ex);
+
+    let randomWallet = ethers.Wallet.fromMnemonic(mnemonic);
+    const address = await randomWallet.getAddress();
+    console.log(randomWallet, '<<<<<<<<<<prov');
+
+    let privkey = randomWallet.privateKey;
+    if (privkey.substring(0, 2) === '0x') {
+      privkey = privkey.substring(2, privkey.length);
+      console.log(privkey, '>>>>>new');
     }
-    if (response) {
-      // success
-      const json = response.data;
-      console.log(json, '<<<<<<<<<<<<<<JSON DATA');
-      resolve(json);
-    }
-  });
 
-
-    // let randomWallet = ethers.Wallet.fromMnemonic(mnemonic);
-    // const address = await randomWallet.getAddress();
-    // console.log(randomWallet, '<<<<<<<<<<prov');
-
-    // let currentAccount = {
-    //   Name: nick,
-    //   Password: pwd,
-    //   PassPrompt: prompt,
-    //   isBackup: true,
-    //   Mnemonic: mnemonic,
-    //   Address: address,
-    //   PrivateKey: randomWallet.privateKey,
-    //   Keystore: randomWallet.publicKey,
-    // };
-    // console.log(
-    //   currentAccount,
-    //   '<<<<<<<<<<<<<<set currentAccount>>>>>>>>>>>>>>>>',
-    // );
-    // setCurrentAccount(currentAccount);
-    // addAccount(currentAccount);
+    let currentAccount = {
+      Name: nick,
+      Password: pwd,
+      PassPrompt: prompt,
+      isBackup: true,
+      Mnemonic: mnemonic,
+      Address: address,
+      PrivateKey: privkey,
+      Keystore: randomWallet.publicKey,
+    };
+    console.log(
+      currentAccount,
+      '<<<<<<<<<<<<<<set currentAccount>>>>>>>>>>>>>>>>',
+    );
+    setCurrentAccount(currentAccount);
+    addAccount(currentAccount);
   };
 
 

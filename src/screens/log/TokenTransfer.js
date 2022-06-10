@@ -87,12 +87,13 @@ const TokenTransfer = ({
       let walletSigner = wallet.connect(provider);
       const mlt = new ethers.Contract(abi_address, abi, walletSigner);
       const bal = await mlt.balanceOf(currentAccount.Address);
-      console.log(amount, ethers.utils.formatEther(bal));
       if (amount > ethers.utils.formatEther(bal)) {
         alert('please set transfer amount again.');
+        return;
       }
-      mlt.transfer(receiveAddress, amount).then((trans) => {
+      mlt.transfer(receiveAddress, ethers.utils.parseEther(amount.toString())).then((trans) => {
         console.log(trans, '_________________success');
+        alert('Transfer Successfully!');
       }).catch((error) => {
         console.log(error, '______________error');
       });
@@ -105,6 +106,7 @@ const TokenTransfer = ({
       const balance = await wallet.getBalance();
       if (amount > ethers.utils.formatEther(balance)) {
         alert('please set transfer amount again.');
+        return;
       }
       wallet.sendTransaction({
         from : currentAccount.Address,
@@ -112,6 +114,7 @@ const TokenTransfer = ({
         value: amount,
       }).then((trans) => {
         console.log(trans);
+        alert('Transfer Successfully!');
       }).catch((error) => {
         console.log(error, '___________error______native token');
       });
