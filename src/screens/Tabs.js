@@ -2,19 +2,18 @@
  * Created on 11/3/21 by lonmee
  */
 import * as React from 'react';
-import {useCallback} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './tabs/Home';
 import Profiles from './tabs/Profiles';
 import Messages from './tabs/Messages';
 import Contacts from './tabs/Contacts';
 import Discover from './tabs/Discover';
-import {Image, PixelRatio, useWindowDimensions} from 'react-native';
+import {Image} from 'react-native';
 import I18n from '../i18n/I18n';
 import HeaderProfiles from './tabs/profiles/HeaderProfiles';
 import HeaderRightBtn from './tabs/HeaderRightBtn';
 import {connect} from 'react-redux';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {HeaderIcons} from '../shared/Icons';
 
 const iconDic = {
@@ -38,56 +37,54 @@ function Ionicons({name, focused, color, size}) {
   );
 }
 
-const Tabs = ({layout, darkMode, showPullMenu}) => {
-  console.log(layout);
+const Tabs = ({darkMode, showPullMenu}) => {
   const contactAddIcon = darkMode
     ? HeaderIcons.contactAddIconWhite
     : HeaderIcons.contactAddIconBlack;
   const {navigate} = useNavigation();
   const goScreen = screenName => () => navigate(screenName);
-  const {scale} = useWindowDimensions();
   const {Navigator, Screen} = createBottomTabNavigator();
 
-  const menuHandler = useCallback(function (e) {
-    showPullMenu({
-      position: {
-        x:
-          PixelRatio.getPixelSizeForLayoutSize(e.nativeEvent.pageX / scale) -
-          80,
-        y: PixelRatio.getPixelSizeForLayoutSize(e.nativeEvent.pageY / scale),
-      },
-      buttons: [
-        {
-          title: 'Create nft',
-          handler: () => {
-            goScreen('');
-            showPullMenu({position: {}, buttons: []});
-          },
+  function menuHandler(e) {
+    e.target.measure((x, y, width, height, pageX, pageY) =>
+      showPullMenu({
+        position: {
+          x: pageX - width - 30,
+          y: pageY + height,
         },
-        {
-          title: 'Post article',
-          handler: () => {
-            goScreen('');
-            showPullMenu({position: {}, buttons: []});
+        buttons: [
+          {
+            title: 'Create nft',
+            handler: () => {
+              goScreen('')();
+              showPullMenu({position: {}, buttons: []});
+            },
           },
-        },
-        {
-          title: 'Add friend',
-          handler: () => {
-            goScreen('');
-            showPullMenu({position: {}, buttons: []});
+          {
+            title: 'Post article',
+            handler: () => {
+              goScreen('PostMsgEditor')();
+              showPullMenu({position: {}, buttons: []});
+            },
           },
-        },
-        {
-          title: 'QR code',
-          handler: () => {
-            goScreen('');
-            showPullMenu({position: {}, buttons: []});
+          {
+            title: 'Add friend',
+            handler: () => {
+              goScreen('PeersScreen')();
+              showPullMenu({position: {}, buttons: []});
+            },
           },
-        },
-      ],
-    });
-  }, []);
+          {
+            title: 'QR code',
+            handler: () => {
+              goScreen('')();
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+        ],
+      }),
+    );
+  }
 
   return (
     <Navigator

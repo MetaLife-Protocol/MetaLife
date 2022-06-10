@@ -53,7 +53,7 @@ const PostItem = ({
 
   const {navigate, push} = useNavigation();
 
-  const {scale} = useWindowDimensions();
+  const {height} = useWindowDimensions();
 
   const {
       name = author.substring(0, 10),
@@ -92,45 +92,47 @@ const PostItem = ({
 
   const forwardHandler = useCallback(
     function (e) {
-      showPullMenu({
-        position: {
-          x: PixelRatio.getPixelSizeForLayoutSize(e.nativeEvent.pageX / scale),
-          y: PixelRatio.getPixelSizeForLayoutSize(e.nativeEvent.pageY / scale),
-        },
-        buttons: [
-          {
-            title: 'copy message id',
-            handler: () => {
-              setString(key);
-              Toast.show('id copied');
-              showPullMenu({position: {}, buttons: []});
-            },
+      e.target.measure((x, y, width, height, pageX, pageY) =>
+        showPullMenu({
+          position: {
+            x: pageX + width,
+            y: pageY + height,
           },
-          {
-            title: 'copy message content',
-            handler: () => {
-              setString(cText);
-              Toast.show('content copied');
-              showPullMenu({position: {}, buttons: []});
+          buttons: [
+            {
+              title: 'copy message id',
+              handler: () => {
+                setString(key);
+                Toast.show('id copied');
+                showPullMenu({position: {}, buttons: []});
+              },
             },
-          },
-          {
-            title: 'report',
-            handler: () => {
-              report(
-                {
-                  plaintiff: feedId,
-                  defendant: author,
-                  messagekey: key,
-                  reasons: 'sex',
-                },
-                data => Toast.show(data),
-              );
-              showPullMenu({position: {}, buttons: []});
+            {
+              title: 'copy message content',
+              handler: () => {
+                setString(cText);
+                Toast.show('content copied');
+                showPullMenu({position: {}, buttons: []});
+              },
             },
-          },
-        ],
-      });
+            {
+              title: 'report',
+              handler: () => {
+                report(
+                  {
+                    plaintiff: feedId,
+                    defendant: author,
+                    messagekey: key,
+                    reasons: 'sex',
+                  },
+                  data => Toast.show(data),
+                );
+                showPullMenu({position: {}, buttons: []});
+              },
+            },
+          ],
+        }),
+      );
     },
     [item],
   );

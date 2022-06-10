@@ -58,8 +58,6 @@ const App = ({
   const {Navigator, Screen, Group} = createNativeStackNavigator();
   const {channel} = nodejs;
 
-  const btBtn = useRef(null);
-
   const navigationRef = useNavigationContainerRef();
 
   // todo: loading bar test
@@ -111,7 +109,6 @@ const App = ({
             /*, headerLargeTitle: true*/
             headerRight: props => (
               <HeaderRightBtn
-                ref={btBtn}
                 btnIcon={darkMode ? bluetoothIconWhite : bluetoothIconBlack}
                 btnHandler={() => {
                   console.log('search');

@@ -4,7 +4,7 @@
  */
 import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles from '../SchemaStyles';
+import SchemaStyles, {colorsSchema} from '../SchemaStyles';
 import {useDispatch, useSelector} from 'react-redux';
 
 export default ({style = []}) => {
@@ -46,7 +46,12 @@ export default ({style = []}) => {
               <Text
                 style={[
                   titleStyle,
-                  {color: highLight === i ? 'black' : BG.backgroundColor},
+                  {
+                    color:
+                      highLight === i
+                        ? colorsSchema.primary
+                        : BG.backgroundColor,
+                  },
                 ]}>
                 {title}
               </Text>
@@ -68,9 +73,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     padding: 6,
     margin: 4,
-    borderRadius: 10,
+    borderRadius: 6,
   },
   titleStyle: {
+    fontSize: 16,
     marginHorizontal: 2,
     marginVertical: 8,
   },
