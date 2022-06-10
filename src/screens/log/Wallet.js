@@ -115,6 +115,7 @@ const Wallet = ({
       let eth_provider = new ethers.providers.JsonRpcProvider('https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161');
       balance = await eth_provider.getBalance(currentAccount.Address);
     } else {
+      console.log(currentAccount, '>>>>>>>>>account info');
       let mesh_provider = new ethers.providers.JsonRpcProvider('https://jsonapi1.smartmesh.io/');
       balance = await mesh_provider.getBalance(currentAccount.Address);
 
@@ -181,8 +182,8 @@ const Wallet = ({
     axios
       .get('https://api.hitbtc.com/api/3/public/price/rate?from=SMT&to=USDT')
       .then(res => {
-        setSmtPrice(Math.round(res.data.SMT.price));
-        console.log(Math.round(res.data.SMT.price), '>>>>>smt');
+        setSmtPrice(Math.round(res.data.SMT.price * 10000) / 10000);
+        console.log(Math.round(res.data.SMT.price * 10000) / 10000, '>>>>>smt');
       }).catch(error => console.log(error, '>>>>>smt'));
     axios
       .get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/category?id=6053dfb66be1bf5c15e865ee', {
@@ -202,8 +203,8 @@ const Wallet = ({
       .get('https://api.hitbtc.com/api/3/public/price/rate?from=MESH&to=USDT')
       .then(res => {
         setIsLoadingSMT(false);
-        setMeshPrice(Math.round(res.data.MESH.price));
-        console.log(Math.round(res.data.MESH.price), '>>>>>>mesh');
+        setMeshPrice(Math.round(res.data.MESH.price * 10000) / 10000);
+        console.log(Math.round(res.data.MESH.price * 10000) / 10000, '>>>>>>mesh');
       }).catch(error => console.log(error, '>>>>>mesh'));
   };
 
@@ -524,26 +525,26 @@ const Wallet = ({
               <Text style={[styles.tokenTitle]}>ETH</Text>
               <View style={[styles.tableRow]}>
                 <View>
-                  <Text style={[styles.inputText]}>Quantity</Text>
-                  <Text style={[styles.inputText, {color: 'black'}]}>
+                  <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>Quantity</Text>
+                  <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                     {/* {currentAccount.Balance ? currentAccount.Balance : 0} */}
                     {Math.round(curBalance * 10000) / 10000}
                   </Text>
                 </View>
                 <View>
-                  <Text style={[styles.inputText, {textAlign: 'center'}]}>
+                  <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black', textAlign: 'center'}]}>
                     Price
                   </Text>
-                  <Text style={[styles.inputText, {color: 'black'}]}>
+                  <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                     {currencySwitch ? '$' : '¥'}
                     {currencySwitch ? (networkSwitch ? ethPrice : smtPrice) : (networkSwitch ? Math.round(ethPrice * cnyRate * 10000) / 10000 : Math.round(smtPrice * cnyRate * 10000) / 10000)}
                   </Text>
                 </View>
                 <View>
-                  <Text style={[styles.inputText, {textAlign: 'right'}]}>
+                  <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black', textAlign: 'right'}]}>
                     Amount
                   </Text>
-                  <Text style={[styles.inputText, {color: 'black'}]}>
+                  <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                     {/* {Math.round(
                       ethPrice * currentAccount.Balance
                         ? currentAccount.Balance
@@ -561,26 +562,26 @@ const Wallet = ({
                 <Text style={[styles.tokenTitle]}>SMT</Text>
                 <View style={[styles.tableRow]}>
                   <View>
-                    <Text style={[styles.inputText]}>Quantity</Text>
-                    <Text style={[styles.inputText, {color: 'black'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>Quantity</Text>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                       {/* {currentAccount.Balance ? currentAccount.Balance : 0} */}
                       {parseInt(smtBalance * 10000) / 10000}
                     </Text>
                   </View>
                   <View>
-                    <Text style={[styles.inputText, {textAlign: 'center'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black', textAlign: 'center'}]}>
                       Price
                     </Text>
-                    <Text style={[styles.inputText, {color: 'black'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                       {currencySwitch ? '$' : '¥'}
                       {currencySwitch ? Math.round(smtPrice * 10000) / 10000 : Math.round(smtPrice * cnyRate * 10000) / 10000}
                     </Text>
                   </View>
                   <View>
-                    <Text style={[styles.inputText, {textAlign: 'right'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black', textAlign: 'right'}]}>
                       Amount
                     </Text>
-                    <Text style={[styles.inputText, {color: 'black'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                       {/* {Math.round(
                         ethPrice * currentAccount.Balance
                           ? currentAccount.Balance
@@ -596,26 +597,26 @@ const Wallet = ({
                 <Text style={[styles.tokenTitle]}>MLT</Text>
                 <View style={[styles.tableRow]}>
                   <View>
-                    <Text style={[styles.inputText]}>Quantity</Text>
-                    <Text style={[styles.inputText, {color: 'black'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>Quantity</Text>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                       {/* {currentAccount.Balance ? currentAccount.Balance : 0} */}
                       {parseInt(mltBalance * 10000) / 10000}
                     </Text>
                   </View>
                   <View>
-                    <Text style={[styles.inputText, {textAlign: 'center'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black', textAlign: 'center'}]}>
                       Price
                     </Text>
-                    <Text style={[styles.inputText, {color: 'black'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                       {currencySwitch ? '$' : '¥'}
                       {currencySwitch ? Math.round(mltPrice * 10000) / 10000 : Math.round(mltPrice * cnyRate * 10000) / 10000}
                     </Text>
                   </View>
                   <View>
-                    <Text style={[styles.inputText, {textAlign: 'right'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black', textAlign: 'right'}]}>
                       Amount
                     </Text>
-                    <Text style={[styles.inputText, {color: 'black'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                       {/* {Math.round(
                         ethPrice * currentAccount.Balance
                           ? currentAccount.Balance
@@ -631,25 +632,25 @@ const Wallet = ({
                 <Text style={[styles.tokenTitle]}>MESH</Text>
                 <View style={[styles.tableRow]}>
                   <View>
-                    <Text style={[styles.inputText]}>Quantity</Text>
-                    <Text style={[styles.inputText, {color: 'black'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>Quantity</Text>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                       {parseInt(meshBalance * 10000) / 10000}
                     </Text>
                   </View>
                   <View>
-                    <Text style={[styles.inputText, {textAlign: 'center'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black', textAlign: 'center'}]}>
                       Price
                     </Text>
-                    <Text style={[styles.inputText, {color: 'black'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                       {currencySwitch ? '$' : '¥'}
                       {currencySwitch ? Math.round(meshPrice * 10000) / 10000 : Math.round(meshPrice * cnyRate * 10000) / 10000}
                     </Text>
                   </View>
                   <View>
-                    <Text style={[styles.inputText, {textAlign: 'right'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black', textAlign: 'right'}]}>
                       Amount
                     </Text>
-                    <Text style={[styles.inputText, {color: 'black'}]}>
+                    <Text style={[styles.inputText, {color: darkMode ? 'white' : 'black'}]}>
                       {currencySwitch ? '$' : '¥'}
                       {currencySwitch ? Math.round(meshPrice * mltBalance * 10000) / 10000 : Math.round(meshPrice * mltBalance * cnyRate * 10000) / 10000}
                     </Text>
