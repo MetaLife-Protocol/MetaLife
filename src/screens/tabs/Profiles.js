@@ -14,6 +14,8 @@ const Profiles = ({feedId, infoDic, avatar}) => {
       window.platform = '${Platform.OS}'; 
       true; // note: this is required, or you'll sometimes get silent failures
     `;
+  const setUrl = `setUrl('${avatar}');
+    true;`;
 
   const webview = useRef(null);
   useEffect(loadedHandler, [avatar]);
@@ -21,7 +23,7 @@ const Profiles = ({feedId, infoDic, avatar}) => {
   function loadHandler() {}
 
   function loadedHandler() {
-    avatar && webview.current.injectJavaScript(`setUrl('${avatar}');true;`);
+    avatar && webview.current.injectJavaScript(setUrl);
   }
 
   function messageHandler({nativeEvent: {data}}) {

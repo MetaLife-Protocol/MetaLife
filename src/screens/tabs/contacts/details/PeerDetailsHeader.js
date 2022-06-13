@@ -59,6 +59,26 @@ const PeerDetailsHeader = ({
       imgs: [url],
     });
 
+  // {avatar ? (
+  //     <View style={[{height: height, width: width}, ...style]}>
+  //       <WebView
+  //           ref={webview}
+  //           containerStyle={[{borderRadius: height << 1}]}
+  //           scrollEnabled={false}
+  //           source={{
+  //             uri:
+  //                 __DEV__ && onlineRender
+  //                     ? 'http://10.13.230.223:3000'
+  //                     : Platform.OS === 'ios'
+  //                         ? 'static.bundle/web/render/index.html'
+  //                         : 'file:///android_asset/web/render/index.html',
+  //           }}
+  //           originWhitelist={['*']}
+  //           onLoadEnd={loadedHandler}
+  //       />
+  //     </View>
+  // ) : (
+
   return (
     <View>
       <View style={[item, row, flex1]}>

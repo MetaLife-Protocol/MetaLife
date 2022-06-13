@@ -11,8 +11,6 @@ const subdomain = 'metalifesocial';
 //uri: `https://metalifesocial.readyplayer.me/avatar?frameApi`,
 
 let isSubscribed = false;
-let count = 0;
-const correlationId = 'a0bf9c2a-44d7-4882-8e72-4bc7ab73849f';
 
 const Avatar = ({setAvatar}) => {
   const webview = useRef();
@@ -39,28 +37,14 @@ const Avatar = ({setAvatar}) => {
   const process = data => {
     const json = JSON.parse(data);
 
-    // Filter for only Ready Player Me Events
     if (json.source !== 'readyplayerme') {
       return;
     }
 
+    console.log(json.eventName, 'called');
     if (json.eventName === 'v1.avatar.exported') {
       // Event called after avatar has been created and the URL generated
       onAvatarExported(json);
-    }
-
-    if (json.eventName !== 'v1.subscription.deleted') {
-      count++;
-
-      if (count > 4) {
-        webview.current.postMessage(
-          JSON.stringify({
-            target: 'readyplayerme',
-            type: 'unsubscribe',
-            correlationId,
-          }),
-        );
-      }
     }
   };
 

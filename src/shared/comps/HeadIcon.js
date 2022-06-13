@@ -35,37 +35,15 @@ export default ({
       {/*    image === PeerIcons.peerGirlIcon && pub ? PeerIcons.pubIcon : image*/}
       {/*  }*/}
       {/*/>*/}
-
-      {avatar ? (
-        <View style={[{height: height, width: width}, ...style]}>
-          <WebView
-            ref={webview}
-            containerStyle={[{borderRadius: height << 1}]}
-            scrollEnabled={false}
-            source={{
-              uri:
-                __DEV__ && onlineRender
-                  ? 'http://10.13.230.223:3000'
-                  : Platform.OS === 'ios'
-                  ? 'static.bundle/web/render/index.html'
-                  : 'file:///android_asset/web/render/index.html',
-            }}
-            originWhitelist={['*']}
-            onLoadEnd={loadedHandler}
-          />
-        </View>
-      ) : (
-        <FastImage
-          style={[
-            {height: height, width: width, borderRadius: height << 1},
-            ...style,
-          ]}
-          source={
-            image === PeerIcons.peerGirlIcon && pub ? PeerIcons.pubIcon : image
-          }
-        />
-      )}
-
+      <FastImage
+        style={[
+          {height: height, width: width, borderRadius: height << 1},
+          ...style,
+        ]}
+        source={
+          image === PeerIcons.peerGirlIcon && pub ? PeerIcons.pubIcon : image
+        }
+      />
       {online && online.length > 0 && (
         <View
           style={[

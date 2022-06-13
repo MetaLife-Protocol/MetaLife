@@ -53,8 +53,6 @@ const PostItem = ({
 
   const {navigate, push} = useNavigation();
 
-  const {height} = useWindowDimensions();
-
   const {
       name = author.substring(0, 10),
       description = '',
