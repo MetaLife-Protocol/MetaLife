@@ -18,7 +18,7 @@ import {
 import TitleAndTips from '../create_collection/comps/TitleAndTips';
 import ImagePickerView from '../create_collection/comps/ImagePickerView';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
-import {PureTextInput, useStyle} from 'metalife-base';
+import {PureTextInput, RoundBtn, useStyle} from 'metalife-base';
 
 const CreateNewItem = ({}) => {
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
@@ -63,6 +63,35 @@ const CreateNewItem = ({}) => {
             onChangeText={setDescription}
             inputProps={{multiline: true}}
           />
+
+          <TitleAndTips
+            title={'Supply'}
+            tips={'The number of items that can be minted. No gas cost to you!'}
+          />
+          <PureTextInput
+            placeholder={'1'}
+            style={styles.nameContainer}
+            inputProps={{editable: false}}
+          />
+          <TitleAndTips title={'Blockchain'} />
+          <TitleAndTips
+            title={'Freeze metadata'}
+            tips={
+              "Freezing your metadata will allow you to permanently lock and store all of this item's content in decentralized file storage."
+            }
+          />
+          <PureTextInput
+            defaultValue={
+              'To freeze your metadata, you must create your item first.'
+            }
+            style={styles.nameContainer}
+            inputProps={{editable: false, multiline: true}}
+          />
+          <RoundBtn
+            press={() => {}}
+            style={styles.buttonContainer}
+            title={'Next'}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -86,6 +115,10 @@ const createSty = theme =>
       height: 44,
       paddingHorizontal: 10,
       marginTop: 10,
+    },
+    buttonContainer: {
+      marginTop: 10,
+      marginBottom: 20,
     },
   });
 export default CreateNewItem;
