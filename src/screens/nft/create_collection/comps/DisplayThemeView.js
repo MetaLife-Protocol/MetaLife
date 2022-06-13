@@ -45,6 +45,7 @@ const DisplayThemeView = ({selectedToken = 'Padded', onSelect}) => {
       }
       return (
         <TouchableOpacity
+          key={item.title}
           onPress={() => {
             onSelect && onSelect(item.title);
           }}

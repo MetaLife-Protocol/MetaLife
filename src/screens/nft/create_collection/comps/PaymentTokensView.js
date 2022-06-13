@@ -30,6 +30,7 @@ const PaymentTokensView = ({selectedToken = 'SMT', onSelect}) => {
       const isSelect = selectedToken === item.title;
       return (
         <TouchableOpacity
+          key={item.title}
           onPress={() => {
             onSelect && onSelect(item.title);
           }}
