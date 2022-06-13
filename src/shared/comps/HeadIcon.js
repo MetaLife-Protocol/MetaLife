@@ -1,8 +1,7 @@
-import {Platform, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useRef} from 'react';
 import {PeerIcons} from '../Icons';
 import FastImage from 'react-native-fast-image';
-import {WebView} from 'react-native-webview';
 
 /**
  * Created on 22 Feb 2022 by lonmee

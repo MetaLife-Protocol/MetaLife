@@ -1,12 +1,13 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {connect} from 'react-redux/lib/exports';
 import {WebView} from 'react-native-webview';
 import {Platform, Text, View} from 'react-native';
 import {Link} from '@react-navigation/native';
 import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import RoundBtn from '../../shared/comps/RoundBtn';
-import {setAvatar} from '../../remote/ssb/ssbOP';
+import {setAbout} from '../../remote/ssb/ssbOP';
 import Toast from 'react-native-tiny-toast';
+import FastImage from 'react-native-fast-image';
 
 const Profiles = ({feedId, infoDic, avatar}) => {
   const {flex1, alignItemsCenter, justifyCenter, text} = SchemaStyles();
@@ -16,6 +17,10 @@ const Profiles = ({feedId, infoDic, avatar}) => {
     `;
   const setUrl = `setUrl('${avatar}');
     true;`;
+  const capture = `capture();
+    true;`;
+
+  const [capImg, setCapImg] = useState('');
 
   const webview = useRef(null);
   useEffect(loadedHandler, [avatar]);
@@ -27,18 +32,29 @@ const Profiles = ({feedId, infoDic, avatar}) => {
   }
 
   function messageHandler({nativeEvent: {data}}) {
+    const {type, content} = JSON.parse(data);
     console.log('processing: ', JSON.parse(data));
+    switch (type) {
+      case 'capture':
+        setCapImg(content);
+    }
   }
 
   function submit(type, value) {
-    setAvatar(feedId, {...infoDic[feedId], [type]: value}, () =>
+    setAbout(feedId, {...infoDic[feedId], [type]: value}, () =>
       Toast.show(type + ' submitted'),
     );
   }
 
-  const onlineRender = false;
+  const onlineRender = true;
   return avatar ? (
     <>
+      {!!capImg && (
+        <FastImage
+          style={[{width: 150, height: 150}]}
+          source={{uri: capImg.split(',')[1]}}
+        />
+      )}
       <WebView
         ref={webview}
         source={{
@@ -53,20 +69,23 @@ const Profiles = ({feedId, infoDic, avatar}) => {
         onLoad={loadHandler}
         onLoadEnd={loadedHandler}
         onMessage={messageHandler}
+        androidHardwareAccelerationDisabled={true}
         injectedJavaScript={runFirst}
       />
       <RoundBtn
         style={[
           {
+            alignSelf: 'center',
             height: 30,
-            width: '40%',
             position: 'absolute',
             bottom: 10,
-            right: -20,
           },
         ]}
-        title={'Use it as avatar'}
-        press={() => submit('avatar', avatar)}
+        title={'Use this frame as avatar'}
+        press={() => {
+          webview.current.injectJavaScript(capture);
+          // submit('avatar', avatar);
+        }}
       />
     </>
   ) : (

@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
+    marginHorizontal: 10,
     fontWeight: 'bold',
   },
 });

@@ -16,7 +16,7 @@ import ControllerItem from '../../../shared/comps/ControllerItem';
 import I18n from '../../../i18n/I18n';
 import Section from '../../../shared/comps/Section';
 import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
-import {setAbout} from '../../../remote/ssb/ssbOP';
+import {setAboutImage, setAbout} from '../../../remote/ssb/ssbOP';
 import Toast from 'react-native-tiny-toast';
 import {ProfileModal} from './modal/ProfileModal';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
@@ -49,9 +49,13 @@ const Setting = ({
   }
 
   function submit(type, value) {
-    setAbout(feedId, {...infoDic[feedId], [type]: value}, () =>
-      Toast.show(type + ' submitted'),
-    );
+    type === 'image'
+      ? setAboutImage(feedId, {...infoDic[feedId], [type]: value}, () =>
+          Toast.show(type + ' submitted'),
+        )
+      : setAbout(feedId, {...infoDic[feedId], [type]: value}, () =>
+          Toast.show(type + ' submitted'),
+        );
   }
 
   return (

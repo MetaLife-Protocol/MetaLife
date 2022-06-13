@@ -87,12 +87,12 @@ export const getHops = (hop = 1, cb = null) =>
 /************************** profile & about **************************/
 export const getProfile = (fid, cb) =>
   ssb.aboutSelf.get(fid, (e, v) => (e ? console.error(e) : cb(v)));
-export const setAbout = (fid, {name, description, image}, cb) =>
+export const setAboutImage = (fid, {name, description, image, avatar}, cb) =>
   ssb.publishUtilsBack.publishAbout(
-    {type: 'about', about: fid, name, description, image},
+    {type: 'about', about: fid, name, description, image, avatar},
     (e, v) => (e ? console.error(e) : cb(v)),
   );
-export const setAvatar = (fid, {name, description, image, avatar}, cb) =>
+export const setAbout = (fid, {name, description, image, avatar}, cb) =>
   ssb.publish(
     {type: 'about', about: fid, name, description, image, avatar},
     (e, v) => (e ? console.error(e) : cb(v)),
