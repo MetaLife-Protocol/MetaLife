@@ -10,6 +10,7 @@ import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {useStyle} from 'metalife-base';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Toast from 'react-native-tiny-toast';
+import {uploadFileToIFPS} from '../../nftUtils';
 
 const ImagePickerView = ({style, onImagePicker}) => {
   const styles = useStyle(createSty);
@@ -22,11 +23,12 @@ const ImagePickerView = ({style, onImagePicker}) => {
         return errorCode && Toast.show(errorMessage);
       }
       const [file] = assets;
-      // uploadFileToIFPS({
-      //   fileName: file.fileName,
-      //   filepath: file.uri,
-      //   fileType: file.type,
-      // });
+      // console.log('file::', file);
+      uploadFileToIFPS({
+        fileName: file.fileName,
+        filepath: file.uri,
+        fileType: file.type,
+      });
       onImagePicker && onImagePicker(file);
       setImage(file);
     },
