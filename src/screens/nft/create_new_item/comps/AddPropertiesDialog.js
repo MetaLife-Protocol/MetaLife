@@ -15,14 +15,21 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import {DialogTitle, PureTextInput, RoundBtn, useStyle} from 'metalife-base';
+import {
+  DialogTitle,
+  PureTextInput,
+  RoundBtn,
+  useDialog,
+  useStyle,
+} from 'metalife-base';
 import Constants from '../../../../shared/Constants';
 
-const emptyType = {type: '', name: ''};
-const AddPropertiesDialog = ({}) => {
+const AddPropertiesDialog = ({onSure, defaultProperties}) => {
   const styles = useStyle(createSty);
-
-  const [properties, setProperties] = useState([{type: '', name: ''}]);
+  const dialog = useDialog();
+  const [properties, setProperties] = useState(
+    defaultProperties.length ? defaultProperties : [{type: '', name: ''}],
+  );
 
   const addMore = useCallback(() => {
     setProperties(preProperties => {
@@ -132,7 +139,13 @@ const AddPropertiesDialog = ({}) => {
       <RoundBtn
         style={{marginHorizontal: 0, marginTop: 20}}
         title={'Save'}
-        press={() => {}}
+        press={() => {
+          dialog.dismiss();
+          const filterList = properties.filter((item, index) => {
+            return item.type && item.name;
+          });
+          onSure && onSure(filterList);
+        }}
       />
     </View>
   );

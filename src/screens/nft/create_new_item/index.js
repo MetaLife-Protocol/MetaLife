@@ -27,7 +27,7 @@ import {
   useStyle,
   useTheme,
 } from 'metalife-base';
-import AddPropertiesDialog from '../create_collection/comps/AddPropertiesDialog';
+import AddPropertiesDialog from './comps/AddPropertiesDialog';
 
 const CreateNewItem = ({}) => {
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
@@ -36,11 +36,17 @@ const CreateNewItem = ({}) => {
   const dialog = useDialog();
   const [itemFile, setItemFile] = useState(),
     [name, setName] = useState(),
-    [description, setDescription] = useState('');
+    [description, setDescription] = useState(''),
+    [properties, setProperties] = useState([]);
 
   const addProperties = useCallback(() => {
-    dialog.show(<AddPropertiesDialog />);
-  }, [dialog]);
+    dialog.show(
+      <AddPropertiesDialog
+        onSure={setProperties}
+        defaultProperties={properties}
+      />,
+    );
+  }, [dialog, properties]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -95,6 +101,26 @@ const CreateNewItem = ({}) => {
               </Pressable>
             }
           />
+
+          {properties.length > 0 && (
+            <View style={styles.propertiesContentContainer}>
+              {properties.map((item, index) => {
+                return (
+                  <View
+                    key={item.type + item.name + index}
+                    style={[
+                      styles.propertiesItemContainer,
+                      index !== properties.length - 1
+                        ? {borderBottomWidth: 1, borderBottomColor: '#A5ABB7'}
+                        : {},
+                    ]}>
+                    <Text style={styles.propertiesType}>{item.type}</Text>
+                    <Text style={styles.propertiesName}>{item.name}</Text>
+                  </View>
+                );
+              })}
+            </View>
+          )}
 
           <TitleAndTips
             title={'Supply'}
@@ -159,6 +185,24 @@ const createSty = theme =>
     rightAddIcon: {
       width: 43,
       height: 43,
+    },
+    propertiesContentContainer: {
+      borderWidth: 1,
+      borderColor: '#A5ABB7',
+      borderRadius: 12,
+    },
+    propertiesItemContainer: {
+      padding: 10,
+    },
+    propertiesType: {
+      fontSize: 14,
+      color: theme.c_8E8E92,
+      lineHeight: 17,
+    },
+    propertiesName: {
+      fontSize: 15,
+      color: theme.c_000000_FFFFFF,
+      lineHeight: 18,
     },
   });
 export default CreateNewItem;
