@@ -7,9 +7,10 @@ import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
 import RoundBtn from '../../shared/comps/RoundBtn';
 import {setAbout, setAboutImage} from '../../remote/ssb/ssbOP';
 import Toast from 'react-native-tiny-toast';
-import FastImage from 'react-native-fast-image';
 import {savePicture} from '../../utils';
 import ImagePicker from 'react-native-image-crop-picker';
+import RNFetchBlob from 'rn-fetch-blob';
+import RNFS from 'react-native-fs';
 
 const Profiles = ({feedId, infoDic, avatar}) => {
   const {flex1, alignItemsCenter, justifyCenter, text} = SchemaStyles();
@@ -39,17 +40,24 @@ const Profiles = ({feedId, infoDic, avatar}) => {
     switch (type) {
       case 'capture':
         setCapImg(content);
-        savePicture(
-          Platform === 'ios' ? content : content.split(',')[1],
-          'photo',
-          'MetaLife',
-          r => {
-            console.log('photo saved in: ', r);
-            ImagePicker.openCropper({path: r}).then(p =>
-              submit('image', p.path.replace('file://', '')),
-            );
-          },
-        );
+        Platform.OS === 'ios'
+          ? savePicture(content, 'photo', 'MetaLife', r => {
+              console.log('photo saved in: ', r);
+              ImagePicker.openCropper({path: r}).then(p =>
+                submit('image', p.path.replace('file://', '')),
+              );
+            })
+          : RNFetchBlob.fs
+              .writeFile(
+                `${RNFS.ExternalDirectoryPath}/${
+                  (Math.random() * 10000000) | 0
+                }.png`,
+                content.split(',')[1],
+                'base64',
+              )
+              .then(rst => {
+                console.log(rst);
+              });
         submit('avatar', avatar);
         break;
     }

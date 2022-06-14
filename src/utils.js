@@ -40,7 +40,7 @@ export function photoHandler(submit) {
     .catch(null);
 }
 
-async function hasAndroidPermission() {
+export async function hasAndroidPermission() {
   const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
 
   const hasPermission = await PermissionsAndroid.check(permission);
