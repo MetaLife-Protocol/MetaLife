@@ -50,10 +50,7 @@ const Profiles = ({feedId, infoDic, avatar}) => {
   return avatar ? (
     <>
       {!!capImg && (
-        <FastImage
-          style={[{width: 150, height: 150}]}
-          source={{uri: capImg.split(',')[1]}}
-        />
+        <FastImage style={[{width: 150, height: 150}]} source={{uri: capImg}} />
       )}
       <WebView
         ref={webview}
