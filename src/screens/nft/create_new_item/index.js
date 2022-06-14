@@ -5,7 +5,7 @@
  * @Date: 2022-06-13
  * @Project:MetaLife
  */
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Text,
   View,
@@ -14,18 +14,33 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   ScrollView,
+  Image,
+  Pressable,
 } from 'react-native';
 import TitleAndTips from '../create_collection/comps/TitleAndTips';
 import ImagePickerView from '../create_collection/comps/ImagePickerView';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
-import {PureTextInput, RoundBtn, useStyle} from 'metalife-base';
+import {
+  PureTextInput,
+  RoundBtn,
+  useDialog,
+  useStyle,
+  useTheme,
+} from 'metalife-base';
+import AddPropertiesDialog from '../create_collection/comps/AddPropertiesDialog';
 
 const CreateNewItem = ({}) => {
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
   const styles = useStyle(createSty);
+  const theme = useTheme();
+  const dialog = useDialog();
   const [itemFile, setItemFile] = useState(),
     [name, setName] = useState(),
     [description, setDescription] = useState('');
+
+  const addProperties = useCallback(() => {
+    dialog.show(<AddPropertiesDialog />);
+  }, [dialog]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -65,6 +80,23 @@ const CreateNewItem = ({}) => {
           />
 
           <TitleAndTips
+            title={'Properties'}
+            tips={'Textual traits that show up as rectangles'}
+            rightView={
+              <Pressable onPress={addProperties}>
+                <Image
+                  source={
+                    theme.isLight
+                      ? require('../../../assets/image/nft/new_nft_add_icon_light.png')
+                      : require('../../../assets/image/nft/new_nft_add_icon_dark.png')
+                  }
+                  style={styles.rightAddIcon}
+                />
+              </Pressable>
+            }
+          />
+
+          <TitleAndTips
             title={'Supply'}
             tips={'The number of items that can be minted. No gas cost to you!'}
           />
@@ -91,6 +123,10 @@ const CreateNewItem = ({}) => {
             press={() => {}}
             style={styles.buttonContainer}
             title={'Next'}
+          />
+          <Image
+            style={{}}
+            source={{uri: `https://gateway.pinata.cloud/ipfs/${''}`}}
           />
         </ScrollView>
       </KeyboardAvoidingView>
@@ -119,6 +155,10 @@ const createSty = theme =>
     buttonContainer: {
       marginTop: 10,
       marginBottom: 20,
+    },
+    rightAddIcon: {
+      width: 43,
+      height: 43,
     },
   });
 export default CreateNewItem;
