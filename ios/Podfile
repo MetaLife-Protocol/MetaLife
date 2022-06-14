@@ -47,6 +47,7 @@ target 'MetaLife' do
   pod 'Permission-SpeechRecognition', :path => "#{permissions_path}/SpeechRecognition"
   pod 'Permission-StoreKit', :path => "#{permissions_path}/StoreKit"
   
+
   target 'MetaLifeTests' do
     inherit! :complete
     inherit! :search_paths
