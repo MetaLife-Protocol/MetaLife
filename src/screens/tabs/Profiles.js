@@ -39,12 +39,17 @@ const Profiles = ({feedId, infoDic, avatar}) => {
     switch (type) {
       case 'capture':
         setCapImg(content);
-        savePicture(content, 'photo', 'MetaLife', r => {
-          console.log('photo saved in: ', r);
-          ImagePicker.openCropper({path: r}).then(p =>
-            submit('image', p.path.replace('file://', '')),
-          );
-        });
+        savePicture(
+          Platform === 'ios' ? content : content.split(',')[1],
+          'photo',
+          'MetaLife',
+          r => {
+            console.log('photo saved in: ', r);
+            ImagePicker.openCropper({path: r}).then(p =>
+              submit('image', p.path.replace('file://', '')),
+            );
+          },
+        );
         submit('avatar', avatar);
         break;
     }
@@ -60,7 +65,7 @@ const Profiles = ({feedId, infoDic, avatar}) => {
         );
   }
 
-  const onlineRender = true;
+  const onlineRender = false;
   return avatar ? (
     <>
       {/*{!!capImg && (*/}
