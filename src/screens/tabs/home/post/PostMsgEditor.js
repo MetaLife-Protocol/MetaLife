@@ -22,17 +22,16 @@ import Section from '../../../../shared/comps/Section';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {cameraHandler, photoHandler} from '../../../../utils';
 
-const initialState = [],
-  reducer = (state, {type, payload}) => {
-    switch (type) {
-      case 'add':
-        return [...state, payload];
-      case 'set':
-        return payload;
-      case 'remove':
-        return state.filter(p => p.path !== payload);
-    }
-  };
+const reducer = (state, {type, payload}) => {
+  switch (type) {
+    case 'add':
+      return [...state, payload];
+    case 'set':
+      return payload;
+    case 'remove':
+      return state.filter(p => p.path !== payload);
+  }
+};
 
 const PostMsgEditor = ({
   cachedContent,
