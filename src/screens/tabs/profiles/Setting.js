@@ -16,14 +16,14 @@ import ControllerItem from '../../../shared/comps/ControllerItem';
 import I18n from '../../../i18n/I18n';
 import Section from '../../../shared/comps/Section';
 import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
-import {setAboutImage, setAbout} from '../../../remote/ssb/ssbOP';
+import {setAbout, setAboutImage} from '../../../remote/ssb/ssbOP';
 import Toast from 'react-native-tiny-toast';
 import {ProfileModal} from './modal/ProfileModal';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import {ArrowImage} from '../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
-import {cameraHandler, photoHandler} from '../../../utils';
+import {cameraHandlerWithCrop, photoHandlerWithCrop} from '../../../utils';
 
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
 
@@ -76,8 +76,8 @@ const Setting = ({
       />
       <ScrollView>
         <Pressable
-          onPress={() => cameraHandler(headerIconSubmit)}
-          onLongPress={() => photoHandler(headerIconSubmit)}>
+          onPress={() => cameraHandlerWithCrop(headerIconSubmit)}
+          onLongPress={() => photoHandlerWithCrop(headerIconSubmit)}>
           <Section style={[marginTop10, alignItemsCenter, {marginBottom: -10}]}>
             <HeadIcon
               width={90}

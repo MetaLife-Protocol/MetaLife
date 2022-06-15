@@ -22,11 +22,38 @@ export function cameraHandler(submit) {
     compressImageQuality: 0.88,
     mediaType: 'photo',
   })
-    .then(r => ImagePicker.openCropper({path: r.path}).then(submit))
+    .then(submit)
     .catch(null);
 }
 
 export function photoHandler(submit) {
+  Keyboard.dismiss();
+  ImagePicker.openPicker({
+    cropping: false,
+    multiple: false,
+    compressImageMaxWidth: 1080,
+    compressImageMaxHeight: 1920,
+    compressImageQuality: 0.88,
+    mediaType: 'photo',
+  })
+    .then(submit)
+    .catch(null);
+}
+
+export function cameraHandlerWithCrop(submit) {
+  ImagePicker.openCamera({
+    cropping: false,
+    multiple: false,
+    compressImageMaxWidth: 1080,
+    compressImageMaxHeight: 1920,
+    compressImageQuality: 0.88,
+    mediaType: 'photo',
+  })
+    .then(r => ImagePicker.openCropper({path: r.path}).then(submit))
+    .catch(null);
+}
+
+export function photoHandlerWithCrop(submit) {
   Keyboard.dismiss();
   ImagePicker.openPicker({
     cropping: false,
