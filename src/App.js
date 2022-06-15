@@ -46,6 +46,7 @@ import NFTList from './screens/nft/nft_list';
 import MyNFTList from './screens/nft/my_nft_list/MyNFTList';
 import CreateCollection from './screens/nft/create_collection';
 import CreateNewItem from './screens/nft/create_new_item';
+import NFTDetailNew from './screens/nft/nft_details_new';
 
 const App = () => {
   const {theme, BG} = SchemaStyles();
@@ -235,6 +236,11 @@ const App = () => {
           name="NFTDetails"
           options={{headerTitle: 'NFT Details'}}
           component={NFTDetails}
+        />
+        <Stack.Screen
+          name="NFTDetailNew"
+          options={{headerTitle: ''}}
+          component={NFTDetailNew}
         />
         <Stack.Screen
           name="NFTList"
