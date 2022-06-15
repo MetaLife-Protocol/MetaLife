@@ -21,9 +21,9 @@ import {
   persistentConnectPeer,
 } from '../../../remote/ssb/ssbOP';
 import Toast from 'react-native-tiny-toast';
-import {PlusBlack, PlusWhite} from '../../../shared/Icons';
 import ControllerItem from '../../../shared/comps/ControllerItem';
 import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
+import {HeaderIcons} from '../../../shared/Icons';
 
 const Pubs = ({darkMode, infoDic, pubs}) => {
   const {flex1, row, alignItemsCenter, text, marginTop10} = SchemaStyles(),
@@ -72,7 +72,11 @@ const Pubs = ({darkMode, infoDic, pubs}) => {
                 setCode('');
                 Keyboard.dismiss();
               }}>
-              <Image source={darkMode ? PlusWhite : PlusBlack} />
+              <Image
+                source={
+                  darkMode ? HeaderIcons.PlusWhite : HeaderIcons.PlusBlack
+                }
+              />
             </Pressable>
           </View>
         </ControllerItem>
