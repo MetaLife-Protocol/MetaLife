@@ -24,6 +24,22 @@ import Toast from 'react-native-tiny-toast';
 import ControllerItem from '../../../shared/comps/ControllerItem';
 import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
 import {HeaderIcons} from '../../../shared/Icons';
+import RoundBtn from '../../../shared/comps/RoundBtn';
+
+const presetPubs = [
+  {
+    name: 'MetaLife Planet 1',
+    key: '@1qF7giAqTYBuAUbFsO13ezRy1WhKvwcX23II65jwxUc=.ed25519',
+    invite:
+      '106.52.171.12:8008:@1qF7giAqTYBuAUbFsO13ezRy1WhKvwcX23II65jwxUc=.ed25519~bZ/KKsdDMq+FdcjePXEBaRG81BP4mVnO2NfSLOkg46g=',
+  },
+  {
+    name: 'MetaLife Planet 2',
+    key: '@HZnU6wM+F17J0RSLXP05x3Lag2jGv3F3LzHMjh72coE=.ed25519',
+    invite:
+      '54.179.3.93:8008:@HZnU6wM+F17J0RSLXP05x3Lag2jGv3F3LzHMjh72coE=.ed25519~9Ax3nlgD6lyRVsrkwJYgGSFqsnSjYYR8KEofw160Ht4=',
+  },
+];
 
 const Pubs = ({darkMode, infoDic, pubs}) => {
   const {flex1, row, alignItemsCenter, text, marginTop10} = SchemaStyles(),
@@ -67,7 +83,7 @@ const Pubs = ({darkMode, infoDic, pubs}) => {
               onPress={() => {
                 inviteAccept(code, (e, v) => {
                   Toast.showSuccess(e ? e.message : 'invite accepted');
-                  e || reconnect2pub();
+                  e && reconnect2pub();
                 });
                 setCode('');
                 Keyboard.dismiss();
@@ -83,7 +99,7 @@ const Pubs = ({darkMode, infoDic, pubs}) => {
       </Section>
       {pubs.length > 0 && (
         <Section
-          style={[marginTop10, {height: '100%'}]}
+          style={[marginTop10]}
           title={'Your pubs'}
           separator={NormalSeparator}>
           {pubs.map(
@@ -99,6 +115,36 @@ const Pubs = ({darkMode, infoDic, pubs}) => {
               />
             ),
           )}
+        </Section>
+      )}
+      {presetPubs.length > 0 && (
+        <Section
+          style={[marginTop10, {height: '100%'}]}
+          title={'Presets'}
+          separator={NormalSeparator}>
+          {presetPubs.map(({name, key, invite}) => (
+            <ControllerItem key={key} title={name}>
+              <RoundBtn
+                style={[{height: 24, marginRight: 0}]}
+                title={'Connect'}
+                disabled={
+                  pubs.filter(
+                    ({
+                      content: {
+                        address: {key: pKey},
+                      },
+                    }) => pKey === key,
+                  ).length !== 0
+                }
+                press={() => {
+                  inviteAccept(invite, (e, v) => {
+                    Toast.showSuccess(e ? e.message : 'invite accepted');
+                    e && reconnect2pub();
+                  });
+                }}
+              />
+            </ControllerItem>
+          ))}
         </Section>
       )}
     </SafeAreaView>

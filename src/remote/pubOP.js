@@ -4,7 +4,8 @@
  */
 
 const pubIp = ['54.179.3.93'];
-const url = `http://${pubIp[0]}:10008/ssb/api/tipped-who-off`;
+const url = `http://${pubIp[0]}:10008/ssb/api/`;
+const api = ['tipped-who-off', 'id2eth'];
 
 /**
  * Body:
@@ -23,7 +24,27 @@ const url = `http://${pubIp[0]}:10008/ssb/api/tipped-who-off`;
  * @param params
  */
 export function report(params, cb) {
-  fetch(url, {
+  fetch(url + api[0], {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(params),
+  }).then(r => cb(JSON.parse(r._bodyText).data));
+}
+
+/**
+ *
+ * @param params
+ * {
+ *  "client_id":"@C49GskstTGIrvYPqvTk+Vjyj23tD0wbCSkvX7A4zoHw=.ed25519",
+ *  "client_eth_address":"0xce92bddda9de3806e4f4b55f47d20ea82973f2d7"
+ * }
+ * @param cb
+ */
+export function bindIDAndWallet(params, cb) {
+  fetch(url + api[1], {
     method: 'POST',
     headers: {
       Accept: 'application/json',
