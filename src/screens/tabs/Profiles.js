@@ -36,7 +36,7 @@ const Profiles = ({feedId, infoDic, avatar}) => {
 
   function messageHandler({nativeEvent: {data}}) {
     const {type, content} = JSON.parse(data);
-    console.log('processing: ', JSON.parse(data));
+    let path;
     switch (type) {
       case 'capture':
         setCapImg(content);
@@ -49,15 +49,20 @@ const Profiles = ({feedId, infoDic, avatar}) => {
             })
           : RNFetchBlob.fs
               .writeFile(
-                `${RNFS.ExternalDirectoryPath}/${
-                  (Math.random() * 10000000) | 0
-                }.png`,
+                (path = `${RNFS.ExternalDirectoryPath}/${
+                  (Math.random() * 10e6) | 0
+                }.png`),
                 content.split(',')[1],
                 'base64',
               )
               .then(rst => {
-                console.log(rst);
-              });
+                savePicture(path, 'photo', 'MetaLife', r => {
+                  ImagePicker.openCropper({path: r}).then(p =>
+                    submit('image', p.path.replace('file://', '')),
+                  );
+                });
+              })
+              .catch(error => Toast.show('Permission needed'));
         submit('avatar', avatar);
         break;
     }
