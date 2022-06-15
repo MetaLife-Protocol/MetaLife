@@ -37,6 +37,43 @@ const NFTDetailNew = ({}) => {
             The underbelly of Web3. A shadow vague, formless, but eternal.The
             underbelly of Web3.The underbelly of{' '}
           </Text>
+
+          <View style={styles.bidTimeContainer}>
+            <Text style={styles.time1Text}>
+              Ends on Thursday,May 19,2022 at 17:56 GM+8
+            </Text>
+            <Text style={styles.time2Text}>00:00:30 Left</Text>
+            <View style={styles.splitView} />
+            <Text style={styles.time1Text}>Mminimum bid</Text>
+            <View style={styles.row}>
+              <Image
+                style={styles.smtIcon}
+                source={require('../../../assets/image/nft/icon_nft_mlt.png')}
+              />
+              <Text style={styles.time2Text}>32721.31</Text>
+            </View>
+            <Text style={styles.time1Text}>$ 452.93</Text>
+          </View>
+
+          <View style={[styles.row, {marginTop: 20}]}>
+            <Image
+              style={styles.userIcon}
+              source={require('../../../assets/image/nft/icon_nft_mlt.png')}
+            />
+            <Text style={styles.time1Text}>
+              Created by <Text style={styles.primary}>PROOF_XYZ</Text>
+            </Text>
+          </View>
+
+          <View style={[styles.row, {marginTop: 15}]}>
+            <Image
+              style={styles.userIcon}
+              source={require('../../../assets/image/nft/icon_nft_mlt.png')}
+            />
+            <Text style={styles.time1Text}>
+              Ownde by <Text style={styles.primary}>VaultMonkey</Text>
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -76,6 +113,48 @@ const styleFun = theme =>
       color: theme.c_000000_FFFFFF,
       marginTop: 5,
       lineHeight: 17,
+    },
+    bidTimeContainer: {
+      width: 345,
+      borderWidth: 1,
+      borderColor: theme.c_4E586E,
+      borderRadius: 12,
+      marginTop: 20,
+      paddingVertical: 10,
+    },
+    time1Text: {
+      fontSize: 14,
+      color: theme.c_8E8E92,
+      lineHeight: 17,
+      paddingHorizontal: 10,
+    },
+    time2Text: {
+      fontSize: 15,
+      color: theme.c_000000_FFFFFF,
+      lineHeight: 18,
+      fontWeight: 'bold',
+      paddingHorizontal: 10,
+    },
+    splitView: {
+      height: 1,
+      width: '100%',
+      backgroundColor: theme.c_4E586E,
+      marginVertical: 10,
+    },
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    smtIcon: {
+      width: 22,
+      height: 22,
+    },
+    userIcon: {
+      width: 30,
+      height: 30,
+    },
+    primary: {
+      color: theme.primary,
     },
   });
 export default NFTDetailNew;
