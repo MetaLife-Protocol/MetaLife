@@ -6,7 +6,13 @@
 import React, {useEffect, useRef} from 'react';
 import {connect} from 'react-redux/lib/exports';
 import {WebView} from 'react-native-webview';
-import {Platform, Text, useWindowDimensions, View} from 'react-native';
+import {
+  Platform,
+  SafeAreaView,
+  Text,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import {Link, useNavigation} from '@react-navigation/native';
 import SchemaStyles, {colorsSchema} from '../../../../shared/SchemaStyles';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
@@ -80,7 +86,7 @@ const AvatarEditor = ({feedId, infoDic, avatar}) => {
 
   const onlineRender = false;
   return avatar ? (
-    <View style={[flex1, {height: '100%'}]}>
+    <SafeAreaView style={[flex1, {height: '100%'}]}>
       <View style={[{marginTop: 40, width: '100%', height: width}]}>
         <WebView
           ref={webview}
@@ -113,7 +119,7 @@ const AvatarEditor = ({feedId, infoDic, avatar}) => {
         title={'Refine avatar'}
         press={() => navigate('Avatar')}
       />
-    </View>
+    </SafeAreaView>
   ) : (
     <View
       style={[

@@ -83,7 +83,7 @@ const Pubs = ({darkMode, infoDic, pubs}) => {
               onPress={() => {
                 inviteAccept(code, (e, v) => {
                   Toast.showSuccess(e ? e.message : 'invite accepted');
-                  e && reconnect2pub();
+                  e || reconnect2pub();
                 });
                 setCode('');
                 Keyboard.dismiss();
@@ -139,7 +139,7 @@ const Pubs = ({darkMode, infoDic, pubs}) => {
                 press={() => {
                   inviteAccept(invite, (e, v) => {
                     Toast.showSuccess(e ? e.message : 'invite accepted');
-                    e && reconnect2pub();
+                    e || reconnect2pub();
                   });
                 }}
               />
