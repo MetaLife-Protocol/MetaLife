@@ -12,10 +12,9 @@ import SchemaStyles, {colorsSchema} from '../../../../shared/SchemaStyles';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
 import {setAbout, setAboutImage} from '../../../../remote/ssb/ssbOP';
 import Toast from 'react-native-tiny-toast';
-import {savePicture} from '../../../../utils';
+import {getRandomPathName, savePicture} from '../../../../utils';
 import ImagePicker from 'react-native-image-crop-picker';
 import RNFetchBlob from 'rn-fetch-blob';
-import RNFS from 'react-native-fs';
 
 const AvatarEditor = ({feedId, infoDic, avatar}) => {
   const {flex1, alignItemsCenter, justifyCenter, text} = SchemaStyles();
@@ -53,9 +52,7 @@ const AvatarEditor = ({feedId, infoDic, avatar}) => {
             })
           : RNFetchBlob.fs
               .writeFile(
-                (path = `${RNFS.ExternalDirectoryPath}/${
-                  (Math.random() * 10e6) | 0
-                }.png`),
+                (path = getRandomPathName()),
                 content.split(',')[1],
                 'base64',
               )

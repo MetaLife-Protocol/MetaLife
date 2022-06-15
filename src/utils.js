@@ -1,6 +1,7 @@
 import {Keyboard, PermissionsAndroid, Platform} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import CameraRoll from '@react-native-community/cameraroll';
+import RNFS from 'react-native-fs';
 
 /**
  * Created on 22 Feb 2022 by lonmee
@@ -85,4 +86,8 @@ export async function savePicture(tag, type, album, cb) {
   }
 
   CameraRoll.save(tag, {type, album}).then(r => cb && cb(r));
+}
+
+export function getRandomPathName() {
+  return `${RNFS.ExternalDirectoryPath}/${(Math.random() * 10e6) | 0}.png`;
 }
