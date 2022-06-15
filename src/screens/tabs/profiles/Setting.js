@@ -97,7 +97,7 @@ const Setting = ({
               <Text style={[text]}>{description}</Text>
             </ControllerItem>
           </Pressable>
-          <Pressable onPress={() => navigate('Avatar')}>
+          <Pressable onPress={() => navigate('AvatarEditor')}>
             <ControllerItem title={'Avatar'}>
               <Image source={ArrowImage} />
             </ControllerItem>

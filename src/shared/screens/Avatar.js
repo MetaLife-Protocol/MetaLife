@@ -6,17 +6,36 @@
 import React, {useRef} from 'react';
 import {WebView} from 'react-native-webview';
 import {connect} from 'react-redux/lib/exports';
+import Toast from 'react-native-tiny-toast';
+import {setAbout, setAboutImage} from '../../remote/ssb/ssbOP';
 
 const subdomain = 'metalifesocial';
 //uri: `https://metalifesocial.readyplayer.me/avatar?frameApi`,
 
 let isSubscribed = false;
 
-const Avatar = ({setAvatar}) => {
+const Avatar = ({
+  setAvatar,
+  cfg: {darkMode, lang, verbose},
+  feedId,
+  infoDic,
+}) => {
   const webview = useRef();
 
+  function submit(type, value) {
+    type === 'image'
+      ? setAboutImage(feedId, {...infoDic[feedId], [type]: value}, () =>
+          Toast.show(type + ' submitted'),
+        )
+      : setAbout(feedId, {...infoDic[feedId], [type]: value}, () =>
+          Toast.show(type + ' submitted'),
+        );
+  }
+
   function onAvatarExported(message) {
-    setAvatar(message.data?.url + '?' + Math.random());
+    let avatar;
+    setAvatar((avatar = message.data?.url + '?' + Math.random()));
+    submit('avatar', avatar);
   }
 
   const subscribe = () => {
@@ -61,7 +80,7 @@ const Avatar = ({setAvatar}) => {
 };
 
 const msp = s => {
-  return {};
+  return {cfg: s.cfg, feedId: s.user.feedId, infoDic: s.info};
 };
 
 const mdp = d => {

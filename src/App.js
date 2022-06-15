@@ -41,6 +41,7 @@ import {
   bluetoothIconWhite,
   HeaderIcons,
 } from './shared/Icons';
+import AvatarEditor from './screens/tabs/profiles/setting/AvatarEditor';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -145,7 +146,9 @@ const App = ({
           options={{title: 'Message'}}
           component={MessageDetailsScreen}
         />
+        {/* Settings */}
         <Screen name="Setting" component={Setting} />
+        <Screen name="AvatarEditor" component={AvatarEditor} />
         <Screen name="Avatar" component={Avatar} />
         <Screen name="Pubs" component={Pubs} />
         <Group screenOptions={{presentation: 'modal'}} />
