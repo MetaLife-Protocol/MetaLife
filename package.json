@@ -42,6 +42,7 @@
     "react-native-permissions": "^3.3.1"
   },
   "dependencies": {
+    "@ethersproject/shims": "^5.6.0",
     "@react-native-async-storage/async-storage": "^1.16.1",
     "@react-native-community/cameraroll": "^4.1.2",
     "@react-navigation/bottom-tabs": "^6.3.1",
@@ -59,6 +60,7 @@
     "react-native-ble-wormhole": "github:heroims/WormholeProtocol-RN",
     "react-native-fast-image": "^8.5.11",
     "react-native-fs": "^2.20.0",
+    "react-native-get-random-values": "^1.8.0",
     "react-native-i18n": "^2.0.15",
     "react-native-image-crop-picker": "^0.37.3",
     "react-native-image-zoom-viewer": "^3.0.1",
@@ -73,6 +75,7 @@
     "react-native-tcp-socket": "^5.6.0",
     "react-native-tiny-toast": "^1.0.7",
     "react-native-version": "^4.0.0",
+    "react-native-web3-wallet": "github:heroims/react-native-web3-wallet",
     "react-native-webview": "^11.18.2",
     "react-redux": "^7.2.8",
     "redux": "^4.1.2",
