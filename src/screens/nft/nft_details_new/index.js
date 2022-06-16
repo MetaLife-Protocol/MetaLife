@@ -16,6 +16,9 @@ import {
   ScrollView,
 } from 'react-native';
 import {useStyle} from 'metalife-base';
+import CollectionView from './comps/CollectionView';
+import DetailTitle from './comps/DetailTitle';
+import PropertiesView from '../create_new_item/comps/PropertiesView';
 
 const NFTDetailNew = ({}) => {
   const styles = useStyle(styleFun);
@@ -74,6 +77,16 @@ const NFTDetailNew = ({}) => {
               Ownde by <Text style={styles.primary}>VaultMonkey</Text>
             </Text>
           </View>
+          <DetailTitle title={'About Collection'} />
+          <CollectionView />
+          <DetailTitle title={'Properties'} />
+          <PropertiesView
+            style={{marginTop: 10}}
+            properties={[
+              {name: 'Name', type: 'Type'},
+              {name: 'Name2', type: 'Type2'},
+            ]}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
