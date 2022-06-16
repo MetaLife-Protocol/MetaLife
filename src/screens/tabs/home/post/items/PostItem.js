@@ -65,7 +65,7 @@ const PostItem = ({
     voted = voteArr.includes(feedId);
 
   // apply filters
-  const textArr = applyFilters(cText);
+  const textArr = cText ? applyFilters(cText) : [];
 
   const likeHandler = useCallback(
     function () {

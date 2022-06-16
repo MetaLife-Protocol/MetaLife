@@ -87,29 +87,29 @@ const Setting = ({
           </Section>
         </Pressable>
         <Section separator={NormalSeparator}>
-          <Pressable onPress={() => setPnVisible(true)}>
+          <Pressable onPress={() => setPnVisible(true)} hitSlop={10}>
             <ControllerItem title={'Nickname'}>
               <Text style={[text]}>{name}</Text>
             </ControllerItem>
           </Pressable>
-          <Pressable onPress={() => setPdVisible(true)}>
+          <Pressable onPress={() => setPdVisible(true)} hitSlop={10}>
             <ControllerItem title={'Introduction'}>
               <Text style={[text]}>{description}</Text>
             </ControllerItem>
           </Pressable>
-          <Pressable onPress={() => navigate('AvatarEditor')}>
+          <Pressable onPress={() => navigate('AvatarEditor')} hitSlop={10}>
             <ControllerItem title={'Avatar'}>
               <Image source={ArrowImage} />
             </ControllerItem>
           </Pressable>
         </Section>
         <Section style={[marginTop10]} separator={NormalSeparator}>
-          <Pressable onPress={() => navigate('Pubs')}>
+          <Pressable onPress={() => navigate('Pubs')} hitSlop={10}>
             <ControllerItem title={'Connect PUB'}>
               <Image source={ArrowImage} />
             </ControllerItem>
           </Pressable>
-          <Pressable onPress={() => navigate('Mnemonic')}>
+          <Pressable onPress={() => navigate('Mnemonic')} hitSlop={10}>
             <ControllerItem title={'Mnemonic'}>
               <Image source={ArrowImage} />
             </ControllerItem>
