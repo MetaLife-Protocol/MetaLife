@@ -18,17 +18,18 @@ const ImagePickerView = ({style, onImagePicker}) => {
   const [image, setImage] = useState();
 
   const cameraHandler = useCallback(
-    ({didCancel, errorCode, errorMessage, assets}) => {
+    async ({didCancel, errorCode, errorMessage, assets}) => {
       if (errorCode || didCancel) {
         return errorCode && Toast.show(errorMessage);
       }
       const [file] = assets;
       // console.log('file::', file);
-      uploadFileToIFPS({
+      const res = await uploadFileToIFPS({
         fileName: file.fileName,
         filepath: file.uri,
         fileType: file.type,
       });
+      console.log('res::', res);
       onImagePicker && onImagePicker(file);
       setImage(file);
     },
