@@ -119,7 +119,7 @@ const Pubs = ({darkMode, infoDic, pubs}) => {
       )}
       {presetPubs.length > 0 && (
         <Section
-          style={[marginTop10, {height: '100%'}]}
+          style={[marginTop10]}
           title={'Presets'}
           separator={NormalSeparator}>
           {presetPubs.map(({name, key, invite}) => (
