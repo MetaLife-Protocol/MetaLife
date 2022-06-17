@@ -42,6 +42,7 @@ import {
   HeaderIcons,
 } from './shared/Icons';
 import AvatarEditor from './screens/tabs/profiles/setting/AvatarEditor';
+import WalletScreen from './screens/tabs/profiles/wallet/WalletScreen';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -129,6 +130,8 @@ const App = ({
           options={{title: 'Peers'}}
           component={PeerDetailsScreen}
         />
+        {/** wallet **/}
+        <Screen name="WalletScreen" component={WalletScreen} />
         {/* Posts */}
         <Screen
           name="PostMsgEditor"

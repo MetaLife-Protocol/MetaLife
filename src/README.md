@@ -1,4 +1,4 @@
-> ### add "var Buffer = require('buffer').Buffer;" to
+> ### (patched) ~~add "var Buffer = require('buffer').Buffer;" to~~ 
 >> mode_modules/pull-rn-channel/index.js  
 >> mode_modules/packet-stream-codec/index.js  
 >> mode_modules/pull-reader/index.js  
@@ -30,10 +30,7 @@
 >> `# nodejs-mobile-react-native for android`  
 >> export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/21.4.7075529
 
-> ### add readme.md to
-> [`nodejs-assets/nodejs-project`](nodejs-assets/nodejs-project)
->
-> ### resolve port conflict
+> ### (patched) ~~resolve port conflict~~
 > #### change port on serve-blob
 >> - add `serveBlobs: {
      port: 26834
