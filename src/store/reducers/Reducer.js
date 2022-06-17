@@ -27,6 +27,7 @@ const reducer = combineReducers({
   pubs: pubReducer,
   feed: feedReducer,
   vote: voteReducer,
+  // wallet
   wallet: walletReducer,
 });
 

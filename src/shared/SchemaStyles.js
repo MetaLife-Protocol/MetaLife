@@ -87,6 +87,9 @@ const stylesBasics = StyleSheet.create({
   column: {
     flexDirection: 'column',
   },
+  width100p: {
+    width: '100%',
+  },
   alignItemsCenter: {
     alignItems: 'center',
   },

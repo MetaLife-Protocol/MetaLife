@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useRef} from 'react';
+import {useEffect} from 'react';
 import {
   NavigationContainer,
   useNavigationContainerRef,
@@ -43,6 +43,7 @@ import {
 } from './shared/Icons';
 import AvatarEditor from './screens/tabs/profiles/setting/AvatarEditor';
 import WalletScreen from './screens/tabs/profiles/wallet/WalletScreen';
+import WalletCreator from './screens/tabs/profiles/wallet/WalletCreator';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -132,6 +133,7 @@ const App = ({
         />
         {/** wallet **/}
         <Screen name="WalletScreen" component={WalletScreen} />
+        <Screen name="WalletCreator" component={WalletCreator} />
         {/* Posts */}
         <Screen
           name="PostMsgEditor"

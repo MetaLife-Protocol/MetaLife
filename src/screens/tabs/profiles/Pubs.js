@@ -7,6 +7,7 @@ import {
   Keyboard,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   TextInput,
   View,
@@ -69,84 +70,86 @@ const Pubs = ({darkMode, infoDic, pubs}) => {
 
   return (
     <SafeAreaView>
-      <Section style={[marginTop10]} title={'Adding an invitation'}>
-        <ControllerItem>
-          <View style={[row, alignItemsCenter]}>
-            <TextInput
-              style={[invite, text, flex1]}
-              value={code}
-              placeholder={'Redeem an Invitation'}
-              placeholderTextColor={textHolder}
-              onChangeText={setCode}
-            />
-            <Pressable
-              onPress={() => {
-                inviteAccept(code, (e, v) => {
-                  Toast.showSuccess(e ? e.message : 'invite accepted');
-                  e || reconnect2pub();
-                });
-                setCode('');
-                Keyboard.dismiss();
-              }}>
-              <Image
-                source={
-                  darkMode ? HeaderIcons.PlusWhite : HeaderIcons.PlusBlack
-                }
+      <ScrollView>
+        <Section style={[marginTop10]} title={'Adding an invitation'}>
+          <ControllerItem>
+            <View style={[row, alignItemsCenter]}>
+              <TextInput
+                style={[invite, text, flex1]}
+                value={code}
+                placeholder={'Redeem an Invitation'}
+                placeholderTextColor={textHolder}
+                onChangeText={setCode}
               />
-            </Pressable>
-          </View>
-        </ControllerItem>
-      </Section>
-      {pubs.length > 0 && (
-        <Section
-          style={[marginTop10]}
-          title={'Your pubs'}
-          separator={NormalSeparator}>
-          {pubs.map(
-            ({
-              timestamp,
-              content: {
-                address: {host, key},
-              },
-            }) => (
-              <ControllerItem
-                key={key}
-                title={(infoDic[key] && infoDic[key].name) || key}
-              />
-            ),
-          )}
-        </Section>
-      )}
-      {presetPubs.length > 0 && (
-        <Section
-          style={[marginTop10]}
-          title={'Presets'}
-          separator={NormalSeparator}>
-          {presetPubs.map(({name, key, invite}) => (
-            <ControllerItem key={key} title={name}>
-              <RoundBtn
-                style={[{height: 24, marginRight: 0}]}
-                title={'Connect'}
-                disabled={
-                  pubs.filter(
-                    ({
-                      content: {
-                        address: {key: pKey},
-                      },
-                    }) => pKey === key,
-                  ).length !== 0
-                }
-                press={() => {
-                  inviteAccept(invite, (e, v) => {
+              <Pressable
+                onPress={() => {
+                  inviteAccept(code, (e, v) => {
                     Toast.showSuccess(e ? e.message : 'invite accepted');
                     e || reconnect2pub();
                   });
-                }}
-              />
-            </ControllerItem>
-          ))}
+                  setCode('');
+                  Keyboard.dismiss();
+                }}>
+                <Image
+                  source={
+                    darkMode ? HeaderIcons.PlusWhite : HeaderIcons.PlusBlack
+                  }
+                />
+              </Pressable>
+            </View>
+          </ControllerItem>
         </Section>
-      )}
+        {pubs.length > 0 && (
+          <Section
+            style={[marginTop10]}
+            title={'Your pubs'}
+            separator={NormalSeparator}>
+            {pubs.map(
+              ({
+                timestamp,
+                content: {
+                  address: {host, key},
+                },
+              }) => (
+                <ControllerItem
+                  key={key}
+                  title={(infoDic[key] && infoDic[key].name) || key}
+                />
+              ),
+            )}
+          </Section>
+        )}
+        {presetPubs.length > 0 && (
+          <Section
+            style={[marginTop10]}
+            title={'Presets'}
+            separator={NormalSeparator}>
+            {presetPubs.map(({name, key, invite}) => (
+              <ControllerItem key={key} title={name}>
+                <RoundBtn
+                  style={[{height: 24, marginRight: 0}]}
+                  title={'Connect'}
+                  disabled={
+                    pubs.filter(
+                      ({
+                        content: {
+                          address: {key: pKey},
+                        },
+                      }) => pKey === key,
+                    ).length !== 0
+                  }
+                  press={() => {
+                    inviteAccept(invite, (e, v) => {
+                      Toast.showSuccess(e ? e.message : 'invite accepted');
+                      e || reconnect2pub();
+                    });
+                  }}
+                />
+              </ControllerItem>
+            ))}
+          </Section>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };

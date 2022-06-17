@@ -4,7 +4,6 @@ import {
   Image,
   ImageBackground,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -26,12 +25,11 @@ const iconDic = {
   transfer: require('../../../../assets/image/wallet/Transfer.png'),
 };
 
-const WalletCard = ({style, cfg, showPullMenu, feedId, wallet}) => {
+const WalletCard = ({style, darkMode, showPullMenu, feedId, wallet}) => {
   const {row, flex1, justifySpaceAround, alignItemsCenter} = SchemaStyles(),
     {container, title, volume, icons, tag} = styles;
 
   const {navigate} = useNavigation();
-
   function goScreen(name, params) {
     navigate(name, params);
   }
@@ -54,7 +52,7 @@ const WalletCard = ({style, cfg, showPullMenu, feedId, wallet}) => {
           {
             title: 'Create account',
             handler: () => {
-              goScreen('');
+              goScreen('WalletCreator');
               showPullMenu({position: {}, buttons: []});
             },
           },
