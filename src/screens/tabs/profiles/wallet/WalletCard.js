@@ -9,7 +9,8 @@ import {
   View,
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import React from 'react';
+import React, {useState} from 'react';
+import {WalletSwitchModal} from './modal/WalletSwitchModal';
 
 /**
  * Created on 16 Jun 2022 by lonmee
@@ -30,6 +31,9 @@ const WalletCard = ({style, darkMode, showPullMenu, feedId, wallet}) => {
     {container, title, volume, icons, tag} = styles;
 
   const {navigate} = useNavigation();
+
+  const [switchVisible, setSwitchVisible] = useState(false);
+
   function goScreen(name, params) {
     navigate(name, params);
   }
@@ -45,7 +49,7 @@ const WalletCard = ({style, darkMode, showPullMenu, feedId, wallet}) => {
           {
             title: 'Switch account',
             handler: () => {
-              goScreen('PostMsgEditor');
+              setSwitchVisible(true);
               showPullMenu({position: {}, buttons: []});
             },
           },
@@ -83,50 +87,59 @@ const WalletCard = ({style, darkMode, showPullMenu, feedId, wallet}) => {
   }
 
   return (
-    <ImageBackground
-      style={[
-        ...style,
-        flex1,
-        container,
-        justifySpaceAround,
-        {alignSelf: 'center'},
-      ]}
-      source={iconDic.BG}>
-      <View style={[row, justifySpaceAround]}>
-        <Text style={[title]}>Address</Text>
-        <Text style={[{color: '#C0D7F4'}]}>account number</Text>
-        <Pressable onPress={menuHandler}>
-          <Image source={iconDic.dots} />
-        </Pressable>
-      </View>
-      <Text style={[volume]}>$ 12345678.88</Text>
-      <View style={[{width: '100%'}, row, justifySpaceAround]}>
-        <Pressable
-          style={[alignItemsCenter, icons]}
-          onPress={() => goScreen('xx', {})}>
-          <Image source={iconDic.scan} />
-          <Text style={[tag]}>Scan</Text>
-        </Pressable>
-        <Pressable
-          style={[alignItemsCenter, icons]}
-          onPress={() => goScreen('xx', {})}>
-          <Image source={iconDic.receive} />
-          <Text style={[tag]}>Receive</Text>
-        </Pressable>
-        <Pressable
-          style={[alignItemsCenter, icons]}
-          onPress={() => goScreen('xx', {})}>
-          <Image source={iconDic.photon} />
-          <Text style={[tag]}>Photon</Text>
-        </Pressable>
-        <Pressable
-          style={[alignItemsCenter, icons]}
-          onPress={() => goScreen('xx', {})}>
-          <Image source={iconDic.transfer} />
-          <Text style={[tag]}>Transfer</Text>
-        </Pressable>
-      </View>
-    </ImageBackground>
+    <>
+      <ImageBackground
+        style={[
+          ...style,
+          flex1,
+          container,
+          justifySpaceAround,
+          {alignSelf: 'center'},
+        ]}
+        source={iconDic.BG}>
+        <View style={[row, justifySpaceAround]}>
+          <Text style={[title]}>Address</Text>
+          <Text style={[{color: '#C0D7F4'}]}>account number</Text>
+          <Pressable onPress={menuHandler}>
+            <Image source={iconDic.dots} />
+          </Pressable>
+        </View>
+        <Text style={[volume]}>$ 12345678.88</Text>
+        <View style={[{width: '100%'}, row, justifySpaceAround]}>
+          <Pressable
+            style={[alignItemsCenter, icons]}
+            onPress={() => goScreen('xx', {})}>
+            <Image source={iconDic.scan} />
+            <Text style={[tag]}>Scan</Text>
+          </Pressable>
+          <Pressable
+            style={[alignItemsCenter, icons]}
+            onPress={() => goScreen('xx', {})}>
+            <Image source={iconDic.receive} />
+            <Text style={[tag]}>Receive</Text>
+          </Pressable>
+          <Pressable
+            style={[alignItemsCenter, icons]}
+            onPress={() => goScreen('xx', {})}>
+            <Image source={iconDic.photon} />
+            <Text style={[tag]}>Photon</Text>
+          </Pressable>
+          <Pressable
+            style={[alignItemsCenter, icons]}
+            onPress={() => goScreen('xx', {})}>
+            <Image source={iconDic.transfer} />
+            <Text style={[tag]}>Transfer</Text>
+          </Pressable>
+        </View>
+      </ImageBackground>
+      <WalletSwitchModal
+        visible={switchVisible}
+        setVisible={setSwitchVisible}
+        value={'1-2'}
+        holderText={'nickname'}
+        submitHandler={console.log}
+      />
+    </>
   );
 };
 

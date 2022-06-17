@@ -44,6 +44,7 @@ import {
 import AvatarEditor from './screens/tabs/profiles/setting/AvatarEditor';
 import WalletScreen from './screens/tabs/profiles/wallet/WalletScreen';
 import WalletCreator from './screens/tabs/profiles/wallet/WalletCreator';
+import WalletImporter from './screens/tabs/profiles/wallet/WalletImporter';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -134,6 +135,7 @@ const App = ({
         {/** wallet **/}
         <Screen name="WalletScreen" component={WalletScreen} />
         <Screen name="WalletCreator" component={WalletCreator} />
+        <Screen name="WalletImporter" component={WalletImporter} />
         {/* Posts */}
         <Screen
           name="PostMsgEditor"

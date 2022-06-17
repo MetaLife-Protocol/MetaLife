@@ -23,9 +23,7 @@ export const ProfileModal = ({
       animationType={'slide'}
       transparent={true}
       visible={visible}
-      onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
-      }}>
+      onRequestClose={null}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <TextInput

@@ -4,6 +4,7 @@ import SchemaStyles from '../../shared/SchemaStyles';
 
 const Profiles = ({feedId}) => {
   const {text} = SchemaStyles();
+
   return <></>;
 };
 
