@@ -8,6 +8,7 @@ import SchemaStyles from '../SchemaStyles';
 const RoundBtn = ({title, press, disabled = false, style = null}) => {
   const [active, setActive] = useState(false);
   const {
+    FG,
     btnActiveBG,
     btnActiveFG,
     btnInactiveBG,
@@ -21,7 +22,11 @@ const RoundBtn = ({title, press, disabled = false, style = null}) => {
         style={[
           styles.border,
           style,
-          disabled ? btnDisabledBG : active ? btnActiveBG : btnInactiveBG,
+          disabled
+            ? [FG, btnDisabledBG]
+            : active
+            ? btnActiveBG
+            : [FG, btnInactiveBG],
         ]}
         onTouchStart={() => setActive(true)}
         onTouchEnd={() => {
