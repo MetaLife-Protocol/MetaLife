@@ -66,9 +66,12 @@ const Messages = ({privateMsg}) => {
           ))}
         </Section>
       ) : (
-        Object.keys(privateMsg).map(key => (
-          <MessageItem key={key} rootKey={key} msgArr={privateMsg[key]} />
-        ))
+        Object.keys(privateMsg).map(
+          key =>
+            privateMsg[key].length > 0 && (
+              <MessageItem key={key} rootKey={key} msgArr={privateMsg[key]} />
+            ),
+        )
       )}
     </ScrollView>
   );
