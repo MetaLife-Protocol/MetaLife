@@ -10,7 +10,7 @@ import Guid from './screens/Guid';
 import Restore from './screens/guid/Restore';
 import SubScreen from './shared/screens/SubScreen';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from './shared/SchemaStyles';
+import useSchemaStyles from './shared/UseSchemaStyles';
 import Setting from './screens/tabs/profiles/Setting';
 import PeersScreen from './screens/tabs/contacts/PeersScreen';
 import PeerDetailsScreen from './screens/tabs/contacts/PeerDetailsScreen';
@@ -45,6 +45,7 @@ import AvatarEditor from './screens/tabs/profiles/setting/AvatarEditor';
 import WalletScreen from './screens/tabs/profiles/wallet/WalletScreen';
 import WalletCreator from './screens/tabs/profiles/wallet/WalletCreator';
 import WalletImporter from './screens/tabs/profiles/wallet/WalletImporter';
+import WalletManager from './screens/tabs/profiles/wallet/WalletManager';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -57,7 +58,7 @@ const App = ({
   setViewImages,
   darkMode,
 }) => {
-  const {barStyle, theme} = SchemaStyles();
+  const {barStyle, theme} = useSchemaStyles();
   const store = useStore();
   const {Navigator, Screen, Group} = createNativeStackNavigator();
   const {channel} = nodejs;
@@ -133,9 +134,26 @@ const App = ({
           component={PeerDetailsScreen}
         />
         {/** wallet **/}
-        <Screen name="WalletScreen" component={WalletScreen} />
-        <Screen name="WalletCreator" component={WalletCreator} />
-        <Screen name="WalletImporter" component={WalletImporter} />
+        <Screen
+          name="WalletScreen"
+          component={WalletScreen}
+          options={{title: 'Wallet'}}
+        />
+        <Screen
+          name="WalletCreator"
+          component={WalletCreator}
+          options={{title: 'Create account'}}
+        />
+        <Screen
+          name="WalletImporter"
+          component={WalletImporter}
+          options={{title: 'Import account'}}
+        />
+        <Screen
+          name="WalletManager"
+          component={WalletManager}
+          options={{title: 'Wallet management'}}
+        />
         {/* Posts */}
         <Screen
           name="PostMsgEditor"

@@ -1,7 +1,7 @@
 import React from 'react';
 import {SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {useTimer} from '../../../shared/Hooks';
 import Section from '../../../shared/comps/Section';
 import PeerItem from './item/PeerItem';
@@ -13,7 +13,7 @@ const PeersScreen = ({
   setStagedPeers,
   setConnectedPeers,
 }) => {
-  const {BG, flex1} = SchemaStyles();
+  const {BG, flex1} = useSchemaStyles();
   useTimer(refreshStagedAndConnected, 3000);
 
   function refreshStagedAndConnected() {

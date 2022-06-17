@@ -14,7 +14,9 @@ import {
   View,
 } from 'react-native';
 import {Link, useNavigation} from '@react-navigation/native';
-import SchemaStyles, {colorsSchema} from '../../../../shared/SchemaStyles';
+import useSchemaStyles, {
+  colorsSchema,
+} from '../../../../shared/UseSchemaStyles';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
 import {setAbout, setAboutImage} from '../../../../remote/ssb/ssbOP';
 import Toast from 'react-native-tiny-toast';
@@ -23,7 +25,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 
 const AvatarEditor = ({feedId, infoDic, avatar}) => {
-  const {flex1, alignItemsCenter, justifyCenter, text} = SchemaStyles();
+  const {flex1, alignItemsCenter, justifyCenter, text} = useSchemaStyles();
   const runFirst = `
       window.platform = '${Platform.OS}'; 
       true; // note: this is required, or you'll sometimes get silent failures

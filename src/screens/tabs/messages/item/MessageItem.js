@@ -1,6 +1,6 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
@@ -19,7 +19,7 @@ const MessageItem = ({rootKey, feedId, infoDic, msgArr}) => {
     lastMsg = msgArr[msgArr.length - 1],
     {navigate} = useNavigation();
 
-  const {row, flex1, text} = SchemaStyles(),
+  const {row, flex1, text} = useSchemaStyles(),
     {textContainer, item, title, desc} = styles;
   const {name = '', description = '', image = ''} = infoDic[recp] || {};
   return (

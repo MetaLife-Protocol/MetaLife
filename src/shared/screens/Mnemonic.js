@@ -4,14 +4,14 @@
 
 import React, {useLayoutEffect, useState} from 'react';
 import {SafeAreaView, Text, View} from 'react-native';
-import SchemaStyles, {colorsBasics} from '../../shared/SchemaStyles';
+import useSchemaStyles, {colorsBasics} from '../UseSchemaStyles';
 import {getMnemonic} from '../../remote/ssb/ssbOP';
 import RoundBtn from '../comps/RoundBtn';
 import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
 const Mnemonic = () => {
-  const {FG, flex1, marginTop10, text} = SchemaStyles();
+  const {FG, flex1, marginTop10, text} = useSchemaStyles();
   const [mnemonic, setMnemonic] = useState();
   useLayoutEffect(() => getMnemonic(setMnemonic), []);
   return (

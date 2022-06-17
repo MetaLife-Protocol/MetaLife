@@ -1,9 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../../shared/SchemaStyles';
+import useSchemaStyles from '../../shared/UseSchemaStyles';
 
 const Profiles = ({feedId}) => {
-  const {text} = SchemaStyles();
+  const {text} = useSchemaStyles();
 
   return <></>;
 };

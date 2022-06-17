@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import Toast from 'react-native-tiny-toast';
@@ -25,7 +25,7 @@ const iconDic = {
 
 const HeaderProfiles = ({feedId, relations, infoDic}) => {
   const {row, flex1, justifySpaceBetween, alignItemsCenter, marginTop10} =
-      SchemaStyles(),
+      useSchemaStyles(),
     {container, photo, setting, nameFont, desc, at} = styles;
 
   const {navigate, push} = useNavigation(),

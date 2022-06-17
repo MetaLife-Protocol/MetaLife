@@ -10,7 +10,7 @@ import {
   Switch,
   Text,
 } from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ControllerItem from '../../../shared/comps/ControllerItem';
 import I18n from '../../../i18n/I18n';
@@ -35,7 +35,7 @@ const Setting = ({
   setLang,
   setVerbose,
 }) => {
-  const {flex1, alignItemsCenter, marginTop10, text} = SchemaStyles();
+  const {flex1, alignItemsCenter, marginTop10, text} = useSchemaStyles();
 
   const {name, description, image} = infoDic[feedId] || {};
 

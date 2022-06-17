@@ -13,7 +13,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {blobsSetter, sendMsg} from '../../../../remote/ssb/ssbOP';
 import {useNavigation} from '@react-navigation/native';
 import MultimediaPanel from './MultimediaPanel';
@@ -39,7 +39,7 @@ const PostMsgEditor = ({
   resetPostContent,
   showPullMenu,
 }) => {
-  const {FG, flex1, placeholderTextColor, text} = SchemaStyles();
+  const {FG, flex1, placeholderTextColor, text} = useSchemaStyles();
   const {goBack} = useNavigation();
   const {scale} = useWindowDimensions();
   const [content, setContent] = useState(cachedContent.content),

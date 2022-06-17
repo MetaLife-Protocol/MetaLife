@@ -4,7 +4,7 @@ import persistReducer from 'redux-persist/es/persistReducer';
 import persistStore from 'redux-persist/es/persistStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import I18n from 'react-native-i18n';
-import {populateStyles} from '../shared/SchemaStyles';
+import {populateStyles} from '../shared/UseSchemaStyles';
 import {devToolsEnhancer} from 'redux-devtools-extension';
 
 /**

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
+import useSchemaStyles, {colorsSchema} from '../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import SearchBar from '../../shared/comps/SearchBar';
 import MessageItem from './messages/item/MessageItem';
@@ -10,7 +10,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 const Messages = ({privateMsg}) => {
   const {textHolder} = colorsSchema,
-    {FG, row, text, alignItemsCenter} = SchemaStyles(),
+    {FG, row, text, alignItemsCenter} = useSchemaStyles(),
     {searchBar, contactItemContainer, textView, nameTF, descTF} = styles;
   const {setOptions, getState} = useNavigation();
   const [result, setResult] = useState([]);

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, Image, ScrollView, StyleSheet, View} from 'react-native';
-import SchemaStyles from '../../shared/SchemaStyles';
+import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import Section from '../../shared/comps/Section';
 import FriendItem from './contacts/item/FriendItem';
@@ -24,7 +24,7 @@ const Contacts = ({
   infoDic,
   relations: [friends, following, follower],
 }) => {
-  const {BG} = SchemaStyles(),
+  const {BG} = useSchemaStyles(),
     {searchBar, item} = styles;
   const {setOptions, getState} = useNavigation();
   const [result, setResult] = useState([]);

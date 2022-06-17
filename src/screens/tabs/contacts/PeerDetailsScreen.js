@@ -1,6 +1,6 @@
 import React, {useEffect, useLayoutEffect} from 'react';
 import {FlatList, Modal, SafeAreaView, StyleSheet} from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import ItemAgent from '../home/post/ItemAgent';
@@ -10,7 +10,7 @@ import {batchMsgCB} from '../../../store/MsgCB';
 import {useDispatch} from 'react-redux';
 
 const PeerDetailsScreen = ({verbose, selfFeedId, relations, info, feed}) => {
-  const {flex1} = SchemaStyles(),
+  const {flex1} = useSchemaStyles(),
     {} = styles;
 
   const {setOptions} = useNavigation(),

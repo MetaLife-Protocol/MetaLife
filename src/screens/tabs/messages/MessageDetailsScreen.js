@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import SchemaStyles, {colorsBasics} from '../../../shared/SchemaStyles';
+import useSchemaStyles, {colorsBasics} from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import MsgInput from '../../../shared/comps/MsgInput';
@@ -26,7 +26,7 @@ const MessageDetailsScreen = ({
   infoDic,
   privateMsg,
 }) => {
-  const {BG, FG, row, flex1} = SchemaStyles(),
+  const {BG, FG, row, flex1} = useSchemaStyles(),
     {itemContainer, item, itemLeft, itemRight, title, desc} = styles,
     {name = '', description = '', image = ''} = infoDic[recp] || {};
 

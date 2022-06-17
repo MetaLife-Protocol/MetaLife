@@ -1,5 +1,5 @@
 import {Image, Linking, Text} from 'react-native';
-import SchemaStyles from '../../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../../shared/UseSchemaStyles';
 import React from 'react';
 import FastImage from 'react-native-fast-image';
 
@@ -9,7 +9,7 @@ import FastImage from 'react-native-fast-image';
  */
 
 export default ({index, link, url, verbose = false}) => {
-  const {text} = SchemaStyles();
+  const {text} = useSchemaStyles();
   return (
     <>
       {/*<Image*/}

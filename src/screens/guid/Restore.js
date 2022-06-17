@@ -10,7 +10,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import SchemaStyles, {colorsBasics} from '../../shared/SchemaStyles';
+import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 import RoundBtn from '../../shared/comps/RoundBtn';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 import nodejs from 'nodejs-mobile-react-native';
@@ -19,7 +19,8 @@ import {useNavigation} from '@react-navigation/native';
 import {connect} from 'react-redux/lib/exports';
 
 const Restore = ({setResync}) => {
-  const {FG, flex1, marginTop10, text, placeholderTextColor} = SchemaStyles();
+  const {FG, flex1, marginTop10, text, placeholderTextColor} =
+    useSchemaStyles();
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
   const [mnemonic, setMnemonic] = useState('');
   const {channel} = nodejs;

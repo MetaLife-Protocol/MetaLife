@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import SchemaStyles from '../SchemaStyles';
+import useSchemaStyles from '../UseSchemaStyles';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 
 const iconDic = {
@@ -17,7 +17,7 @@ const iconDic = {
 
 const MsgInput = ({sendHandler}) => {
   const {FG, input, row, alignItemsCenter, flex1, text, placeholderTextColor} =
-      SchemaStyles(),
+      useSchemaStyles(),
     {inner, round, textInput, sender} = styles;
   const [content, setContent] = useState(''),
     [offset, setOffset] = useState(0);

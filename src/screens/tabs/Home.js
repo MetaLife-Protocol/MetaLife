@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Pressable, ScrollView, StyleSheet, Text} from 'react-native';
-import SchemaStyles, {colorsBasics} from '../../shared/SchemaStyles';
+import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useTimer} from '../../shared/Hooks';
 import {getConnectedPeers} from '../../remote/ssb/ssbOP';
@@ -11,7 +11,7 @@ import SearchBar from '../../shared/comps/SearchBar';
 import FriendItem from './contacts/item/FriendItem';
 
 const Home = ({cfg: {verbose}, publicMsg, setConnectedPeers}) => {
-  const {flex1, BG} = SchemaStyles(),
+  const {flex1, BG} = useSchemaStyles(),
     {searchBar} = styles;
   const {navigate, setOptions, getState} = useNavigation();
   const [result, setResult] = useState([]);

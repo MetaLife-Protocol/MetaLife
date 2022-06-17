@@ -1,11 +1,11 @@
 import {StyleSheet, View} from 'react-native';
 import React from 'react';
-import SchemaStyles from '../SchemaStyles';
+import useSchemaStyles from '../UseSchemaStyles';
 import HeaderLargeTitle from './HeaderLargeTitle';
 import {SearchBar} from 'react-native-screens';
 
 const HeaderSearch = props => {
-  const {} = SchemaStyles(),
+  const {} = useSchemaStyles(),
     {container} = styles;
   return (
     <View style={[container]}>

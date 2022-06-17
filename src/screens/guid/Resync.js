@@ -4,7 +4,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, Text} from 'react-native';
-import SchemaStyles from '../../shared/SchemaStyles';
+import useSchemaStyles from '../../shared/UseSchemaStyles';
 import RoundBtn from '../../shared/comps/RoundBtn';
 import {StackActions, useNavigation} from '@react-navigation/native';
 import {useTimer} from '../../shared/Hooks';
@@ -29,7 +29,8 @@ const Resync = ({
   setStagedPeers,
   setConnectedPeers,
 }) => {
-  const {FG, flex1, marginTop10, btnInactiveFG, btnInactiveBG} = SchemaStyles(),
+  const {FG, flex1, marginTop10, btnInactiveFG, btnInactiveBG} =
+      useSchemaStyles(),
     {border, title} = styles;
   const {navigate, dispatch, popToTop, getState} = useNavigation();
   const store = useStore();

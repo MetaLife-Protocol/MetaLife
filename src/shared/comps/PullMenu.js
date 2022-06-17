@@ -4,11 +4,11 @@
  */
 import React, {useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../SchemaStyles';
+import useSchemaStyles, {colorsSchema} from '../UseSchemaStyles';
 import {useDispatch, useSelector} from 'react-redux';
 
 export default ({style = []}) => {
-  const {flex1, text, BG} = SchemaStyles(),
+  const {flex1, text, BG} = useSchemaStyles(),
     {background, container, titleStyle} = styles;
 
   const {pullMenu} = useSelector(state => state.runtime),

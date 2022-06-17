@@ -5,7 +5,7 @@
 import React, {useLayoutEffect, useRef, useState} from 'react';
 import {Keyboard, SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import MsgInput from '../../../../shared/comps/MsgInput';
 import {loadMsg, sendMsg} from '../../../../remote/ssb/ssbOP';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -14,7 +14,7 @@ import Section from '../../../../shared/comps/Section';
 import PostItem from './items/PostItem';
 
 const PostMsgEditor = ({commentDic}) => {
-  const {FG, flex1} = SchemaStyles();
+  const {FG, flex1} = useSchemaStyles();
 
   const {setOptions} = useNavigation();
   const {params} = useRoute(),

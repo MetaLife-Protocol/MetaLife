@@ -3,18 +3,10 @@
  *
  */
 import React, {useState} from 'react';
-import {
-  Alert,
-  Image,
-  Modal,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../../../../shared/SchemaStyles';
-import RoundBtn from '../../../../../shared/comps/RoundBtn';
+import {Modal, Pressable, StyleSheet, Text, View} from 'react-native';
+import useSchemaStyles, {
+  colorsSchema,
+} from '../../../../../shared/UseSchemaStyles';
 
 export const WalletSwitchModal = ({
   visible,
@@ -23,7 +15,7 @@ export const WalletSwitchModal = ({
   holderText,
   submitHandler,
 }) => {
-  const {flex1, FG, BG, row, text, justifySpaceBetween} = SchemaStyles(),
+  const {flex1, FG, BG, row, text, justifySpaceBetween} = useSchemaStyles(),
     {textHolder} = colorsSchema,
     {centeredView, modalView, title, line} = styles;
 
@@ -52,12 +44,16 @@ export const WalletSwitchModal = ({
   );
 };
 
+const icons = {
+  walletB: require('../../../../../assets/image/wallet/wallet-balck.png'),
+  walletW: require('../../../../../assets/image/wallet/wallet-white.png'),
+};
+
 const styles = StyleSheet.create({
   centeredView: {
     flexDirection: 'column-reverse',
   },
   modalView: {
-    height: 320,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
   },

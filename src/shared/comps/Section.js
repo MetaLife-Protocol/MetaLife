@@ -1,12 +1,12 @@
 import {Button, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import SchemaStyles from '../SchemaStyles';
+import useSchemaStyles from '../UseSchemaStyles';
 
 /**
  * Created on 05 Nov 2021 by lonmee
  */
 const Section = ({children, title, separator, style, rightBtn}) => {
-  const {FG, BG, text} = SchemaStyles();
+  const {FG, BG, text} = useSchemaStyles();
   const {titleContainer, ti} = styles;
   children && !Array.isArray(children) && (children = [children]);
   return (

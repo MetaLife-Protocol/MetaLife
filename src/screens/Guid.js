@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, ImageBackground, StyleSheet, View} from 'react-native';
 import RoundBtn from '../shared/comps/RoundBtn';
-import SchemaStyles from '../shared/SchemaStyles';
+import useSchemaStyles from '../shared/UseSchemaStyles';
 import {useNavigation} from '@react-navigation/native';
 import nodejs from 'nodejs-mobile-react-native';
 
@@ -14,7 +14,7 @@ const iconDic = {
 };
 
 const Guid = () => {
-  const {flex1, alignItemsCenter, width100Percent} = SchemaStyles(),
+  const {flex1, alignItemsCenter, width100Percent} = useSchemaStyles(),
     {titleImg, buttons, buttonPadding} = styles;
   const {replace, navigate} = useNavigation();
   const {channel} = nodejs;

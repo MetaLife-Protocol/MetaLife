@@ -1,6 +1,6 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
@@ -9,7 +9,7 @@ import {findRootKey} from '../../../../store/filters/MsgFilters';
 import {PeerIcons} from '../../../../shared/Icons';
 
 const FriendItem = ({fId, infoDic, privateMsg, pubs, connectedPeers}) => {
-  const {row, flex1, text} = SchemaStyles();
+  const {row, flex1, text} = useSchemaStyles();
   const {textContainer, item, title, desc} = styles;
   const {name = '', description = '', image = ''} = infoDic[fId] || {},
     {replace, push} = useNavigation(),

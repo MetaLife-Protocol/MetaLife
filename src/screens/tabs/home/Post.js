@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ItemAgent from './../home/post/ItemAgent';
 import SearchBar from '../../../shared/comps/SearchBar';
 import {searchPublicMsgByPostId} from '../../../store/filters/MsgFilters';
 
 const Post = ({cfg: {verbose}, publicMsg, setConnectedPeers}) => {
-  const {flex1} = SchemaStyles(),
+  const {flex1} = useSchemaStyles(),
     {searchBar} = styles;
   const [result, setResult] = useState([]);
   const [KW, setKW] = useState('');

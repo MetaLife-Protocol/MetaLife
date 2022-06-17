@@ -7,7 +7,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {useSelector} from 'react-redux';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
 
@@ -29,7 +29,7 @@ const MultimediaPanel = ({
   clearHandler,
   sendHandler,
 }) => {
-  const {BG, row, alignItemsCenter, justifySpaceBetween} = SchemaStyles(),
+  const {BG, row, alignItemsCenter, justifySpaceBetween} = useSchemaStyles(),
     {container, funBtn, reviewBtn} = styles;
   const {darkMode} = useSelector(state => state.cfg),
     iconVoice = darkMode ? iconDic.voiceB : iconDic.voiceW,

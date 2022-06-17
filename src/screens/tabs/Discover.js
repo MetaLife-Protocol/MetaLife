@@ -6,12 +6,12 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
-import SchemaStyles from '../../shared/SchemaStyles';
+import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation} from '@react-navigation/native';
 
 const Discover = ({darkMode}) => {
-  const {justifyCenter, marginTop10} = SchemaStyles();
+  const {justifyCenter, marginTop10} = useSchemaStyles();
   const {navigate} = useNavigation();
 
   const iconDic = {
@@ -25,9 +25,9 @@ const Discover = ({darkMode}) => {
   const DATA = [
     {title: 'DAO', bgImg: iconDic.DAO},
     {title: 'NFT', bgImg: iconDic.NFT},
-    // {title: 'Play to earn', bgImg: iconDic.pte},
-    // {title: 'VISwap', bgImg: iconDic.vis},
-    // {title: 'Featured Content', bgImg: iconDic.fc},
+    {title: 'Play to earn', bgImg: iconDic.pte},
+    {title: 'VISwap', bgImg: iconDic.vis},
+    {title: 'Featured Content', bgImg: iconDic.fc},
   ];
 
   const Item = ({item: {title, bgImg}}) => {

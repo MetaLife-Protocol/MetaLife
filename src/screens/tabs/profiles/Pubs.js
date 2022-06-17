@@ -12,7 +12,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../../shared/SchemaStyles';
+import useSchemaStyles, {colorsSchema} from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import Section from '../../../shared/comps/Section';
 import {
@@ -43,7 +43,7 @@ const presetPubs = [
 ];
 
 const Pubs = ({darkMode, infoDic, pubs}) => {
-  const {flex1, row, alignItemsCenter, text, marginTop10} = SchemaStyles(),
+  const {flex1, row, alignItemsCenter, text, marginTop10} = useSchemaStyles(),
     {textHolder} = colorsSchema,
     {invite} = styles;
   const [code, setCode] = useState('');

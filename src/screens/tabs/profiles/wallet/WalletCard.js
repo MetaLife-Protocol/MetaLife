@@ -1,4 +1,4 @@
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {useNavigation} from '@react-navigation/native';
 import {
   Image,
@@ -27,7 +27,7 @@ const iconDic = {
 };
 
 const WalletCard = ({style, darkMode, showPullMenu, feedId, wallet}) => {
-  const {row, flex1, justifySpaceAround, alignItemsCenter} = SchemaStyles(),
+  const {row, flex1, justifySpaceAround, alignItemsCenter} = useSchemaStyles(),
     {container, title, volume, icons, tag} = styles;
 
   const {navigate} = useNavigation();
@@ -63,7 +63,7 @@ const WalletCard = ({style, darkMode, showPullMenu, feedId, wallet}) => {
           {
             title: 'Manage account',
             handler: () => {
-              goScreen('PeersScreen');
+              goScreen('WalletManager');
               showPullMenu({position: {}, buttons: []});
             },
           },

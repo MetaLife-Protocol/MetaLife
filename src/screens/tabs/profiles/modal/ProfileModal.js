@@ -3,7 +3,9 @@
  */
 import React, {useState} from 'react';
 import {Alert, Modal, StyleSheet, TextInput, View} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../../../shared/SchemaStyles';
+import useSchemaStyles, {
+  colorsSchema,
+} from '../../../../shared/UseSchemaStyles';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
 
 export const ProfileModal = ({
@@ -13,7 +15,7 @@ export const ProfileModal = ({
   holderText,
   submitHandler,
 }) => {
-  const {row} = SchemaStyles(),
+  const {row} = useSchemaStyles(),
     {textHolder} = colorsSchema;
 
   const [valueLocal, setValueLocal] = useState(value);

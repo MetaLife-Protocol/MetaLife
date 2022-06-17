@@ -1,4 +1,6 @@
-import SchemaStyles, {colorsBasics} from '../../../../../shared/SchemaStyles';
+import useSchemaStyles, {
+  colorsBasics,
+} from '../../../../../shared/UseSchemaStyles';
 import {Linking, Text} from 'react-native';
 import React, {useState} from 'react';
 import {play} from '../../../../../mgrs/AudioMgr';
@@ -9,7 +11,7 @@ import {play} from '../../../../../mgrs/AudioMgr';
  */
 
 export default ({link, url, verbose = false}) => {
-  const {text} = SchemaStyles();
+  const {text} = useSchemaStyles();
   const [playing, setPlaying] = useState(false);
   const playHandler = () => {
     setPlaying(true);

@@ -1,11 +1,11 @@
 import React, {useLayoutEffect} from 'react';
 import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import FriendItem from './item/FriendItem';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
 const PeersListScreen = () => {
-  const {flex1} = SchemaStyles(),
+  const {flex1} = useSchemaStyles(),
     {} = styles;
 
   const {setOptions} = useNavigation(),

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {
@@ -20,7 +20,7 @@ const PeerItem = ({
   relations: [friends, following],
 }) => {
   const isFollowing = friends.includes(key) || following.includes(key);
-  const {row, flex1, text} = SchemaStyles(),
+  const {row, flex1, text} = useSchemaStyles(),
     {textContainer, item, title, desc} = styles;
   const {navigate} = useNavigation();
   const {name = '', description = '', image = ''} = infoDic[key] || {};

@@ -167,8 +167,8 @@ export function populateStyles(darkMode) {
   }
 }
 
-function SchemaStyles() {
+function useSchemaStyles() {
   return cache[1];
 }
 
-export default SchemaStyles;
+export default useSchemaStyles;

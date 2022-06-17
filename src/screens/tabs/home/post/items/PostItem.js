@@ -10,7 +10,9 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import SchemaStyles, {colorsBasics} from '../../../../../shared/SchemaStyles';
+import useSchemaStyles, {
+  colorsBasics,
+} from '../../../../../shared/UseSchemaStyles';
 import {localDate} from '../../../../../utils';
 import PostMsgPanel from './PostMsgPannel';
 import HeadIcon from '../../../../../shared/comps/HeadIcon';
@@ -43,7 +45,7 @@ const PostItem = ({
   setViewImages,
 }) => {
   const {row, flex1, text, placeholderTextColor, justifySpaceBetween} =
-      SchemaStyles(),
+      useSchemaStyles(),
     {container, textContainer, contentContainer, panel} = styles;
   const {setString} = nativeClipboard;
   const {

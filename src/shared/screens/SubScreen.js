@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
 import {SafeAreaView, ScrollView, StatusBar, View} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../SchemaStyles';
+import useSchemaStyles from '../UseSchemaStyles';
 
 const SubScreen = () => {
-  const {barStyle, FG, flex1} = SchemaStyles();
+  const {barStyle, FG, flex1} = useSchemaStyles();
   useEffect(() => {
     console.log('enter screen');
     return () => console.log('exit screen');

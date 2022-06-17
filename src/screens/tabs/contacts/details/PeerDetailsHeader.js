@@ -9,7 +9,7 @@ import {markMsgCBByKey} from '../../../../store/MsgCB';
 import {findRootKey} from '../../../../store/filters/MsgFilters';
 import React, {useState} from 'react';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   friendsGraphParse,
@@ -29,7 +29,7 @@ const PeerDetailsHeader = ({
   privateMsg,
   setViewImages,
 }) => {
-  const {row, flex1, justifySpaceAround, text} = SchemaStyles(),
+  const {row, flex1, justifySpaceAround, text} = useSchemaStyles(),
     {textContainer, item, title, desc, btn} = styles;
 
   const {navigate, push} = useNavigation(),

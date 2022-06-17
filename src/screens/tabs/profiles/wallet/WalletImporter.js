@@ -14,7 +14,9 @@ import {
 import Section from '../../../../shared/comps/Section';
 import {NormalSeparator} from '../../../../shared/comps/SectionSeparators';
 import ControllerItem from '../../../../shared/comps/ControllerItem';
-import SchemaStyles, {colorsSchema} from '../../../../shared/SchemaStyles';
+import useSchemaStyles, {
+  colorsSchema,
+} from '../../../../shared/UseSchemaStyles';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 
@@ -25,7 +27,7 @@ import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo'
 
 const WalletCreator = ({cfg: {lang, darkMode, verbose}}) => {
   const {flex1, FG, with100p, row, alignItemsCenter, text, marginTop10} =
-      SchemaStyles(),
+      useSchemaStyles(),
     {textHolder} = colorsSchema,
     {invite} = styles;
 

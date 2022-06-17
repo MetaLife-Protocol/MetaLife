@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import {Image, Pressable, Text, View} from 'react-native';
-import SchemaStyles from '../../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../../shared/UseSchemaStyles';
 
 const iconDic = {
   iconForward: require('../../../../../assets/image/messages/dongtai_icon_forward.png'),
@@ -21,7 +21,7 @@ const PostMsgPanel = ({
   commentHandler,
   likeHandler,
 }) => {
-  const {row, text} = SchemaStyles();
+  const {row, text} = useSchemaStyles();
   return (
     <View style={style}>
       <Pressable
