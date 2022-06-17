@@ -57,9 +57,9 @@ const WalletManager = ({cfg: {darkMode}}) => {
     <SafeAreaView style={[flex1, FG, row]}>
       <View style={[{backgroundColor: darkMode ? '#2b2f2f' : '#edeef1'}]}>
         {Object.keys(walletData).map(k => (
-          <Pressable onPress={() => setTIndex(k)}>
+          <Pressable key={k} onPress={() => setTIndex(k)}>
             <View style={k === tIndex && FG}>
-              <Image style={[btn]} key={k} source={getIcon(k, k === tIndex)} />
+              <Image style={[btn]} source={getIcon(k, k === tIndex)} />
             </View>
           </Pressable>
         ))}
