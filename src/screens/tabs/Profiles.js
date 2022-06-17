@@ -1,15 +1,15 @@
 import React from 'react';
 import {connect} from 'react-redux/lib/exports';
-import {Text} from 'react-native';
 import SchemaStyles from '../../shared/SchemaStyles';
 
 const Profiles = ({feedId}) => {
   const {text} = SchemaStyles();
-  return <Text style={[text]}>{feedId}</Text>;
+  return <></>;
 };
 
 const msp = s => {
   return {
+    cfg: s.cfg,
     feedId: s.user.feedId,
   };
 };

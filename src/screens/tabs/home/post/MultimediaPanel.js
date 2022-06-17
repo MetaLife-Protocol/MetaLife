@@ -41,9 +41,9 @@ const MultimediaPanel = ({
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
       <View style={[BG, row, alignItemsCenter, container, justifySpaceBetween]}>
         <View style={[row]}>
-          <Pressable onPress={voiceHandler}>
-            <Image style={[funBtn]} source={iconVoice} />
-          </Pressable>
+          {/*<Pressable onPress={voiceHandler}>*/}
+          {/*  <Image style={[funBtn]} source={iconVoice} />*/}
+          {/*</Pressable>*/}
           <Pressable onPress={cameraHandler}>
             <Image style={[funBtn]} source={iconCamera} />
           </Pressable>

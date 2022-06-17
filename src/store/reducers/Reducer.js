@@ -10,6 +10,7 @@ import {infoReducer} from './info';
 import {commentReducer} from './comment';
 import {pubReducer} from './pub';
 import {runtimeReducer} from './runtime';
+import {walletReducer} from './wallet';
 
 const reducer = combineReducers({
   // app
@@ -26,6 +27,7 @@ const reducer = combineReducers({
   pubs: pubReducer,
   feed: feedReducer,
   vote: voteReducer,
+  wallet: walletReducer,
 });
 
 export default reducer;

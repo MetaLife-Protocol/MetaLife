@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../shared/Icons';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
+import WalletCard from './wallet/WalletCard';
 
 const iconDic = {
   BG: require('../../../assets/image/profiles/Profiles_backgroud.png'),
@@ -88,6 +89,7 @@ const HeaderProfiles = ({feedId, relations, infoDic}) => {
           <Text style={[desc]}>friend:{myFriends.length}</Text>
         </Pressable>
       </View>
+      <WalletCard style={[{position: 'absolute', top: 270}]} />
       <Pressable style={[setting]} onPress={() => navigate('Setting')}>
         <Image source={iconDic.icon_setting} />
       </Pressable>

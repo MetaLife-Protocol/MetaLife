@@ -42,8 +42,10 @@ const Tabs = ({darkMode, showPullMenu}) => {
     ? HeaderIcons.contactAddIconWhite
     : HeaderIcons.contactAddIconBlack;
   const {navigate} = useNavigation();
-  const goScreen = screenName => () => navigate(screenName);
   const {Navigator, Screen} = createBottomTabNavigator();
+  function goScreen(name, params) {
+    navigate(name, params);
+  }
 
   function menuHandler(e) {
     e.target.measure((x, y, width, height, pageX, pageY) =>
@@ -56,28 +58,28 @@ const Tabs = ({darkMode, showPullMenu}) => {
           {
             title: 'Create nft',
             handler: () => {
-              goScreen('')();
+              goScreen('');
               showPullMenu({position: {}, buttons: []});
             },
           },
           {
             title: 'Post article',
             handler: () => {
-              goScreen('PostMsgEditor')();
+              goScreen('PostMsgEditor');
               showPullMenu({position: {}, buttons: []});
             },
           },
           {
             title: 'Add friend',
             handler: () => {
-              goScreen('PeersScreen')();
+              goScreen('PeersScreen');
               showPullMenu({position: {}, buttons: []});
             },
           },
           {
             title: 'QR code',
             handler: () => {
-              goScreen('')();
+              goScreen('');
               showPullMenu({position: {}, buttons: []});
             },
           },
@@ -128,7 +130,7 @@ const Tabs = ({darkMode, showPullMenu}) => {
           headerRight: props => (
             <HeaderRightBtn
               btnIcon={HeaderIcons.messageAdd}
-              btnHandler={goScreen('FriendList')}
+              btnHandler={() => goScreen('FriendList')}
             />
           ),
           headerRightContainerStyle: [{right: 19}],
@@ -145,7 +147,7 @@ const Tabs = ({darkMode, showPullMenu}) => {
           headerRight: props => (
             <HeaderRightBtn
               btnIcon={contactAddIcon}
-              btnHandler={goScreen('PeersScreen')}
+              btnHandler={() => goScreen('PeersScreen')}
             />
           ),
           headerRightContainerStyle: [{right: 19}],
