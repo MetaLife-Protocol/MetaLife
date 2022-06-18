@@ -54,11 +54,18 @@ export const publicHandler = key =>
       const {
           messages: [msg],
         } = rMsgs,
-        {author, sequence} = msg.value;
+        {author, sequence, content} = msg.value;
       const feedSeq =
         (feed[author] && feed[author][0] && feed[author][0].value.sequence) ||
         0;
-      msg.value.content.branch
+      // 分流 评论 / 关取 / 非关系 信息不做feed累计，直接做CB处理
+      console.log(
+        'type: ' + content.type,
+        'relation: ' + updatesPeers.includes(author),
+      );
+      content.branch ||
+      content.type === 'contact' ||
+      !updatesPeers.includes(author)
         ? checkMarkedMsgCB({fId: author, msg: msg})
         : sequence === feedSeq + 1
         ? dispatch({
