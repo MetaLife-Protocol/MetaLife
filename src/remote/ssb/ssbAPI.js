@@ -73,9 +73,12 @@ export const trainFeed = (fId, feed, cb) =>
   );
 
 /****************** API: retrieve all of feed by special ids ******************/
+let training = false; // tag for training stand alone
 export const trainRangeFeed = (ids, feed, cb) => {
   const loopIds = [...ids];
-  if (loopIds.length) {
+
+  if (loopIds.length && !training) {
+    training = true;
     let fId = loopIds.shift();
     trainFeed(fId, feed, stepper);
   }
@@ -89,7 +92,9 @@ export const trainRangeFeed = (ids, feed, cb) => {
       'color: #CD1E1E;',
     );
     idMsgs.msgs.length && cb(idMsgs);
-    loopIds.length && trainFeed(loopIds.shift(), feed, stepper);
+    loopIds.length
+      ? trainFeed(loopIds.shift(), feed, stepper)
+      : (training = false);
   }
 };
 

@@ -1,7 +1,7 @@
 /**
  * Created on 17 Feb 2022 by lonmee
  */
-import React from 'react';
+import React, {memo} from 'react';
 import PostItem from './items/PostItem';
 import {colorsSchema} from '../../../../shared/UseSchemaStyles';
 import {Text} from 'react-native';
@@ -57,4 +57,4 @@ const ItemAgent = ({info: {item}, verbose = false}) => {
   }
 };
 
-export default ItemAgent;
+export default memo(ItemAgent, () => true);
