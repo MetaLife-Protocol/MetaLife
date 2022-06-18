@@ -60,6 +60,7 @@ export const publicHandler = key =>
         0;
       // 分流 评论 / 关取 / 非关系 信息不做feed累计，直接做CB处理
       console.log(
+        author,
         'type: ' + content.type,
         'relation: ' + updatesPeers.includes(author),
       );
