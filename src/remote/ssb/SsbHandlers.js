@@ -58,7 +58,9 @@ export const publicHandler = key =>
       const feedSeq =
         (feed[author] && feed[author][0] && feed[author][0].value.sequence) ||
         0;
-      sequence === feedSeq + 1
+      msg.value.content.branch
+        ? checkMarkedMsgCB({fId: author, msg: msg})
+        : sequence === feedSeq + 1
         ? dispatch({
             type: 'appendFeed',
             payload: checkMarkedMsgCB({fId: author, msg: msg}),
