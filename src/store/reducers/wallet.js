@@ -27,7 +27,7 @@ export const walletReducer = (state = initState, {type, payload}) => {
       const {} = payload;
     case 'walletDeleteAccount':
       const {} = payload;
-    case 'use':
+    case 'setCurrent':
       return {...state, current: payload};
     default:
       return state;

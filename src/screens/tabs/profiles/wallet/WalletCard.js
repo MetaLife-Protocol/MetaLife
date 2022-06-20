@@ -26,7 +26,14 @@ const iconDic = {
   transfer: require('../../../../assets/image/wallet/Transfer.png'),
 };
 
-const WalletCard = ({style, cfg: {darkMode}, showPullMenu, feedId, wallet}) => {
+const WalletCard = ({
+  style,
+  cfg: {darkMode},
+  showPullMenu,
+  feedId,
+  wallet,
+  setCurrent,
+}) => {
   const {row, flex1, justifySpaceAround, alignItemsCenter} = useSchemaStyles(),
     {container, title, volume, icons, tag} = styles;
 
@@ -139,7 +146,7 @@ const WalletCard = ({style, cfg: {darkMode}, showPullMenu, feedId, wallet}) => {
         holderText={'nickname'}
         wallet={wallet}
         darkMode={darkMode}
-        submitHandler={console.log}
+        submitHandler={setCurrent}
       />
     </>
   );
@@ -183,6 +190,7 @@ const msp = s => {
 const mdp = d => {
   return {
     showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
+    setCurrent: payload => d({type: 'setCurrent', payload}),
   };
 };
 
