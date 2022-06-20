@@ -86,9 +86,9 @@ export function importAccountByMnemonic(mnemonic, pw) {
   importMnemonic(mnemonic, pw).then(console.log);
 }
 
-export function getWBalance(type, wAddr) {
+export function getWBalance(type, wAddr, cb) {
   getBalance(financeConfig.chains[type].rpcURL, wAddr)
-    .then(value => console.log(bigNumberFormatUnits(value)))
+    .then(value => cb && cb(bigNumberFormatUnits(value)))
     .catch(console.warn);
 }
 

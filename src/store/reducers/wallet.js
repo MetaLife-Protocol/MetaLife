@@ -8,6 +8,7 @@ const initState = {
     index: 0,
   },
   accounts: {
+    default: null,
     Spectrum: [
       {
         name: '[account name-spectrum-1]',

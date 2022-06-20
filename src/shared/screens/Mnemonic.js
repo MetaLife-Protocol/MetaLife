@@ -41,10 +41,10 @@ const Mnemonic = () => {
       />
       <RoundBtn
         style={[{marginBottom: 40}]}
-        title={'Copy'}
+        title={'Create wallet with this mnemonic'}
         press={() => {
           importAccountByMnemonic(mnemonic, '1234');
-          Toast.show('Mnemonic copied');
+          Toast.show("Wallet created with this mnemonic default pw: '1234'");
         }}
       />
     </SafeAreaView>
