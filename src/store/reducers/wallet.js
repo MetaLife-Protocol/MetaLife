@@ -9,12 +9,15 @@ const initState = {
   },
   accounts: {
     spectrum: [
-      {name: '[account name-spectrum-1]', publicKey: '[publicKey]'},
-      {name: '[account name-spectrum-2]', publicKey: '[publicKey]'},
+      {
+        name: '[account name-spectrum-1]',
+        address: '[address]',
+      },
+      {name: '[account name-spectrum-2]', address: '[address]'},
     ],
     ether: [
-      {name: '[account name-ether-1]', publicKey: '[publicKey]'},
-      {name: '[account name-ether-2]', publicKey: '[publicKey]'},
+      {name: '[account name-ether-1]', address: '[address]'},
+      {name: '[account name-ether-2]', address: '[address]'},
     ],
   },
 };

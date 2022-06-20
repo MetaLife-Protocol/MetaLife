@@ -3,7 +3,15 @@
  *
  */
 import React, {useState} from 'react';
-import {Image, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import useSchemaStyles, {
   colorsSchema,
 } from '../../../../../shared/UseSchemaStyles';
@@ -57,14 +65,15 @@ export const WalletAccountSwitchModal = ({
               />
             </Pressable>
           </View>
-          <View>
+          <ScrollView overScrollMode={'auto'}>
             {accounts[type].map((v, i) => (
               <Pressable
+                key={i}
                 onPress={() => i !== index && submitHandler({type, index: i})}>
-                <AccountItem item={v} key={i} selected={i === index} />
+                <AccountItem item={v} selected={i === index} />
               </Pressable>
             ))}
-          </View>
+          </ScrollView>
         </View>
       </View>
     </Modal>
