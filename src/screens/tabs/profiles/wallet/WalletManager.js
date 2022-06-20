@@ -18,7 +18,7 @@ import {useNavigation} from '@react-navigation/native';
  *
  */
 
-const WalletManager = ({cfg: {darkMode}, accounts}) => {
+const WalletManager = ({cfg: {darkMode}, wallet: {current, accounts}}) => {
   const {flex1, BG, FG, text, row, width100Percent, justifySpaceBetween} =
       useSchemaStyles(),
     {} = colorsSchema,
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     cfg: s.cfg,
-    accounts: s.wallet,
+    wallet: s.wallet,
   };
 };
 
