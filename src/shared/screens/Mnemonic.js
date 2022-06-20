@@ -9,6 +9,7 @@ import {getMnemonic} from '../../remote/ssb/ssbOP';
 import RoundBtn from '../comps/RoundBtn';
 import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
+import {importAccountByMnemonic} from '../../remote/wallet/WalletAPI';
 
 const Mnemonic = () => {
   const {FG, flex1, marginTop10, text} = useSchemaStyles();
@@ -35,6 +36,14 @@ const Mnemonic = () => {
         title={'Copy'}
         press={() => {
           nativeClipboard.setString(mnemonic);
+          Toast.show('Mnemonic copied');
+        }}
+      />
+      <RoundBtn
+        style={[{marginBottom: 40}]}
+        title={'Copy'}
+        press={() => {
+          importAccountByMnemonic(mnemonic, '1234');
           Toast.show('Mnemonic copied');
         }}
       />

@@ -4,18 +4,18 @@
 
 const initState = {
   current: {
-    type: 'spectrum',
+    type: 'Spectrum',
     index: 0,
   },
   accounts: {
-    spectrum: [
+    Spectrum: [
       {
         name: '[account name-spectrum-1]',
         address: '[address]',
       },
       {name: '[account name-spectrum-2]', address: '[address]'},
     ],
-    ether: [
+    Ethereum: [
       {name: '[account name-ether-1]', address: '[address]'},
       {name: '[account name-ether-2]', address: '[address]'},
     ],
