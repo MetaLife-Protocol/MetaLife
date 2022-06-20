@@ -11,17 +11,20 @@ import useSchemaStyles, {
   colorsSchema,
 } from '../../../../shared/UseSchemaStyles';
 import React, {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 /**
  * Created on 17 Jun 2022 by lonmee
  *
  */
 
-const WalletManager = ({cfg: {darkMode}}) => {
+const WalletManager = ({cfg: {darkMode}, accounts}) => {
   const {flex1, BG, FG, text, row, width100Percent, justifySpaceBetween} =
       useSchemaStyles(),
     {} = colorsSchema,
     {btn} = styles;
+
+  const {navigate} = useNavigation();
 
   const [tIndex, setTIndex] = useState('spectrum');
   const [plusActive, setPlusActive] = useState(false);
@@ -56,7 +59,7 @@ const WalletManager = ({cfg: {darkMode}}) => {
   return (
     <SafeAreaView style={[flex1, FG, row]}>
       <View style={[{backgroundColor: darkMode ? '#2b2f2f' : '#edeef1'}]}>
-        {Object.keys(walletData).map(k => (
+        {Object.keys(accounts).map(k => (
           <Pressable key={k} onPress={() => setTIndex(k)}>
             <View style={k === tIndex && FG}>
               <Image style={[btn]} source={getIcon(k, k === tIndex)} />
@@ -67,9 +70,11 @@ const WalletManager = ({cfg: {darkMode}}) => {
       <View style={[flex1, FG]}>
         <View style={[row, justifySpaceBetween, {marginHorizontal: 10}]}>
           <Text style={[text]}>{tIndex}</Text>
-          <Image source={getBtnIcon()} />
+          <Pressable onPress={() => navigate('WalletCreator')}>
+            <Image source={getBtnIcon()} />
+          </Pressable>
         </View>
-        {walletData[tIndex].map(({name, publicKey}, index) => (
+        {accounts[tIndex].map(({name, publicKey}, index) => (
           <Text key={index} style={[text]}>
             {name + ' : ' + publicKey}
           </Text>
@@ -77,17 +82,6 @@ const WalletManager = ({cfg: {darkMode}}) => {
       </View>
     </SafeAreaView>
   );
-};
-
-const walletData = {
-  spectrum: [
-    {name: 's-a', publicKey: 123},
-    {name: 's-b', publicKey: 123},
-  ],
-  ether: [
-    {name: 'e-a', publicKey: 123},
-    {name: 'e-b', publicKey: 123},
-  ],
 };
 
 const icons = {
@@ -113,6 +107,7 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     cfg: s.cfg,
+    accounts: s.wallet,
   };
 };
 

@@ -3,23 +3,35 @@
  *
  */
 import React, {useState} from 'react';
-import {Modal, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Image, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
 import useSchemaStyles, {
   colorsSchema,
 } from '../../../../../shared/UseSchemaStyles';
+import {CloseIcons} from '../../../../../shared/Icons';
 
-export const WalletSwitchModal = ({
+export const WalletAccountSwitchModal = ({
   visible,
   setVisible,
   value,
+  darkMode,
   holderText,
   submitHandler,
+  wallet: {
+    current: {type, index},
+    accounts,
+  },
 }) => {
   const {flex1, FG, BG, row, text, justifySpaceBetween} = useSchemaStyles(),
     {textHolder} = colorsSchema,
     {centeredView, modalView, title, line} = styles;
 
   const [valueLocal, setValueLocal] = useState(value);
+  const AccountItem = (name, pk) => (
+    <View>
+      <Text>{name}</Text>
+      <Text>{pk}</Text>
+    </View>
+  );
 
   return (
     <Modal
@@ -30,14 +42,19 @@ export const WalletSwitchModal = ({
       <View style={[flex1, centeredView]}>
         <View style={[FG, modalView]}>
           <View style={[row, title, justifySpaceBetween]}>
-            <Text style={[text]}>osos</Text>
-            <Text style={[text]}>Wallet management</Text>
-            {/*<Image source={}></Image>*/}
+            <Text style={[text]}>Switch Account</Text>
             <Pressable onPress={() => setVisible(false)}>
-              <Text style={[text]}>xxx</Text>
+              <Image
+                style={[{width: 20, height: 20}]}
+                source={darkMode ? CloseIcons.xWhite : CloseIcons.xBlack}
+              />
             </Pressable>
           </View>
-          <View style={[BG, line]} />
+          <View>
+            {accounts[type].map(({name, publicKey}, i) => (
+              <AccountItem name={name} pk={publicKey} />
+            ))}
+          </View>
         </View>
       </View>
     </Modal>

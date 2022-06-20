@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import React, {useState} from 'react';
-import {WalletSwitchModal} from './modal/WalletSwitchModal';
+import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
 
 /**
  * Created on 16 Jun 2022 by lonmee
@@ -26,7 +26,7 @@ const iconDic = {
   transfer: require('../../../../assets/image/wallet/Transfer.png'),
 };
 
-const WalletCard = ({style, darkMode, showPullMenu, feedId, wallet}) => {
+const WalletCard = ({style, cfg: {darkMode}, showPullMenu, feedId, wallet}) => {
   const {row, flex1, justifySpaceAround, alignItemsCenter} = useSchemaStyles(),
     {container, title, volume, icons, tag} = styles;
 
@@ -132,11 +132,13 @@ const WalletCard = ({style, darkMode, showPullMenu, feedId, wallet}) => {
           </Pressable>
         </View>
       </ImageBackground>
-      <WalletSwitchModal
+      <WalletAccountSwitchModal
         visible={switchVisible}
         setVisible={setSwitchVisible}
         value={'1-2'}
         holderText={'nickname'}
+        wallet={wallet}
+        darkMode={darkMode}
         submitHandler={console.log}
       />
     </>
@@ -174,6 +176,7 @@ const msp = s => {
     feedId: s.user.feedId,
     relations: s.user.relations,
     infoDic: s.info,
+    wallet: s.wallet,
   };
 };
 

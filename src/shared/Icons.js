@@ -19,6 +19,11 @@ export const HeaderIcons = {
   home_add: require('../assets/image/headerBtn/home_icon_add.png'),
 };
 
+export const CloseIcons = {
+  xBlack: require('../assets/image/shared/XBlack.png'),
+  xWhite: require('../assets/image/shared/XWhite.png'),
+};
+
 export const ArrowImage = require('../assets/image/shared/back.png');
 export const bluetoothIconBlack = require('../assets/image/shared/Bluetooth-black.png');
 export const bluetoothIconWhite = require('../assets/image/shared/Bluetooth-white.png');
