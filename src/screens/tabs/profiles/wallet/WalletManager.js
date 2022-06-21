@@ -74,9 +74,9 @@ const WalletManager = ({cfg: {darkMode}, wallet: {current, accounts}}) => {
             <Image source={getBtnIcon()} />
           </Pressable>
         </View>
-        {accounts[tIndex].map(({name, publicKey}, index) => (
+        {accounts[tIndex].map(({name, address}, index) => (
           <Text key={index} style={[text]}>
-            {name + ' : ' + publicKey}
+            {name + ' : ' + address}
           </Text>
         ))}
       </View>

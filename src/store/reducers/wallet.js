@@ -4,23 +4,11 @@
 
 const initState = {
   current: {
-    type: 'Spectrum',
+    type: 'spectrum',
     index: 0,
   },
   balance: {},
-  accounts: {
-    Spectrum: [
-      {
-        name: '[account name-spectrum-1]',
-        address: '[address]',
-      },
-      {name: '[account name-spectrum-2]', address: '[address]'},
-    ],
-    Ethereum: [
-      {name: '[account name-ether-1]', address: '[address]'},
-      {name: '[account name-ether-2]', address: '[address]'},
-    ],
-  },
+  accounts: {},
 };
 
 export const walletReducer = (state = initState, {type, payload}) => {
