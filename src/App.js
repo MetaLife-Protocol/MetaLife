@@ -30,7 +30,11 @@ import Mnemonic from './shared/screens/Mnemonic';
 import {startSSB} from './remote/ssb/starter';
 import {initializeHandlers} from './remote/ssb/SsbListeners';
 import {checkAddon} from './remote/ssb/SsbHandlers';
-import {bluetoothSearch, getConnectedPeers} from './remote/ssb/ssbOP';
+import {
+  bluetoothSearch,
+  getConnectedPeers,
+  getMnemonic,
+} from './remote/ssb/ssbOP';
 import {useStore} from 'react-redux';
 import nodejs from 'nodejs-mobile-react-native';
 import Resync from './screens/guid/Resync';
@@ -46,6 +50,7 @@ import WalletCreator from './screens/tabs/profiles/wallet/WalletCreator';
 import WalletImporter from './screens/tabs/profiles/wallet/WalletImporter';
 import WalletManager from './screens/tabs/profiles/wallet/WalletManager';
 import WalletDetails from './screens/tabs/profiles/wallet/WalletDetails';
+import {importAccountByMnemonic} from './remote/wallet/WalletAPI';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -57,6 +62,7 @@ const App = ({
   viewImages,
   setViewImages,
   darkMode,
+  walletCreateAccount,
 }) => {
   const {barStyle, theme} = useSchemaStyles();
   const store = useStore();
@@ -72,6 +78,11 @@ const App = ({
       startSSB().then(ssb => {
         window.ssb = ssb;
         setFeedId(ssb.id);
+        getMnemonic(mnemonic =>
+          importAccountByMnemonic(mnemonic, '1234', ({keystore: {address}}) =>
+            walletCreateAccount({name: 'default', address}),
+          ),
+        );
         resync ||
           (initializeHandlers(store),
           checkAddon('launch'),
@@ -218,6 +229,7 @@ const mdp = d => {
     setFeedId: id => d({type: 'setFeedId', payload: id}),
     setConnectedPeers: v => d({type: 'setConnectedPeers', payload: v}),
     setViewImages: imgs => d({type: 'images', payload: imgs}),
+    walletCreateAccount: payload => d({type: 'walletCreateAccount', payload}),
   };
 };
 

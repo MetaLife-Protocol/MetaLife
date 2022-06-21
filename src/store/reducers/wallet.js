@@ -7,8 +7,8 @@ const initState = {
     type: 'Spectrum',
     index: 0,
   },
+  balance: {},
   accounts: {
-    default: null,
     Spectrum: [
       {
         name: '[account name-spectrum-1]',
@@ -26,7 +26,21 @@ const initState = {
 export const walletReducer = (state = initState, {type, payload}) => {
   switch (type) {
     case 'walletCreateAccount':
-      const {} = payload;
+      return {
+        ...state,
+        accounts: {
+          ...state.accounts,
+          [state.current.type]: [
+            ...state.accounts[state.current.type],
+            payload,
+          ],
+        },
+      };
+    case 'setBalance':
+      return {
+        ...state,
+        balance: {...state.balance, [state.current.type]: payload},
+      };
     case 'walletUpdateAccount':
       const {} = payload;
     case 'walletDeleteAccount':

@@ -34,11 +34,15 @@ export const WalletAccountSwitchModal = ({
     {centeredView, modalView, title, accountItem} = styles;
 
   const [valueLocal, setValueLocal] = useState(value);
-  const AccountItem = ({item: {name, publicKey}, selected}) => (
+  const AccountItem = ({item: {name, address}, selected}) => (
     <View style={[row, accountItem, BG, alignItemsCenter, justifySpaceBetween]}>
       <View>
         <Text style={[text]}>{name}</Text>
-        <Text style={[{color: '#8E8E92', marginTop: 6}]}>{publicKey}</Text>
+        {address && (
+          <Text style={[{color: '#8E8E92', marginTop: 6}]}>
+            {'0x' + address.substring(0, 12) + '...' + address.substr(-12)}
+          </Text>
+        )}
       </View>
       {selected && (
         <Image

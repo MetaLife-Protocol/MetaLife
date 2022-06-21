@@ -82,8 +82,8 @@ export function createAccount(pw, cb) {
     .catch(reason => console.warn(reason));
 }
 
-export function importAccountByMnemonic(mnemonic, pw) {
-  importMnemonic(mnemonic, pw).then(console.log);
+export function importAccountByMnemonic(mnemonic, pw, cb) {
+  importMnemonic(mnemonic, pw).then(value => cb && cb(value));
 }
 
 export function getWBalance(type, wAddr, cb) {

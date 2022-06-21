@@ -11,7 +11,7 @@ import SearchBar from '../../shared/comps/SearchBar';
 import FriendItem from './contacts/item/FriendItem';
 
 const Home = ({cfg: {verbose}, publicMsg, setConnectedPeers}) => {
-  const {flex1, BG} = useSchemaStyles(),
+  const {BG} = useSchemaStyles(),
     {searchBar} = styles;
   const {navigate, setOptions, getState} = useNavigation();
   const [result, setResult] = useState([]);
