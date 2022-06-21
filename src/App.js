@@ -108,7 +108,9 @@ const App = ({
             headerRight: props => (
               <HeaderRightBtn
                 btnIcon={
-                  darkMode ? HeaderIcons.PlusWhite : HeaderIcons.PlusBlack
+                  false
+                    ? HeaderIcons.walletSwitchBtnActive
+                    : HeaderIcons.walletSwitchBtnNormal
                 }
                 btnHandler={() => navigationRef.navigate('PostMsgEditor')}
               />
@@ -148,7 +150,20 @@ const App = ({
         <Screen
           name="WalletDetails"
           component={WalletDetails}
-          options={{title: 'Wallet'}}
+          options={{
+            title: 'Wallet',
+            headerRight: props => (
+              <HeaderRightBtn
+                btnIcon={darkMode ? bluetoothIconWhite : bluetoothIconBlack}
+                btnHandler={() => {
+                  console.log('search');
+                  bluetoothSearch(20e3, res => {
+                    console.log('bluetooth search', res);
+                  });
+                }}
+              />
+            ),
+          }}
         />
         <Screen
           name="WalletCreator"

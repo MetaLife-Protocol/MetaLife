@@ -19,7 +19,7 @@
 >> export PATH=$PATH:$ANDROID_HOME/tools  
 >> export PATH=$PATH:$ANDROID_HOME/tools/bin  
 >> export PATH=$PATH:$ANDROID_HOME/platform-tools  
->> export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin`
+>> export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
 
 >> sdkmanager 'build-tools;28.0.3' 'cmake;3.6.4111459' 'ndk;21.4.7075529' 'platforms;android-29' 'tools'
 

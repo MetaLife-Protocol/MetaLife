@@ -17,6 +17,8 @@ export const HeaderIcons = {
   contactAddIconWhite: require('../assets/image/headerBtn/contacts_icon_add_white.png'),
   contactAddIconBlack: require('../assets/image/headerBtn/contacts_icon_add_black.png'),
   home_add: require('../assets/image/headerBtn/home_icon_add.png'),
+  walletSwitchBtnNormal: require('../assets/image/wallet/icon_toggle_default.png'),
+  walletSwitchBtnActive: require('../assets/image/wallet/icon_toggle_presses.png'),
 };
 
 export const CloseIcons = {
