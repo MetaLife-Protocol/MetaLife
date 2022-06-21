@@ -70,13 +70,16 @@ export const WalletAccountSwitchModal = ({
             </Pressable>
           </View>
           <ScrollView overScrollMode={'auto'}>
-            {accounts[type].map((v, i) => (
-              <Pressable
-                key={i}
-                onPress={() => i !== index && submitHandler({type, index: i})}>
-                <AccountItem item={v} selected={i === index} />
-              </Pressable>
-            ))}
+            {accounts[type] &&
+              accounts[type].map((v, i) => (
+                <Pressable
+                  key={i}
+                  onPress={() =>
+                    i !== index && submitHandler({type, index: i})
+                  }>
+                  <AccountItem item={v} selected={i === index} />
+                </Pressable>
+              ))}
           </ScrollView>
         </View>
       </View>

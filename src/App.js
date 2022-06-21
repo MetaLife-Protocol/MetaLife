@@ -62,6 +62,7 @@ const App = ({
   viewImages,
   setViewImages,
   darkMode,
+  accounts,
   walletCreateAccount,
 }) => {
   const {barStyle, theme} = useSchemaStyles();
@@ -78,11 +79,12 @@ const App = ({
       startSSB().then(ssb => {
         window.ssb = ssb;
         setFeedId(ssb.id);
-        getMnemonic(mnemonic =>
-          importAccountByMnemonic(mnemonic, '1234', ({keystore: {address}}) =>
-            walletCreateAccount({name: 'default', address}),
-          ),
-        );
+        accounts.spectrum ||
+          getMnemonic(mnemonic =>
+            importAccountByMnemonic(mnemonic, '1234', ({keystore: {address}}) =>
+              walletCreateAccount({name: 'default', address}),
+            ),
+          );
         resync ||
           (initializeHandlers(store),
           checkAddon('launch'),
@@ -112,7 +114,7 @@ const App = ({
                     ? HeaderIcons.walletSwitchBtnActive
                     : HeaderIcons.walletSwitchBtnNormal
                 }
-                btnHandler={() => navigationRef.navigate('PostMsgEditor')}
+                btnHandler={null}
               />
             ),
           }}
@@ -236,6 +238,7 @@ const msp = s => {
     viewImages: s.runtime.images,
     feedId: s.user.feedId,
     resync: s.user.resync,
+    accounts: s.wallet.accounts,
   };
 };
 

@@ -18,10 +18,9 @@ export const walletReducer = (state = initState, {type, payload}) => {
         ...state,
         accounts: {
           ...state.accounts,
-          [state.current.type]: [
-            ...state.accounts[state.current.type],
-            payload,
-          ],
+          [state.current.type]: state.accounts[state.current.type]
+            ? [...state.accounts[state.current.type], payload]
+            : [payload],
         },
       };
     case 'setBalance':
