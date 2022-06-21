@@ -42,10 +42,10 @@ import {
   HeaderIcons,
 } from './shared/Icons';
 import AvatarEditor from './screens/tabs/profiles/setting/AvatarEditor';
-import WalletScreen from './screens/tabs/profiles/wallet/WalletScreen';
 import WalletCreator from './screens/tabs/profiles/wallet/WalletCreator';
 import WalletImporter from './screens/tabs/profiles/wallet/WalletImporter';
 import WalletManager from './screens/tabs/profiles/wallet/WalletManager';
+import WalletDetails from './screens/tabs/profiles/wallet/WalletDetails';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -135,8 +135,8 @@ const App = ({
         />
         {/** wallet **/}
         <Screen
-          name="WalletScreen"
-          component={WalletScreen}
+          name="WalletDetails"
+          component={WalletDetails}
           options={{title: 'Wallet'}}
         />
         <Screen

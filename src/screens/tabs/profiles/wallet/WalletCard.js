@@ -17,15 +17,6 @@ import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
  *
  */
 
-const iconDic = {
-  BG: require('../../../../assets/image/wallet/wallet_backgroud.png'),
-  dots: require('../../../../assets/image/wallet/more.png'),
-  scan: require('../../../../assets/image/wallet/Sach.png'),
-  receive: require('../../../../assets/image/wallet/Receivr.png'),
-  photon: require('../../../../assets/image/wallet/Photon.png'),
-  transfer: require('../../../../assets/image/wallet/Transfer.png'),
-};
-
 const WalletCard = ({
   style,
   cfg: {darkMode},
@@ -95,50 +86,46 @@ const WalletCard = ({
 
   return (
     <>
-      <ImageBackground
-        style={[
-          ...style,
-          flex1,
-          container,
-          justifySpaceAround,
-          {alignSelf: 'center'},
-        ]}
-        source={iconDic.BG}>
-        <View style={[row, justifySpaceAround]}>
-          <Text style={[title]}>Address</Text>
-          <Text style={[{color: '#C0D7F4'}]}>account number</Text>
-          <Pressable onPress={menuHandler}>
-            <Image source={iconDic.dots} />
-          </Pressable>
-        </View>
-        <Text style={[volume]}>$ 12345678.88</Text>
-        <View style={[{width: '100%'}, row, justifySpaceAround]}>
-          <Pressable
-            style={[alignItemsCenter, icons]}
-            onPress={() => goScreen('xx', {})}>
-            <Image source={iconDic.scan} />
-            <Text style={[tag]}>Scan</Text>
-          </Pressable>
-          <Pressable
-            style={[alignItemsCenter, icons]}
-            onPress={() => goScreen('xx', {})}>
-            <Image source={iconDic.receive} />
-            <Text style={[tag]}>Receive</Text>
-          </Pressable>
-          <Pressable
-            style={[alignItemsCenter, icons]}
-            onPress={() => goScreen('xx', {})}>
-            <Image source={iconDic.photon} />
-            <Text style={[tag]}>Photon</Text>
-          </Pressable>
-          <Pressable
-            style={[alignItemsCenter, icons]}
-            onPress={() => goScreen('xx', {})}>
-            <Image source={iconDic.transfer} />
-            <Text style={[tag]}>Transfer</Text>
-          </Pressable>
-        </View>
-      </ImageBackground>
+      <Pressable style={[...style]} onPress={() => goScreen('WalletDetails')}>
+        <ImageBackground
+          style={[flex1, container, justifySpaceAround, {alignSelf: 'center'}]}
+          source={iconDic.BG}>
+          <View style={[row, justifySpaceAround]}>
+            <Text style={[title]}>Address</Text>
+            <Text style={[{color: '#C0D7F4'}]}>account number</Text>
+            <Pressable onPress={menuHandler}>
+              <Image source={iconDic.dots} />
+            </Pressable>
+          </View>
+          <Text style={[volume]}>$ 12345678.88</Text>
+          <View style={[{width: '100%'}, row, justifySpaceAround]}>
+            <Pressable
+              style={[alignItemsCenter, icons]}
+              onPress={() => goScreen('xx', {})}>
+              <Image source={iconDic.scan} />
+              <Text style={[tag]}>Scan</Text>
+            </Pressable>
+            <Pressable
+              style={[alignItemsCenter, icons]}
+              onPress={() => goScreen('xx', {})}>
+              <Image source={iconDic.receive} />
+              <Text style={[tag]}>Receive</Text>
+            </Pressable>
+            <Pressable
+              style={[alignItemsCenter, icons]}
+              onPress={() => goScreen('xx', {})}>
+              <Image source={iconDic.photon} />
+              <Text style={[tag]}>Photon</Text>
+            </Pressable>
+            <Pressable
+              style={[alignItemsCenter, icons]}
+              onPress={() => goScreen('xx', {})}>
+              <Image source={iconDic.transfer} />
+              <Text style={[tag]}>Transfer</Text>
+            </Pressable>
+          </View>
+        </ImageBackground>
+      </Pressable>
       <WalletAccountSwitchModal
         visible={switchVisible}
         setVisible={setSwitchVisible}
@@ -150,6 +137,15 @@ const WalletCard = ({
       />
     </>
   );
+};
+
+const iconDic = {
+  BG: require('../../../../assets/image/wallet/wallet_backgroud.png'),
+  dots: require('../../../../assets/image/wallet/more.png'),
+  scan: require('../../../../assets/image/wallet/Sach.png'),
+  receive: require('../../../../assets/image/wallet/Receivr.png'),
+  photon: require('../../../../assets/image/wallet/Photon.png'),
+  transfer: require('../../../../assets/image/wallet/Transfer.png'),
 };
 
 const styles = StyleSheet.create({

@@ -96,6 +96,9 @@ const stylesBasics = StyleSheet.create({
   alignContentCenter: {
     alignContent: 'center',
   },
+  alignSelfCenter: {
+    alignSelf: 'center',
+  },
   justifyCenter: {
     justifyContent: 'center',
   },
