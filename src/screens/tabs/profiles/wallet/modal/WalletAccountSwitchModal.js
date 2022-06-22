@@ -16,6 +16,7 @@ import useSchemaStyles, {
   colorsSchema,
 } from '../../../../../shared/UseSchemaStyles';
 import {CloseIcons} from '../../../../../shared/Icons';
+import {abbreviationAccount} from '../../../../../utils';
 
 export const WalletAccountSwitchModal = ({
   visible,
@@ -40,7 +41,7 @@ export const WalletAccountSwitchModal = ({
         <Text style={[text]}>{name}</Text>
         {address && (
           <Text style={[{color: '#8E8E92', marginTop: 6}]}>
-            {'0x' + address.substring(0, 12) + '...' + address.substr(-12)}
+            {abbreviationAccount()}
           </Text>
         )}
       </View>

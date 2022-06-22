@@ -10,7 +10,7 @@ import Guid from './screens/Guid';
 import Restore from './screens/guid/Restore';
 import SubScreen from './shared/screens/SubScreen';
 import {connect} from 'react-redux/lib/exports';
-import useSchemaStyles from './shared/UseSchemaStyles';
+import useSchemaStyles, {colorsBasics} from './shared/UseSchemaStyles';
 import Setting from './screens/tabs/profiles/Setting';
 import PeersScreen from './screens/tabs/contacts/PeersScreen';
 import PeerDetailsScreen from './screens/tabs/contacts/PeerDetailsScreen';
@@ -20,7 +20,7 @@ import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import Pubs from './screens/tabs/profiles/Pubs';
-import {Modal, StatusBar} from 'react-native';
+import {Modal, StatusBar, Text, View} from 'react-native';
 import CommentEditor from './screens/tabs/home/post/CommentEditor';
 import PullMenu from './shared/comps/PullMenu';
 import Avatar from './shared/screens/Avatar';
@@ -62,10 +62,11 @@ const App = ({
   viewImages,
   setViewImages,
   darkMode,
-  accounts,
+  wallet,
   walletCreateAccount,
 }) => {
-  const {barStyle, theme} = useSchemaStyles();
+  const {barStyle, row, theme, justifySpaceBetween, alignItemsCenter} =
+    useSchemaStyles();
   const store = useStore();
   const {Navigator, Screen, Group} = createNativeStackNavigator();
   const {channel} = nodejs;
@@ -79,7 +80,7 @@ const App = ({
       startSSB().then(ssb => {
         window.ssb = ssb;
         setFeedId(ssb.id);
-        accounts.spectrum ||
+        wallet.accounts.spectrum ||
           getMnemonic(mnemonic =>
             importAccountByMnemonic(mnemonic, '1234', ({keystore: {address}}) =>
               walletCreateAccount({name: 'default', address}),
@@ -103,22 +104,7 @@ const App = ({
         <Screen name="Resync" component={Resync} />
         <Screen name="Tabs" options={{headerShown: false}} component={Tabs} />
         {/* Home */}
-        <Screen
-          name="Post"
-          component={Post}
-          options={{
-            headerRight: props => (
-              <HeaderRightBtn
-                btnIcon={
-                  false
-                    ? HeaderIcons.walletSwitchBtnActive
-                    : HeaderIcons.walletSwitchBtnNormal
-                }
-                btnHandler={null}
-              />
-            ),
-          }}
-        />
+        <Screen name="Post" component={Post} options={{}} />
         {/* Contacts */}
         <Screen name="FriendList" component={FriendList} />
         <Screen
@@ -155,15 +141,31 @@ const App = ({
           options={{
             title: 'Wallet',
             headerRight: props => (
-              <HeaderRightBtn
-                btnIcon={darkMode ? bluetoothIconWhite : bluetoothIconBlack}
-                btnHandler={() => {
-                  console.log('search');
-                  bluetoothSearch(20e3, res => {
-                    console.log('bluetooth search', res);
-                  });
-                }}
-              />
+              <View
+                style={[
+                  row,
+                  alignItemsCenter,
+                  justifySpaceBetween,
+                  {
+                    backgroundColor: '#292E2E',
+                    width: 67.5,
+                    height: 22,
+                    borderRadius: 12,
+                    paddingLeft: 10,
+                  },
+                ]}>
+                <Text style={[{color: colorsBasics.primary}]}>
+                  {wallet.current.type === 'spectrum' ? 'SPE' : 'ETH'}
+                </Text>
+                <HeaderRightBtn
+                  btnIcon={
+                    false
+                      ? HeaderIcons.walletSwitchBtnActive
+                      : HeaderIcons.walletSwitchBtnNormal
+                  }
+                  btnHandler={null}
+                />
+              </View>
             ),
           }}
         />
@@ -238,7 +240,7 @@ const msp = s => {
     viewImages: s.runtime.images,
     feedId: s.user.feedId,
     resync: s.user.resync,
-    accounts: s.wallet.accounts,
+    wallet: s.wallet,
   };
 };
 
