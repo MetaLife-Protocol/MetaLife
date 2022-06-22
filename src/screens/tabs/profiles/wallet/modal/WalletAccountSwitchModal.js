@@ -17,14 +17,13 @@ import useSchemaStyles, {
 } from '../../../../../shared/UseSchemaStyles';
 import {CloseIcons} from '../../../../../shared/Icons';
 import {abbreviationAccount} from '../../../../../utils';
+import {AccountItem} from '../items/AccountItem';
 
 export const WalletAccountSwitchModal = ({
   visible,
   setVisible,
-  value,
-  darkMode,
-  holderText,
   submitHandler,
+  darkMode,
   wallet: {
     current: {type, index},
     accounts,
@@ -33,26 +32,6 @@ export const WalletAccountSwitchModal = ({
   const {flex1, FG, BG, row, text, alignItemsCenter, justifySpaceBetween} =
       useSchemaStyles(),
     {centeredView, modalView, title, accountItem} = styles;
-
-  const [valueLocal, setValueLocal] = useState(value);
-  const AccountItem = ({item: {name, address}, selected}) => (
-    <View style={[row, accountItem, BG, alignItemsCenter, justifySpaceBetween]}>
-      <View>
-        <Text style={[text]}>{name}</Text>
-        {address && (
-          <Text style={[{color: '#8E8E92', marginTop: 6}]}>
-            {abbreviationAccount()}
-          </Text>
-        )}
-      </View>
-      {selected && (
-        <Image
-          style={[{marginRight: 15}]}
-          source={darkMode ? icons.checkedB : icons.checkedW}
-        />
-      )}
-    </View>
-  );
 
   return (
     <Modal
@@ -78,7 +57,11 @@ export const WalletAccountSwitchModal = ({
                   onPress={() =>
                     i !== index && submitHandler({type, index: i})
                   }>
-                  <AccountItem item={v} selected={i === index} />
+                  <AccountItem
+                    item={v}
+                    selected={i === index}
+                    darkMode={darkMode}
+                  />
                 </Pressable>
               ))}
           </ScrollView>
@@ -86,12 +69,6 @@ export const WalletAccountSwitchModal = ({
       </View>
     </Modal>
   );
-};
-
-const icons = {
-  wallet: require('../../../../../assets/image/wallet/wallet_backgroud.png'),
-  checkedW: require('../../../../../assets/image/wallet/icon_checked_default_white.png'),
-  checkedB: require('../../../../../assets/image/wallet/icon_checked_default_black.png'),
 };
 
 const styles = StyleSheet.create({
@@ -118,12 +95,5 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
-  },
-  accountItem: {
-    borderRadius: 9,
-    height: 60,
-    marginHorizontal: 15,
-    marginVertical: 5,
-    paddingLeft: 15,
   },
 });

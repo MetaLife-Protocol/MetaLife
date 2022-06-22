@@ -136,8 +136,6 @@ const WalletCard = ({
       <WalletAccountSwitchModal
         visible={switchVisible}
         setVisible={setSwitchVisible}
-        value={'1-2'}
-        holderText={'nickname'}
         wallet={wallet}
         darkMode={darkMode}
         submitHandler={setCurrent}

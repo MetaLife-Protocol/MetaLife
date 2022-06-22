@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {
   NavigationContainer,
   useNavigationContainerRef,
@@ -51,6 +51,7 @@ import WalletImporter from './screens/tabs/profiles/wallet/WalletImporter';
 import WalletManager from './screens/tabs/profiles/wallet/WalletManager';
 import WalletDetails from './screens/tabs/profiles/wallet/WalletDetails';
 import {importAccountByMnemonic} from './remote/wallet/WalletAPI';
+import {WalletSwitchModal} from './screens/tabs/profiles/wallet/modal/WalletSwitchModal';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -64,6 +65,7 @@ const App = ({
   darkMode,
   wallet,
   walletCreateAccount,
+  setCurrent,
 }) => {
   const {barStyle, row, theme, justifySpaceBetween, alignItemsCenter} =
     useSchemaStyles();
@@ -72,6 +74,8 @@ const App = ({
   const {channel} = nodejs;
 
   const navigationRef = useNavigationContainerRef();
+
+  const [switchVisible, setSwitchVisible] = useState(false);
 
   // todo: loading bar test
   useEffect(() => {
@@ -163,7 +167,7 @@ const App = ({
                       ? HeaderIcons.walletSwitchBtnActive
                       : HeaderIcons.walletSwitchBtnNormal
                   }
-                  btnHandler={null}
+                  btnHandler={() => setSwitchVisible(true)}
                 />
               </View>
             ),
@@ -230,6 +234,13 @@ const App = ({
           imageUrls={viewImages.imgs}
         />
       </Modal>
+      <WalletSwitchModal
+        visible={switchVisible}
+        setVisible={setSwitchVisible}
+        wallet={wallet}
+        darkMode={darkMode}
+        submitHandler={setCurrent}
+      />
     </NavigationContainer>
   );
 };
@@ -250,6 +261,7 @@ const mdp = d => {
     setConnectedPeers: v => d({type: 'setConnectedPeers', payload: v}),
     setViewImages: imgs => d({type: 'images', payload: imgs}),
     walletCreateAccount: payload => d({type: 'walletCreateAccount', payload}),
+    setCurrent: payload => d({type: 'setCurrent', payload}),
   };
 };
 
