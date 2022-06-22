@@ -16,7 +16,7 @@ import {
  */
 export const financeConfig = {
   chains: {
-    Spectrum: {
+    spectrum: {
       rpcURL: 'https://jsonapi1.smartmesh.io/',
       chainID: 20180430,
       explorerURL: 'https://spectrum.pub/',
@@ -61,7 +61,7 @@ export const financeConfig = {
         ],
       },
     },
-    Ethereum: {
+    ethereum: {
       rpcURL: 'https://mainnet.infura.io/v3/',
       chainID: 1,
       explorerURL: 'https://etherscan.io',

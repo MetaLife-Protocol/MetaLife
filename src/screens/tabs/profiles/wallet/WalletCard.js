@@ -11,6 +11,11 @@ import {
 import {connect} from 'react-redux/lib/exports';
 import React, {useState} from 'react';
 import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
+import {
+  abbreviationAccount,
+  getCurrentAccount,
+  getCurrentBalance,
+} from '../../../../utils';
 
 /**
  * Created on 16 Jun 2022 by lonmee
@@ -26,7 +31,7 @@ const WalletCard = ({
   setCurrent,
 }) => {
   const {row, flex1, justifySpaceAround, alignItemsCenter} = useSchemaStyles(),
-    {container, title, volume, icons, tag} = styles;
+    {container, title, balanceS, icons, tag} = styles;
 
   const {navigate} = useNavigation();
 
@@ -92,12 +97,14 @@ const WalletCard = ({
           source={iconDic.BG}>
           <View style={[row, justifySpaceAround]}>
             <Text style={[title]}>Address</Text>
-            <Text style={[{color: '#C0D7F4'}]}>account number</Text>
+            <Text style={[{color: '#C0D7F4'}]}>
+              {abbreviationAccount(getCurrentAccount(wallet).address, 5, 8)}
+            </Text>
             <Pressable onPress={menuHandler}>
               <Image source={iconDic.dots} />
             </Pressable>
           </View>
-          <Text style={[volume]}>$ 12345678.88</Text>
+          <Text style={[balanceS]}>$ {getCurrentBalance(wallet)}</Text>
           <View style={[{width: '100%'}, row, justifySpaceAround]}>
             <Pressable
               style={[alignItemsCenter, icons]}
@@ -157,7 +164,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 15,
   },
-  volume: {
+  balanceS: {
     marginLeft: 15.5,
     color: 'white',
     fontSize: 25,

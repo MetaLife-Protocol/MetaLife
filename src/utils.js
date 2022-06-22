@@ -14,6 +14,26 @@ export const localDate = timestamp => {
   return time + ' ' + day;
 };
 
+/*************************** wallet ***************************/
+export function abbreviationAccount(addr, pre, post) {
+  return '0x' + addr.substring(0, pre) + '...' + addr.substr(-post);
+}
+export function getCurrentAccount(wallet) {
+  return (
+    (wallet.accounts[wallet.current.type] &&
+      wallet.accounts[wallet.current.type][wallet.current.index]) ||
+    {}
+  );
+}
+
+export function getCurrentBalance(wallet) {
+  return (
+    (wallet.balance[wallet.current.type] &&
+      wallet.balance[wallet.current.type][wallet.current.index]) ||
+    0
+  );
+}
+
 export function cameraHandler(submit) {
   ImagePicker.openCamera({
     cropping: false,

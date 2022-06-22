@@ -12,6 +12,7 @@ import useSchemaStyles, {
 } from '../../../../shared/UseSchemaStyles';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
+import {financeConfig} from '../../../../remote/wallet/WalletAPI';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -37,7 +38,7 @@ const WalletManager = ({cfg: {darkMode}, wallet: {current, accounts}}) => {
           : darkMode
           ? icons.walletInactiveBSpectrum
           : icons.walletInactiveWSpectrum;
-      case 'ether':
+      case 'ethereum':
         return active
           ? icons.walletActiveEther
           : darkMode
@@ -59,7 +60,7 @@ const WalletManager = ({cfg: {darkMode}, wallet: {current, accounts}}) => {
   return (
     <SafeAreaView style={[flex1, FG, row]}>
       <View style={[{backgroundColor: darkMode ? '#2b2f2f' : '#edeef1'}]}>
-        {Object.keys(accounts).map(k => (
+        {Object.keys(financeConfig.chains).map(k => (
           <Pressable key={k} onPress={() => setTIndex(k)}>
             <View style={k === tIndex && FG}>
               <Image style={[btn]} source={getIcon(k, k === tIndex)} />
@@ -74,11 +75,12 @@ const WalletManager = ({cfg: {darkMode}, wallet: {current, accounts}}) => {
             <Image source={getBtnIcon()} />
           </Pressable>
         </View>
-        {accounts[tIndex].map(({name, address}, index) => (
-          <Text key={index} style={[text]}>
-            {name + ' : ' + address}
-          </Text>
-        ))}
+        {accounts[tIndex] &&
+          accounts[tIndex].map(({name, address}, index) => (
+            <Text key={index} style={[text]}>
+              {name + ' : ' + address}
+            </Text>
+          ))}
       </View>
     </SafeAreaView>
   );
