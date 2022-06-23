@@ -1,0 +1,3 @@
+[submodule "metalife-base"]
+	path = packages/metalife-base
+	url = git@github.com:MetaLife-Protocol/rn-metalife-base.git
