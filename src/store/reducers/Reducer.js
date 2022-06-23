@@ -11,6 +11,8 @@ import {commentReducer} from './comment';
 import {pubReducer} from './pub';
 import {runtimeReducer} from './runtime';
 import {walletReducer} from './wallet';
+import {photonReducer} from './photon';
+import {accountReducer} from './account';
 
 const reducer = combineReducers({
   // app
@@ -29,6 +31,8 @@ const reducer = combineReducers({
   vote: voteReducer,
   // wallet
   wallet: walletReducer,
+  photon: photonReducer,
+  account: accountReducer,
 });
 
 export default reducer;
