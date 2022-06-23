@@ -2,6 +2,7 @@ import {Keyboard, PermissionsAndroid, Platform} from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import CameraRoll from '@react-native-community/cameraroll';
 import RNFS from 'react-native-fs';
+import Toast from 'react-native-tiny-toast';
 
 /**
  * Created on 22 Feb 2022 by lonmee
@@ -111,3 +112,27 @@ export async function savePicture(tag, type, album, cb) {
 export function getRandomPathName() {
   return `${RNFS.ExternalDirectoryPath}/${(Math.random() * 10e6) | 0}.png`;
 }
+
+export function saveImg(img) {
+  // console.log('saveImg', img);
+  const promise = CameraRoll.saveToCameraRoll(img);
+  promise
+    .then(function (result) {
+      // alert('保存成功！地址如下：\n' + result);
+      Toast.show('Save Success');
+    })
+    .catch(function (error) {
+      // alert('保存失败！\n' + error);
+      Toast.show('Save Fail');
+    });
+}
+export const restrict = event => {
+  const regex = new RegExp('^[a-zA-Z]+$');
+  const key = String.fromCharCode(
+    !event.charCode ? event.which : event.charCode,
+  );
+  if (!regex.test(key)) {
+    event.preventDefault();
+    return false;
+  }
+};
