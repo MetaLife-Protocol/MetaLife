@@ -1,0 +1,3 @@
+[submodule "packages/react-native-photon"]
+	path = packages/react-native-photon
+	url = git@github.com:MetaLife-Protocol/react-native-photon.git
