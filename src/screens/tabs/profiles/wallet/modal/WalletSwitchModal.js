@@ -9,6 +9,7 @@ import useSchemaStyles, {
 } from '../../../../../shared/UseSchemaStyles';
 import {CloseIcons} from '../../../../../shared/Icons';
 import WalletCore from '../comp/WalletCore';
+import PullMenu from '../../../../../shared/comps/PullMenu';
 
 export const WalletSwitchModal = ({
   visible,
@@ -41,8 +42,9 @@ export const WalletSwitchModal = ({
             </Pressable>
           </View>
           <View style={[BG, line]} />
-          <WalletCore />
+          <WalletCore closeHandler={() => setVisible(false)} />
         </View>
+        <PullMenu />
       </View>
     </Modal>
   );

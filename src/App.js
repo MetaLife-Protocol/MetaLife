@@ -224,7 +224,6 @@ const App = ({
         {/* Screen holder */}
         <Screen name="SubScreen" options={{}} component={SubScreen} />
       </Navigator>
-      <PullMenu />
       <Modal visible={viewImages.imgs.length > 0} transparent={true}>
         <ImageViewer
           index={viewImages.index}
@@ -241,6 +240,7 @@ const App = ({
         darkMode={darkMode}
         submitHandler={setCurrent}
       />
+      <PullMenu />
     </NavigationContainer>
   );
 };
