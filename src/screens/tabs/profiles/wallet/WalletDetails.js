@@ -18,29 +18,25 @@ import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import {TokenItem} from './items/TokenItem';
 import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
-import MaskView from '../../../../shared/comps/MaskView';
+import {
+  abbreviationAccount,
+  getCurrentAccount,
+  getCurrentBalance,
+} from '../../../../utils';
 
 /**
  * Created on 17 Jun 2022 by lonmee
  *
  */
 
-const WalletDetails = ({
-  cfg: {darkMode},
-  showPullMenu,
-  feedId,
-  wallet,
-  setCurrent,
-}) => {
+const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
   const {
       marginTop10,
-      BG,
       FG,
       row,
       flex1,
       text,
       justifySpaceAround,
-      alignItemsCenter,
       alignSelfCenter,
     } = useSchemaStyles(),
     {
@@ -121,16 +117,20 @@ const WalletDetails = ({
         <ImageBackground
           style={[marginTop10, container, justifySpaceAround, alignSelfCenter]}
           source={iconDic.BG}>
-          <View style={[row, justifySpaceAround]}>
-            <Text style={[title]}>Address</Text>
-            <Text style={[{color: '#C0D7F4'}]}>account number</Text>
-            <Pressable onPress={menuHandler}>
-              <Image source={iconDic.dots} />
-            </Pressable>
+          <View>
+            <View style={[row, justifySpaceAround]}>
+              <Text style={[title]}>{getCurrentAccount(wallet).name}</Text>
+              <Text style={[{color: '#C0D7F4'}]}>
+                {abbreviationAccount(getCurrentAccount(wallet).address, 5, 8)}
+              </Text>
+              <Pressable onPress={menuHandler}>
+                <Image source={iconDic.dots} />
+              </Pressable>
+            </View>
+            <Text style={[volume]}>$ {getCurrentBalance(wallet)}</Text>
           </View>
-          <Text style={[volume]}>$ 12345678.88</Text>
           <View style={[row]}>
-            <Text style={[address]}>0x1234567890</Text>
+            <Text style={[address]}>0x{getCurrentAccount(wallet).address}</Text>
             <Pressable
               onPress={() => {
                 nativeClipboard.setString('[address]');
@@ -196,9 +196,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   volume: {
-    marginLeft: 15.5,
+    marginTop: 17,
+    marginLeft: 15,
     color: 'white',
-    fontSize: 25,
+    fontSize: 27,
     fontWeight: '500',
   },
   address: {
