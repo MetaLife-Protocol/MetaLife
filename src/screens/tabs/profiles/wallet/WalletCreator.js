@@ -19,6 +19,8 @@ import useSchemaStyles, {
 } from '../../../../shared/UseSchemaStyles';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
+import {createAccount} from '../../../../remote/wallet/WalletAPI';
+import Toast from 'react-native-tiny-toast';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -28,7 +30,9 @@ import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo'
 const WalletCreator = ({
   cfg: {lang, darkMode, verbose},
   route: {params},
+  navigation: {goBack},
   wallet,
+  walletCreateAccount,
 }) => {
   const {flex1, FG, with100p, row, alignItemsCenter, text, marginTop10} =
       useSchemaStyles(),
@@ -43,7 +47,6 @@ const WalletCreator = ({
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
 
   const targetChain = params ? params.type : wallet.current.type;
-  console.log(targetChain);
 
   return (
     <SafeAreaView style={[flex1, FG, marginTop10]}>
@@ -103,6 +106,17 @@ const WalletCreator = ({
           style={[{marginBottom: 50}]}
           title={'Create account'}
           disabled={!(aName && pw && cPw && pw === cPw)}
+          press={() =>
+            createAccount(pw, targetChain, ({keystore: {address}}) => {
+              setAName('');
+              setPW('');
+              setCPW('');
+              setPrompt('');
+              walletCreateAccount({type: targetChain, name: aName, address});
+              Toast.show('Wallet created');
+              goBack();
+            })
+          }
         />
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -120,7 +134,7 @@ const msp = s => {
 
 const mdp = d => {
   return {
-    create: payload => d({type: 'walletCreateAccount', payload}),
+    walletCreateAccount: payload => d({type: 'walletCreateAccount', payload}),
   };
 };
 

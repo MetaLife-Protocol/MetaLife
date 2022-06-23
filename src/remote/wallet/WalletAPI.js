@@ -76,8 +76,15 @@ export const financeConfig = {
   },
 };
 
-export function createAccount(pw, cb) {
-  createWallet(pw, "m/44'/60'/0'/0/0")
+/**
+ * 0 BTC 60  ETH
+ * @param pw
+ * @param cb
+ * @param type
+ */
+export function createAccount(pw, type, cb) {
+  const code = type === 'spectrum' || 'ethereum' ? "60'" : "0'";
+  createWallet(pw, `m/44'/${code}/0'/0/0`)
     .then(res => cb && cb(res))
     .catch(reason => console.warn(reason));
 }

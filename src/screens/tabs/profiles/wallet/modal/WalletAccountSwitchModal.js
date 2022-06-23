@@ -2,7 +2,7 @@
  * Created on 17 Jun 2022 by lonmee
  *
  */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   Image,
   Modal,
@@ -12,13 +12,11 @@ import {
   Text,
   View,
 } from 'react-native';
-import useSchemaStyles, {
-  colorsSchema,
-} from '../../../../../shared/UseSchemaStyles';
+import useSchemaStyles from '../../../../../shared/UseSchemaStyles';
 import {CloseIcons} from '../../../../../shared/Icons';
-import {abbreviationAccount} from '../../../../../utils';
 import {AccountItem} from '../items/AccountItem';
 import {useDispatch} from 'react-redux';
+import Toast from 'react-native-tiny-toast';
 
 export const WalletAccountSwitchModal = ({
   visible,
@@ -39,13 +37,20 @@ export const WalletAccountSwitchModal = ({
     dispatch({type: 'setMask', payload: visible});
   }, [visible]);
 
+  const content = useRef();
+
   return (
     <Modal
       animationType={'slide'}
       transparent={true}
       visible={visible}
       onRequestClose={null}>
-      <View style={[flex1, centeredView]}>
+      <Pressable
+        style={[flex1, centeredView]}
+        ref={content}
+        onPress={event =>
+          event.target === content.current && setVisible(false)
+        }>
         <View style={[FG, modalView]}>
           <View style={[row, title, justifySpaceBetween]}>
             <Text style={[text]}>Switch Account</Text>
@@ -72,7 +77,7 @@ export const WalletAccountSwitchModal = ({
               ))}
           </ScrollView>
         </View>
-      </View>
+      </Pressable>
     </Modal>
   );
 };

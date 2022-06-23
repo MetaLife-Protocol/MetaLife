@@ -14,6 +14,7 @@ import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {financeConfig} from '../../../../../remote/wallet/WalletAPI';
 import {AccountItem} from '../items/AccountItem';
+import Toast from 'react-native-tiny-toast';
 
 /**
  * Created on 22 Jun 2022 by lonmee
@@ -126,12 +127,10 @@ const WalletCore = ({
             accounts[tIndex].map((v, i) => (
               <Pressable
                 key={i}
-                onPress={() =>
-                  i !== current.index && setCurrent({type: tIndex, index: i})
-                }>
+                onPress={() => setCurrent({type: tIndex, index: i})}>
                 <AccountItem
                   item={v}
-                  selected={i === current.index}
+                  selected={tIndex === current.type && i === current.index}
                   darkMode={darkMode}
                 />
               </Pressable>

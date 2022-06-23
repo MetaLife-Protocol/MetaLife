@@ -24,10 +24,6 @@ import HeadIcon from '../../../shared/comps/HeadIcon';
 import {ArrowImage} from '../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
 import {cameraHandlerWithCrop, photoHandlerWithCrop} from '../../../utils';
-import {
-  importAccount,
-  importAccountByMnemonic,
-} from '../../../remote/wallet/WalletAPI';
 
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
 
