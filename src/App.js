@@ -50,9 +50,18 @@ import WalletCreator from './screens/tabs/profiles/wallet/WalletCreator';
 import WalletImporter from './screens/tabs/profiles/wallet/WalletImporter';
 import WalletManager from './screens/tabs/profiles/wallet/WalletManager';
 import WalletDetails from './screens/tabs/profiles/wallet/WalletDetails';
-import {importAccountByMnemonic} from './remote/wallet/WalletAPI';
+import {
+  financeConfig,
+  importAccountByMnemonic,
+} from './remote/wallet/WalletAPI';
 import {WalletSwitchModal} from './screens/tabs/profiles/wallet/modal/WalletSwitchModal';
 import MaskView from './shared/comps/MaskView';
+import {startPhotonServer} from 'react-native-photon';
+import {
+  exportPrivateKeyFromKeystore,
+  exportPrivateKeyFromMnemonic,
+} from 'react-native-web3-wallet';
+import {getCurrentAccount} from './utils';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -86,12 +95,31 @@ const App = ({
       startSSB().then(ssb => {
         window.ssb = ssb;
         setFeedId(ssb.id);
-        wallet.accounts.spectrum ||
-          getMnemonic(mnemonic =>
-            importAccountByMnemonic(mnemonic, '1234', ({keystore: {address}}) =>
-              walletCreateAccount({name: 'default', address}),
-            ),
-          );
+        wallet.accounts.spectrum
+          ? getMnemonic(mnemonic =>
+              exportPrivateKeyFromMnemonic(mnemonic, "m/44'/60'/0'/0/0").then(
+                key =>
+                  startPhotonServer({
+                    // privateKey:
+                    //   '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
+                    // address: '0x096F7368bC01f438f8De8775DAFD71a566413C6f',
+                    // ethRPCEndPoint: '',
+                    privateKey: key,
+                    address: getCurrentAccount(wallet).address,
+                    ethRPCEndPoint: financeConfig.chains.spectrum.rpcURL,
+                  })
+                    .then(console.log)
+                    .catch(console.warn),
+              ),
+            )
+          : getMnemonic(mnemonic =>
+              importAccountByMnemonic(
+                mnemonic,
+                '1234',
+                ({keystore: {address}}) =>
+                  walletCreateAccount({name: 'default', address}),
+              ),
+            );
         resync ||
           (initializeHandlers(store),
           checkAddon('launch'),
