@@ -88,13 +88,9 @@ const WalletCreator = ({
             </ControllerItem>
             <ControllerItem>
               <Text style={[text]}>
-                {`xxxxxxxxx
-                xxxxxxxxx
-                xxxxxxxxx
-                xxxxxxxxx
-                xxxxxxxxx
-                xxxxxxxxx
-                xxxxxxxxx`}
+                {
+                  'xxxxxxxxx\nxxxxxxxxx\nxxxxxxxxx\nxxxxxxxxx\nxxxxxxxxx\nxxxxxxxxx\nxxxxxxxxx'
+                }
               </Text>
             </ControllerItem>
           </Section>
