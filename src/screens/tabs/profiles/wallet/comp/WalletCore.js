@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {financeConfig} from '../../../../../remote/wallet/WalletAPI';
 import {AccountItem} from '../items/AccountItem';
 import Toast from 'react-native-tiny-toast';
+import WalletAccountDetails from '../WalletAccountDetails';
 
 /**
  * Created on 22 Jun 2022 by lonmee
@@ -27,6 +28,7 @@ const WalletCore = ({
   setCurrent,
   showPullMenu,
   closeHandler,
+  manageHandle,
 }) => {
   const {flex1, FG, text, row, justifySpaceBetween} = useSchemaStyles(),
     {} = colorsSchema,
@@ -127,7 +129,12 @@ const WalletCore = ({
             accounts[tIndex].map((v, i) => (
               <Pressable
                 key={i}
-                onPress={() => setCurrent({type: tIndex, index: i})}>
+                onPress={() => {
+                  console.log('hhhh', v);
+                  manageHandle
+                    ? goScreen('WalletAccountDetails', {key: tIndex, ...v})
+                    : setCurrent({type: tIndex, index: i});
+                }}>
                 <AccountItem
                   item={v}
                   selected={tIndex === current.type && i === current.index}

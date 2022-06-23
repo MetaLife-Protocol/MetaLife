@@ -62,6 +62,7 @@ import {
   exportPrivateKeyFromMnemonic,
 } from 'react-native-web3-wallet';
 import {getCurrentAccount} from './utils';
+import WalletAccountDetails from './screens/tabs/profiles/wallet/WalletAccountDetails';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -217,6 +218,11 @@ const App = ({
           name="WalletManager"
           component={WalletManager}
           options={{title: 'Wallet management'}}
+        />
+        <Screen
+          name="WalletAccountDetails"
+          component={WalletAccountDetails}
+          options={{title: 'Wallet account'}}
         />
         {/* Posts */}
         <Screen

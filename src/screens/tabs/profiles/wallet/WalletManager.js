@@ -12,7 +12,7 @@ const WalletManager = () => {
   const {flex1} = useSchemaStyles();
   return (
     <SafeAreaView style={[flex1]}>
-      <WalletCore />
+      <WalletCore manageHandle={true} />
     </SafeAreaView>
   );
 };
