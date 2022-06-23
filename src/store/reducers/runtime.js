@@ -6,9 +6,12 @@ const initState = {
   pullMenu: {},
   postContent: {photo: [], content: ''},
   images: {index: 0, imgs: []},
+  masked: false,
 };
 export const runtimeReducer = (state = initState, {type, payload}) => {
   switch (type) {
+    case 'setMask':
+      return {...state, masked: payload};
     case 'pullMenu':
       return {...state, pullMenu: payload};
     case 'cachePostContent':

@@ -2,7 +2,7 @@
  * Created on 17 Jun 2022 by lonmee
  *
  */
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   Modal,
@@ -18,6 +18,7 @@ import useSchemaStyles, {
 import {CloseIcons} from '../../../../../shared/Icons';
 import {abbreviationAccount} from '../../../../../utils';
 import {AccountItem} from '../items/AccountItem';
+import {useDispatch} from 'react-redux';
 
 export const WalletAccountSwitchModal = ({
   visible,
@@ -32,6 +33,11 @@ export const WalletAccountSwitchModal = ({
   const {flex1, FG, BG, row, text, alignItemsCenter, justifySpaceBetween} =
       useSchemaStyles(),
     {centeredView, modalView, title, accountItem} = styles;
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch({type: 'setMask', payload: visible});
+  }, [visible]);
 
   return (
     <Modal

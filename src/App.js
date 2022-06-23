@@ -52,6 +52,7 @@ import WalletManager from './screens/tabs/profiles/wallet/WalletManager';
 import WalletDetails from './screens/tabs/profiles/wallet/WalletDetails';
 import {importAccountByMnemonic} from './remote/wallet/WalletAPI';
 import {WalletSwitchModal} from './screens/tabs/profiles/wallet/modal/WalletSwitchModal';
+import MaskView from './shared/comps/MaskView';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -66,6 +67,7 @@ const App = ({
   wallet,
   walletCreateAccount,
   setCurrent,
+  masked,
 }) => {
   const {barStyle, row, theme, justifySpaceBetween, alignItemsCenter} =
     useSchemaStyles();
@@ -224,6 +226,7 @@ const App = ({
         {/* Screen holder */}
         <Screen name="SubScreen" options={{}} component={SubScreen} />
       </Navigator>
+      <MaskView darkMode={darkMode} enabled={masked} eventEnabled={false} />
       <Modal visible={viewImages.imgs.length > 0} transparent={true}>
         <ImageViewer
           index={viewImages.index}
@@ -247,6 +250,7 @@ const App = ({
 
 const msp = s => {
   return {
+    masked: s.runtime.masked,
     darkMode: s.cfg.darkMode,
     viewImages: s.runtime.images,
     feedId: s.user.feedId,

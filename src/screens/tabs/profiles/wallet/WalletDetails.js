@@ -18,6 +18,7 @@ import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import {TokenItem} from './items/TokenItem';
 import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
+import MaskView from '../../../../shared/comps/MaskView';
 
 /**
  * Created on 17 Jun 2022 by lonmee

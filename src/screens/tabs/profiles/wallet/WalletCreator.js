@@ -80,7 +80,15 @@ const WalletCreator = ({cfg: {lang, darkMode, verbose}}) => {
               />
             </ControllerItem>
             <ControllerItem>
-              <Text style={[text]}>{'xxxxxx'}</Text>
+              <Text style={[text]}>
+                {`xxxxxxxxx
+                xxxxxxxxx
+                xxxxxxxxx
+                xxxxxxxxx
+                xxxxxxxxx
+                xxxxxxxxx
+                xxxxxxxxx`}
+              </Text>
             </ControllerItem>
           </Section>
         </View>
