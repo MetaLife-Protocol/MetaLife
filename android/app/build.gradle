@@ -143,6 +143,7 @@ android {
             ignoreAssetsPattern '!*.json.license!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
         vectorDrawables.useSupportLibrary = true
+        missingDimensionStrategy 'react-native-camera', 'general' // <--- insert this line
     }
     lintOptions{
         checkDependencies true
