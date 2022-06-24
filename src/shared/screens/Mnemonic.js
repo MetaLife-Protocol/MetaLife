@@ -57,7 +57,7 @@ const Mnemonic = () => {
                 type: 'walletCreateAccount',
                 payload: {name: 'default', address},
               });
-              getWBalance('Spectrum', address, v => dispatch('setBalance', v));
+              getWBalance('spectrum', address, v => dispatch('setBalance', v));
             },
           );
         }}
