@@ -79,8 +79,20 @@ export const financeConfig = {
     },
   },
   contracts: {
-    Mesh: 'erc20',
-    MLT: 'erc20',
+    spectrum: {
+      Mesh: {
+        address: '0xa4c9af589c07b7539e5fcc45975b995a45e3f379',
+        decmis: 18,
+        symbol: 'Mesh',
+        abi: 'erc20',
+      },
+      MLT: {
+        address: '0xa27f8f580c01db0682ce185209ffb84121a2f711',
+        decmis: 18,
+        symbol: 'MLT',
+        abi: 'erc20',
+      },
+    },
   },
   contractABIs: {
     NFTCollection: [],
@@ -676,12 +688,11 @@ export function getWBalance(type, wAddr, cb) {
     .catch(console.warn);
 }
 
-export function getWBalanceByContract(type, cType, cAddr, wAddr) {
-  console.log();
+export function getWBalanceByContract(type, cType, wAddr) {
   getContractBalance(
     financeConfig.chains[type].rpcURL,
-    cAddr,
-    financeConfig.contractABIs[financeConfig.contracts[cType]],
+    financeConfig.contracts[type][cType].address,
+    financeConfig.contractABIs[financeConfig.contracts[type][cType].abi],
     wAddr,
   );
 }
