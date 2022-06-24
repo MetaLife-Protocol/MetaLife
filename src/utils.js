@@ -16,7 +16,7 @@ export const localDate = timestamp => {
 
 /*************************** wallet ***************************/
 export function abbreviationAccount(addr, pre, post) {
-  return '0x' + addr.substring(0, pre) + '...' + addr.substr(-post);
+  return addr ? '0x' + addr.substring(0, pre) + '...' + addr.substr(-post) : '';
 }
 
 export function getCurrentAccount(wallet) {
