@@ -43,3 +43,5 @@
  
 > ### pod repos 
 >> https://mirrors.tuna.tsinghua.edu.cn/help/CocoaPods/
+> ### pod repos 
+>> https://github.com/MetaLife-Protocol/react-native-metalife-storage.git

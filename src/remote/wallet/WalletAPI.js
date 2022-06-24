@@ -655,7 +655,7 @@ export function importAccountByMnemonic(mnemonic, pw, type, cb) {
       saveAccounts(res.keystore.address, res.keystore, (success, err) => {
         console.log('save', success, err);
       });
-      cb(res);
+      cb && cb(res);
     })
     .catch(reason => console.warn(reason));
 }
@@ -701,9 +701,12 @@ function saveAccounts(address, keystore, cb) {
   let originKey = window.ssb.id;
   let signedMessage = getSignedSecretSession(originKey);
   retrieveWithSession(originKey, signedMessage)
-    .then(accounts => {
-      if (accounts === undefined || accounts === null) {
+    .then(res => {
+      let accounts;
+      if (res === undefined || res === null) {
         accounts = {};
+      } else {
+        accounts = JSON.parse(res);
       }
       accounts[address] = keystore;
 
@@ -724,10 +727,11 @@ function getAccount(address, cb) {
   let originKey = window.ssb.id;
   let signedMessage = getSignedSecretSession(originKey);
   retrieveWithSession(originKey, signedMessage)
-    .then(accounts => {
-      if (accounts === undefined || accounts === null || accounts === {}) {
+    .then(res => {
+      if (res === undefined || res === null || res === '{}') {
         cb(false, new Error('no accounts'));
       } else {
+        let accounts = JSON.parse(res);
         if (accounts[address] === undefined || accounts[address] === null) {
           cb(false, new Error('no account'));
         } else {
@@ -744,10 +748,11 @@ function deleteAccount(address, cb) {
   let originKey = window.ssb.id;
   let signedMessage = getSignedSecretSession(originKey);
   retrieveWithSession(originKey, signedMessage)
-    .then(accounts => {
-      if (accounts === undefined || accounts === null || accounts === {}) {
+    .then(res => {
+      if (res === undefined || res === null || res === '{}') {
         cb(false, new Error('no accounts'));
       } else {
+        let accounts = JSON.parse(res);
         if (accounts[address] === undefined || accounts[address] === null) {
           cb(false, new Error('no account'));
         } else {
