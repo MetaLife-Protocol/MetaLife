@@ -48,13 +48,18 @@ const Mnemonic = () => {
         style={[{marginBottom: 40}]}
         title={'Create wallet with this mnemonic'}
         press={() => {
-          importAccountByMnemonic(mnemonic, '1234', ({keystore: {address}}) => {
-            dispatch({
-              type: 'walletCreateAccount',
-              payload: {name: 'default', address},
-            });
-            getWBalance('Spectrum', address, v => dispatch('setBalance', v));
-          });
+          importAccountByMnemonic(
+            mnemonic,
+            '1234',
+            'spectrum',
+            ({keystore: {address}}) => {
+              dispatch({
+                type: 'walletCreateAccount',
+                payload: {name: 'default', address},
+              });
+              getWBalance('Spectrum', address, v => dispatch('setBalance', v));
+            },
+          );
         }}
       />
     </SafeAreaView>

@@ -655,7 +655,7 @@ export function importAccountByMnemonic(mnemonic, pw, type, cb) {
       saveAccounts(res.keystore.address, res.keystore, (success, err) => {
         console.log('save', success, err);
       });
-      cb(res);
+      cb && cb(res);
     })
     .catch(reason => console.warn(reason));
 }
