@@ -5,7 +5,7 @@
  */
 'use strict';
 import React, {memo} from 'react';
-import {SchemaStyles} from 'metalife-base';
+import {SchemaStyles} from '../../../metalife-base';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 const SelectDialog = ({visible = false, listData = [], style, onPress}) => {

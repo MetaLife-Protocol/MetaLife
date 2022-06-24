@@ -68,6 +68,7 @@ import NFTDetails from './screens/nft/nft_details';
 import NFTDetailNew from './screens/nft/nft_details_new';
 import NFTList from './screens/nft/nft_list';
 import MyNFTList from './screens/nft/my_nft_list/MyNFTList';
+import Scan from './screens/photon/scan';
 
 process.nextTick = process.nextTick || setImmediate;
 

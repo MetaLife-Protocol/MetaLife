@@ -8,7 +8,7 @@
 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../metalife-base';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
 import CameraMarkerView from './comps/CameraMarkerView';

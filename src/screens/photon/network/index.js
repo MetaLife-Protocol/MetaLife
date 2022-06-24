@@ -16,7 +16,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../metalife-base';
 import PhotonAccountInfoCard from './comps/PhotonAccountInfoCard';
 import {useNavigation} from '@react-navigation/native';
 import PhotonMoreActionsView from './comps/PhotonMoreActionsView';

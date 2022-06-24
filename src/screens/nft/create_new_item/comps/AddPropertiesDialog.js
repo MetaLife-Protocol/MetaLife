@@ -21,7 +21,7 @@ import {
   RoundBtn,
   useDialog,
   useStyle,
-} from 'metalife-base';
+} from '../../../../metalife-base';
 import Constants from '../../../../shared/Constants';
 
 const AddPropertiesDialog = ({onSure, defaultProperties}) => {

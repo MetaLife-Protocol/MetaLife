@@ -8,7 +8,12 @@
 
 import React from 'react';
 import {Text, View, StyleSheet, Image} from 'react-native';
-import {DialogTitle, RoundBtn, useDialog, useStyle} from 'metalife-base';
+import {
+  DialogTitle,
+  RoundBtn,
+  useDialog,
+  useStyle,
+} from '../../../../metalife-base';
 import Toast from 'react-native-tiny-toast';
 import CreateNFTInformationView from './CreateNFTInfomationView';
 import {useNavigation} from '@react-navigation/native';

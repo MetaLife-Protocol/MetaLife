@@ -7,7 +7,7 @@
 
 import React, {useCallback} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {PureTextInput, useStyle} from 'metalife-base';
+import {PureTextInput, useStyle} from '../../../../metalife-base';
 
 const LinksView = ({netUrlCallback}) => {
   const styles = useStyle(createSty);

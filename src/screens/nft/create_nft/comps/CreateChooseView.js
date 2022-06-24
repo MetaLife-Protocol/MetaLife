@@ -8,7 +8,7 @@
 
 import React from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../../metalife-base';
 
 const CreateChooseView = ({
   title = '',

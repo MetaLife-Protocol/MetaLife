@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../metalife-base';
 import {useRoute} from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 import {saveImg} from '../../../utils';

@@ -8,7 +8,7 @@
 
 import React, {useCallback} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {ethNumberFixed, useStyle} from 'metalife-base';
+import {ethNumberFixed, useStyle} from '../../../../metalife-base';
 
 const PhotonAccountInfoCard = ({style, balance, currentAccount}) => {
   const styles = useStyle(createSty);

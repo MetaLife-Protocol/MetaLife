@@ -15,7 +15,7 @@ import {
   useStyle,
   safeDecimal,
   ETHER,
-} from 'metalife-base';
+} from '../../../metalife-base';
 import Constants from '../../../shared/Constants';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {depositChannelMethod} from 'react-native-photon';

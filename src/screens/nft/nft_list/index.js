@@ -19,7 +19,7 @@ import {
 } from 'react-native';
 import NFTListItem from './comps/NFTListItem';
 import {useNavigation} from '@react-navigation/native';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../metalife-base';
 
 const NFTList = ({}) => {
   const navigation = useNavigation();

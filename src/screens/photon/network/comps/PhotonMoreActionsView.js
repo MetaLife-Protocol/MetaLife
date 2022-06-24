@@ -14,7 +14,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDialog, useStyle} from 'metalife-base';
+import {useDialog, useStyle} from '../../../../metalife-base';
 import {useNavigation} from '@react-navigation/native';
 import {uploadPhotonLogDialog} from '../hooks';
 

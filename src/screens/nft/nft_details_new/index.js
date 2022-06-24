@@ -15,7 +15,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../metalife-base';
 import CollectionView from './comps/CollectionView';
 import DetailTitle from './comps/DetailTitle';
 import PropertiesView from '../create_new_item/comps/PropertiesView';

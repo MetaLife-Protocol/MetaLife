@@ -7,7 +7,7 @@
 
 import React, {useCallback} from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../../metalife-base';
 
 const tokens = [
   {

@@ -7,7 +7,12 @@
  */
 import React, {useCallback} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
-import {EmptyView, PhotonSeparator, useStyle, useTheme} from 'metalife-base';
+import {
+  EmptyView,
+  PhotonSeparator,
+  useStyle,
+  useTheme,
+} from '../../../metalife-base';
 import {useRecordPhotonData} from './hooks';
 import RecordItem from './comps/RecordItem';
 

@@ -8,7 +8,7 @@
 
 import React, {useEffect, useRef} from 'react';
 import {Animated, View} from 'react-native';
-import {useTheme} from 'metalife-base';
+import {useTheme} from '../../../../metalife-base';
 
 const CameraMarkerView = ({}) => {
   const theme = useTheme();

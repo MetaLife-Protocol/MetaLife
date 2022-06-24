@@ -8,7 +8,7 @@
 import React from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import Constants from '../../../../shared/Constants';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../../metalife-base';
 
 const flashIcon = require('../../../../assets/image/icons/icon_flashlight_light.png');
 const FlashLightButton = ({onPress}) => {

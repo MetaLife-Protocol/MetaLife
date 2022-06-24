@@ -26,7 +26,7 @@ import {
   useDialog,
   useStyle,
   useTheme,
-} from 'metalife-base';
+} from '../../../metalife-base';
 import AddPropertiesDialog from './comps/AddPropertiesDialog';
 import PropertiesView from './comps/PropertiesView';
 

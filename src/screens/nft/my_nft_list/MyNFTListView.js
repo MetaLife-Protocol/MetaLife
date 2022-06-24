@@ -8,7 +8,12 @@
 
 import React from 'react';
 import {FlatList, StyleSheet} from 'react-native';
-import {EmptyView, PhotonSeparator, useStyle, useTheme} from 'metalife-base';
+import {
+  EmptyView,
+  PhotonSeparator,
+  useStyle,
+  useTheme,
+} from '../../../metalife-base';
 import MyNFTListItem from './comps/MyNFTListItem';
 
 const MyNFTListView = ({}) => {

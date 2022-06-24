@@ -8,7 +8,7 @@
 
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {colorsSchema, SchemaStyles} from 'metalife-base';
+import {colorsSchema, SchemaStyles} from '../../../metalife-base';
 
 const iconDic = {
   arrowIcon: require('../../../assets/image/icons/icons_down_arrow.png'),

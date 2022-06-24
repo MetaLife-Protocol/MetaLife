@@ -7,7 +7,7 @@
 
 import React, {useCallback, useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../../metalife-base';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Toast from 'react-native-tiny-toast';
 import {uploadFileToIFPS} from '../../nftUtils';

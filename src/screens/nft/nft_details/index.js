@@ -14,7 +14,7 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import {RoundBtn, useStyle} from 'metalife-base';
+import {RoundBtn, useStyle} from '../../../metalife-base';
 
 const NFTDetails = ({}) => {
   const styles = useStyle(styleFun);

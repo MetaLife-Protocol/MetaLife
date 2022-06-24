@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {ethNumberFixed, formatDate, useStyle} from 'metalife-base';
+import {ethNumberFixed, formatDate, useStyle} from '../../../../metalife-base';
 import Constants from '../../../../shared/Constants';
 
 const RecordItem = ({amount, stateColor, stateDisplay, time, address}) => {

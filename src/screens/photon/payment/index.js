@@ -21,7 +21,7 @@ import {
   PureTextInput,
   RoundBtn,
   useStyle,
-} from 'metalife-base';
+} from '../../../metalife-base';
 import Constants from '../../../shared/Constants';
 import {useNavigation} from '@react-navigation/native';
 import {photonTransfer} from 'react-native-photon';

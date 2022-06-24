@@ -24,7 +24,7 @@ import {
   safeDecimal,
   useStyle,
   useTheme,
-} from 'metalife-base';
+} from '../../../metalife-base';
 import {useRoute} from '@react-navigation/native';
 import CreateNFTInformationView from './comps/CreateNFTInfomationView';
 import Constants from '../../../shared/Constants';

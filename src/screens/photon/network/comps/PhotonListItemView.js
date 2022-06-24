@@ -35,7 +35,12 @@
 
 import React, {useCallback, useMemo} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {ethNumberFixed, NormalDialog, useDialog, useStyle} from 'metalife-base';
+import {
+  ethNumberFixed,
+  NormalDialog,
+  useDialog,
+  useStyle,
+} from '../../../../metalife-base';
 import Constants from '../../../../shared/Constants';
 import {getPhotonTokenSymbol, settleChannelDialog} from '../../PhotonUtils';
 import {useNavigation} from '@react-navigation/native';

@@ -1,0 +1,11 @@
+{
+  "name": "metalife-base",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "types": "index.js",
+  "peerDependencies": {
+    "decimal.js": "^10.3.1",
+    "react-native": "^0.68.2"
+  }
+}

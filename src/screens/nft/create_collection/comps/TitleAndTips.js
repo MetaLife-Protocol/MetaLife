@@ -7,7 +7,7 @@
 
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../../metalife-base';
 
 const TitleAndTips = ({title = '', tips = '', rightView}) => {
   const styles = useStyle(createSty);

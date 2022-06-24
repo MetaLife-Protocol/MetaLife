@@ -1,6 +1,6 @@
 'use strict';
 import React, {useMemo} from 'react';
-import {useTheme} from 'metalife-base';
+import {useTheme} from '../../../../metalife-base';
 import RecordItem from './RecordItem';
 
 const TransactionRecordItem = ({data}) => {

@@ -7,7 +7,7 @@
 
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../../metalife-base';
 
 const CategoryView = () => {
   const styles = useStyle(createSty);

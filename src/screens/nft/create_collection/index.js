@@ -13,7 +13,7 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import {PureTextInput, RoundBtn, useStyle} from 'metalife-base';
+import {PureTextInput, RoundBtn, useStyle} from '../../../metalife-base';
 import TitleAndTips from './comps/TitleAndTips';
 import ImagePickerView from './comps/ImagePickerView';
 import CategoryView from './comps/CategoryView';

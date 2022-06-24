@@ -8,7 +8,7 @@
 
 import React from 'react';
 import {Text, View, StyleSheet, Image} from 'react-native';
-import {useStyle} from 'metalife-base';
+import {useStyle} from '../../../../metalife-base';
 
 const CollectionView = ({}) => {
   const styles = useStyle(styleFun);

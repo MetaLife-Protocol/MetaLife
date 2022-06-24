@@ -23,7 +23,7 @@ import {
   useStyle,
   ETHER,
   safeDecimal,
-} from 'metalife-base';
+} from '../../../metalife-base';
 import {useNavigation} from '@react-navigation/native';
 import {createChannel} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';

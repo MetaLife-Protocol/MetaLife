@@ -15,7 +15,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {PureTextInput, RoundBtn, useDialog, useStyle} from 'metalife-base';
+import {
+  PureTextInput,
+  RoundBtn,
+  useDialog,
+  useStyle,
+} from '../../../metalife-base';
 import StepView from './comps/StepView';
 import Toast from 'react-native-tiny-toast';
 import {launchImageLibrary} from 'react-native-image-picker';

@@ -7,7 +7,7 @@
 
 import React from 'react';
 import {FlatList, SafeAreaView, StyleSheet, View} from 'react-native';
-import {PhotonSeparator, useStyle, useTheme} from 'metalife-base';
+import {PhotonSeparator, useStyle, useTheme} from '../../../metalife-base';
 import PhotonTokenOptionItem from './comps/PhotonTokenOptionItem';
 
 const PhotonTokenOption = () => {

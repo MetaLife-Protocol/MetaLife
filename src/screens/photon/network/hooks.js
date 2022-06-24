@@ -1,8 +1,8 @@
 import React from 'react';
-import {NormalDialog} from 'metalife-base';
 import {uploadPhotonLog} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {store} from '../../../store/configureStore';
+import {NormalDialog} from '../../../metalife-base';
 
 export const uploadPhotonLogDialog = ({dialog}) => {
   dialog.show(
