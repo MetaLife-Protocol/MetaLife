@@ -46,5 +46,5 @@
 > ### private registry localized 
 >> git clone git@github.com:MetaLife-Protocol/react-native-metalife-storage.git  
 >> npm i react-native-metalife-storage --registry=https://github.com/MetaLife-Protocol/react-native-metalife-storage.git  
->> git clone git@github.com:MetaLife-Protocol/react-native-photon.git  
+>> cd packages && git clone git@github.com:MetaLife-Protocol/react-native-photon.git && cd ..
 >> npm i react-native-photon --registry=https://github.com/MetaLife-Protocol/react-native-photon.git
