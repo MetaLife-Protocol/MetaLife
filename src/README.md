@@ -43,5 +43,6 @@
  
 > ### pod repos 
 >> https://mirrors.tuna.tsinghua.edu.cn/help/CocoaPods/
-> ### pod repos 
->> https://github.com/MetaLife-Protocol/react-native-metalife-storage.git
+> ### local registry 
+>> git clone git@github.com:MetaLife-Protocol/react-native-metalife-storage.git  
+>> npm i react-native-metalife-storage --registry=https://github.com/MetaLife-Protocol/react-native-metalife-storage.git
