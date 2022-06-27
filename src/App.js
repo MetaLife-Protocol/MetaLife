@@ -20,7 +20,7 @@ import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import Pubs from './screens/tabs/profiles/Pubs';
-import {Modal, Pressable, StatusBar, Text} from 'react-native';
+import {Modal, Pressable, StatusBar, Text, View} from 'react-native';
 import CommentEditor from './screens/tabs/home/post/CommentEditor';
 import PullMenu from './shared/comps/PullMenu';
 import Avatar from './shared/screens/Avatar';
