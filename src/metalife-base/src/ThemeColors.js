@@ -1,7 +1,7 @@
 'use strict';
 
-import SchemaStyles, {colorsBasics} from './SchemaStyles';
 import {useMemo} from 'react';
+import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 
 /**
  * @Author: lq
@@ -45,8 +45,8 @@ export function getTheme(isLightTheme) {
 }
 
 export function useTheme() {
-  const {theme} = SchemaStyles();
-  return useMemo(() => getTheme(!theme.dark), [theme.dark]);
+  const {theme} = useSchemaStyles();
+  return useMemo(() => getTheme(!theme?.dark), [theme?.dark]);
 }
 
 export function useStyle(createFun) {

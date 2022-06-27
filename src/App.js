@@ -240,6 +240,101 @@ const App = ({
         />
         {/* Screen holder */}
         <Screen name="SubScreen" options={{}} component={SubScreen} />
+
+        {/*Photon*/}
+        <Screen
+          name="CreateChannel"
+          options={{headerTitle: 'Create Channel'}}
+          component={CreateChannel}
+        />
+        <Screen name="Scan" options={{headerTitle: 'Scan'}} component={Scan} />
+        <Screen
+          name="ReceivingCode"
+          options={{
+            headerTitle: 'ReceivingCode',
+            headerBackground: () => (
+              <View
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: '#29DAD7',
+                }}
+              />
+            ),
+          }}
+          component={ReceivingCode}
+        />
+        <Screen
+          name="Payment"
+          options={{headerTitle: 'Photon Payment'}}
+          component={Payment}
+        />
+        <Screen
+          name="PhotonNetwork"
+          options={{headerTitle: 'Photon network'}}
+          component={PhotonNetwork}
+        />
+        <Screen
+          name="PhotonTransactionRecord"
+          options={{headerTitle: 'Transaction Record'}}
+          component={PhotonTransactionRecord}
+        />
+        <Screen
+          name="SupplementaryBalance"
+          options={{headerTitle: 'supplementary balance'}}
+          component={SupplementaryBalance}
+        />
+        <Screen
+          name="PhotonAddressContact"
+          options={{headerTitle: 'Address Contact'}}
+          component={PhotonAddressContact}
+        />
+        <Screen
+          name="PhotonTokenOption"
+          options={{headerTitle: 'Token option'}}
+          component={PhotonTokenOption}
+        />
+        {/*  NFT*/}
+        <Screen
+          name="CreateNFT"
+          options={{headerTitle: 'Create NFT'}}
+          component={CreateNFTV2}
+        />
+        <Screen
+          name="CreateNFTStep2"
+          options={{headerTitle: 'Create NFT'}}
+          component={CreateNFTStep2}
+        />
+        <Screen
+          name="CreateCollection"
+          options={{headerTitle: 'Create a Collection'}}
+          component={CreateCollection}
+        />
+        <Screen
+          name="CreateNewItem"
+          options={{headerTitle: 'Create New Item'}}
+          component={CreateNewItem}
+        />
+        <Screen
+          name="NFTDetails"
+          options={{headerTitle: 'NFT Details'}}
+          component={NFTDetails}
+        />
+        <Screen
+          name="NFTDetailNew"
+          options={{headerTitle: ''}}
+          component={NFTDetailNew}
+        />
+        <Screen
+          name="NFTList"
+          options={{headerTitle: 'Open Galaxy'}}
+          component={NFTList}
+        />
+        <Screen
+          name="MyNFTList"
+          options={{headerTitle: 'NFT'}}
+          component={MyNFTList}
+        />
       </Navigator>
       <PullMenu />
       <Modal visible={viewImages.imgs.length > 0} transparent={true}>
@@ -257,101 +352,6 @@ const App = ({
         wallet={wallet}
         darkMode={darkMode}
         submitHandler={setCurrent}
-      />
-
-      {/*Photon*/}
-      <Screen
-        name="CreateChannel"
-        options={{headerTitle: 'Create Channel'}}
-        component={CreateChannel}
-      />
-      <Screen name="Scan" options={{headerTitle: 'Scan'}} component={Scan} />
-      <Screen
-        name="ReceivingCode"
-        options={{
-          headerTitle: 'ReceivingCode',
-          headerBackground: () => (
-            <View
-              style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#29DAD7',
-              }}
-            />
-          ),
-        }}
-        component={ReceivingCode}
-      />
-      <Screen
-        name="Payment"
-        options={{headerTitle: 'Photon Payment'}}
-        component={Payment}
-      />
-      <Screen
-        name="PhotonNetwork"
-        options={{headerTitle: 'Photon network'}}
-        component={PhotonNetwork}
-      />
-      <Screen
-        name="PhotonTransactionRecord"
-        options={{headerTitle: 'Transaction Record'}}
-        component={PhotonTransactionRecord}
-      />
-      <Screen
-        name="SupplementaryBalance"
-        options={{headerTitle: 'supplementary balance'}}
-        component={SupplementaryBalance}
-      />
-      <Screen
-        name="PhotonAddressContact"
-        options={{headerTitle: 'Address Contact'}}
-        component={PhotonAddressContact}
-      />
-      <Screen
-        name="PhotonTokenOption"
-        options={{headerTitle: 'Token option'}}
-        component={PhotonTokenOption}
-      />
-      {/*  NFT*/}
-      <Screen
-        name="CreateNFT"
-        options={{headerTitle: 'Create NFT'}}
-        component={CreateNFTV2}
-      />
-      <Screen
-        name="CreateNFTStep2"
-        options={{headerTitle: 'Create NFT'}}
-        component={CreateNFTStep2}
-      />
-      <Screen
-        name="CreateCollection"
-        options={{headerTitle: 'Create a Collection'}}
-        component={CreateCollection}
-      />
-      <Screen
-        name="CreateNewItem"
-        options={{headerTitle: 'Create New Item'}}
-        component={CreateNewItem}
-      />
-      <Screen
-        name="NFTDetails"
-        options={{headerTitle: 'NFT Details'}}
-        component={NFTDetails}
-      />
-      <Screen
-        name="NFTDetailNew"
-        options={{headerTitle: ''}}
-        component={NFTDetailNew}
-      />
-      <Screen
-        name="NFTList"
-        options={{headerTitle: 'Open Galaxy'}}
-        component={NFTList}
-      />
-      <Screen
-        name="MyNFTList"
-        options={{headerTitle: 'NFT'}}
-        component={MyNFTList}
       />
     </NavigationContainer>
   );
