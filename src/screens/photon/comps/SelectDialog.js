@@ -5,11 +5,11 @@
  */
 'use strict';
 import React, {memo} from 'react';
-import {SchemaStyles} from '../../../metalife-base';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 
 const SelectDialog = ({visible = false, listData = [], style, onPress}) => {
-  const {text, dialogBg} = SchemaStyles(),
+  const {text, dialogBg} = useSchemaStyles(),
     {container, itemText} = styles;
 
   if (!visible) {
