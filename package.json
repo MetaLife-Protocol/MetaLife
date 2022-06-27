@@ -33,8 +33,7 @@
     "metro script": "~~~~~~~~~~~~~~~ metro ~~~~~~~~~~~~~~~~",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint .",
-    "fix": "cd configs && sh fix.sh"
+    "lint": "eslint ."
   },
   "peerDependencies": {
     "react-native-ble-manager": "^8.0.2",
