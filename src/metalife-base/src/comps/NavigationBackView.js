@@ -9,11 +9,11 @@
 import React, {useCallback, useMemo} from 'react';
 import {Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import SchemaStyles from '../SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 
 const NavigationBackView = props => {
   const navigation = useNavigation();
-  const {theme} = SchemaStyles();
+  const {theme} = useSchemaStyles();
 
   const backImg = useMemo(() => {
     return !theme.dark

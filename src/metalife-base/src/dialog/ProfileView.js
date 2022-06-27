@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../SchemaStyles';
+import useSchemaStyles, {colorsSchema} from '../../../shared/UseSchemaStyles';
+
 import RoundBtn from '../comps/RoundBtn';
 import {useDialog} from './Dialog';
 
 export const ProfileView = ({value, holderText, submitHandler}) => {
-  const {row} = SchemaStyles(),
+  const {row} = useSchemaStyles(),
     {textHolder} = colorsSchema;
   const dialog = useDialog();
   const [valueLocal, setValueLocal] = useState(value);

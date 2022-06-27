@@ -1,9 +1,9 @@
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import SchemaStyles from '../SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 
 const HeaderLargeTitle = ({options: {title}, btnIcon, btnHandler}) => {
-  const {text, row, alignItemsCenter, justifySpaceBetween} = SchemaStyles(),
+  const {text, row, alignItemsCenter, justifySpaceBetween} = useSchemaStyles(),
     {container, header, headerTitle} = styles;
   return (
     <View style={[container]}>

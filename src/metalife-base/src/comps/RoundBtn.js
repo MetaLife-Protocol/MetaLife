@@ -3,7 +3,7 @@
  */
 import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableNativeFeedback, View} from 'react-native';
-import SchemaStyles from '../SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 
 const RoundBtn = ({title, press, disabled = false, style = null}) => {
   const [active, setActive] = useState(false);
@@ -14,7 +14,7 @@ const RoundBtn = ({title, press, disabled = false, style = null}) => {
     btnInactiveFG,
     btnDisabledBG,
     btnDisabledFG,
-  } = SchemaStyles();
+  } = useSchemaStyles();
   return (
     <TouchableNativeFeedback onPress={disabled ? null : press}>
       <View

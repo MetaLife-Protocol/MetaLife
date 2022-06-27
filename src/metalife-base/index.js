@@ -15,7 +15,7 @@ import DialogTitle from './src/dialog/DialogTitle';
 
 export {ProfileView} from './src/dialog/ProfileView';
 export * from './src/dialog/Dialog';
-export * from './src/SchemaStyles';
+// export * from './src/SchemaStyles';
 export * from './src/ThemeColors';
 export * from './src/utils/DateUtils';
 export * from './src/utils/NumberUtils';

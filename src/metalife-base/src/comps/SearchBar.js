@@ -1,4 +1,4 @@
-import SchemaStyles from '../SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {Image, Pressable, StyleSheet, TextInput, View} from 'react-native';
 import React, {useState} from 'react';
 
@@ -12,7 +12,7 @@ const iconDic = {
 
 const SearchBar = ({style}) => {
   const {FG, row, alignItemsCenter, flex1, input, text, placeholderTextColor} =
-      SchemaStyles(),
+      useSchemaStyles(),
     {container, img, inputS, clear} = styles;
 
   const [KW, setKW] = useState('');

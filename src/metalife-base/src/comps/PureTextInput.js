@@ -8,9 +8,9 @@
 
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
-import SchemaStyles from '../SchemaStyles';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 import {PhotonSeparator} from './PhotonSeparator';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 
 const PureTextInput = ({
   style,
@@ -23,7 +23,7 @@ const PureTextInput = ({
   rightComponent,
 }) => {
   const {flex1, text, placeholderTextColor, row, alignItemsCenter} =
-      SchemaStyles(),
+      useSchemaStyles(),
     {round, textInput} = styles;
   const [content, setContent] = useState(defaultValue);
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();

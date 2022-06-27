@@ -1,6 +1,6 @@
 'use strict';
 
-import SchemaStyles from '../SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {View} from 'react-native';
 import React from 'react';
 
@@ -11,7 +11,7 @@ import React from 'react';
  */
 
 export const PhotonSeparator = ({style}) => {
-  const {BG} = SchemaStyles();
+  const {BG} = useSchemaStyles();
   return (
     <View
       style={[

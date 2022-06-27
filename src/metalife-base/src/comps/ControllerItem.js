@@ -1,12 +1,13 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import SchemaStyles, {colorsSchema} from '../SchemaStyles';
+import useSchemaStyles, {colorsSchema} from '../../../shared/UseSchemaStyles';
+// import SchemaStyles, {colorsSchema} from '../SchemaStyles';
 
 /**
  * Created on 08 Nov 2021 by lonmee
  */
 const ControllerItem = ({children, title}) => {
-  const {row, alignItemsCenter} = SchemaStyles(),
+  const {row, alignItemsCenter} = useSchemaStyles(),
     {textHolder} = colorsSchema,
     {titleFont} = styles;
   return (
