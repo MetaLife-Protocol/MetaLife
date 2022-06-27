@@ -1,0 +1,133 @@
+diff --git a/node_modules/react-native-scrypt/android/build.gradle b/node_modules/react-native-scrypt/android/build.gradle
+index dac9cc5..417a7a0 100644
+--- a/node_modules/react-native-scrypt/android/build.gradle
++++ b/node_modules/react-native-scrypt/android/build.gradle
+@@ -54,6 +54,6 @@ repositories {
+ }
+ 
+ dependencies {
+-    compile 'com.facebook.react:react-native:+'
++    implementation 'com.facebook.react:react-native:+'
+ }
+
+diff --git a/node_modules/react-native-scrypt/index.d.ts b/node_modules/react-native-scrypt/index.d.ts
+index 20a1a1c..3f47e72 100644
+--- a/node_modules/react-native-scrypt/index.d.ts
++++ b/node_modules/react-native-scrypt/index.d.ts
+@@ -6,33 +6,25 @@
+ // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+ // TypeScript Version: 3.0
+ 
+-declare module 'react-native-scrypt' {
+-  function scrypt (
+-    password: string,
+-    salt: number[],
+-    cost?: number,
+-    blocksize?: number,
+-    parallel?: number,
+-    length?: number,
+-    encoding?: 'legacy'
+-  ): Promise<string>;
+-  function scrypt (
+-    password: Buffer,
+-    salt: Buffer,
+-    cost?: number,
+-    blocksize?: number,
+-    parallel?: number,
+-    length?: number,
+-    encoding?: 'buffer'
+-  ): Promise<Buffer>;
+-  function scrypt (
+-    password: string,
+-    salt: string,
+-    cost?: number,
+-    blocksize?: number,
+-    parallel?: number,
+-    length?: number,
+-    encoding?: 'hex' | 'base64'
+-  ): Promise<string>;
+-  export default scrypt
+-}
++export as namespace scrypt;
++
++export type ProgressCallback = (progress: number) => boolean | void;
++
++export function scrypt(
++    password: ArrayLike<number>,
++    salt: ArrayLike<number>,
++    N: number,
++    r: number,
++    p: number,
++    dkLen: number,
++    callback?: ProgressCallback
++): Promise<Uint8Array>;
++
++export function syncScrypt(
++    password: ArrayLike<number>,
++    salt: ArrayLike<number>,
++    N: number,
++    r: number,
++    p: number,
++    dkLen: number
++): Uint8Array;
+diff --git a/node_modules/react-native-scrypt/index.js b/node_modules/react-native-scrypt/index.js
+index f55e831..e1af14d 100644
+--- a/node_modules/react-native-scrypt/index.js
++++ b/node_modules/react-native-scrypt/index.js
+@@ -32,7 +32,7 @@ const bitArrayToBuffer = array => {
+   return out
+ }
+ 
+-export default async function scrypt (passwd, salt, N = 16384, r = 8, p = 1, dkLen = 64, encoding = 'legacy') {
++async function _scrypt (passwd, salt, N = 16384, r = 8, p = 1, dkLen = 64, encoding = 'legacy') {
+   let encodedInput = passwd
+   let encodedSalt = salt
+   if (encoding === 'legacy') {
+@@ -51,3 +51,46 @@ export default async function scrypt (passwd, salt, N = 16384, r = 8, p = 1, dkL
+   else if (encoding === 'buffer') return Buffer.from(result, 'hex')
+   else return result
+ }
++
++(function(root) {
++  const lib = {
++      scrypt: function(password, salt, N, r, p, dkLen, progressCallback) { 
++        return new Promise(function(resolve, reject) {
++              if (progressCallback) { progressCallback(0); }
++              _scrypt(Buffer.from(password), Buffer.from(salt), N, r, p, dkLen, 'buffer').then(res=>{
++                if (progressCallback) { progressCallback(1); }
++                resolve(Buffer.from(res, 'hex'));
++              })
++              .catch(err=>{
++                console.error(err)
++                reject(err);
++              })
++          });
++      },
++      syncScrypt:async function(password, salt, N, r, p, dkLen) {
++          return Buffer.from(await _scrypt(password, salt, N, r, p, dkLen, 'buffer'), 'hex');
++      }
++  };
++
++  // node.js
++  if (typeof(exports) !== 'undefined') {
++     module.exports = lib;
++
++  // RequireJS/AMD
++  // http://www.requirejs.org/docs/api.html
++  // https://github.com/amdjs/amdjs-api/wiki/AMD
++  } else if (typeof(define) === 'function' && define.amd) {
++      define(lib);
++
++  // Web Browsers
++  } else if (root) {
++
++      // If there was an existing library "scrypt", make sure it is still available
++      if (root.scrypt) {
++          root._scrypt = root.scrypt;
++      }
++
++      root.scrypt = lib;
++  }
++
++})(this);
+\ No newline at end of file
