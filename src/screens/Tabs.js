@@ -14,6 +14,7 @@ import HeaderProfiles from './tabs/profiles/HeaderProfiles';
 import HeaderRightBtn from './tabs/HeaderRightBtn';
 import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import {HeaderIcons} from '../shared/Icons';
 
 const iconDic = {
   Home_icon_Default: require('../assets/image/tabBtn/Home_icon_Default.png'),
@@ -28,13 +29,6 @@ const iconDic = {
   Profiles_icon_Selected: require('../assets/image/tabBtn/Profiles_icon_Selected.png'),
 };
 
-const headerBtnIconDic = {
-  addWhite: require('../assets/image/headerBtn/contacts_icon_add_white.png'),
-  addBlack: require('../assets/image/headerBtn/contacts_icon_add_black.png'),
-  home_add: require('../assets/image/headerBtn/home_icon_add.png'),
-  messageAdd: require('../assets/image/headerBtn/Message_icon_add.png'),
-};
-
 function Ionicons({name, focused, color, size}) {
   return (
     <Image
@@ -43,15 +37,59 @@ function Ionicons({name, focused, color, size}) {
   );
 }
 
-const Tabs = ({darkMode}) => {
-  const addIcon = darkMode
-    ? headerBtnIconDic.addWhite
-    : headerBtnIconDic.addBlack;
+const Tabs = ({darkMode, showPullMenu}) => {
+  const contactAddIcon = darkMode
+    ? HeaderIcons.contactAddIconWhite
+    : HeaderIcons.contactAddIconBlack;
   const {navigate} = useNavigation();
-  const goScreen = screenName => () => navigate(screenName);
-  const Tab = createBottomTabNavigator();
+  const {Navigator, Screen} = createBottomTabNavigator();
+  function goScreen(name, params) {
+    navigate(name, params);
+  }
+
+  function menuHandler(e) {
+    e.target.measure((x, y, width, height, pageX, pageY) =>
+      showPullMenu({
+        position: {
+          x: pageX - width - 30,
+          y: pageY + height,
+        },
+        buttons: [
+          {
+            title: 'Create nft',
+            handler: () => {
+              goScreen('');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+          {
+            title: 'Post article',
+            handler: () => {
+              goScreen('PostMsgEditor');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+          {
+            title: 'Add friend',
+            handler: () => {
+              goScreen('PeersScreen');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+          {
+            title: 'QR code',
+            handler: () => {
+              goScreen('');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+        ],
+      }),
+    );
+  }
+
   return (
-    <Tab.Navigator
+    <Navigator
       initialRouteName={'Home'}
       screenOptions={({route}) => ({
         tabBarIcon: ({focused, color, size}) => (
@@ -63,7 +101,7 @@ const Tabs = ({darkMode}) => {
           />
         ),
       })}>
-      <Tab.Screen
+      <Screen
         name={'Home'}
         component={Home}
         options={{
@@ -74,14 +112,14 @@ const Tabs = ({darkMode}) => {
           headerTitleStyle: [{fontSize: 34}],
           headerRight: props => (
             <HeaderRightBtn
-              btnIcon={headerBtnIconDic.home_add}
-              btnHandler={goScreen('PostMsgEditor')}
+              btnIcon={HeaderIcons.home_add}
+              btnHandler={menuHandler}
             />
           ),
           headerRightContainerStyle: [{right: 19}],
         }}
       />
-      <Tab.Screen
+      <Screen
         name={'Messages'}
         component={Messages}
         options={{
@@ -91,37 +129,31 @@ const Tabs = ({darkMode}) => {
           headerTitleStyle: [{fontSize: 34}],
           headerRight: props => (
             <HeaderRightBtn
-              btnIcon={headerBtnIconDic.messageAdd}
-              btnHandler={goScreen('FriendList')}
+              btnIcon={HeaderIcons.messageAdd}
+              btnHandler={() => goScreen('FriendList')}
             />
           ),
           headerRightContainerStyle: [{right: 19}],
         }}
       />
-      <Tab.Screen
+      <Screen
         name={'Contacts'}
         component={Contacts}
         options={{
           title: I18n.t('Contacts'),
-          // header: props =>
-          //   HeaderLargeTitle({
-          //     ...props,
-          //     btnIcon: addIcon,
-          //     btnHandler: goScreen('SubScreen'),
-          //   }),
           headerTitleAlign: 'left',
           headerTitleAllowFontScaling: true,
           headerTitleStyle: [{fontSize: 34}],
           headerRight: props => (
             <HeaderRightBtn
-              btnIcon={addIcon}
-              btnHandler={goScreen('PeersScreen')}
+              btnIcon={contactAddIcon}
+              btnHandler={() => goScreen('PeersScreen')}
             />
           ),
           headerRightContainerStyle: [{right: 19}],
         }}
       />
-      <Tab.Screen
+      <Screen
         name={'Discover'}
         component={Discover}
         options={{
@@ -131,7 +163,7 @@ const Tabs = ({darkMode}) => {
           headerTitleStyle: [{fontSize: 34}],
         }}
       />
-      <Tab.Screen
+      <Screen
         name={'Profiles'}
         component={Profiles}
         options={{
@@ -139,10 +171,16 @@ const Tabs = ({darkMode}) => {
           header: () => <HeaderProfiles />,
         }}
       />
-    </Tab.Navigator>
+    </Navigator>
   );
 };
 
 const msp = s => s.cfg;
 
-export default connect(msp)(Tabs);
+const mdp = d => {
+  return {
+    showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
+  };
+};
+
+export default connect(msp, mdp)(Tabs);

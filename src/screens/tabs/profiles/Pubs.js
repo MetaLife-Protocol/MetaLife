@@ -4,13 +4,15 @@
 import React, {useState} from 'react';
 import {
   Image,
+  Keyboard,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   TextInput,
   View,
 } from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../../shared/SchemaStyles';
+import useSchemaStyles, {colorsSchema} from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import Section from '../../../shared/comps/Section';
 import {
@@ -18,14 +20,30 @@ import {
   getConnectedPeers,
   inviteAccept,
   persistentConnectPeer,
-} from '../../../remote/ssbOP';
+} from '../../../remote/ssb/ssbOP';
 import Toast from 'react-native-tiny-toast';
-import {PlusBlack, PlusWhite} from '../../../shared/Icons';
 import ControllerItem from '../../../shared/comps/ControllerItem';
-import PeerItem from '../contacts/item/PeerItem';
+import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
+import {HeaderIcons} from '../../../shared/Icons';
+import RoundBtn from '../../../shared/comps/RoundBtn';
 
-const Pubs = ({darkMode, pubs, addPub}) => {
-  const {flex1, row, alignItemsCenter, text, marginTop10} = SchemaStyles(),
+const presetPubs = [
+  {
+    name: 'MetaLife Planet 1',
+    key: '@1qF7giAqTYBuAUbFsO13ezRy1WhKvwcX23II65jwxUc=.ed25519',
+    invite:
+      '106.52.171.12:8008:@1qF7giAqTYBuAUbFsO13ezRy1WhKvwcX23II65jwxUc=.ed25519~bZ/KKsdDMq+FdcjePXEBaRG81BP4mVnO2NfSLOkg46g=',
+  },
+  {
+    name: 'MetaLife Planet 2',
+    key: '@HZnU6wM+F17J0RSLXP05x3Lag2jGv3F3LzHMjh72coE=.ed25519',
+    invite:
+      '54.179.3.93:8008:@HZnU6wM+F17J0RSLXP05x3Lag2jGv3F3LzHMjh72coE=.ed25519~9Ax3nlgD6lyRVsrkwJYgGSFqsnSjYYR8KEofw160Ht4=',
+  },
+];
+
+const Pubs = ({darkMode, infoDic, pubs}) => {
+  const {flex1, row, alignItemsCenter, text, marginTop10} = useSchemaStyles(),
     {textHolder} = colorsSchema,
     {invite} = styles;
   const [code, setCode] = useState('');
@@ -44,7 +62,6 @@ const Pubs = ({darkMode, pubs, addPub}) => {
         ) {
           tAddr.pop();
           const tarAddr = tAddr.join(':');
-          addPub(tarAddr);
           disconnectPeer(addr, () => persistentConnectPeer(tarAddr, {type}));
         }
       });
@@ -53,36 +70,86 @@ const Pubs = ({darkMode, pubs, addPub}) => {
 
   return (
     <SafeAreaView>
-      <Section style={[marginTop10]} title={'Adding an invitation'}>
-        <ControllerItem>
-          <View style={[row, alignItemsCenter]}>
-            <TextInput
-              style={[invite, text, flex1]}
-              value={code}
-              placeholder={'Redeem an Invitation'}
-              placeholderTextColor={textHolder}
-              onChangeText={setCode}
-            />
-            <Pressable
-              onPress={() => {
-                inviteAccept(code, (e, v) => {
-                  Toast.showSuccess(e ? e.message : 'invite accepted');
-                  e || reconnect2pub();
-                });
-                setCode('');
-              }}>
-              <Image source={darkMode ? PlusWhite : PlusBlack} />
-            </Pressable>
-          </View>
-        </ControllerItem>
-      </Section>
-      {pubs.length && (
-        <Section style={[marginTop10]} title={'Your pubs'}>
-          {pubs.map((pObj, i) => (
-            <PeerItem pObj={pObj} key={i} />
-          ))}
+      <ScrollView>
+        <Section style={[marginTop10]} title={'Adding an invitation'}>
+          <ControllerItem>
+            <View style={[row, alignItemsCenter]}>
+              <TextInput
+                style={[invite, text, flex1]}
+                value={code}
+                placeholder={'Redeem an Invitation'}
+                placeholderTextColor={textHolder}
+                onChangeText={setCode}
+              />
+              <Pressable
+                onPress={() => {
+                  inviteAccept(code, (e, v) => {
+                    Toast.showSuccess(e ? e.message : 'invite accepted');
+                    e || reconnect2pub();
+                  });
+                  setCode('');
+                  Keyboard.dismiss();
+                }}>
+                <Image
+                  source={
+                    darkMode ? HeaderIcons.PlusWhite : HeaderIcons.PlusBlack
+                  }
+                />
+              </Pressable>
+            </View>
+          </ControllerItem>
         </Section>
-      )}
+        {pubs.length > 0 && (
+          <Section
+            style={[marginTop10]}
+            title={'Your pubs'}
+            separator={NormalSeparator}>
+            {pubs.map(
+              ({
+                timestamp,
+                content: {
+                  address: {host, key},
+                },
+              }) => (
+                <ControllerItem
+                  key={key}
+                  title={(infoDic[key] && infoDic[key].name) || key}
+                />
+              ),
+            )}
+          </Section>
+        )}
+        {presetPubs.length > 0 && (
+          <Section
+            style={[marginTop10]}
+            title={'Presets'}
+            separator={NormalSeparator}>
+            {presetPubs.map(({name, key, invite}) => (
+              <ControllerItem key={key} title={name}>
+                <RoundBtn
+                  style={[{height: 24, marginRight: 0}]}
+                  title={'Connect'}
+                  disabled={
+                    pubs.filter(
+                      ({
+                        content: {
+                          address: {key: pKey},
+                        },
+                      }) => pKey === key,
+                    ).length !== 0
+                  }
+                  press={() => {
+                    inviteAccept(invite, (e, v) => {
+                      Toast.showSuccess(e ? e.message : 'invite accepted');
+                      e || reconnect2pub();
+                    });
+                  }}
+                />
+              </ControllerItem>
+            ))}
+          </Section>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -98,15 +165,14 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     darkMode: s.cfg.darkMode,
-    pubs: s.user.pubs,
-    stagedPeers: s.contacts.stagedPeers,
+    infoDic: s.info,
+    pubs: s.pubs,
+    stagedPeers: s.contact.stagedPeers,
   };
 };
 
 const mdp = d => {
-  return {
-    addPub: v => d({type: 'addPub', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(Pubs);

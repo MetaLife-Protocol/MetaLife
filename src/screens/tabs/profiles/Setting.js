@@ -1,7 +1,7 @@
 /**
  * Created on 08 Nov 2021 by lonmee
  */
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   Pressable,
@@ -10,60 +10,52 @@ import {
   Switch,
   Text,
 } from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ControllerItem from '../../../shared/comps/ControllerItem';
 import I18n from '../../../i18n/I18n';
 import Section from '../../../shared/comps/Section';
 import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {setAbout} from '../../../remote/ssbOP';
+import {setAbout, setAboutImage} from '../../../remote/ssb/ssbOP';
 import Toast from 'react-native-tiny-toast';
 import {ProfileModal} from './modal/ProfileModal';
-import {checkAndLaunchCamera} from '../../../utils';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import {ArrowImage} from '../../../shared/Icons';
 import {useNavigation} from '@react-navigation/native';
+import {cameraHandlerWithCrop, photoHandlerWithCrop} from '../../../utils';
 
 const HolderIcon = require('../../../assets/image/profiles/setting_icon_add.png');
 
 const Setting = ({
   cfg: {darkMode, lang, verbose},
   feedId,
-  peerInfoDic,
+  infoDic,
   setDarkMode,
   setLang,
   setVerbose,
 }) => {
-  const {flex1, alignItemsCenter, marginTop10, text} = SchemaStyles();
+  const {flex1, alignItemsCenter, marginTop10, text} = useSchemaStyles();
 
-  const {name, description, image} = peerInfoDic[feedId] || {};
+  const {name, description, image} = infoDic[feedId] || {};
 
   const {navigate} = useNavigation();
 
   const [pnVisible, setPnVisible] = useState(false),
     [pdVisible, setPdVisible] = useState(false);
 
-  const submit = useCallback(
-    (type, value) =>
-      setAbout(feedId, {...peerInfoDic[feedId], [type]: value}, () =>
-        Toast.show(type + ' submitted'),
-      ),
-    [peerInfoDic],
-  );
+  function headerIconSubmit({path}) {
+    submit('image', path.replace('file://', ''));
+  }
 
-  const checkCamera2Launch = useCallback(
-    () => checkAndLaunchCamera(cameraHandler),
-    [],
-  );
-
-  function cameraHandler({didCancel, errorCode, errorMessage, assets}) {
-    if (errorCode || didCancel) {
-      return errorCode && Toast.show(errorMessage);
-    }
-    const [file] = assets;
-    submit('image', file.uri.replace('file://', ''));
+  function submit(type, value) {
+    type === 'image'
+      ? setAboutImage(feedId, {...infoDic[feedId], [type]: value}, () =>
+          Toast.show(type + ' submitted'),
+        )
+      : setAbout(feedId, {...infoDic[feedId], [type]: value}, () =>
+          Toast.show(type + ' submitted'),
+        );
   }
 
   return (
@@ -84,20 +76,8 @@ const Setting = ({
       />
       <ScrollView>
         <Pressable
-          onPress={checkCamera2Launch}
-          onLongPress={() =>
-            launchImageLibrary(
-              {
-                cameraType: 'front',
-                maxHeight: 1920,
-                maxWidth: 1080,
-                quality: 0.88,
-                mediaType: 'photo',
-                selectionLimit: 1,
-              },
-              cameraHandler,
-            )
-          }>
+          onPress={() => cameraHandlerWithCrop(headerIconSubmit)}
+          onLongPress={() => photoHandlerWithCrop(headerIconSubmit)}>
           <Section style={[marginTop10, alignItemsCenter, {marginBottom: -10}]}>
             <HeadIcon
               width={90}
@@ -107,20 +87,30 @@ const Setting = ({
           </Section>
         </Pressable>
         <Section separator={NormalSeparator}>
-          <Pressable onPress={() => setPnVisible(true)}>
+          <Pressable onPress={() => setPnVisible(true)} hitSlop={10}>
             <ControllerItem title={'Nickname'}>
               <Text style={[text]}>{name}</Text>
             </ControllerItem>
           </Pressable>
-          <Pressable onPress={() => setPdVisible(true)}>
+          <Pressable onPress={() => setPdVisible(true)} hitSlop={10}>
             <ControllerItem title={'Introduction'}>
               <Text style={[text]}>{description}</Text>
             </ControllerItem>
           </Pressable>
+          <Pressable onPress={() => navigate('AvatarEditor')} hitSlop={10}>
+            <ControllerItem title={'Avatar'}>
+              <Image source={ArrowImage} />
+            </ControllerItem>
+          </Pressable>
         </Section>
         <Section style={[marginTop10]} separator={NormalSeparator}>
-          <Pressable onPress={() => navigate('Pubs')}>
+          <Pressable onPress={() => navigate('Pubs')} hitSlop={10}>
             <ControllerItem title={'Connect PUB'}>
+              <Image source={ArrowImage} />
+            </ControllerItem>
+          </Pressable>
+          <Pressable onPress={() => navigate('Mnemonic')} hitSlop={10}>
+            <ControllerItem title={'Mnemonic'}>
               <Image source={ArrowImage} />
             </ControllerItem>
           </Pressable>
@@ -173,7 +163,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     feedId: s.user.feedId,
-    peerInfoDic: s.contacts.peerInfoDic,
+    infoDic: s.info,
   };
 };
 

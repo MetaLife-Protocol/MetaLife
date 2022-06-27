@@ -1,48 +1,45 @@
-import React, {useLayoutEffect} from 'react';
-import {FlatList, SafeAreaView, StyleSheet} from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import React, {useEffect, useLayoutEffect} from 'react';
+import {FlatList, Modal, SafeAreaView, StyleSheet} from 'react-native';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {trainProfileFeed} from '../../../remote/ssbAPI';
-import ItemAgent from '../home/ItemAgent';
+import ItemAgent from '../home/post/ItemAgent';
 import PeerDetailsHeader from './details/PeerDetailsHeader';
-import {batchMsgCB, checkMarkedMsgCB} from '../../../remote/ssb/MsgCB';
+import {trainFeed} from '../../../remote/ssb/ssbAPI';
+import {batchMsgCB} from '../../../store/MsgCB';
+import {useDispatch} from 'react-redux';
 
-const PeerDetailsScreen = ({
-  verbose,
-  selfFeedId,
-  relations,
-  peerInfoDic,
-  feedDic,
-  mergeFeedDic,
-}) => {
-  const {flex1} = SchemaStyles(),
+const PeerDetailsScreen = ({verbose, selfFeedId, relations, info, feed}) => {
+  const {flex1} = useSchemaStyles(),
     {} = styles;
 
   const {setOptions} = useNavigation(),
-    {params: feedId} = useRoute();
+    {params: feedId} = useRoute(),
+    dispatch = useDispatch();
 
   const isMyself = selfFeedId === feedId,
-    {name} = peerInfoDic[feedId] || {},
+    {name} = info[feedId] || {},
     myBlock = relations[3],
     isMyBlock = myBlock.includes(feedId);
 
   useLayoutEffect(() => {
     setOptions({title: name || feedId});
-    isMyBlock ||
-      (console.log('peer details addon ->'),
-      trainProfileFeed(
-        feedId,
-        feedDic[feedId],
-        idFeed =>
-          idFeed.feed.length && (batchMsgCB(idFeed.feed), mergeFeedDic(idFeed)),
-      ));
   }, []);
+
+  useEffect(() => {
+    isMyBlock ||
+      trainFeed(feedId, feed, idMsgs =>
+        dispatch({
+          type: 'appendFeed',
+          payload: batchMsgCB(idMsgs),
+        }),
+      );
+  }, [isMyBlock]);
 
   return (
     <SafeAreaView style={[flex1]}>
       <FlatList
-        data={feedDic[feedId]}
+        data={feed[feedId]}
         keyExtractor={(_, i) => i}
         ListHeaderComponent={<PeerDetailsHeader />}
         renderItem={info => <ItemAgent info={info} verbose={verbose} />}
@@ -58,15 +55,13 @@ const msp = s => {
     verbose: s.cfg.verbose,
     selfFeedId: s.user.feedId,
     relations: s.user.relations,
-    peerInfoDic: s.contacts.peerInfoDic,
-    feedDic: s.msg.feedDic,
+    info: s.info,
+    feed: s.feed,
   };
 };
 
 const mdp = d => {
-  return {
-    mergeFeedDic: v => d({type: 'mergeFeedDic', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(PeerDetailsScreen);

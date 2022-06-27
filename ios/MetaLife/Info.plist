@@ -17,15 +17,19 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
 		<key>NSExceptionDomains</key>
 		<dict>
 			<key>localhost</key>
@@ -35,8 +39,34 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Social needs</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Offline Chat Usage</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Communication needs</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Social needs</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Head icon &amp; post image usage</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Social needs</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Offline Chat Usage</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Discover peers around</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Take video</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Social needs</string>
+	<key>NSNearbyInteractionUsageDescription</key>
+	<string>Communication needs</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Head icon &amp; post image usage</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Head icon &amp; post image usage</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Social needs</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -46,18 +76,10 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Head icon &amp; post image usage</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Head icon &amp; post image usage</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Head icon &amp; post image usage</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Take video</string>
+	<key>kTCCServiceMediaLibrary</key>
+	<string>Social needs</string>
 </dict>
 </plist>

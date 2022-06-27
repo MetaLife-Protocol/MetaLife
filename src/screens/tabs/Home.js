@@ -1,172 +1,102 @@
-import React, {useCallback, useEffect} from 'react';
-import {AppState, FlatList, SafeAreaView} from 'react-native';
-import SchemaStyles from '../../shared/SchemaStyles';
+import React, {useEffect, useState} from 'react';
+import {Pressable, ScrollView, StyleSheet, Text} from 'react-native';
+import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
-import * as ssbOP from '../../remote/ssbOP';
-import {
-  addPrivateUpdatesListener,
-  addPublicUpdatesListener,
-  connStart,
-  getProfile,
-  graph,
-  loadMsg,
-  replicationSchedulerStart,
-  reqStartSSB,
-  stage,
-  suggestStart,
-} from '../../remote/ssbOP';
-import {
-  batchMsgCB,
-  checkMarkedMsgCB,
-  markMsgCBByType,
-} from '../../remote/ssb/MsgCB';
-import ItemAgent from './home/ItemAgent';
-import {trainRangeFeed, trainFeed} from '../../remote/ssbAPI';
+import {useTimer} from '../../shared/Hooks';
+import {getConnectedPeers} from '../../remote/ssb/ssbOP';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import Section from '../../shared/comps/Section';
+import ItemAgent from './home/post/ItemAgent';
+import SearchBar from '../../shared/comps/SearchBar';
+import FriendItem from './contacts/item/FriendItem';
 
-const Home = ({
-  cfg: {verbose},
-  feedId,
-  setFeedId,
-  relations,
-  feedDic,
-  addPeerInfo,
-  setFriendsGraph,
-  publicMsg,
-  addPublicMsg,
-  appendFeedDic,
-  setPrivateMsg,
-  mergeFeedDic,
-  removeFeedDic,
-  setVote,
-}) => {
-  const {flex1} = SchemaStyles(),
-    [myFriends, myFollowing] = relations;
+const Home = ({cfg: {verbose}, publicMsg, setConnectedPeers}) => {
+  const {BG} = useSchemaStyles(),
+    {searchBar} = styles;
+  const {navigate, setOptions, getState} = useNavigation();
+  const [result, setResult] = useState([]);
+  const [KW, setKW] = useState('');
+
+  useFocusEffect(() => {
+    setOptions({tabBarBadge: null});
+  });
 
   useEffect(() => {
-    // promise demo
-    // foo().then(console.log).catch(console.warn);
-    window.ssb ||
-      reqStartSSB(ssb => {
-        /******** ssb started handlers ********/
-        ssbOP.ssb = window.ssb = ssb;
-        setFeedId(ssb.id);
-        // setup conn
-        connStart(v => {
-          console.log(v ? 'conn start' : 'conn started yet');
-          // put online
-          stage(v => console.log(v ? 'peer stage' : 'peer staged yet'));
+    getState().index !== 0 && setOptions({tabBarBadge: ''});
+  }, [publicMsg]);
 
-          replicationSchedulerStart(v =>
-            console.log('replicationSchedulerStart: ', v),
-          );
-          suggestStart(v => console.log('suggestStart: ', v));
-          console.log('launching addon ->');
-          trainRangeFeed([...myFriends, ...myFollowing], feedDic, idFeed =>
-            mergeFeedDic(batchMsgCB(idFeed)),
-          );
-          /******** msg handlers ********/
-          addPublicUpdatesListener(key =>
-            loadMsg(key, false, publicMsgHandler),
-          );
-          addPrivateUpdatesListener(key =>
-            loadMsg(key, true, (err, msg) => err || setPrivateMsg(msg)),
-          );
-        });
-        /******** msg checker ********/
-        markMsgCBByType('contact', contactMsgHandler);
-        markMsgCBByType('about', (_, {about}) =>
-          getProfile(about, v => addPeerInfo([about, v])),
-        );
-        markMsgCBByType('vote', (author, content) =>
-          setVote({author, content}),
-        );
-        markMsgCBByType('post', (author, content) =>
-          addPublicMsg({author, content}),
-        );
-      });
-    /******** app state handlers ********/
-    AppState.addEventListener('change', appStateChangeHandler);
-  }, []);
+  useTimer(() => getConnectedPeers(setConnectedPeers), 10 * 1000, [], false);
 
-  const appStateChangeHandler = useCallback(
-    state => {
-      switch (state) {
-        case 'active':
-          console.log('active addon ->');
-          trainRangeFeed([...myFriends, ...myFollowing], feedDic, mergeFeedDic);
-          break;
-        case 'inactive':
-          break;
-      }
-    },
-    [relations, feedDic],
-  );
-
-  const publicMsgHandler = useCallback(
-    (err, {messages, full}) => {
-      if (!err) {
-        const {author, sequence} = messages[0].value;
-        const feedSeq =
-          (feedDic[author] && feedDic[author][0][0].value.sequence) || 0;
-        sequence === feedSeq + 1
-          ? appendFeedDic(checkMarkedMsgCB(messages))
-          : trainFeed(author, feedDic, idFeed =>
-              mergeFeedDic(batchMsgCB(idFeed)),
-            );
-      }
-    },
-    [feedDic],
-  );
-
-  const contactMsgHandler = useCallback(
-    (author, {following, contact}) => {
-      if (author === feedId) {
-        following
-          ? (console.log(`following ${contact.substring(1, 6)} addon ->`),
-            trainFeed(contact, feedDic, idFeed =>
-              mergeFeedDic(batchMsgCB(idFeed)),
-            ))
-          : removeFeedDic(contact);
-      }
-      graph(setFriendsGraph);
-    },
-    [feedDic],
-  );
+  function changeTextHandler(text) {
+    setKW(text);
+    setResult(text ? [] : []);
+  }
 
   return (
-    <SafeAreaView style={[flex1]}>
-      <FlatList
-        data={[...publicMsg].reverse()}
-        keyExtractor={(_, index) => index}
-        renderItem={info => <ItemAgent info={info} verbose={verbose} />}
+    <ScrollView style={BG}>
+      <SearchBar
+        style={[searchBar]}
+        placeholder={'contact id or nickname'}
+        changeTextHandler={changeTextHandler}
       />
-    </SafeAreaView>
+      {result.length > 0 || KW !== '' ? (
+        <Section key={0} title={'Search'}>
+          {result.map((key, i) => (
+            <FriendItem fId={key} key={i} />
+          ))}
+        </Section>
+      ) : (
+        <>
+          <Section
+            title={'Feed'}
+            rightBtn={
+              <Pressable onPress={() => navigate('Post')}>
+                <Text style={[{color: colorsBasics.primary, marginRight: 20}]}>
+                  More
+                </Text>
+              </Pressable>
+            }>
+            {publicMsg
+              .concat()
+              .splice(0, 5)
+              .map(info => (
+                <ItemAgent
+                  key={info.key}
+                  info={{item: info}}
+                  verbose={verbose}
+                />
+              ))}
+          </Section>
+          <Section
+            title={'NFT'}
+            rightBtn={
+              <Pressable onPress={() => navigate('Post')}>
+                <Text style={[{color: colorsBasics.primary, marginRight: 20}]}>
+                  More
+                </Text>
+              </Pressable>
+            }
+          />
+        </>
+      )}
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  searchBar: {marginVertical: 10},
+});
 
 const msp = s => {
   return {
     cfg: s.cfg,
-    feedId: s.user.feedId,
-    relations: s.user.relations,
-    publicMsg: s.msg.publicMsg,
-    feedDic: s.msg.feedDic,
+    publicMsg: s.public,
   };
 };
 
 const mdp = d => {
   return {
-    setFeedId: v => d({type: 'setFeedId', payload: v}),
-    addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
-    setPublicMsg: v => d({type: 'setPublicMsg', payload: v}),
-    appendFeedDic: v => d({type: 'appendFeedDic', payload: v}),
-    addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
-    setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),
-    addPrivateMsg: v => d({type: 'addPrivateMsg', payload: v}),
-    setVote: v => d({type: 'setVote', payload: v}),
-    setFriendsGraph: v => d({type: 'setFriendsGraph', payload: v}),
-    mergeFeedDic: v => d({type: 'mergeFeedDic', payload: v}),
-    removeFeedDic: v => d({type: 'removeFeedDic', payload: v}),
+    setConnectedPeers: v => d({type: 'setConnectedPeers', payload: v}),
   };
 };
 

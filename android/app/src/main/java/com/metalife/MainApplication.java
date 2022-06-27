@@ -2,16 +2,20 @@ package com.metalife;
 
 import android.app.Application;
 import android.content.Context;
+import android.webkit.WebView;
+
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.reactlibrary.PhotonApplication;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends PhotonApplication implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost =
       new ReactNativeHost(this) {
@@ -57,6 +61,7 @@ public class MainApplication extends Application implements ReactApplication {
   private static void initializeFlipper(
       Context context, ReactInstanceManager reactInstanceManager) {
     if (BuildConfig.DEBUG) {
+        WebView.setWebContentsDebuggingEnabled(true);
       try {
         /*
          We use reflection here to pick up the class that initializes Flipper,

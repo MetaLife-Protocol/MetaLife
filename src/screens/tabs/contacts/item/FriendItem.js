@@ -1,22 +1,17 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {findRootKey} from '../../../../filters/MsgFilters';
+import {findRootKey} from '../../../../store/filters/MsgFilters';
+import {PeerIcons} from '../../../../shared/Icons';
 
-const iconDic = {
-  peerIcon: require('../../../../assets/image/contacts/peer_icon.png'),
-  daoIcon: require('../../../../assets/image/contacts/dao_icon.png'),
-  nftIcon: require('../../../../assets/image/contacts/nft_icon.png'),
-};
-
-const FriendItem = ({fId, peerInfoDic, privateMsg}) => {
-  const {row, flex1, text} = SchemaStyles();
+const FriendItem = ({fId, infoDic, privateMsg, pubs, connectedPeers}) => {
+  const {row, flex1, text} = useSchemaStyles();
   const {textContainer, item, title, desc} = styles;
-  const {name = '', description = '', image = ''} = peerInfoDic[fId] || {},
+  const {name = '', description = '', image = ''} = infoDic[fId] || {},
     {replace, push} = useNavigation(),
     {name: routeName} = useRoute();
 
@@ -32,7 +27,17 @@ const FriendItem = ({fId, peerInfoDic, privateMsg}) => {
       }>
       <View style={[item, row, flex1]}>
         <HeadIcon
-          image={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
+          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
+          pub={
+            pubs.filter(
+              ({
+                content: {
+                  address: {key},
+                },
+              }) => key === fId,
+            ).length > 0
+          }
+          online={connectedPeers.filter(([_, {key}]) => key === fId)}
         />
         <View style={[textContainer]}>
           <Text numberOfLines={1} style={[title, text]}>
@@ -73,15 +78,15 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     cfg: s.cfg,
-    peerInfoDic: s.contacts.peerInfoDic,
-    privateMsg: s.msg.privateMsg,
+    infoDic: s.info,
+    privateMsg: s.private,
+    pubs: s.pubs,
+    connectedPeers: s.contact.connectedPeers,
   };
 };
 
 const mdp = d => {
-  return {
-    addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(FriendItem);

@@ -4,17 +4,17 @@ import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
 import Toast from 'react-native-tiny-toast';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
-import {block, follow} from '../../../../remote/ssbOP';
-import {markMsgCBByKey} from '../../../../remote/ssb/MsgCB';
-import {findRootKey} from '../../../../filters/MsgFilters';
+import {block, follow} from '../../../../remote/ssb/ssbOP';
+import {markMsgCBByKey} from '../../../../store/MsgCB';
+import {findRootKey} from '../../../../store/filters/MsgFilters';
 import React, {useState} from 'react';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
   friendsGraphParse,
   mutualFriend,
-} from '../../../../filters/ContactsFilters';
+} from '../../../../store/filters/ContactsFilters';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
 /**
@@ -25,17 +25,18 @@ const PeerDetailsHeader = ({
   selfFeedId,
   friendsGraph,
   relations,
-  peerInfoDic,
+  infoDic,
   privateMsg,
+  setViewImages,
 }) => {
-  const {row, flex1, justifySpaceBetween, text} = SchemaStyles(),
+  const {row, flex1, justifySpaceAround, text} = useSchemaStyles(),
     {textContainer, item, title, desc, btn} = styles;
 
   const {navigate, push} = useNavigation(),
     {params: feedId} = useRoute();
 
   const isMyself = selfFeedId === feedId,
-    {name, description, image} = peerInfoDic[feedId] || {},
+    {name, description, image} = infoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations,
     [friends, following, follower, blockList, blocked, other] =
       friendsGraphParse(friendsGraph, feedId),
@@ -46,26 +47,57 @@ const PeerDetailsHeader = ({
 
   const [disabledBlock, setDisabledBlock] = useState(false);
   const [disabledFollow, setDisabledFollow] = useState(false);
+  const [showId, setShowId] = useState(false);
   const {setString} = nativeClipboard;
 
   function peerListHandler(title, list) {
     push('PeersListScreen', {title, list});
   }
 
+  const viewImagesHandler = url =>
+    setViewImages({
+      imgs: [url],
+    });
+
+  // {avatar ? (
+  //     <View style={[{height: height, width: width}, ...style]}>
+  //       <WebView
+  //           ref={webview}
+  //           containerStyle={[{borderRadius: height << 1}]}
+  //           scrollEnabled={false}
+  //           source={{
+  //             uri:
+  //                 __DEV__ && onlineRender
+  //                     ? 'http://10.13.230.223:3000'
+  //                     : Platform.OS === 'ios'
+  //                         ? 'static.bundle/web/render/index.html'
+  //                         : 'file:///android_asset/web/render/index.html',
+  //           }}
+  //           originWhitelist={['*']}
+  //           onLoadEnd={loadedHandler}
+  //       />
+  //     </View>
+  // ) : (
+
   return (
     <View>
       <View style={[item, row, flex1]}>
-        <HeadIcon
-          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
-        />
         <Pressable
-          onPress={event => {
+          onPress={() => image && viewImagesHandler({url: blobIdToUrl(image)})}>
+          <HeadIcon
+            image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
+          />
+        </Pressable>
+        <Pressable
+          onPressIn={() => setShowId(true)}
+          onPressOut={() => setShowId(false)}
+          onLongPress={() => {
             setString(feedId);
             Toast.show('ID copied');
           }}>
           <View style={[textContainer]}>
             <Text numberOfLines={1} style={[title, text]}>
-              {name || feedId}
+              {showId ? feedId : name || feedId}
             </Text>
             {description !== '' && (
               <Text style={[desc]}>bio: {description}</Text>
@@ -73,29 +105,23 @@ const PeerDetailsHeader = ({
           </View>
         </Pressable>
       </View>
-      <View style={[row, flex1, justifySpaceBetween]}>
+      <View style={[row, flex1, justifySpaceAround]}>
         <Pressable
           onPress={() =>
-            peerListHandler(
-              'following by ' + selfFeedId.substring(0, 6),
-              following,
-            )
+            peerListHandler('following by ' + feedId.substring(0, 6), following)
           }>
           <Text style={[desc]}>following:{following.length}</Text>
         </Pressable>
         <Pressable
           onPress={() =>
-            peerListHandler(
-              'follower of ' + selfFeedId.substring(0, 6),
-              follower,
-            )
+            peerListHandler('follower of ' + feedId.substring(0, 6), follower)
           }>
           <Text style={[desc]}>follower:{follower.length}</Text>
         </Pressable>
         <Pressable
           onPress={() =>
             peerListHandler(
-              'Mutual friends with ' + selfFeedId.substring(0, 6),
+              'Mutual friends with ' + feedId.substring(0, 6),
               mutual,
             )
           }>
@@ -103,21 +129,19 @@ const PeerDetailsHeader = ({
         </Pressable>
       </View>
       {isMyself || (
-        <View style={[row, justifySpaceBetween, {alignSelf: 'center'}]}>
-          {isMyBlock || (
-            <RoundBtn
-              style={[btn]}
-              title={'block'}
-              disabled={disabledBlock}
-              press={() => {
-                setDisabledBlock(true);
-                block(feedId, {}, v =>
-                  markMsgCBByKey(v.key, () => setDisabledBlock(false)),
-                );
-              }}
-            />
-          )}
-          {isMyFriend ? (
+        <View style={[row, justifySpaceAround]}>
+          <RoundBtn
+            style={[btn]}
+            title={isMyBlock ? 'unblock' : 'block'}
+            disabled={disabledBlock}
+            press={() => {
+              setDisabledBlock(true);
+              block(feedId, {state: !isMyBlock}, v =>
+                markMsgCBByKey(v.key, () => setDisabledBlock(false)),
+              );
+            }}
+          />
+          {isMyFriend && (
             <RoundBtn
               style={[btn]}
               title={'chat'}
@@ -128,21 +152,18 @@ const PeerDetailsHeader = ({
                 })
               }
             />
-          ) : (
-            isMyFollowing || (
-              <RoundBtn
-                style={[btn]}
-                title={'follow'}
-                disabled={disabledFollow}
-                press={() => {
-                  setDisabledFollow(true);
-                  follow(feedId, {}, v =>
-                    markMsgCBByKey(v.key, () => setDisabledFollow(false)),
-                  );
-                }}
-              />
-            )
           )}
+          <RoundBtn
+            style={[btn]}
+            title={isMyFriend || isMyFollowing ? 'unfollow' : 'follow'}
+            disabled={disabledFollow}
+            press={() => {
+              setDisabledFollow(true);
+              follow(feedId, {state: !(isMyFriend || isMyFollowing)}, v =>
+                markMsgCBByKey(v.key, () => setDisabledFollow(false)),
+              );
+            }}
+          />
         </View>
       )}
     </View>
@@ -174,7 +195,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginVertical: 10,
-    width: 120,
+    width: 100,
     height: 30,
   },
 });
@@ -183,15 +204,15 @@ const msp = s => {
   return {
     selfFeedId: s.user.feedId,
     relations: s.user.relations,
-    friendsGraph: s.contacts.friendsGraph,
-    peerInfoDic: s.contacts.peerInfoDic,
-    privateMsg: s.msg.privateMsg,
+    friendsGraph: s.contact.friendsGraph,
+    infoDic: s.info,
+    privateMsg: s.private,
   };
 };
 
 const mdp = d => {
   return {
-    addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
+    setViewImages: imgs => d({type: 'images', payload: imgs}),
   };
 };
 

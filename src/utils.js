@@ -1,5 +1,7 @@
-import {PermissionsAndroid, Platform} from 'react-native';
-import {launchCamera} from 'react-native-image-picker';
+import {Keyboard, PermissionsAndroid, Platform} from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
+import CameraRoll from '@react-native-community/cameraroll';
+import RNFS from 'react-native-fs';
 import Toast from 'react-native-tiny-toast';
 
 /**
@@ -13,70 +15,125 @@ export const localDate = timestamp => {
   return time + ' ' + day;
 };
 
-export const checkAndLaunchCamera = completeHandler => {
-  Platform.select({
-    ios: () =>
-      launchCamera(
-        {
-          cameraType: 'front',
-          maxHeight: 1920,
-          maxWidth: 1080,
-          quality: 0.88,
-          mediaType: 'photo',
-        },
-        completeHandler,
-      ),
-    android: () =>
-      PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA)
-        .then(value =>
-          value
-            ? launchCamera(
-                {
-                  cameraType: 'front',
-                  maxHeight: 1920,
-                  maxWidth: 1080,
-                  quality: 0.88,
-                  mediaType: 'photo',
-                },
-                completeHandler,
-              )
-            : PermissionsAndroid.request(
-                PermissionsAndroid.PERMISSIONS.CAMERA,
-                {
-                  title: 'connections.modes.bluetooth.permission_request.title',
-                  message:
-                    'connections.modes.bluetooth.permission_request.message',
-                  buttonPositive: 'call_to_action.yes',
-                  buttonNegative: 'call_to_action.no',
-                },
-              ).then(value =>
-                value === 'granted'
-                  ? launchCamera(
-                      {
-                        cameraType: 'front',
-                        maxHeight: 1920,
-                        maxWidth: 1080,
-                        quality: 0.88,
-                        mediaType: 'photo',
-                      },
-                      completeHandler,
-                    )
-                  : Toast.show('please grant the privacy of camera'),
-              ),
-        )
-        .catch(Toast.show),
-  })();
-};
+/*************************** wallet ***************************/
+export function abbreviationAccount(addr, pre, post) {
+  return addr ? '0x' + addr.substring(0, pre) + '...' + addr.substr(-post) : '';
+}
 
-// if (mentions && mentions.length) {
-//   const cache = [];
-//   for (const {link, name} of mentions) {
-//     cache.push(blobIdToUrl(link));
-//     // Image.getSize(
-//     //   blobIdToUrl(link),
-//     //   (w, h) => console.log(w, h),
-//     //   console.warn,
-//     // );
-//   }
-//   // Image.queryCache(cache).then(console.log).catch(console.warn);
-// }
+export function getCurrentAccount(wallet) {
+  return (
+    (wallet.accounts[wallet.current.type] &&
+      wallet.accounts[wallet.current.type][wallet.current.index]) ||
+    {}
+  );
+}
+
+export function getCurrentBalance(wallet) {
+  return (
+    (wallet.balance[wallet.current.type] &&
+      wallet.balance[wallet.current.type][wallet.current.index]) ||
+    0
+  );
+}
+
+export function cameraHandler(submit) {
+  ImagePicker.openCamera({
+    cropping: false,
+    multiple: false,
+    compressImageMaxWidth: 1080,
+    compressImageMaxHeight: 1920,
+    compressImageQuality: 0.88,
+    mediaType: 'photo',
+  })
+    .then(submit)
+    .catch(null);
+}
+
+export function photoHandler(submit) {
+  Keyboard.dismiss();
+  ImagePicker.openPicker({
+    cropping: false,
+    multiple: false,
+    compressImageMaxWidth: 1080,
+    compressImageMaxHeight: 1920,
+    compressImageQuality: 0.88,
+    mediaType: 'photo',
+  })
+    .then(submit)
+    .catch(null);
+}
+
+export function cameraHandlerWithCrop(submit) {
+  ImagePicker.openCamera({
+    cropping: false,
+    multiple: false,
+    compressImageMaxWidth: 1080,
+    compressImageMaxHeight: 1920,
+    compressImageQuality: 0.88,
+    mediaType: 'photo',
+  })
+    .then(r => ImagePicker.openCropper({path: r.path}).then(submit))
+    .catch(null);
+}
+
+export function photoHandlerWithCrop(submit) {
+  Keyboard.dismiss();
+  ImagePicker.openPicker({
+    cropping: false,
+    multiple: false,
+    compressImageMaxWidth: 1080,
+    compressImageMaxHeight: 1920,
+    compressImageQuality: 0.88,
+    mediaType: 'photo',
+  })
+    .then(r => ImagePicker.openCropper({path: r.path}).then(submit))
+    .catch(null);
+}
+
+export async function hasAndroidPermission() {
+  const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+
+  const hasPermission = await PermissionsAndroid.check(permission);
+  if (hasPermission) {
+    return true;
+  }
+
+  const status = await PermissionsAndroid.request(permission);
+  return status === 'granted';
+}
+
+export async function savePicture(tag, type, album, cb) {
+  if (Platform.OS === 'android' && !hasAndroidPermission()) {
+    return;
+  }
+
+  CameraRoll.save(tag, {type, album}).then(r => cb && cb(r));
+}
+
+export function getRandomPathName() {
+  return `${RNFS.ExternalDirectoryPath}/${(Math.random() * 10e6) | 0}.png`;
+}
+
+export function saveImg(img) {
+  // console.log('saveImg', img);
+  const promise = CameraRoll.saveToCameraRoll(img);
+  promise
+    .then(function (result) {
+      // alert('保存成功！地址如下：\n' + result);
+      Toast.show('Save Success');
+    })
+    .catch(function (error) {
+      // alert('保存失败！\n' + error);
+      Toast.show('Save Fail');
+    });
+}
+export const restrict = event => {
+  const regex = new RegExp('^[a-zA-Z]+$');
+  const key = String.fromCharCode(
+    !event.charCode ? event.which : event.charCode,
+  );
+  if (!regex.test(key)) {
+    event.preventDefault();
+    return false;
+  }
+};

@@ -1,0 +1,27 @@
+diff --git a/node_modules/multiserver-bluetooth/index.js b/node_modules/multiserver-bluetooth/index.js
+index c5ecfef..51678f2 100644
+--- a/node_modules/multiserver-bluetooth/index.js
++++ b/node_modules/multiserver-bluetooth/index.js
+@@ -29,12 +29,18 @@ function makePlugin(opts) {
+     // Take a copy of the string
+     let btInternalRepresentation = internalRepresentation.slice();
+ 
+-    do { 
+-      parts.push(btInternalRepresentation.substring(0, 2)) 
++    if(btInternalRepresentation.length < 20 && btInternalRepresentation.length > 10) {
++      do { 
++        parts.push(btInternalRepresentation.substring(0, 2)) 
++      } 
++      while( (btInternalRepresentation = btInternalRepresentation.substring(2, btInternalRepresentation.length)) != "" );  
++      
++      return parts.join(":");
++    }
++    else {
++      return btInternalRepresentation;
+     } 
+-    while( (btInternalRepresentation = btInternalRepresentation.substring(2, btInternalRepresentation.length)) != "" );
+ 
+-    return parts.join(":");
+   }
+ 
+   function toInternalAddress(macAddress) {

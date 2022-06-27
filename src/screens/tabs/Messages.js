@@ -1,21 +1,28 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../shared/SchemaStyles';
+import useSchemaStyles, {colorsSchema} from '../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import SearchBar from '../../shared/comps/SearchBar';
 import MessageItem from './messages/item/MessageItem';
-
-const iconDic = {
-  photo: require('../../assets/image/profiles/photo.png'),
-  fb: require('../../assets/image/profiles/Facebook.png'),
-  nf: require('../../assets/image/profiles/NewFriends.png'),
-  tt: require('../../assets/image/profiles/Twitter.png'),
-};
+import Section from '../../shared/comps/Section';
+import {searchPrivateMsgByContentAndRecp} from '../../store/filters/MsgFilters';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 
 const Messages = ({privateMsg}) => {
-  const {textHolder} = colorsSchema;
-  const {FG, row, text, alignItemsCenter} = SchemaStyles();
-  const {searchBar, contactItemContainer, textView, nameTF, descTF} = styles;
+  const {textHolder} = colorsSchema,
+    {FG, row, text, alignItemsCenter} = useSchemaStyles(),
+    {searchBar, contactItemContainer, textView, nameTF, descTF} = styles;
+  const {setOptions, getState} = useNavigation();
+  const [result, setResult] = useState([]);
+  const [KW, setKW] = useState('');
+
+  useFocusEffect(() => {
+    setOptions({tabBarBadge: null});
+  });
+
+  useEffect(() => {
+    getState().index !== 1 && setOptions({tabBarBadge: ''});
+  }, [privateMsg]);
 
   const snItem = ({item: {name, icon}}) => (
     <View
@@ -40,12 +47,32 @@ const Messages = ({privateMsg}) => {
     </View>
   );
 
+  function changeTextHandler(text) {
+    setKW(text);
+    setResult(text ? searchPrivateMsgByContentAndRecp(privateMsg, text) : []);
+  }
+
   return (
     <ScrollView style={FG}>
-      <SearchBar style={[searchBar]} />
-      {Object.keys(privateMsg).map(key => (
-        <MessageItem key={key} rootKey={key} msgArr={privateMsg[key]} />
-      ))}
+      <SearchBar
+        style={[searchBar]}
+        placeholder={'contact id or message content'}
+        changeTextHandler={changeTextHandler}
+      />
+      {result.length > 0 || KW !== '' ? (
+        <Section key={0} title={'Search'}>
+          {result.map(key => (
+            <MessageItem key={key} rootKey={key} msgArr={privateMsg[key]} />
+          ))}
+        </Section>
+      ) : (
+        Object.keys(privateMsg).map(
+          key =>
+            privateMsg[key].length > 0 && (
+              <MessageItem key={key} rootKey={key} msgArr={privateMsg[key]} />
+            ),
+        )
+      )}
     </ScrollView>
   );
 };
@@ -72,19 +99,14 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
-    cfg: s.cfg,
     feedId: s.user.feedId,
-    privateMsg: s.msg.privateMsg,
+    cfg: s.cfg,
+    privateMsg: s.private,
   };
 };
 
 const mdp = d => {
-  return {
-    setPublicMsg: v => d({type: 'setPublicMsg', payload: v}),
-    addPublicMsg: v => d({type: 'addPublicMsg', payload: v}),
-    setPrivateMsg: v => d({type: 'setPrivateMsg', payload: v}),
-    addPrivateMsg: v => d({type: 'addPrivateMsg', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(Messages);

@@ -8,7 +8,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import SchemaStyles from '../SchemaStyles';
+import useSchemaStyles from '../UseSchemaStyles';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 
 const iconDic = {
@@ -17,25 +17,31 @@ const iconDic = {
 
 const MsgInput = ({sendHandler}) => {
   const {FG, input, row, alignItemsCenter, flex1, text, placeholderTextColor} =
-      SchemaStyles(),
+      useSchemaStyles(),
     {inner, round, textInput, sender} = styles;
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(''),
+    [offset, setOffset] = useState(0);
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
   return (
     <KeyboardAvoidingView
-      keyboardVerticalOffset={isIPhoneX_deprecated ? 94 : 64}
-      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+      keyboardVerticalOffset={offset}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <View style={[FG, row, alignItemsCenter, inner]}>
         <View style={[input, flex1, round]}>
           <TextInput
-            placeholder="Write a comment …"
             style={[flex1, textInput, text]}
+            placeholder="Write a comment …"
+            autoFocus={true}
+            onBlur={() => setOffset(isIPhoneX_deprecated ? 94 : 64)}
             value={content}
             onChangeText={setContent}
             placeholderTextColor={placeholderTextColor.color}
           />
         </View>
         <Pressable
+          hitSlop={10}
+          pressRetentionOffset={10}
+          disabled={content === ''}
           onPress={() => {
             sendHandler(content);
             setContent('');
@@ -58,6 +64,8 @@ const styles = StyleSheet.create({
   },
   textInput: {
     marginHorizontal: 15,
+    fontSize: 15,
+    padding: 5,
   },
   sender: {marginLeft: 16, marginRight: 18},
 });

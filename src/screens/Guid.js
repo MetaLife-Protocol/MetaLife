@@ -1,8 +1,9 @@
 import React from 'react';
 import {Image, ImageBackground, StyleSheet, View} from 'react-native';
 import RoundBtn from '../shared/comps/RoundBtn';
-import SchemaStyles from '../shared/SchemaStyles';
+import useSchemaStyles from '../shared/UseSchemaStyles';
 import {useNavigation} from '@react-navigation/native';
+import nodejs from 'nodejs-mobile-react-native';
 
 /**
  * Created on 11/4/21 by lonmee
@@ -13,22 +14,24 @@ const iconDic = {
 };
 
 const Guid = () => {
-  const {flex1, alignItemsCenter, width100Percent} = SchemaStyles(),
+  const {flex1, alignItemsCenter, width100Percent} = useSchemaStyles(),
     {titleImg, buttons, buttonPadding} = styles;
+  const {replace, navigate} = useNavigation();
+  const {channel} = nodejs;
 
-  const {navigate} = useNavigation();
+  function createHandler() {
+    channel.post('identity', 'CREATE');
+    replace('Tabs');
+  }
 
   return (
     <ImageBackground style={[flex1, alignItemsCenter]} source={iconDic.guid}>
       <Image style={titleImg} source={iconDic.MetaLife} />
       <View style={flex1} />
       <View style={[buttons, width100Percent]}>
-        <RoundBtn title={'Login'} press={() => navigate('Login')} />
+        <RoundBtn title={'Create'} press={createHandler} />
         <View style={buttonPadding} />
-        <RoundBtn
-          title={'Sign up'}
-          press={() => navigate('SignUp', {foo: 'foo'})}
-        />
+        <RoundBtn title={'Restore'} press={() => navigate('Restore')} />
         <View style={buttonPadding} />
       </View>
     </ImageBackground>

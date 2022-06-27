@@ -3,7 +3,10 @@
  */
 import React, {useState} from 'react';
 import {Alert, Modal, StyleSheet, TextInput, View} from 'react-native';
-import SchemaStyles, {colorsSchema} from '../../../../shared/SchemaStyles';
+import useSchemaStyles, {
+  colorsBasics,
+  colorsSchema,
+} from '../../../../shared/UseSchemaStyles';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
 
 export const ProfileModal = ({
@@ -13,7 +16,7 @@ export const ProfileModal = ({
   holderText,
   submitHandler,
 }) => {
-  const {row} = SchemaStyles(),
+  const {BG, row} = useSchemaStyles(),
     {textHolder} = colorsSchema;
 
   const [valueLocal, setValueLocal] = useState(value);
@@ -23,11 +26,9 @@ export const ProfileModal = ({
       animationType={'slide'}
       transparent={true}
       visible={visible}
-      onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
-      }}>
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
+      onRequestClose={null}>
+      <View style={[styles.centeredView]}>
+        <View style={[BG, styles.modalView]}>
           <TextInput
             style={styles.modalText}
             autoFocus={true}
@@ -66,8 +67,9 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colorsBasics.primary,
     padding: 35,
     alignItems: 'center',
   },

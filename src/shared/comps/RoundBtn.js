@@ -2,26 +2,31 @@
  * Created on 11/4/21 by lonmee
  */
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableNativeFeedback, View} from 'react-native';
-import SchemaStyles from '../SchemaStyles';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
+import useSchemaStyles from '../UseSchemaStyles';
 
 const RoundBtn = ({title, press, disabled = false, style = null}) => {
   const [active, setActive] = useState(false);
   const {
+    FG,
     btnActiveBG,
     btnActiveFG,
     btnInactiveBG,
     btnInactiveFG,
     btnDisabledBG,
     btnDisabledFG,
-  } = SchemaStyles();
+  } = useSchemaStyles();
   return (
-    <TouchableNativeFeedback onPress={disabled ? null : press}>
+    <Pressable onPress={disabled ? null : press}>
       <View
         style={[
           styles.border,
           style,
-          disabled ? btnDisabledBG : active ? btnActiveBG : btnInactiveBG,
+          disabled
+            ? [FG, btnDisabledBG]
+            : active
+            ? btnActiveBG
+            : [FG, btnInactiveBG],
         ]}
         onTouchStart={() => setActive(true)}
         onTouchEnd={() => {
@@ -35,7 +40,7 @@ const RoundBtn = ({title, press, disabled = false, style = null}) => {
           {title}
         </Text>
       </View>
-    </TouchableNativeFeedback>
+    </Pressable>
   );
 };
 
@@ -50,6 +55,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 15,
+    marginHorizontal: 10,
     fontWeight: 'bold',
   },
 });

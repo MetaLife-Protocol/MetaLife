@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Image,
   ImageBackground,
@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import HeadIcon from '../../../shared/comps/HeadIcon';
 import Toast from 'react-native-tiny-toast';
@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../shared/Icons';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
+import WalletCard from './wallet/WalletCard';
 
 const iconDic = {
   BG: require('../../../assets/image/profiles/Profiles_backgroud.png'),
@@ -22,16 +23,18 @@ const iconDic = {
   photo: require('../../../assets/image/profiles/photo.png'),
 };
 
-const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
+const HeaderProfiles = ({feedId, relations, infoDic}) => {
   const {row, flex1, justifySpaceBetween, alignItemsCenter, marginTop10} =
-      SchemaStyles(),
+      useSchemaStyles(),
     {container, photo, setting, nameFont, desc, at} = styles;
 
   const {navigate, push} = useNavigation(),
     {setString} = nativeClipboard;
 
-  const {name, description, image} = peerInfoDic[feedId] || {},
+  const {name, description, image, avatar} = infoDic[feedId] || {},
     [myFriends, myFollowing, myFollower, myBlock, myBlocked] = relations;
+
+  const [showId, setShowId] = useState(false);
 
   function peerListHandler(title, list) {
     push('PeersListScreen', {title, list});
@@ -39,21 +42,24 @@ const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
 
   return (
     <ImageBackground style={[container, alignItemsCenter]} source={iconDic.BG}>
-      <HeadIcon
-        style={[photo]}
-        width={90}
-        height={90}
-        image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerIcon}
-      />
       <Pressable
-        onPress={() => {
+        onPressIn={() => setShowId(true)}
+        onPressOut={() => setShowId(false)}
+        onLongPress={() => {
           setString(feedId);
           Toast.show('ID copied');
         }}>
-        <Text style={[nameFont, marginTop10]}>
-          {name || feedId.substring(0, 10)}
-        </Text>
+        <HeadIcon
+          style={[photo]}
+          width={90}
+          height={90}
+          avatar={avatar}
+          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
+        />
       </Pressable>
+      <Text style={[nameFont, marginTop10]}>
+        {showId ? feedId.substring(0, 20) : name || feedId.substring(0, 10)}
+      </Text>
       <Text style={[desc]}>{description}</Text>
       <Text style={[at]}>{feedId.substring(0, 8)}</Text>
       <View
@@ -83,6 +89,7 @@ const HeaderProfiles = ({feedId, relations, peerInfoDic}) => {
           <Text style={[desc]}>friend:{myFriends.length}</Text>
         </Pressable>
       </View>
+      <WalletCard style={[{position: 'absolute', top: 270}]} />
       <Pressable style={[setting]} onPress={() => navigate('Setting')}>
         <Image source={iconDic.icon_setting} />
       </Pressable>
@@ -123,7 +130,7 @@ const msp = s => {
   return {
     feedId: s.user.feedId,
     relations: s.user.relations,
-    peerInfoDic: s.contacts.peerInfoDic,
+    infoDic: s.info,
   };
 };
 

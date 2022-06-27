@@ -1,34 +1,32 @@
 import React from 'react';
 import {Button, Pressable, StyleSheet, Text, View} from 'react-native';
-import SchemaStyles from '../../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {
   connectPeer,
   disconnectPeer,
   follow,
-  getProfile,
   persistentConnectPeer,
-} from '../../../../remote/ssbOP';
+} from '../../../../remote/ssb/ssbOP';
 import {PeerIcons} from '../../../../shared/Icons';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation} from '@react-navigation/native';
 
 const PeerItem = ({
-  pObj: [address, {type, key, state = ''}],
-  peerInfoDic,
-  addPeerInfo,
+  item: [address, {type, key, state = ''}],
+  infoDic,
   relations: [friends, following],
 }) => {
   const isFollowing = friends.includes(key) || following.includes(key);
-  const {row, flex1, text} = SchemaStyles(),
+  const {row, flex1, text} = useSchemaStyles(),
     {textContainer, item, title, desc} = styles;
   const {navigate} = useNavigation();
-  const {name = '', description = '', image = ''} = peerInfoDic[key] || {};
+  const {name = '', description = '', image = ''} = infoDic[key] || {};
 
   function connectHandler(v) {
-    Toast.show('connected: ' + v.id ? v.id.substring(0, 10) : 'no id');
+    Toast.show('connected: ' + v ? v.id.substring(0, 10) : 'no id');
   }
 
   function disconnectHandler(v) {
@@ -36,9 +34,7 @@ const PeerItem = ({
   }
 
   function followHandler(v) {
-    const fid = v.value.content.contact;
-    getProfile(fid, v => addPeerInfo([fid, v])),
-      Toast.show('Following: ' + fid.substring(0, 10));
+    Toast.show('Following: ' + v.value.content.contact.substring(0, 10));
   }
 
   return (
@@ -49,10 +45,10 @@ const PeerItem = ({
             image
               ? {uri: blobIdToUrl(image)}
               : type == 'lan'
-              ? PeerIcons.peerIcon
+              ? PeerIcons.peerGirlIcon
               : type == 'pub'
-              ? PeerIcons.daoIcon
-              : PeerIcons.nftIcon
+              ? PeerIcons.pubIcon
+              : PeerIcons.peerGirlIcon
           }
         />
         <View style={[textContainer]}>
@@ -118,15 +114,13 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
-    peerInfoDic: s.contacts.peerInfoDic,
+    infoDic: s.info,
     relations: s.user.relations,
   };
 };
 
 const mdp = d => {
-  return {
-    addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(PeerItem);

@@ -3,10 +3,10 @@
  */
 import {ActivityIndicator, Text, View} from 'react-native';
 import React from 'react';
-import SchemaStyles from '../SchemaStyles';
+import useSchemaStyles from '../UseSchemaStyles';
 
 const LoadingBar = ({loaded, style}) => {
-  const {row, text, alignItemsCenter} = SchemaStyles();
+  const {row, text, alignItemsCenter} = useSchemaStyles();
   return (
     <View style={[row, alignItemsCenter, ...style]}>
       <ActivityIndicator size={'small'} animating={loaded < 1} />

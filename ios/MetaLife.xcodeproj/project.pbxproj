@@ -9,11 +9,16 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* MetaLifeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* MetaLifeTests.m */; };
 		03F3B65924EBC61237CDE29B /* libPods-MetaLife.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2294E4C90DFBAADF5D6C62DD /* libPods-MetaLife.a */; };
+		0BDD55DB91344580860B0D0A /* libPods-MetaLifeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAE466A0EAB508CEFFF14AD7 /* libPods-MetaLifeTests.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		4E446C5DD1C5BBAC598941CF /* libPods-MetaLife-MetaLifeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FA552C6C2E6C8F53BE1D103 /* libPods-MetaLife-MetaLifeTests.a */; };
+		43BB21FA286415F9007EBED6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43BB21F9286415F9007EBED6 /* MobileCoreServices.framework */; };
+		43E1A09628654B0500B2B7EB /* Mobile.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E1A09528654B0400B2B7EB /* Mobile.xcframework */; };
+		43E1A09728654B0500B2B7EB /* Mobile.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43E1A09528654B0400B2B7EB /* Mobile.xcframework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		B045A7A728335D9000193B74 /* launch.png in Resources */ = {isa = PBXBuildFile; fileRef = B045A7A628335D9000193B74 /* launch.png */; };
+		B04FE0D128503C7F00158349 /* static.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B04FE0D028503C7F00158349 /* static.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,11 +44,17 @@
 		2294E4C90DFBAADF5D6C62DD /* libPods-MetaLife.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MetaLife.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		238A85FBE36DED17026E4387 /* Pods-MetaLife-MetaLifeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLife-MetaLifeTests.release.xcconfig"; path = "Target Support Files/Pods-MetaLife-MetaLifeTests/Pods-MetaLife-MetaLifeTests.release.xcconfig"; sourceTree = "<group>"; };
 		318104D68A70FF6E510F29E0 /* Pods-MetaLife.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLife.release.xcconfig"; path = "Target Support Files/Pods-MetaLife/Pods-MetaLife.release.xcconfig"; sourceTree = "<group>"; };
+		43BB21F9286415F9007EBED6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		43E1A09528654B0400B2B7EB /* Mobile.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Mobile.xcframework; sourceTree = "<group>"; };
 		5305DE93A00826DD9B9DAB6C /* Pods-MetaLife.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLife.debug.xcconfig"; path = "Target Support Files/Pods-MetaLife/Pods-MetaLife.debug.xcconfig"; sourceTree = "<group>"; };
-		7FA552C6C2E6C8F53BE1D103 /* libPods-MetaLife-MetaLifeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MetaLife-MetaLifeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5BAD4BDBBD97D88C5CD06EB2 /* Pods-MetaLifeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLifeTests.release.xcconfig"; path = "Target Support Files/Pods-MetaLifeTests/Pods-MetaLifeTests.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = MetaLife/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A1AFA42E43CBEEA5F226191A /* Pods-MetaLife-MetaLifeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLife-MetaLifeTests.debug.xcconfig"; path = "Target Support Files/Pods-MetaLife-MetaLifeTests/Pods-MetaLife-MetaLifeTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B045A7A628335D9000193B74 /* launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = launch.png; sourceTree = "<group>"; };
+		B04FE0D028503C7F00158349 /* static.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = static.bundle; path = ../static.bundle; sourceTree = "<group>"; };
+		DCA7A49B98DD35585F9AC84A /* Pods-MetaLifeTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaLifeTests.debug.xcconfig"; path = "Target Support Files/Pods-MetaLifeTests/Pods-MetaLifeTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		FAE466A0EAB508CEFFF14AD7 /* libPods-MetaLifeTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MetaLifeTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,7 +62,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4E446C5DD1C5BBAC598941CF /* libPods-MetaLife-MetaLifeTests.a in Frameworks */,
+				0BDD55DB91344580860B0D0A /* libPods-MetaLifeTests.a in Frameworks */,
+				43E1A09728654B0500B2B7EB /* Mobile.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43BB21FA286415F9007EBED6 /* MobileCoreServices.framework in Frameworks */,
 				03F3B65924EBC61237CDE29B /* libPods-MetaLife.a in Frameworks */,
+				43E1A09628654B0500B2B7EB /* Mobile.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +103,7 @@
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
+				B045A7A628335D9000193B74 /* launch.png */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -103,6 +118,8 @@
 				318104D68A70FF6E510F29E0 /* Pods-MetaLife.release.xcconfig */,
 				A1AFA42E43CBEEA5F226191A /* Pods-MetaLife-MetaLifeTests.debug.xcconfig */,
 				238A85FBE36DED17026E4387 /* Pods-MetaLife-MetaLifeTests.release.xcconfig */,
+				DCA7A49B98DD35585F9AC84A /* Pods-MetaLifeTests.debug.xcconfig */,
+				5BAD4BDBBD97D88C5CD06EB2 /* Pods-MetaLifeTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -110,9 +127,11 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				43E1A09528654B0400B2B7EB /* Mobile.xcframework */,
+				43BB21F9286415F9007EBED6 /* MobileCoreServices.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				2294E4C90DFBAADF5D6C62DD /* libPods-MetaLife.a */,
-				7FA552C6C2E6C8F53BE1D103 /* libPods-MetaLife-MetaLifeTests.a */,
+				FAE466A0EAB508CEFFF14AD7 /* libPods-MetaLifeTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -127,6 +146,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				B04FE0D028503C7F00158349 /* static.bundle */,
 				13B07FAE1A68108700A75B9A /* MetaLife */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* MetaLifeTests */,
@@ -159,8 +179,6 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				E05282EAD703D6B53A6C955A /* [CP] Embed Pods Frameworks */,
-				2BDF316C32584E66A14D0C33 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -182,11 +200,13 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
+				B0BCD6F4282E2FD1007C1746 /* Pre-minify Node.js Mobile project */,
 				1D3DA7960CD7791758F5E199 /* [CP] Embed Pods Frameworks */,
 				7F1FB1B4A7722ABD693B4634 /* [CP] Copy Pods Resources */,
 				4E63BAB2A17300693F51CF6A /* [CP-User] [NODEJS MOBILE] Copy Node.js Project files */,
 				388548364D7531595AD86A68 /* [CP-User] [NODEJS MOBILE] Build Native Modules */,
 				0B92359A7F0B9FD533C598E5 /* [CP-User] [NODEJS MOBILE] Sign Native Modules */,
+				B0BCD6F5282E303E007C1746 /* Post-minify Node.js Mobile project */,
 				A92AE65DB88A91BBF83C7FF6 /* [CP-User] [NODEJS MOBILE] Remove Simulator Strip */,
 			);
 			buildRules = (
@@ -247,6 +267,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				B045A7A728335D9000193B74 /* launch.png in Resources */,
+				B04FE0D128503C7F00158349 /* static.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -295,23 +317,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MetaLife/Pods-MetaLife-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2BDF316C32584E66A14D0C33 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MetaLife-MetaLifeTests/Pods-MetaLife-MetaLifeTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MetaLife-MetaLifeTests/Pods-MetaLife-MetaLifeTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MetaLife-MetaLifeTests/Pods-MetaLife-MetaLifeTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		33ABDCB7E6CBC0C0492E1062 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -327,7 +332,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MetaLife-MetaLifeTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-MetaLifeTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -381,22 +386,41 @@
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/sh\nif [ -f ~/.cargo/env ]; then\n  source ~/.cargo/env;\nfi\nif [ -f ~/.nvm/nvm.sh ]; then\n  source ~/.nvm/nvm.sh;\nfi\nset -e\nFRAMEWORK_BINARY_PATH=\"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/NodeMobile.framework/NodeMobile\"\nFRAMEWORK_STRIPPED_PATH=\"$FRAMEWORK_BINARY_PATH-strip\"\nif [ \"$PLATFORM_NAME\" != \"iphonesimulator\" ]; then\n  if $(lipo \"$FRAMEWORK_BINARY_PATH\" -verify_arch \"x86_64\") ; then\n    lipo -output \"$FRAMEWORK_STRIPPED_PATH\" -remove \"x86_64\" \"$FRAMEWORK_BINARY_PATH\"\n    rm \"$FRAMEWORK_BINARY_PATH\"\n    mv \"$FRAMEWORK_STRIPPED_PATH\" \"$FRAMEWORK_BINARY_PATH\"\n    echo \"Removed simulator strip from NodeMobile.framework\"\n  fi\nfi\n";
 		};
-		E05282EAD703D6B53A6C955A /* [CP] Embed Pods Frameworks */ = {
+		B0BCD6F4282E2FD1007C1746 /* Pre-minify Node.js Mobile project */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MetaLife-MetaLifeTests/Pods-MetaLife-MetaLifeTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+			);
+			name = "Pre-minify Node.js Mobile project";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MetaLife-MetaLifeTests/Pods-MetaLife-MetaLifeTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MetaLife-MetaLifeTests/Pods-MetaLife-MetaLifeTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "# Remove some files we know that won't be used at all\nNODEJS_ASSETS_DIR=\"$( cd \"$PROJECT_DIR\" && cd ../nodejs-assets/ && pwd )\"\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/sodium-native-nodejs-mobile/libsodium/android-toolchain*\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/leveldown\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/ssb-keys-neon/prebuilds\n";
+		};
+		B0BCD6F5282E303E007C1746 /* Post-minify Node.js Mobile project */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Post-minify Node.js Mobile project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Removing all files in node_modules except .node, .so, .a\nfind $CODESIGNING_FOLDER_PATH/nodejs-project/node_modules \\\n  -type f \\\n   ! \\( \\\n    -name \"*.node\" \\\n    \\) \\\n  -print0 | xargs -0 rm -rf\n# We used to keep .so files too, but those are \n# counted as executables by App Store policies\n# -o -name \"*.so\" \\\n# -o -name \"*.a\" \\  \n# Delete symbolic links\nfind $CODESIGNING_FOLDER_PATH/nodejs-project/node_modules -depth -type l -delete\n# Delete empty directories\nfind $CODESIGNING_FOLDER_PATH/nodejs-project/node_modules -depth -type d -empty -delete\n";
 		};
 		F448AEC609DE13565ABDE6C2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -472,9 +496,11 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A1AFA42E43CBEEA5F226191A /* Pods-MetaLife-MetaLifeTests.debug.xcconfig */;
+			baseConfigurationReference = DCA7A49B98DD35585F9AC84A /* Pods-MetaLifeTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				DEVELOPMENT_TEAM = 23JJ7VRKJT;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -499,10 +525,12 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 238A85FBE36DED17026E4387 /* Pods-MetaLife-MetaLifeTests.release.xcconfig */;
+			baseConfigurationReference = 5BAD4BDBBD97D88C5CD06EB2 /* Pods-MetaLifeTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 23JJ7VRKJT;
 				INFOPLIST_FILE = MetaLifeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -525,22 +553,26 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5305DE93A00826DD9B9DAB6C /* Pods-MetaLife.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4TQLD765K3;
+				CURRENT_PROJECT_VERSION = 22062701;
+				DEVELOPMENT_TEAM = UW32LPCQU3;
 				ENABLE_BITCODE = "$(inherited)";
 				INFOPLIST_FILE = MetaLife/Info.plist;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.MetaLife;
+				PRODUCT_BUNDLE_IDENTIFIER = social.metalife.iOS;
 				PRODUCT_NAME = MetaLife;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -552,22 +584,26 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 318104D68A70FF6E510F29E0 /* Pods-MetaLife.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4TQLD765K3;
+				CURRENT_PROJECT_VERSION = 22062701;
+				DEVELOPMENT_TEAM = UW32LPCQU3;
 				ENABLE_BITCODE = "$(inherited)";
 				INFOPLIST_FILE = MetaLife/Info.plist;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.MetaLife;
+				PRODUCT_BUNDLE_IDENTIFIER = social.metalife.iOS;
 				PRODUCT_NAME = MetaLife;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -577,6 +613,7 @@
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -642,6 +679,7 @@
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";

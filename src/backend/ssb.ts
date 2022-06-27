@@ -4,7 +4,6 @@
 
 import fs = require('fs');
 import path = require('path');
-
 const mkdirp = require('mkdirp');
 const caps = require('ssb-caps');
 const ssbKeys = require('ssb-keys');
@@ -52,7 +51,7 @@ export = async function startSSB(isNewIdentity: boolean) {
       cpuMax: 90, // %
     },
     serveBlobs: {
-      port: 26834, //26835 / 3921
+      port: 26834, //26835
     },
     conn: {
       autostart: false,
@@ -112,7 +111,7 @@ export = async function startSSB(isNewIdentity: boolean) {
     .use(require('ssb-http-invite-client'))
     .use(require('ssb-invite-client')) // needs: db2, conn
     // Queries
-    .use(require('ssb-db2/about-self')) // needs: db2
+    .use(require('ssb-about-self')) // needs: db2
     .use(require('ssb-suggest-lite')) // needs: db2, about-self, friends
     .use(require('ssb-threads')) // needs: db, db2, friends
     .use(require('ssb-db2/full-mentions')) // needs: db2
@@ -122,7 +121,6 @@ export = async function startSSB(isNewIdentity: boolean) {
     .use(require('ssb-serve-blobs')) // needs: blobs
     .use(require('ssb-blobs-purge')) // needs: blobs, db2/full-mentions
     // Customizations
-    .use(require('./plugins/aboutSelf')) // needs: db2
     .use(require('./plugins/blobsUtils')) // needs: blobs
     .use(require('./plugins/connUtils')) // needs: conn, aboutSelf
     .use(require('./plugins/aliasUtils')) // needs: db2
@@ -130,7 +128,7 @@ export = async function startSSB(isNewIdentity: boolean) {
     .use(require('./plugins/publishUtilsBack')) // needs: db, blobs, blobsUtils
     .use(require('./plugins/searchUtils')) // needs: db2
     .use(require('./plugins/keysUtils'))
-    .use(settingsUtils) // needs: blobs-purge
+    .use(settingsUtils) // needs: blobs-purge, conn-firewall
     .use(require('./plugins/dbUtils')) // needs: db2, syncing
     .use(require('./plugins/votes')) // needs: db2
     .call(null, config);

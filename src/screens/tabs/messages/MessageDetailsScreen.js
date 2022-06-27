@@ -7,17 +7,14 @@ import {
   Text,
   View,
 } from 'react-native';
-import SchemaStyles, {colorsBasics} from '../../../shared/SchemaStyles';
+import useSchemaStyles, {colorsBasics} from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import MsgInput from '../../../shared/comps/MsgInput';
-import {sendMsg} from '../../../remote/ssbOP';
+import {sendMsg} from '../../../remote/ssb/ssbOP';
 import {localDate} from '../../../utils';
 import HeadIcon from '../../../shared/comps/HeadIcon';
-
-const iconDic = {
-  peerIcon: require('../../../assets/image/contacts/peer_icon.png'),
-};
+import {PeerIcons as iconDic} from '../../../shared/Icons';
 // let scrollView;
 
 const MessageDetailsScreen = ({
@@ -26,18 +23,18 @@ const MessageDetailsScreen = ({
     params: {rootKey, recp},
   },
   feedId,
-  peerInfoDic,
+  infoDic,
   privateMsg,
 }) => {
-  const {BG, FG, row, flex1} = SchemaStyles(),
+  const {BG, FG, row, flex1} = useSchemaStyles(),
     {itemContainer, item, itemLeft, itemRight, title, desc} = styles,
-    {name = '', description = '', image = ''} = peerInfoDic[recp] || {};
+    {name = '', description = '', image = ''} = infoDic[recp] || {};
 
   const headerRight = () => (
     <HeadIcon
       height={30}
       width={30}
-      image={image ? {uri: blobIdToUrl(image)} : iconDic.peerIcon}
+      image={image ? {uri: blobIdToUrl(image)} : iconDic.peerGirlIcon}
     />
   );
 
@@ -155,15 +152,13 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     feedId: s.user.feedId,
-    peerInfoDic: s.contacts.peerInfoDic,
-    privateMsg: s.msg.privateMsg,
+    infoDic: s.info,
+    privateMsg: s.private,
   };
 };
 
 const mdp = d => {
-  return {
-    addPeerInfo: v => d({type: 'addPeerInfo', payload: v}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(MessageDetailsScreen);

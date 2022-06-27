@@ -25,9 +25,9 @@ DerivedData
 build/
 /android/app/src/main/jniLibs/
 /android/app/release/
+/android/local.properties
 .idea
 .gradle
-local.properties
 *.iml
 *.hprof
 /Gemfile.lock
@@ -48,8 +48,6 @@ yarn.lock
 # BUCK
 buck-out/
 \.buckd/
-*.keystore
-!debug.keystore
 
 # fastlane
 #

@@ -135,7 +135,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a" // , "x86", "x86_64"
         }
@@ -143,6 +143,7 @@ android {
             ignoreAssetsPattern '!*.json.license!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
         vectorDrawables.useSupportLibrary = true
+        missingDimensionStrategy 'react-native-camera', 'general' // <--- insert this line
     }
     lintOptions{
         checkDependencies true

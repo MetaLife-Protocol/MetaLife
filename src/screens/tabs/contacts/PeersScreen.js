@@ -1,19 +1,19 @@
 import React from 'react';
 import {SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {useTimer} from '../../../shared/Hooks';
 import Section from '../../../shared/comps/Section';
 import PeerItem from './item/PeerItem';
-import {getConnectedPeers, getStagedPeers} from '../../../remote/ssbOP';
+import {getConnectedPeers, getStagedPeers} from '../../../remote/ssb/ssbOP';
 
 const PeersScreen = ({
   stagedPeers,
-  setStagedPeers,
   connectedPeers,
+  setStagedPeers,
   setConnectedPeers,
 }) => {
-  const {BG, flex1} = SchemaStyles();
+  const {BG, flex1} = useSchemaStyles();
   useTimer(refreshStagedAndConnected, 3000);
 
   function refreshStagedAndConnected() {
@@ -27,14 +27,14 @@ const PeersScreen = ({
         {stagedPeers.length > 0 && (
           <Section title={'Staged Peers'}>
             {stagedPeers.map(
-              (pObj, i) => pObj[0] && <PeerItem pObj={pObj} key={i} />,
+              (pObj, i) => pObj[0] && <PeerItem item={pObj} key={i} />,
             )}
           </Section>
         )}
         {connectedPeers.length > 0 && (
           <Section title={'connectedPeers'}>
             {connectedPeers.map((pObj, i) => (
-              <PeerItem pObj={pObj} key={i} />
+              <PeerItem item={pObj} key={i} />
             ))}
           </Section>
         )}
@@ -45,8 +45,8 @@ const PeersScreen = ({
 
 const msp = s => {
   return {
-    stagedPeers: s.contacts.stagedPeers,
-    connectedPeers: s.contacts.connectedPeers,
+    stagedPeers: s.contact.stagedPeers,
+    connectedPeers: s.contact.connectedPeers,
   };
 };
 

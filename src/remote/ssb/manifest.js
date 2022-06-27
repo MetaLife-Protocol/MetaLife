@@ -72,6 +72,7 @@ export default {
     graph: 'async',
     graphStream: 'source',
   },
+  // read: https://github.com/ssbc/ssb-ebt
   ebt: {
     replicate: 'duplex',
     replicateFormat: 'duplex',
@@ -223,6 +224,7 @@ export default {
     updateShowFollows: 'sync',
     updateDetailedLogs: 'sync',
     updateAllowCheckingNewVersion: 'sync',
+    updateEnableFirewall: 'sync',
   },
   resyncUtils: {
     progress: 'source',

@@ -4,11 +4,11 @@
 import * as React from 'react';
 import {FlatList, SafeAreaView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import SchemaStyles from '../../../shared/SchemaStyles';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import FriendItem from '../contacts/item/FriendItem';
 
 const FriendList = ({relations: [friends]}) => {
-  const {BG} = SchemaStyles();
+  const {BG} = useSchemaStyles();
   return (
     <SafeAreaView style={[BG]}>
       <FlatList
