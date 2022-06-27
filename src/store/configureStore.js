@@ -8,6 +8,7 @@ import {populateStyles} from '../shared/UseSchemaStyles';
 import {devToolsEnhancer} from 'redux-devtools-extension';
 
 /**
+ * todo: version control for persist, when data struct update
  * Created on 11 Nov 2021 by lonmee
  */
 const persistConfig = {

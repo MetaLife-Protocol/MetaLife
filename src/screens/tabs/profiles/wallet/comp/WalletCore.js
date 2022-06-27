@@ -14,6 +14,8 @@ import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {financeConfig} from '../../../../../remote/wallet/WalletAPI';
 import {AccountItem} from '../items/AccountItem';
+import Toast from 'react-native-tiny-toast';
+import WalletAccountDetails from '../WalletAccountDetails';
 
 /**
  * Created on 22 Jun 2022 by lonmee
@@ -24,6 +26,9 @@ const WalletCore = ({
   cfg: {darkMode},
   wallet: {current, accounts},
   setCurrent,
+  showPullMenu,
+  closeHandler,
+  manageHandle,
 }) => {
   const {flex1, FG, text, row, justifySpaceBetween} = useSchemaStyles(),
     {} = colorsSchema,
@@ -61,6 +66,39 @@ const WalletCore = ({
       : icons.plusBtnDefaultW;
   }
 
+  function goScreen(name, params) {
+    navigate(name, params);
+  }
+
+  function menuHandler(e, type) {
+    e.target.measure((x, y, width, height, pageX, pageY) =>
+      showPullMenu({
+        position: {
+          x: pageX - width - 30,
+          y: pageY + height,
+        },
+        buttons: [
+          {
+            title: 'Create',
+            handler: () => {
+              goScreen('WalletCreator', {type});
+              closeHandler && closeHandler();
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+          {
+            title: 'Import',
+            handler: () => {
+              goScreen('WalletImporter', {type});
+              closeHandler && closeHandler();
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+        ],
+      }),
+    );
+  }
+
   return (
     <View style={[flex1, FG, row]}>
       <View style={[{backgroundColor: darkMode ? '#2b2f2f' : '#edeef1'}]}>
@@ -82,7 +120,7 @@ const WalletCore = ({
           <Text style={[text, titleS]}>
             {tIndex === 'spectrum' ? 'Spectrum' : 'Ethereum'}
           </Text>
-          <Pressable onPress={() => navigate('WalletCreator')}>
+          <Pressable onPress={event => menuHandler(event, tIndex)}>
             <Image source={getBtnIcon()} />
           </Pressable>
         </View>
@@ -91,12 +129,15 @@ const WalletCore = ({
             accounts[tIndex].map((v, i) => (
               <Pressable
                 key={i}
-                onPress={() =>
-                  i !== current.index && setCurrent({type: tIndex, index: i})
-                }>
+                onPress={() => {
+                  console.log('hhhh', v);
+                  manageHandle
+                    ? goScreen('WalletAccountDetails', {key: tIndex, ...v})
+                    : setCurrent({type: tIndex, index: i});
+                }}>
                 <AccountItem
                   item={v}
-                  selected={i === current.index}
+                  selected={tIndex === current.type && i === current.index}
                   darkMode={darkMode}
                 />
               </Pressable>
@@ -140,6 +181,7 @@ const msp = s => {
 const mdp = d => {
   return {
     setCurrent: payload => d({type: 'setCurrent', payload}),
+    showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
   };
 };
 

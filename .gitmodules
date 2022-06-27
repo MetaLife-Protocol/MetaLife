@@ -1,6 +1,6 @@
-[submodule "metalife-base"]
-	path = packages/metalife-base
-	url = git@github.com:MetaLife-Protocol/rn-metalife-base.git
+# [submodule "metalife-base"]
+# 	path = packages/metalife-base
+# 	url = git@github.com:MetaLife-Protocol/rn-metalife-base.git
 [submodule "packages/react-native-photon"]
 	path = packages/react-native-photon
 	url = git+ssh://git@github.com:MetaLife-Protocol/react-native-photon.git#master

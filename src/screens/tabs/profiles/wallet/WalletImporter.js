@@ -25,7 +25,11 @@ import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo'
  *
  */
 
-const WalletCreator = ({cfg: {lang, darkMode, verbose}}) => {
+const WalletCreator = ({
+  cfg: {lang, darkMode, verbose},
+  route: {params},
+  wallet,
+}) => {
   const {flex1, FG, with100p, row, alignItemsCenter, text, marginTop10} =
       useSchemaStyles(),
     {textHolder} = colorsSchema,
@@ -37,6 +41,9 @@ const WalletCreator = ({cfg: {lang, darkMode, verbose}}) => {
     [prompt, setPrompt] = useState('');
 
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
+
+  const targetChain = params ? params.type : wallet.current.type;
+  console.log(targetChain);
 
   return (
     <SafeAreaView style={[flex1, FG, marginTop10]}>

@@ -2,34 +2,37 @@
  * Created on 17 Jun 2022 by lonmee
  *
  */
-import React, {useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Image, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
-import useSchemaStyles, {
-  colorsSchema,
-} from '../../../../../shared/UseSchemaStyles';
+import useSchemaStyles from '../../../../../shared/UseSchemaStyles';
 import {CloseIcons} from '../../../../../shared/Icons';
 import WalletCore from '../comp/WalletCore';
+import PullMenu from '../../../../../shared/comps/PullMenu';
+import {useDispatch} from 'react-redux';
 
-export const WalletSwitchModal = ({
-  visible,
-  setVisible,
-  submitHandler,
-  darkMode,
-  wallet: {
-    current: {type, index},
-    accounts,
-  },
-}) => {
+export const WalletSwitchModal = ({visible, setVisible, darkMode}) => {
   const {flex1, FG, BG, row, text, justifySpaceBetween} = useSchemaStyles(),
     {centeredView, modalView, title, line, textStyle} = styles;
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch({type: 'setMask', payload: visible});
+  }, [visible]);
+
+  const content = useRef();
 
   return (
     <Modal
       animationType={'slide'}
       transparent={true}
       visible={visible}
-      onRequestClose={null}>
-      <View style={[flex1, centeredView]}>
+      onRequestClose={() => setVisible(false)}>
+      <Pressable
+        style={[flex1, centeredView]}
+        ref={content}
+        onPress={event =>
+          event.target === content.current && setVisible(false)
+        }>
         <View style={[FG, modalView]}>
           <View style={[row, title, justifySpaceBetween]}>
             <Image source={darkMode ? icons.walletB : icons.walletW} />
@@ -41,9 +44,10 @@ export const WalletSwitchModal = ({
             </Pressable>
           </View>
           <View style={[BG, line]} />
-          <WalletCore />
+          <WalletCore closeHandler={() => setVisible(false)} />
         </View>
-      </View>
+        <PullMenu />
+      </Pressable>
     </Modal>
   );
 };

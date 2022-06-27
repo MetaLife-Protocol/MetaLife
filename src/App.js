@@ -20,7 +20,7 @@ import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import Pubs from './screens/tabs/profiles/Pubs';
-import {Modal, StatusBar, Text, View} from 'react-native';
+import {Modal, Pressable, StatusBar, Text} from 'react-native';
 import CommentEditor from './screens/tabs/home/post/CommentEditor';
 import PullMenu from './shared/comps/PullMenu';
 import Avatar from './shared/screens/Avatar';
@@ -50,7 +50,10 @@ import WalletCreator from './screens/tabs/profiles/wallet/WalletCreator';
 import WalletImporter from './screens/tabs/profiles/wallet/WalletImporter';
 import WalletManager from './screens/tabs/profiles/wallet/WalletManager';
 import WalletDetails from './screens/tabs/profiles/wallet/WalletDetails';
-import {importAccountByMnemonic} from './remote/wallet/WalletAPI';
+import {
+  financeConfig,
+  importAccountByMnemonic,
+} from './remote/wallet/WalletAPI';
 import {WalletSwitchModal} from './screens/tabs/profiles/wallet/modal/WalletSwitchModal';
 import CreateChannel from './screens/photon/create_channel';
 import ReceivingCode from './screens/photon/receiving_code';
@@ -69,6 +72,14 @@ import NFTDetailNew from './screens/nft/nft_details_new';
 import NFTList from './screens/nft/nft_list';
 import MyNFTList from './screens/nft/my_nft_list/MyNFTList';
 import Scan from './screens/photon/scan';
+import MaskView from './shared/comps/MaskView';
+import {startPhotonServer} from 'react-native-photon';
+import {
+  exportPrivateKeyFromKeystore,
+  exportPrivateKeyFromMnemonic,
+} from 'react-native-web3-wallet';
+import {getCurrentAccount} from './utils';
+import WalletAccountDetails from './screens/tabs/profiles/wallet/WalletAccountDetails';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -83,6 +94,7 @@ const App = ({
   wallet,
   walletCreateAccount,
   setCurrent,
+  masked,
 }) => {
   const {barStyle, row, theme, justifySpaceBetween, alignItemsCenter} =
     useSchemaStyles();
@@ -101,12 +113,31 @@ const App = ({
       startSSB().then(ssb => {
         window.ssb = ssb;
         setFeedId(ssb.id);
-        wallet.accounts.spectrum ||
-          getMnemonic(mnemonic =>
-            importAccountByMnemonic(mnemonic, '1234', ({keystore: {address}}) =>
-              walletCreateAccount({name: 'default', address}),
-            ),
-          );
+        // wallet.accounts.spectrum
+        //   ? getMnemonic(mnemonic =>
+        //       exportPrivateKeyFromMnemonic(mnemonic, "m/44'/60'/0'/0/0").then(
+        //         key =>
+        //           startPhotonServer({
+        //             // privateKey:
+        //             //   '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
+        //             // address: '0x096F7368bC01f438f8De8775DAFD71a566413C6f',
+        //             // ethRPCEndPoint: '',
+        //             privateKey: key,
+        //             address: getCurrentAccount(wallet).address,
+        //             ethRPCEndPoint: financeConfig.chains.spectrum.rpcURL,
+        //           })
+        //             .then(console.log)
+        //             .catch(console.warn),
+        //       ),
+        //     )
+        //   : getMnemonic(mnemonic =>
+        //       importAccountByMnemonic(
+        //         mnemonic,
+        //         '1234',
+        //         ({keystore: {address}}) =>
+        //           walletCreateAccount({name: 'default', address}),
+        //       ),
+        //     );
         resync ||
           (initializeHandlers(store),
           checkAddon('launch'),
@@ -162,7 +193,8 @@ const App = ({
           options={{
             title: 'Wallet',
             headerRight: props => (
-              <View
+              <Pressable
+                onPress={() => setSwitchVisible(true)}
                 style={[
                   row,
                   alignItemsCenter,
@@ -184,9 +216,8 @@ const App = ({
                       ? HeaderIcons.walletSwitchBtnActive
                       : HeaderIcons.walletSwitchBtnNormal
                   }
-                  btnHandler={() => setSwitchVisible(true)}
                 />
-              </View>
+              </Pressable>
             ),
           }}
         />
@@ -204,6 +235,11 @@ const App = ({
           name="WalletManager"
           component={WalletManager}
           options={{title: 'Wallet management'}}
+        />
+        <Screen
+          name="WalletAccountDetails"
+          component={WalletAccountDetails}
+          options={{title: 'Wallet account'}}
         />
         {/* Posts */}
         <Screen
@@ -336,7 +372,7 @@ const App = ({
           component={MyNFTList}
         />
       </Navigator>
-      <PullMenu />
+      <MaskView darkMode={darkMode} enabled={masked} eventEnabled={false} />
       <Modal visible={viewImages.imgs.length > 0} transparent={true}>
         <ImageViewer
           index={viewImages.index}
@@ -353,12 +389,14 @@ const App = ({
         darkMode={darkMode}
         submitHandler={setCurrent}
       />
+      <PullMenu />
     </NavigationContainer>
   );
 };
 
 const msp = s => {
   return {
+    masked: s.runtime.masked,
     darkMode: s.cfg.darkMode,
     viewImages: s.runtime.images,
     feedId: s.user.feedId,
