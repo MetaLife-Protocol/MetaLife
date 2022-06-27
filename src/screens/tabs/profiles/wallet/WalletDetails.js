@@ -18,11 +18,7 @@ import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import {TokenItem} from './items/TokenItem';
 import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
-import {
-  abbreviationAccount,
-  getCurrentAccount,
-  getCurrentBalance,
-} from '../../../../utils';
+import {getCurrentAccount, getCurrentBalance} from '../../../../utils';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -37,6 +33,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
       flex1,
       text,
       justifySpaceAround,
+      justifySpaceBetween,
       alignSelfCenter,
     } = useSchemaStyles(),
     {
@@ -62,6 +59,9 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
     },
     [navigate],
   );
+
+  const [volumeVisible, setVolumeVisible] = useState(false);
+  const [coinType, setCoinType] = useState('dollar');
 
   function menuHandler(e) {
     e.target.measure((x, y, width, height, pageX, pageY) =>
@@ -118,16 +118,29 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
           style={[marginTop10, container, justifySpaceAround, alignSelfCenter]}
           source={iconDic.BG}>
           <View>
-            <View style={[row, justifySpaceAround]}>
-              <Text style={[title]}>{getCurrentAccount(wallet).name}</Text>
-              <Text style={[{color: '#C0D7F4'}]}>
-                {abbreviationAccount(getCurrentAccount(wallet).address, 5, 8)}
-              </Text>
+            <View style={[row, justifySpaceBetween, {marginHorizontal: 15}]}>
+              <View style={[row, justifySpaceBetween, {width: 115}]}>
+                <Text style={[title]} numberOfLines={1}>
+                  {getCurrentAccount(wallet).name}
+                </Text>
+                <Pressable onPress={() => setVolumeVisible(!volumeVisible)}>
+                  <Image source={iconDic.eyeOpen} />
+                </Pressable>
+                <Pressable
+                  onPress={() =>
+                    setCoinType(coinType === 'rmb' ? 'dollar' : 'rmb')
+                  }>
+                  <Image source={iconDic.dollar} />
+                </Pressable>
+              </View>
               <Pressable onPress={menuHandler}>
                 <Image source={iconDic.dots} />
               </Pressable>
             </View>
-            <Text style={[volume]}>$ {getCurrentBalance(wallet)}</Text>
+            <Text style={[volume]}>
+              {coinType === 'rmb' ? '¥' : '$'}{' '}
+              {volumeVisible ? getCurrentBalance(wallet) : '******'}
+            </Text>
           </View>
           <View style={[row]}>
             <Text style={[address]}>0x{getCurrentAccount(wallet).address}</Text>
@@ -184,6 +197,10 @@ const iconDic = {
   dots: require('../../../../assets/image/wallet/more.png'),
   copyD: require('../../../../assets/image/wallet/address_copy.png'),
   copyA: require('../../../../assets/image/wallet/address_copy.png'),
+  eyeOpen: require('../../../../assets/image/wallet/Login_icon_zhengyan_default_white.png'),
+  eyeClose: require('../../../../assets/image/wallet/Login_icon_biyan_default_white.png'),
+  dollar: require('../../../../assets/image/wallet/icon_dollar_default.png'),
+  RMB: require('../../../../assets/image/wallet/icon_RMB_default.png'),
 };
 
 const styles = StyleSheet.create({
@@ -194,6 +211,7 @@ const styles = StyleSheet.create({
   title: {
     color: 'white',
     fontSize: 15,
+    width: 60,
   },
   volume: {
     marginTop: 17,
