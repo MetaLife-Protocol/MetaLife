@@ -57,6 +57,12 @@ const stylesDefault = StyleSheet.create({
     backgroundColor: '#F1F1F2',
   },
   placeholderTextColor: {color: '#B6B7B9'},
+  modalBG: {
+    backgroundColor: '#FFFFFF',
+  },
+  modalFG: {
+    backgroundColor: '#F8F9FD',
+  },
 });
 
 const stylesDark = StyleSheet.create({
@@ -73,6 +79,12 @@ const stylesDark = StyleSheet.create({
     backgroundColor: '#282C2D',
   },
   placeholderTextColor: {color: '#7C7E82'},
+  modalBG: {
+    backgroundColor: '#232929',
+  },
+  modalFG: {
+    backgroundColor: '#393E3E',
+  },
 });
 
 const stylesBasics = StyleSheet.create({

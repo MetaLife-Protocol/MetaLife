@@ -30,9 +30,25 @@ export const walletReducer = (state = initState, {type, payload}) => {
         balance: {...state.balance, [state.current.type]: payload},
       };
     case 'walletUpdateAccount':
-      const {} = payload;
+      return {
+        ...state,
+        accounts: {
+          ...state.accounts,
+          [payload.type]: state.accounts[payload.type].map(item => {
+            return item.address === payload.address ? payload : item;
+          }),
+        },
+      };
     case 'walletDeleteAccount':
-      const {} = payload;
+      return {
+        ...state,
+        accounts: {
+          ...state.accounts,
+          [payload.type]: state.accounts[payload.type].filter(
+            item => item.address !== payload.address,
+          ),
+        },
+      };
     case 'setCurrent':
       return {...state, current: payload};
     default:

@@ -11,6 +11,8 @@ import {
 import {
   bigNumberFormatUnits,
   createWallet,
+  exportKeystore,
+  exportPrivateKeyFromKeystore,
   getBalance,
   getContractBalance,
   importKeystore,
@@ -817,4 +819,46 @@ export function getSignedSecretSession(originKey) {
     sharedA,
   );
   return signedMessage;
+}
+
+export function exportAccountKeystore(address, pw, cb) {
+  getAccount(address, (isExit, keystore) => {
+    if (isExit) {
+      console.log('exportAccountKeystore',isExit)
+      exportKeystore(JSON.stringify(keystore), pw)
+        .then(res => cb && cb(true, res))
+        .catch(error => {
+          cb && cb(false);
+          console.warn(error);
+        });
+    }
+  });
+}
+
+export function exportAccountPrivateKey(address, pw, cb) {
+  getAccount(address, (isExit, keystore) => {
+    if (isExit) {
+      exportPrivateKeyFromKeystore(JSON.stringify(keystore), pw)
+        .then(res => cb && cb(true, res))
+        .catch(error => {
+          console.warn(error);
+          cb && cb(false);
+        });
+    }
+  });
+}
+
+export function deleteWalletAccount(address, pw, cb) {
+  getAccount(address, (isExit, keystore) => {
+    if (isExit) {
+      exportKeystore(JSON.stringify(keystore), pw)
+        .then(res => {
+          deleteAccount(address, cb);
+        })
+        .catch(error => {
+          cb && cb(false);
+          console.warn(error);
+        });
+    }
+  });
 }

@@ -130,10 +130,9 @@ const WalletCore = ({
               <Pressable
                 key={i}
                 onPress={() => {
-                  console.log('hhhh', v);
-                  manageHandle
-                    ? goScreen('WalletAccountDetails', {key: tIndex, ...v})
-                    : setCurrent({type: tIndex, index: i});
+                  setCurrent({type: tIndex, index: i});
+                  manageHandle &&
+                    goScreen('WalletAccountDetails');
                 }}>
                 <AccountItem
                   item={v}

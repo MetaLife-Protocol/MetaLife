@@ -107,12 +107,18 @@ const WalletCreator = ({
           title={'Create account'}
           disabled={!(aName && pw && cPw && pw === cPw)}
           press={() =>
-            createAccount(pw, targetChain, ({keystore: {address}}) => {
+            createAccount(pw, targetChain, (res) => {
+              console.log('res', res);
+              const { keystore } = res
               setAName('');
               setPW('');
               setCPW('');
               setPrompt('');
-              walletCreateAccount({type: targetChain, name: aName, address});
+              walletCreateAccount({
+                type: targetChain,
+                name: aName,
+                address: keystore.address,
+              });
               Toast.show('Wallet created');
               goBack();
             })
