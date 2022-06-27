@@ -48,3 +48,7 @@
 >> npm i react-native-metalife-storage --registry=https://github.com/MetaLife-Protocol/react-native-metalife-storage.git  
 >> cd packages && git clone git@github.com:MetaLife-Protocol/react-native-photon.git && cd ..  
 >> npm i react-native-photon --registry=https://github.com/MetaLife-Protocol/react-native-photon.git
+
+> ### Android local.properties  
+>> sdk.dir=/Users/lonmee/Library/Android/sdk  
+>> ndk.dir=/Users/lonmee/Library/Android/sdk/ndk/21.4.7075529  

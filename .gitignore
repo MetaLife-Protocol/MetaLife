@@ -25,6 +25,7 @@ DerivedData
 build/
 /android/app/src/main/jniLibs/
 /android/app/release/
+/android/local.properties
 .idea
 .gradle
 *.iml
