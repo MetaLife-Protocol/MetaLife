@@ -100,7 +100,10 @@ const WalletCard = ({
             <Text style={[{color: '#C0D7F4'}]}>
               {abbreviationAccount(getCurrentAccount(wallet).address, 5, 8)}
             </Text>
-            <Pressable onPress={menuHandler}>
+            <Pressable
+              hitSlop={10}
+              pressRetentionOffset={10}
+              onPress={menuHandler}>
               <Image source={iconDic.dots} />
             </Pressable>
           </View>

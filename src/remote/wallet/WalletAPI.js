@@ -744,6 +744,11 @@ function getAccount(address, cb) {
     });
 }
 
+/**
+ * get keystore first to be sure pw enabled
+ * @param address
+ * @param cb
+ */
 function deleteAccount(address, cb) {
   let originKey = window.ssb.id;
   let signedMessage = getSignedSecretSession(originKey);

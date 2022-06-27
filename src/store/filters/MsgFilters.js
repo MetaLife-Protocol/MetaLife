@@ -1,6 +1,9 @@
 export const findRootKey = (feedId, msgs) => {
   for (const rootKey in msgs) {
-    if (msgs[rootKey][0].value.content.recps.includes(feedId)) {
+    if (
+      msgs[rootKey].length &&
+      msgs[rootKey][0].value.content.recps.includes(feedId)
+    ) {
       return rootKey;
     }
   }

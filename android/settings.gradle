@@ -1,10 +1,7 @@
 rootProject.name = 'MetaLife'
 include ':libsPhoton'
-project(':libsPhoton').projectDir = new File(rootProject.projectDir, '../packages/react-native-photon/android/libsPhoton')
+project(':libsPhoton').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-photon/android/libsPhoton')
 include ':react-native-photon'
 project(':react-native-photon').projectDir = new File(rootProject.projectDir, '../packages/react-native-photon/android')
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
-// photon
-//include ':libsPhoton'
-//project(':libsPhoton').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-photon/android/libsPhoton')
