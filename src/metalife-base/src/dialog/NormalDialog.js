@@ -17,6 +17,7 @@ export const NormalDialog = ({
   confirmStr = 'confirm',
   content,
   onConfirm,
+  confirmDismiss = true,
 }) => {
   const styles = useStyle(createSty);
   const dialog = useDialog();
@@ -40,7 +41,9 @@ export const NormalDialog = ({
           style={styles.btnContainer}
           title={confirmStr}
           press={() => {
-            dialog.dismiss();
+            if (confirmDismiss) {
+              dialog.dismiss();
+            }
             onConfirm && onConfirm();
           }}
         />
