@@ -657,9 +657,12 @@ export function importAccountByMnemonic(mnemonic, pw, type, cb) {
       saveAccounts(res.keystore.address, res.keystore, (success, err) => {
         console.log('save', success, err);
       });
-      cb && cb(res);
+      cb && cb(true, res);
     })
-    .catch(reason => console.warn(reason));
+    .catch(reason => {
+      cb && cb(false);
+      console.warn(reason);
+    });
 }
 
 export function importAccountByKeystore(keystore, pw, cb) {
@@ -668,20 +671,27 @@ export function importAccountByKeystore(keystore, pw, cb) {
       saveAccounts(res.keystore.address, res.keystore, (success, err) => {
         console.log('save', success, err);
       });
-      cb(res);
+      cb && cb(true, res);
     })
-    .catch(reason => console.warn(reason));
+    .catch(reason => {
+      cb && cb(false);
+      console.warn(reason);
+    });
 }
 
 export function importAccountByPrivateKey(privateKey, pw, cb) {
   importPrivateKey(privateKey, pw, true)
     .then(res => {
+      console.log('hhhhhh',res)
       saveAccounts(res.keystore.address, res.keystore, (success, err) => {
         console.log('save', success, err);
       });
-      cb(res);
+      cb && cb(true, res);
     })
-    .catch(reason => console.warn(reason));
+    .catch(reason => {
+      cb && cb(false);
+      console.warn(reason);
+    });
 }
 
 export function getWBalance(type, wAddr, cb) {
@@ -824,7 +834,6 @@ export function getSignedSecretSession(originKey) {
 export function exportAccountKeystore(address, pw, cb) {
   getAccount(address, (isExit, keystore) => {
     if (isExit) {
-      console.log('exportAccountKeystore', isExit);
       exportKeystore(JSON.stringify(keystore), pw)
         .then(res => cb && cb(true, res))
         .catch(error => {
