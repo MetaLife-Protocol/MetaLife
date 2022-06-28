@@ -8,7 +8,7 @@ import useSchemaStyles, {colorsSchema} from '../UseSchemaStyles';
 import {useDispatch, useSelector} from 'react-redux';
 
 export default ({style = []}) => {
-  const {flex1, text, BG} = useSchemaStyles(),
+  const {flex1, text, FG} = useSchemaStyles(),
     {background, container, titleStyle} = styles;
 
   const {pullMenu} = useSelector(state => state.runtime),
@@ -32,7 +32,8 @@ export default ({style = []}) => {
             flex1,
             style,
             container,
-            {top: position.y, left: position.x, backgroundColor: text.color},
+            FG,
+            {top: position.y, left: position.x},
           ]}>
           {buttons.map(({title, handler}, i) => (
             <Pressable
@@ -46,12 +47,7 @@ export default ({style = []}) => {
               <Text
                 style={[
                   titleStyle,
-                  {
-                    color:
-                      highLight === i
-                        ? colorsSchema.primary
-                        : BG.backgroundColor,
-                  },
+                  highLight === i ? {color: colorsSchema.primary} : text,
                 ]}>
                 {title}
               </Text>
