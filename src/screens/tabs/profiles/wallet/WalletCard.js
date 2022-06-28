@@ -131,12 +131,17 @@ const WalletCard = ({
             <Pressable
               style={[alignItemsCenter, icons]}
               onPress={() => {
+                const currentAccount = getCurrentAccount(wallet);
+                console.log('currentAccount::', currentAccount);
+                if (currentAccount?.type !== 'spectrum') {
+                  Toast.show('photon is only used in spectrum chain');
+                  return;
+                }
+
                 dialog.show(
                   <PasswordDialog
                     onConfirm={pw => {
                       console.log('pw::', pw);
-                      const currentAccount = getCurrentAccount(wallet);
-                      console.log('currentAccount::', currentAccount?.address);
                       if (!currentAccount?.address) {
                         Toast.show('Wallet does not exist!');
                         dialog.dismiss();
