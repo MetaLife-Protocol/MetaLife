@@ -111,7 +111,7 @@ const WalletCard = ({
           <View style={[{width: '100%'}, row, justifySpaceAround]}>
             <Pressable
               style={[alignItemsCenter, icons]}
-              onPress={() => goScreen('xx', {})}>
+              onPress={() => goScreen('Scan', {})}>
               <Image source={iconDic.scan} />
               <Text style={[tag]}>Scan</Text>
             </Pressable>
