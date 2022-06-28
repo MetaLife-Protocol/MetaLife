@@ -14,7 +14,7 @@ const initState = {
 export const walletReducer = (state = initState, {type, payload}) => {
   switch (type) {
     case 'walletCreateAccount':
-      const type = payload.type || state.current.type;
+      const type = payload.type;
       return {
         ...state,
         accounts: {

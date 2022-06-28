@@ -55,7 +55,12 @@ const Mnemonic = () => {
             ({keystore: {address}}) => {
               dispatch({
                 type: 'walletCreateAccount',
-                payload: {name: 'default', address},
+                payload: {
+                  type: 'spectrum',
+                  name: 'default',
+                  address,
+                  observer: false,
+                },
               });
               getWBalance('spectrum', address, v => dispatch('setBalance', v));
             },

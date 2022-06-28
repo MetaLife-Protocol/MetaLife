@@ -30,11 +30,7 @@ import Mnemonic from './shared/screens/Mnemonic';
 import {startSSB} from './remote/ssb/starter';
 import {initializeHandlers} from './remote/ssb/SsbListeners';
 import {checkAddon} from './remote/ssb/SsbHandlers';
-import {
-  bluetoothSearch,
-  getConnectedPeers,
-  getMnemonic,
-} from './remote/ssb/ssbOP';
+import {bluetoothSearch, getConnectedPeers} from './remote/ssb/ssbOP';
 import {useStore} from 'react-redux';
 import nodejs from 'nodejs-mobile-react-native';
 import Resync from './screens/guid/Resync';
@@ -50,10 +46,6 @@ import WalletCreator from './screens/tabs/profiles/wallet/WalletCreator';
 import WalletImporter from './screens/tabs/profiles/wallet/WalletImporter';
 import WalletManager from './screens/tabs/profiles/wallet/WalletManager';
 import WalletDetails from './screens/tabs/profiles/wallet/WalletDetails';
-import {
-  financeConfig,
-  importAccountByMnemonic,
-} from './remote/wallet/WalletAPI';
 import {WalletSwitchModal} from './screens/tabs/profiles/wallet/modal/WalletSwitchModal';
 import CreateChannel from './screens/photon/create_channel';
 import ReceivingCode from './screens/photon/receiving_code';
@@ -73,12 +65,6 @@ import NFTList from './screens/nft/nft_list';
 import MyNFTList from './screens/nft/my_nft_list/MyNFTList';
 import Scan from './screens/photon/scan';
 import MaskView from './shared/comps/MaskView';
-import {startPhotonServer} from 'react-native-photon';
-import {
-  exportPrivateKeyFromKeystore,
-  exportPrivateKeyFromMnemonic,
-} from 'react-native-web3-wallet';
-import {getCurrentAccount} from './utils';
 import WalletAccountDetails from './screens/tabs/profiles/wallet/WalletAccountDetails';
 
 process.nextTick = process.nextTick || setImmediate;
@@ -92,7 +78,6 @@ const App = ({
   setViewImages,
   darkMode,
   wallet,
-  walletCreateAccount,
   setCurrent,
   masked,
 }) => {
@@ -113,31 +98,6 @@ const App = ({
       startSSB().then(ssb => {
         window.ssb = ssb;
         setFeedId(ssb.id);
-        // wallet.accounts.spectrum
-        //   ? getMnemonic(mnemonic =>
-        //       exportPrivateKeyFromMnemonic(mnemonic, "m/44'/60'/0'/0/0").then(
-        //         key =>
-        //           startPhotonServer({
-        //             // privateKey:
-        //             //   '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
-        //             // address: '0x096F7368bC01f438f8De8775DAFD71a566413C6f',
-        //             // ethRPCEndPoint: '',
-        //             privateKey: key,
-        //             address: getCurrentAccount(wallet).address,
-        //             ethRPCEndPoint: financeConfig.chains.spectrum.rpcURL,
-        //           })
-        //             .then(console.log)
-        //             .catch(console.warn),
-        //       ),
-        //     )
-        //   : getMnemonic(mnemonic =>
-        //       importAccountByMnemonic(
-        //         mnemonic,
-        //         '1234',
-        //         ({keystore: {address}}) =>
-        //           walletCreateAccount({name: 'default', address}),
-        //       ),
-        //     );
         resync ||
           (initializeHandlers(store),
           checkAddon('launch'),

@@ -42,7 +42,8 @@ const WalletCreator = ({
   const [aName, setAName] = useState(''),
     [pw, setPW] = useState(''),
     [cPw, setCPW] = useState(''),
-    [prompt, setPrompt] = useState('');
+    [prompt, setPrompt] = useState(''),
+    [observer, setObserver] = useState(false);
 
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
 
@@ -91,9 +92,12 @@ const WalletCreator = ({
             </ControllerItem>
             <ControllerItem>
               <Text style={[text]}>
-                {
-                  'xxxxxxxxx\nxxxxxxxxx\nxxxxxxxxx\nxxxxxxxxx\nxxxxxxxxx\nxxxxxxxxx\nxxxxxxxxx'
-                }
+                {`Note:MetaLife waller does not save user password
+                    nor provide backups.All password are required to
+                    backup using encrypted private key.We highly
+                    recommended to backup and save your private key
+                    at the same time,otherwise your wallet can never
+                    be retrieved.`}
               </Text>
             </ControllerItem>
           </Section>
@@ -107,9 +111,13 @@ const WalletCreator = ({
           title={'Create account'}
           disabled={!(aName && pw && cPw && pw === cPw)}
           press={() =>
-            createAccount(pw, targetChain, (res) => {
+            createAccount(pw, targetChain, res => {
               console.log('res', res);
-              const { keystore } = res
+              const {
+                keystore: {address},
+                mnemonic,
+                shuffleMnemonic,
+              } = res;
               setAName('');
               setPW('');
               setCPW('');
@@ -117,7 +125,10 @@ const WalletCreator = ({
               walletCreateAccount({
                 type: targetChain,
                 name: aName,
-                address: keystore.address,
+                address,
+                mnemonic,
+                shuffleMnemonic,
+                observer,
               });
               Toast.show('Wallet created');
               goBack();
