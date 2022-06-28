@@ -19,6 +19,15 @@ export function initPhoton({
   navigate,
 }) {
   //TODO isLogin  & has wallet
+  if (privateKey.startsWith('0x')) {
+    privateKey = privateKey.substring(2);
+  }
+  if (!privateKey.startsWith('0x')) {
+    address = '0x' + address;
+  }
+
+  console.log('privateKey:', privateKey);
+  console.log('address:', address);
   startPhotonServer({
     // privateKey:
     //   '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
