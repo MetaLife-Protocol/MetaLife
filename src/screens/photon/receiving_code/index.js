@@ -18,8 +18,8 @@ import {useStyle} from '../../../metalife-base';
 import {useRoute} from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 import {saveImg} from '../../../utils';
-import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-tiny-toast';
+import NativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 
 const ReceivingCode = () => {
   const {token} = useRoute().params ?? {};
@@ -47,7 +47,7 @@ const ReceivingCode = () => {
   }, []);
 
   const copyFunc = useCallback(() => {
-    Clipboard.setString(token);
+    NativeClipboard.setString(token);
     Toast.show('Copy Success');
   }, [token]);
 
