@@ -17,6 +17,11 @@ import {
   getCurrentBalance,
 } from '../../../../utils';
 import {initPhoton} from '../../../photon/PhotonUtils';
+import {exportPrivateKeyFromKeystore} from 'react-native-web3-wallet';
+import {getAccount} from '../../../../remote/wallet/WalletAPI';
+import {useDialog} from '../../../../metalife-base';
+import PasswordDialog from './modal/PasswordDialog';
+import Toast from 'react-native-tiny-toast';
 
 /**
  * Created on 16 Jun 2022 by lonmee
@@ -35,6 +40,7 @@ const WalletCard = ({
     {container, title, balanceS, icons, tag} = styles;
 
   const {navigate} = useNavigation();
+  const dialog = useDialog();
 
   const [switchVisible, setSwitchVisible] = useState(false);
 
@@ -125,11 +131,66 @@ const WalletCard = ({
             <Pressable
               style={[alignItemsCenter, icons]}
               onPress={() => {
-                initPhoton({
-                  privateKey:
-                    '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
-                  address: '0x096F7368bC01f438f8De8775DAFD71a566413C6f',
-                });
+                dialog.show(
+                  <PasswordDialog
+                    onConfirm={pw => {
+                      console.log('pw::', pw);
+                      const currentAccount = getCurrentAccount(wallet);
+                      console.log('currentAccount::', currentAccount?.address);
+                      if (!currentAccount?.address) {
+                        Toast.show('Wallet does not exist!');
+                        dialog.dismiss();
+                        return;
+                      }
+                      getAccount(
+                        currentAccount?.address,
+                        (isExit, keystore) => {
+                          if (isExit) {
+                            console.log('keystore::', keystore);
+                            exportPrivateKeyFromKeystore(
+                              JSON.stringify(keystore),
+                              pw,
+                            )
+                              .then(res => {
+                                console.log('private Key res::::', res);
+                                dialog.dismiss();
+                                initPhoton({
+                                  privateKey: res,
+                                  address: currentAccount?.address,
+                                  directToNetworkPage: true,
+                                  navigate: navigate,
+                                });
+                              })
+                              .catch(error => {
+                                console.warn(error);
+                                // cb && cb(false);
+                              });
+                          }
+                        },
+                      );
+                    }}
+                  />,
+                );
+
+                // const currentAccount = getCurrentAccount(wallet);
+                // console.log('currentAccount::', currentAccount?.address);
+                // getAccount(currentAccount?.address, (isExit, keystore) => {
+                //   if (isExit) {
+                //     console.log('keystore::', keystore);
+                //     // exportPrivateKeyFromKeystore(JSON.stringify(keystore), pw)
+                //     //   .then(res => cb && cb(true, res))
+                //     //   .catch(error => {
+                //     //     console.warn(error);
+                //     //     cb && cb(false);
+                //     //   });
+                //   }
+                // });
+                // exportPrivateKeyFromKeystore();
+                // initPhoton({
+                //   privateKey:
+                //     '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
+                //   address: '0x096F7368bC01f438f8De8775DAFD71a566413C6f',
+                // });
                 // goScreen('xx', {});
 
                 // goScreen("xx", {});
