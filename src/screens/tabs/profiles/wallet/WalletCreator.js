@@ -37,7 +37,7 @@ const WalletCreator = ({
   const {flex1, FG, with100p, row, alignItemsCenter, text, marginTop10} =
       useSchemaStyles(),
     {textHolder} = colorsSchema,
-    {invite} = styles;
+    {inputs} = styles;
 
   const [aName, setAName] = useState(''),
     [pw, setPW] = useState(''),
@@ -56,7 +56,7 @@ const WalletCreator = ({
           <Section separator={NormalSeparator}>
             <ControllerItem>
               <TextInput
-                style={[invite, text, with100p]}
+                style={[inputs, text, with100p]}
                 value={aName}
                 placeholder={'Account name'}
                 placeholderTextColor={textHolder}
@@ -65,7 +65,7 @@ const WalletCreator = ({
             </ControllerItem>
             <ControllerItem>
               <TextInput
-                style={[invite, text, with100p]}
+                style={[inputs, text, with100p]}
                 value={pw}
                 placeholder={'Password'}
                 placeholderTextColor={textHolder}
@@ -74,7 +74,7 @@ const WalletCreator = ({
             </ControllerItem>
             <ControllerItem>
               <TextInput
-                style={[invite, text, with100p]}
+                style={[inputs, text, with100p]}
                 value={cPw}
                 placeholder={'Confirm password'}
                 placeholderTextColor={textHolder}
@@ -83,7 +83,7 @@ const WalletCreator = ({
             </ControllerItem>
             <ControllerItem>
               <TextInput
-                style={[invite, text, with100p]}
+                style={[inputs, text, with100p]}
                 value={prompt}
                 placeholder={'Password prompt (optional)'}
                 placeholderTextColor={textHolder}
@@ -91,13 +91,12 @@ const WalletCreator = ({
               />
             </ControllerItem>
             <ControllerItem>
-              <Text style={[text]}>
-                {`Note:MetaLife waller does not save user password
-                    nor provide backups.All password are required to
-                    backup using encrypted private key.We highly
-                    recommended to backup and save your private key
-                    at the same time,otherwise your wallet can never
-                    be retrieved.`}
+              <Text style={[text, {color: textHolder}]}>
+                Note:MetaLife waller does not save user password nor provide
+                backups.All password are required to backup using encrypted
+                private key.We highly recommended to backup and save your
+                private key at the same time,otherwise your wallet can never be
+                retrieved.
               </Text>
             </ControllerItem>
           </Section>
@@ -107,7 +106,7 @@ const WalletCreator = ({
         keyboardVerticalOffset={isIPhoneX_deprecated ? 94 : 64}
         behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
         <RoundBtn
-          style={[{marginBottom: 50}]}
+          style={[{marginBottom: 40}]}
           title={'Create account'}
           disabled={!(aName && pw && cPw && pw === cPw)}
           press={() =>
@@ -140,7 +139,11 @@ const WalletCreator = ({
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  inputs: {
+    fontSize: 16,
+  },
+});
 
 const msp = s => {
   return {
