@@ -725,7 +725,7 @@ function saveAccounts(address, keystore, cb) {
     });
 }
 
-function getAccount(address, cb) {
+export function getAccount(address, cb) {
   let originKey = window.ssb.id;
   let signedMessage = getSignedSecretSession(originKey);
   retrieveWithSession(originKey, signedMessage)
@@ -824,7 +824,7 @@ export function getSignedSecretSession(originKey) {
 export function exportAccountKeystore(address, pw, cb) {
   getAccount(address, (isExit, keystore) => {
     if (isExit) {
-      console.log('exportAccountKeystore',isExit)
+      console.log('exportAccountKeystore', isExit);
       exportKeystore(JSON.stringify(keystore), pw)
         .then(res => cb && cb(true, res))
         .catch(error => {
