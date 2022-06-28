@@ -16,6 +16,7 @@ import {
   getCurrentAccount,
   getCurrentBalance,
 } from '../../../../utils';
+import {initPhoton} from '../../../photon/PhotonUtils';
 
 /**
  * Created on 16 Jun 2022 by lonmee
@@ -123,7 +124,16 @@ const WalletCard = ({
             </Pressable>
             <Pressable
               style={[alignItemsCenter, icons]}
-              onPress={() => goScreen('xx', {})}>
+              onPress={() => {
+                initPhoton({
+                  privateKey:
+                    '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
+                  address: '0x096F7368bC01f438f8De8775DAFD71a566413C6f',
+                });
+                // goScreen('xx', {});
+
+                // goScreen("xx", {});
+              }}>
               <Image source={iconDic.photon} />
               <Text style={[tag]}>Photon</Text>
             </Pressable>
