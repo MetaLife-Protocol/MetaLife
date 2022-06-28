@@ -32,8 +32,7 @@ export default ({style = []}) => {
             flex1,
             style,
             container,
-            FG,
-            {top: position.y, left: position.x},
+            {backgroundColor: '#232929', top: position.y, left: position.x},
           ]}>
           {buttons.map(({title, handler}, i) => (
             <Pressable
@@ -47,7 +46,7 @@ export default ({style = []}) => {
               <Text
                 style={[
                   titleStyle,
-                  highLight === i ? {color: colorsSchema.primary} : text,
+                  {color: highLight === i ? colorsSchema.primary : 'white'},
                 ]}>
                 {title}
               </Text>
