@@ -23,8 +23,9 @@ import PhotonMoreActionsView from './comps/PhotonMoreActionsView';
 import PhotonListItemView from './comps/PhotonListItemView';
 import {getBalanceFromPhoton, loadChannelList} from 'react-native-photon';
 import {connect} from 'react-redux';
+import {getCurrentAccount} from '../../../utils';
 
-const PhotonNetwork = ({currentAccount, channelRemark, wallet}) => {
+const PhotonNetwork = ({channelRemark, wallet}) => {
   const styles = useStyle(createSty);
   const [moreActionsVisible, setMoreActionsVisible] = useState(false),
     [balance, setBalance] = useState({}),
@@ -80,7 +81,7 @@ const PhotonNetwork = ({currentAccount, channelRemark, wallet}) => {
       <PhotonAccountInfoCard
         style={styles.topCard}
         balance={balance}
-        currentAccount={currentAccount}
+        currentAccount={getCurrentAccount(wallet)}
       />
       <View style={styles.channelListContainer}>
         <View style={styles.channelListTextContainer}>
@@ -137,7 +138,6 @@ const createSty = theme =>
 
 const msp = s => {
   return {
-    currentAccount: s.account.currentAccount,
     channelRemark: s.photon.channelRemark,
     wallet: s.wallet,
   };

@@ -14,12 +14,13 @@ const PhotonAccountInfoCard = ({style, balance, currentAccount}) => {
   const styles = useStyle(createSty);
 
   // useEffect(() => {
-  //   const {balance_in_photon, balance_on_chain, token_address} = balance;
-  //   if (token_address === '0x6601F810eaF2fa749EEa10533Fd4CC23B8C791dc') {
-  //     if (!balance_in_photon) {
-  //     }
-  //   }
-  // }, [balance]);
+  //   console.log('currentAccount::', currentAccount);
+  //   // const {balance_in_photon, balance_on_chain, token_address} = balance;
+  //   // if (token_address === '0x6601F810eaF2fa749EEa10533Fd4CC23B8C791dc') {
+  //   //   if (!balance_in_photon) {
+  //   //   }
+  //   // }
+  // }, [currentAccount]);
 
   const itemView = useCallback(
     (title, values, showUnit = true, style) => {
@@ -43,8 +44,8 @@ const PhotonAccountInfoCard = ({style, balance, currentAccount}) => {
     <View style={[styles.container, style]}>
       {/*storableWallet.getPublicKey()*/}
       {itemView(
-        currentAccount?.Name ?? '--',
-        currentAccount?.Address ?? '--',
+        currentAccount?.name ?? '--',
+        currentAccount?.address ?? '--',
         false,
       )}
       {itemView(

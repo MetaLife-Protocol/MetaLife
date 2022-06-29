@@ -28,7 +28,7 @@ const ReceivingCode = () => {
   const styles = useStyle(styleFun);
   const svg = useRef();
 
-  let logoFromFile = require('../../../assets/image/contacts/nft_icon.png');
+  let logoFromFile = require('../../../assets/image/nft/logo.png');
 
   const saveQrToDisk = useCallback(() => {
     console.log('svg.current::', svg.current);
