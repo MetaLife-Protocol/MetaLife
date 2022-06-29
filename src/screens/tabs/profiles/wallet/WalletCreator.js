@@ -1,5 +1,5 @@
 import {connect} from 'react-redux/lib/exports';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -32,7 +32,7 @@ import {initPhoton} from '../../../photon/PhotonUtils';
 const WalletCreator = ({
   cfg: {lang, darkMode, verbose},
   route: {params},
-  navigation: {navigate},
+  navigation: {replace},
   wallet,
   walletCreateAccount,
 }) => {
@@ -114,24 +114,31 @@ const WalletCreator = ({
           disabled={!(aName && pw && cPw && pw === cPw)}
           press={() =>
             createAccount(pw, targetChain, res => {
-              console.log('res', res);
               const {
                 keystore: {address},
+                mnemonic,
+                shuffleMnemonic,
               } = res;
               setAName('');
               setPW('');
               setCPW('');
               setPrompt('');
-              walletCreateAccount({
+              const account = {
                 type: targetChain,
                 name: aName,
                 prompt,
                 address,
                 observer,
                 backup,
-              });
+              };
+              walletCreateAccount(account);
               Toast.show('Wallet created');
-              navigate(params.target);
+              replace('WalletBackup', {
+                ...params,
+                account,
+                mnemonic,
+                shuffleMnemonic,
+              });
             })
           }
         />

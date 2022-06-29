@@ -66,6 +66,9 @@ import MyNFTList from './screens/nft/my_nft_list/MyNFTList';
 import Scan from './screens/photon/scan';
 import MaskView from './shared/comps/MaskView';
 import WalletAccountDetails from './screens/tabs/profiles/wallet/WalletAccountDetails';
+import WalletBackup from './screens/tabs/profiles/wallet/WalletBackup';
+import WalletBackupMnemonicSelect from './screens/tabs/profiles/wallet/WalletBackupMnemonicSelect';
+import WalletBackupMnemonicShow from './screens/tabs/profiles/wallet/WalletBackupMnemonicShow';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -185,6 +188,21 @@ const App = ({
           name="WalletCreator"
           component={WalletCreator}
           options={{title: 'Create account'}}
+        />
+        <Screen
+          name="WalletBackup"
+          component={WalletBackup}
+          options={{title: 'Backup Wallet'}}
+        />
+        <Screen
+          name="WalletBackupMnemonicShow"
+          component={WalletBackupMnemonicShow}
+          options={{title: 'Backup Mnemonic'}}
+        />
+        <Screen
+          name="WalletBackupMnemonicSelect"
+          component={WalletBackupMnemonicSelect}
+          options={{title: 'Backup Mnemonic'}}
         />
         <Screen
           name="WalletImporter"
