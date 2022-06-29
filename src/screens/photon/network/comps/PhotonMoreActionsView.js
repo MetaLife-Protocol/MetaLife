@@ -65,6 +65,15 @@ const PhotonMoreActionsView = ({visible, onSelect, onClose, wallet}) => {
           }}>
           Transaction record
         </Text>
+
+        <Text
+          style={styles.text}
+          onPress={() => {
+            onSelect();
+            navigate('Payment');
+          }}>
+          Pay
+        </Text>
         <Text style={styles.text} onPress={uploadLog}>
           Upload data
         </Text>

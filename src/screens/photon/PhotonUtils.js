@@ -11,6 +11,57 @@ import {NormalDialog} from '../../metalife-base';
 import {photonSettleChannel, startPhotonServer} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {store} from '../../store/configureStore';
+import {getCurrentAccount} from '../../utils';
+import PasswordDialog from '../tabs/profiles/wallet/modal/PasswordDialog';
+import {getAccount} from '../../remote/wallet/WalletAPI';
+import {exportPrivateKeyFromKeystore} from 'react-native-web3-wallet';
+
+export function startPhoton({
+  dialog,
+  wallet,
+  navigate,
+  directToNetworkPage = true,
+}) {
+  const currentAccount = getCurrentAccount(wallet);
+  console.log('currentAccount::', currentAccount);
+  if (currentAccount?.type !== 'spectrum') {
+    Toast.show('photon is only used in spectrum chain');
+    return;
+  }
+
+  dialog.show(
+    <PasswordDialog
+      onConfirm={pw => {
+        console.log('pw::', pw);
+        if (!currentAccount?.address) {
+          Toast.show('Wallet does not exist!');
+          dialog.dismiss();
+          return;
+        }
+        getAccount(currentAccount?.address, (isExit, keystore) => {
+          if (isExit) {
+            console.log('keystore::', keystore);
+            exportPrivateKeyFromKeystore(JSON.stringify(keystore), pw)
+              .then(res => {
+                console.log('private Key res::::', res);
+                dialog.dismiss();
+                initPhoton({
+                  privateKey: res,
+                  address: currentAccount?.address,
+                  directToNetworkPage: directToNetworkPage,
+                  navigate: navigate,
+                });
+              })
+              .catch(error => {
+                console.warn(error);
+                // cb && cb(false);
+              });
+          }
+        });
+      }}
+    />,
+  );
+}
 
 export function initPhoton({
   privateKey,

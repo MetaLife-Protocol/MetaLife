@@ -76,7 +76,7 @@ const Scan = () => {
         </Pressable>
       ),
     });
-  }, [navigation, styles.photoImg]);
+  }, [navigation, styles.photoImg, onCallbackData]);
 
   const onQrCallBack = useCallback(
     res => {

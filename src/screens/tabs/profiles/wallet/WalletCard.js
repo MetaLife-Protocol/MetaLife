@@ -16,7 +16,7 @@ import {
   getCurrentAccount,
   getCurrentBalance,
 } from '../../../../utils';
-import {initPhoton} from '../../../photon/PhotonUtils';
+import {initPhoton, startPhoton} from '../../../photon/PhotonUtils';
 import {exportPrivateKeyFromKeystore} from 'react-native-web3-wallet';
 import {getAccount} from '../../../../remote/wallet/WalletAPI';
 import {useDialog} from '../../../../metalife-base';
@@ -118,64 +118,36 @@ const WalletCard = ({
           <View style={[{width: '100%'}, row, justifySpaceAround]}>
             <Pressable
               style={[alignItemsCenter, icons]}
-              onPress={() => goScreen('Scan', {})}>
+              onPress={() => {
+                goScreen('Scan', {
+                  onCallbackData: res => {
+                    Toast.show('TODO res:' + res);
+                  },
+                });
+              }}>
               <Image source={iconDic.scan} />
               <Text style={[tag]}>Scan</Text>
             </Pressable>
             <Pressable
               style={[alignItemsCenter, icons]}
-              onPress={() => goScreen('xx', {})}>
+              onPress={() => {
+                const currentAccount = getCurrentAccount(wallet);
+                goScreen('ReceivingCode', {
+                  token: currentAccount?.address,
+                });
+              }}>
               <Image source={iconDic.receive} />
               <Text style={[tag]}>Receive</Text>
             </Pressable>
             <Pressable
               style={[alignItemsCenter, icons]}
               onPress={() => {
-                const currentAccount = getCurrentAccount(wallet);
-                console.log('currentAccount::', currentAccount);
-                if (currentAccount?.type !== 'spectrum') {
-                  Toast.show('photon is only used in spectrum chain');
-                  return;
-                }
-
-                dialog.show(
-                  <PasswordDialog
-                    onConfirm={pw => {
-                      console.log('pw::', pw);
-                      if (!currentAccount?.address) {
-                        Toast.show('Wallet does not exist!');
-                        dialog.dismiss();
-                        return;
-                      }
-                      getAccount(
-                        currentAccount?.address,
-                        (isExit, keystore) => {
-                          if (isExit) {
-                            console.log('keystore::', keystore);
-                            exportPrivateKeyFromKeystore(
-                              JSON.stringify(keystore),
-                              pw,
-                            )
-                              .then(res => {
-                                console.log('private Key res::::', res);
-                                dialog.dismiss();
-                                initPhoton({
-                                  privateKey: res,
-                                  address: currentAccount?.address,
-                                  directToNetworkPage: true,
-                                  navigate: navigate,
-                                });
-                              })
-                              .catch(error => {
-                                console.warn(error);
-                                // cb && cb(false);
-                              });
-                          }
-                        },
-                      );
-                    }}
-                  />,
-                );
+                startPhoton({
+                  dialog: dialog,
+                  wallet: wallet,
+                  navigate: navigate,
+                  directToNetworkPage: true,
+                });
               }}>
               <Image source={iconDic.photon} />
               <Text style={[tag]}>Photon</Text>

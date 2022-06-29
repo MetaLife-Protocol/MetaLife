@@ -241,7 +241,7 @@ const PhotonListItemView = ({data, channelRemarks}) => {
       {data.state === 1 && (
         <View style={styles.buttonContainer}>
           <Text style={styles.buttonText} onPress={replenishAction}>
-            Replenish
+            deposit
           </Text>
           <Text style={styles.buttonText} onPress={withdrawAction}>
             withdraw
