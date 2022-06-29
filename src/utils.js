@@ -16,6 +16,15 @@ export const localDate = timestamp => {
 };
 
 /*************************** wallet ***************************/
+export function shuffle(mnemonic) {
+  let res = [];
+  for (const m of mnemonic) {
+    let index = Math.floor(Math.random() * mnemonic.length);
+    res.push(mnemonic.split());
+  }
+  return res;
+}
+
 export function abbreviationAccount(addr, pre, post) {
   return addr ? '0x' + addr.substring(0, pre) + '...' + addr.substr(-post) : '';
 }

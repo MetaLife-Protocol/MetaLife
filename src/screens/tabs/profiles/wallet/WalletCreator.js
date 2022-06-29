@@ -19,10 +19,15 @@ import useSchemaStyles, {
 } from '../../../../shared/UseSchemaStyles';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
-import {createAccount} from '../../../../remote/wallet/WalletAPI';
+import {
+  createAccount,
+  getWBalance,
+  importAccountByMnemonic,
+} from '../../../../remote/wallet/WalletAPI';
 import Toast from 'react-native-tiny-toast';
 import {useRoute} from '@react-navigation/native';
 import {initPhoton} from '../../../photon/PhotonUtils';
+import {getMnemonic} from '../../../../remote/ssb/ssbOP';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -35,6 +40,7 @@ const WalletCreator = ({
   navigation: {replace},
   wallet,
   walletCreateAccount,
+  setBalance,
 }) => {
   const {flex1, FG, with100p, row, alignItemsCenter, text, marginTop10} =
       useSchemaStyles(),
@@ -113,33 +119,59 @@ const WalletCreator = ({
           title={'Create account'}
           disabled={!(aName && pw && cPw && pw === cPw)}
           press={() =>
-            createAccount(pw, targetChain, res => {
-              const {
-                keystore: {address},
-                mnemonic,
-                shuffleMnemonic,
-              } = res;
-              setAName('');
-              setPW('');
-              setCPW('');
-              setPrompt('');
-              const account = {
-                type: targetChain,
-                name: aName,
-                prompt,
-                address,
-                observer,
-                backup,
-              };
-              walletCreateAccount(account);
-              Toast.show('Wallet created');
-              replace('WalletBackup', {
-                ...params,
-                account,
-                mnemonic,
-                shuffleMnemonic,
-              });
-            })
+            params.from === 'guid'
+              ? getMnemonic(mnemonic =>
+                  importAccountByMnemonic(
+                    mnemonic,
+                    pw,
+                    'spectrum',
+                    ({keystore: {address}}) => {
+                      const account = {
+                        type: 'spectrum',
+                        name: aName,
+                        prompt,
+                        address,
+                        observer,
+                        backup,
+                      };
+                      walletCreateAccount(account);
+                      // getWBalance('spectrum', address, setBalance);
+                      replace('WalletBackup', {
+                        ...params,
+                        account,
+                        mnemonic,
+                        shuffleMnemonic(mnemonic),
+                      });
+                    },
+                  ),
+                )
+              : createAccount(pw, targetChain, res => {
+                  const {
+                    keystore: {address},
+                    mnemonic,
+                    shuffleMnemonic,
+                  } = res;
+                  setAName('');
+                  setPW('');
+                  setCPW('');
+                  setPrompt('');
+                  const account = {
+                    type: targetChain,
+                    name: aName,
+                    prompt,
+                    address,
+                    observer,
+                    backup,
+                  };
+                  walletCreateAccount(account);
+                  Toast.show('Wallet created');
+                  replace('WalletBackup', {
+                    ...params,
+                    account,
+                    mnemonic,
+                    shuffleMnemonic,
+                  });
+                })
           }
         />
       </KeyboardAvoidingView>
@@ -162,6 +194,7 @@ const msp = s => {
 
 const mdp = d => {
   return {
+    setBalance: payload => d({type: 'setBalance', payload}),
     walletCreateAccount: payload => d({type: 'walletCreateAccount', payload}),
   };
 };

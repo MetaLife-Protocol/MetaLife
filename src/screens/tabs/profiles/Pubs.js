@@ -38,7 +38,7 @@ const presetPubs = [
     name: 'MetaLife Planet 2',
     key: '@HZnU6wM+F17J0RSLXP05x3Lag2jGv3F3LzHMjh72coE=.ed25519',
     invite:
-      '54.179.3.93:8008:@HZnU6wM+F17J0RSLXP05x3Lag2jGv3F3LzHMjh72coE=.ed25519~9Ax3nlgD6lyRVsrkwJYgGSFqsnSjYYR8KEofw160Ht4=',
+      '13.213.41.31:8008:@HZnU6wM+F17J0RSLXP05x3Lag2jGv3F3LzHMjh72coE=.ed25519~S0gwfIeutgCK6zsbQDXqEP0FxiitAIlzZeK7QDSYk40=',
   },
 ];
 

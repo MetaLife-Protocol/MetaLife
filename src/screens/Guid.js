@@ -25,7 +25,7 @@ const Guid = () => {
     navigate('WalletCreator', {
       type: 'spectrum',
       name: 'SPE-1',
-      target: 'Tabs',
+      from: 'guid', // special implements
     });
     // navigate('Mnemonic');
   }
