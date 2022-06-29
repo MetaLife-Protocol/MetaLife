@@ -87,8 +87,7 @@ const createSty = theme =>
     container: {
       position: 'absolute',
       right: 15,
-      width: 163,
-      height: 144,
+      width: 183,
       backgroundColor: theme.c_FFFFFF_232929,
       borderRadius: 6,
       paddingHorizontal: 15,
@@ -99,6 +98,7 @@ const createSty = theme =>
       color: theme.c_000000_FFFFFF,
       fontSize: 15,
       lineHeight: 18,
+      marginTop: 5,
     },
   });
 export default memo(PhotonMoreActionsView);
