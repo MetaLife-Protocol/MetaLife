@@ -16,7 +16,7 @@ import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {HeaderIcons} from '../shared/Icons';
 import {useEffect} from 'react';
-import {startPhoton} from './photon/PhotonUtils';
+import {startPhoton, stopCurrentPhoton} from './photon/PhotonUtils';
 import {useDialog} from '../metalife-base';
 
 const iconDic = {
@@ -57,7 +57,11 @@ const Tabs = ({darkMode, showPullMenu, wallet, cfg}) => {
       wallet: wallet,
       directToNetworkPage: false,
     });
-  }, [wallet]);
+    return () => {
+      stopCurrentPhoton();
+    };
+    //
+  }, []);
 
   function menuHandler(e) {
     e.target.measure((x, y, width, height, pageX, pageY) =>

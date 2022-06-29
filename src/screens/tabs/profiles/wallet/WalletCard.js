@@ -36,6 +36,7 @@ const WalletCard = ({
   feedId,
   wallet,
   setCurrent,
+  photon,
 }) => {
   const {row, flex1, justifySpaceAround, alignItemsCenter} = useSchemaStyles(),
     {container, title, balanceS, icons, tag} = styles;
@@ -143,12 +144,18 @@ const WalletCard = ({
             <Pressable
               style={[alignItemsCenter, icons]}
               onPress={() => {
-                startPhoton({
-                  dialog: dialog,
-                  wallet: wallet,
-                  navigate: navigate,
-                  directToNetworkPage: true,
-                });
+                console.log('photon::', photon);
+                if (photon?.isPhotonLogin) {
+                  navigate('PhotonNetwork');
+                } else {
+                  startPhoton({
+                    dialog: dialog,
+                    wallet: wallet,
+                    navigate: navigate,
+                    directToNetworkPage: true,
+                  });
+                }
+                // return;
               }}>
               <Image source={iconDic.photon} />
               <Text style={[tag]}>Photon</Text>
@@ -214,6 +221,7 @@ const msp = s => {
     relations: s.user.relations,
     infoDic: s.info,
     wallet: s.wallet,
+    photon: s.photon,
   };
 };
 

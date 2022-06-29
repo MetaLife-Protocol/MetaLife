@@ -16,8 +16,12 @@ export const photonReducer = (state = initValue, {type, payload}) => {
           payload,
         ],
       };
-    case 'reset':
-      return initValue;
+    case 'resetPhoton':
+      return {
+        channelRemark: state?.channelRemark,
+        isPhotonLogin: false,
+        logFile: '',
+      };
     default:
       return state;
   }

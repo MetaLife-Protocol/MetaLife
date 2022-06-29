@@ -8,7 +8,11 @@
 import React from 'react';
 import PhotonUrl from './PhotonUrl';
 import {NormalDialog} from '../../metalife-base';
-import {photonSettleChannel, startPhotonServer} from 'react-native-photon';
+import {
+  photonSettleChannel,
+  photonStop,
+  startPhotonServer,
+} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {store} from '../../store/configureStore';
 import {getCurrentAccount} from '../../utils';
@@ -148,4 +152,9 @@ export function settleChannelDialog(dialog, channelIdentifier) {
       }}
     />,
   );
+}
+
+export function stopCurrentPhoton() {
+  photonStop();
+  store.dispatch({type: 'resetPhoton'});
 }

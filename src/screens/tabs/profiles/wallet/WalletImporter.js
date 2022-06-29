@@ -290,7 +290,6 @@ const styles = StyleSheet.create({
     color: '#E2EDEA',
     fontSize: 15,
     height: 46,
-    textAlign: 'center',
   },
   indicator: {
     height: 2,
