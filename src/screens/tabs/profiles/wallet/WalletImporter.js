@@ -40,7 +40,7 @@ const icon = {
 };
 
 const WalletImporter = ({cfg: {darkMode}, route: {params}, wallet, create}) => {
-  const {navigate} = useNavigation();
+  const {navigate, goBack} = useNavigation();
   const {flex1, FG, BG, row, alignSelfCenter, text, marginTop10, modalFG} =
       useSchemaStyles(),
     {textHolder} = colorsSchema;
@@ -70,6 +70,8 @@ const WalletImporter = ({cfg: {darkMode}, route: {params}, wallet, create}) => {
       address: address,
       observer,
     });
+    goBack();
+    Toast.show('Import success');
   };
 
   const renderPage = (placeholder, press, tip) => {
