@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, ImageBackground, StyleSheet, View} from 'react-native';
+import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import RoundBtn from '../shared/comps/RoundBtn';
 import useSchemaStyles from '../shared/UseSchemaStyles';
 import {useNavigation} from '@react-navigation/native';
@@ -15,13 +15,19 @@ const iconDic = {
 
 const Guid = () => {
   const {flex1, alignItemsCenter, width100Percent} = useSchemaStyles(),
-    {titleImg, buttons, buttonPadding} = styles;
+    {titleImg, buttons} = styles;
   const {replace, navigate} = useNavigation();
   const {channel} = nodejs;
 
   function createHandler() {
     channel.post('identity', 'CREATE');
-    replace('Tabs');
+    // replace('Tabs');
+    navigate('WalletCreator', {
+      type: 'spectrum',
+      name: 'SPE-1',
+      target: 'Tabs',
+    });
+    // navigate('Mnemonic');
   }
 
   return (
@@ -29,11 +35,20 @@ const Guid = () => {
       <Image style={titleImg} source={iconDic.MetaLife} />
       <View style={flex1} />
       <View style={[buttons, width100Percent]}>
-        <RoundBtn title={'Create'} press={createHandler} />
-        <View style={buttonPadding} />
-        <RoundBtn title={'Restore'} press={() => navigate('Restore')} />
-        <View style={buttonPadding} />
+        <RoundBtn
+          style={[{marginBottom: 15}]}
+          title={'Create'}
+          press={createHandler}
+        />
+        <RoundBtn
+          style={[{marginBottom: 15}]}
+          title={'Import'}
+          press={() => navigate('Restore')}
+        />
       </View>
+      <Text style={[{color: '#8e8e92', textAlign: 'center', marginBottom: 15}]}>
+        {'*Minors under the age of 17 are prohibited from\n using this product'}
+      </Text>
     </ImageBackground>
   );
 };
@@ -42,11 +57,8 @@ const styles = StyleSheet.create({
   titleImg: {
     marginTop: 178,
   },
-  buttons: {
-    marginBottom: 50,
-  },
   buttonPadding: {
-    height: 15,
+    marginBottom: 25,
   },
 });
 

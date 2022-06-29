@@ -21,6 +21,8 @@ import RoundBtn from '../../../../shared/comps/RoundBtn';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 import {createAccount} from '../../../../remote/wallet/WalletAPI';
 import Toast from 'react-native-tiny-toast';
+import {useRoute} from '@react-navigation/native';
+import {initPhoton} from '../../../photon/PhotonUtils';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -30,7 +32,7 @@ import Toast from 'react-native-tiny-toast';
 const WalletCreator = ({
   cfg: {lang, darkMode, verbose},
   route: {params},
-  navigation: {goBack},
+  navigation: {navigate},
   wallet,
   walletCreateAccount,
 }) => {
@@ -39,11 +41,12 @@ const WalletCreator = ({
     {textHolder} = colorsSchema,
     {inputs} = styles;
 
-  const [aName, setAName] = useState(''),
+  const [aName, setAName] = useState((params && params.name) || ''),
     [pw, setPW] = useState(''),
     [cPw, setCPW] = useState(''),
     [prompt, setPrompt] = useState(''),
-    [observer, setObserver] = useState(false);
+    [observer, setObserver] = useState(false),
+    [backup, setBackup] = useState(false);
 
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
 
@@ -114,8 +117,6 @@ const WalletCreator = ({
               console.log('res', res);
               const {
                 keystore: {address},
-                mnemonic,
-                shuffleMnemonic,
               } = res;
               setAName('');
               setPW('');
@@ -124,13 +125,13 @@ const WalletCreator = ({
               walletCreateAccount({
                 type: targetChain,
                 name: aName,
+                prompt,
                 address,
-                mnemonic,
-                shuffleMnemonic,
                 observer,
+                backup,
               });
               Toast.show('Wallet created');
-              goBack();
+              navigate(params.target);
             })
           }
         />

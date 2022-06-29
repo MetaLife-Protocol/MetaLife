@@ -671,6 +671,7 @@ export function importAccountByKeystore(keystore, pw, cb) {
       saveAccounts(res.keystore.address, res.keystore, (success, err) => {
         console.log('save', success, err);
       });
+      m;
       cb && cb(true, res);
     })
     .catch(reason => {
@@ -682,7 +683,7 @@ export function importAccountByKeystore(keystore, pw, cb) {
 export function importAccountByPrivateKey(privateKey, pw, cb) {
   importPrivateKey(privateKey, pw, true)
     .then(res => {
-      console.log('hhhhhh',res)
+      console.log('hhhhhh', res);
       saveAccounts(res.keystore.address, res.keystore, (success, err) => {
         console.log('save', success, err);
       });
