@@ -24,7 +24,7 @@ import PhotonListItemView from './comps/PhotonListItemView';
 import {getBalanceFromPhoton, loadChannelList} from 'react-native-photon';
 import {connect} from 'react-redux';
 
-const PhotonNetwork = ({currentAccount, channelRemark}) => {
+const PhotonNetwork = ({currentAccount, channelRemark, wallet}) => {
   const styles = useStyle(createSty);
   const [moreActionsVisible, setMoreActionsVisible] = useState(false),
     [balance, setBalance] = useState({}),
@@ -103,6 +103,7 @@ const PhotonNetwork = ({currentAccount, channelRemark}) => {
         onClose={() => {
           setMoreActionsVisible(false);
         }}
+        wallet={wallet}
       />
     </SafeAreaView>
   );
@@ -138,6 +139,7 @@ const msp = s => {
   return {
     currentAccount: s.account.currentAccount,
     channelRemark: s.photon.channelRemark,
+    wallet: s.wallet,
   };
 };
 export default connect(msp)(PhotonNetwork);

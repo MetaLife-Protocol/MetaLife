@@ -55,7 +55,7 @@ const SMT_chainId = 20180430;
 const ETH_chainId = 1;
 const MLT_decmis = 18;
 const MESH_decmis = 18;
-const erc20ABI = [
+export const erc20ABI = [
   {
     anonymous: false,
     inputs: [
