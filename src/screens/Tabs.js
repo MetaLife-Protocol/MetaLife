@@ -15,6 +15,9 @@ import HeaderRightBtn from './tabs/HeaderRightBtn';
 import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {HeaderIcons} from '../shared/Icons';
+import {useEffect} from 'react';
+import {startPhoton} from './photon/PhotonUtils';
+import {useDialog} from '../metalife-base';
 
 const iconDic = {
   Home_icon_Default: require('../assets/image/tabBtn/Home_icon_Default.png'),
@@ -37,15 +40,24 @@ function Ionicons({name, focused, color, size}) {
   );
 }
 
-const Tabs = ({darkMode, showPullMenu}) => {
+const Tabs = ({darkMode, showPullMenu, wallet, cfg}) => {
   const contactAddIcon = darkMode
     ? HeaderIcons.contactAddIconWhite
     : HeaderIcons.contactAddIconBlack;
   const {navigate} = useNavigation();
   const {Navigator, Screen} = createBottomTabNavigator();
+  const dialog = useDialog();
   function goScreen(name, params) {
     navigate(name, params);
   }
+
+  useEffect(() => {
+    startPhoton({
+      dialog: dialog,
+      wallet: wallet,
+      directToNetworkPage: false,
+    });
+  }, [wallet]);
 
   function menuHandler(e) {
     e.target.measure((x, y, width, height, pageX, pageY) =>
@@ -175,7 +187,12 @@ const Tabs = ({darkMode, showPullMenu}) => {
   );
 };
 
-const msp = s => s.cfg;
+const msp = s => {
+  return {
+    cfg: s.cfg,
+    wallet: s.wallet,
+  };
+};
 
 const mdp = d => {
   return {
