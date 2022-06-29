@@ -5,7 +5,7 @@
  * @desc:
  */
 
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -22,8 +22,12 @@ import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo'
 import BlockchainView from './comps/BlockchainView';
 import PaymentTokensView from './comps/PaymentTokensView';
 import DisplayThemeView from './comps/DisplayThemeView';
+import {createCollection, initNFTContract} from '../nftUtils';
+import {getCurrentAccount} from '../../../utils';
+import {getAccount} from '../../../remote/wallet/WalletAPI';
+import {connect} from 'react-redux/lib/exports';
 
-const CreateCollection = () => {
+const CreateCollection = ({wallet}) => {
   const styles = useStyle(createSty);
   const [logoImage, setLogoImage] = useState(),
     [featuredImage, setFeaturedImage] = useState(),
@@ -34,6 +38,23 @@ const CreateCollection = () => {
     [creatorEarnings, setCreatorEarning] = useState(2.5);
 
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
+
+  useEffect(() => {
+    if (wallet) {
+      const currentAccount = getCurrentAccount(wallet);
+      console.log('currentAccount::', currentAccount);
+      getAccount(currentAccount?.address, (isExit, keystore) => {
+        if (isExit) {
+          console.log('keystore::', keystore);
+          initNFTContract(keystore);
+        }
+      });
+    }
+  }, [wallet]);
+
+  const onCreateCollection = useCallback(() => {
+    initNFTContract();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -125,7 +146,13 @@ const CreateCollection = () => {
             tips={'Change how your items are shown.'}
           />
           <DisplayThemeView />
-          <RoundBtn style={styles.buttonContainer} title={'Create'} />
+          <RoundBtn
+            press={() => {
+              onCreateCollection;
+            }}
+            style={styles.buttonContainer}
+            title={'Create'}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -178,4 +205,18 @@ const createSty = theme =>
       marginBottom: 20,
     },
   });
-export default CreateCollection;
+
+const msp = s => {
+  return {
+    wallet: s.wallet,
+  };
+};
+
+const mdp = d => {
+  return {
+    // showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
+    // setCurrent: payload => d({type: 'setCurrent', payload}),
+  };
+};
+
+export default connect(msp, mdp)(CreateCollection);

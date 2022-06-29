@@ -24,15 +24,21 @@ const Discover = ({darkMode}) => {
 
   const DATA = [
     {title: 'DAO', bgImg: iconDic.DAO},
-    {title: 'NFT', bgImg: iconDic.NFT},
+    {
+      title: 'NFT',
+      bgImg: iconDic.NFT,
+      onPress: () => {
+        navigate('CreateCollection');
+      },
+    },
     {title: 'Play to earn', bgImg: iconDic.pte},
     {title: 'VISwap', bgImg: iconDic.vis},
     {title: 'Featured Content', bgImg: iconDic.fc},
   ];
 
-  const Item = ({item: {title, bgImg}}) => {
+  const Item = ({item: {title, bgImg, onPress}}) => {
     return (
-      <Pressable onPress={() => navigate('SubScreen')}>
+      <Pressable onPress={() => (onPress ? onPress() : navigate('SubScreen'))}>
         <ImageBackground style={[styles.item, justifyCenter]} source={bgImg}>
           <Text style={styles.title}>{title}</Text>
         </ImageBackground>

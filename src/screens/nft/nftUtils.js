@@ -9,6 +9,8 @@
 import axios from 'axios';
 import FormData from 'form-data';
 import Toast from 'react-native-tiny-toast';
+import {getSignerContract} from 'react-native-web3-wallet';
+import {erc20ABI} from '../../remote/wallet/App';
 
 export function initNFT({privateKey, address}) {
   // const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
@@ -59,4 +61,85 @@ export async function uploadFileToIFPS({
   //   console.log('SERVER ERROR:', error);
   //   //handle error here
   // });
+}
+
+// getSignerContract(
+//   'https://jsonapi1.smartmesh.io/',
+//   '0xa27f8f580c01db0682ce185209ffb84121a2f711',
+//   erc20ABI,
+//   JSON.stringify(keystore),
+//   'qwerty',
+// )
+//   .then(contract => {
+//     contract
+//       .balanceOf('0x6025B091C6AB619F8e2F75170EB69dc57040dc6e')
+//       .then(res => {
+//         console.log(bigNumberFormatUnits(res));
+//       })
+//       .catch(err => {
+//         console.log(err);
+//       });
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });
+let contractSingle;
+export function initNFTContract(keystore) {
+  getSignerContract(
+    'https://jsonapi1.smartmesh.io/',
+    '0xa27f8f580c01db0682ce185209ffb84121a2f711',
+    erc20ABI,
+    JSON.stringify(keystore),
+    '123456',
+  )
+    .then(contract => {
+      console.log('contract:::', contract);
+      contractSingle = contract;
+      // contract
+      //   .balanceOf('0x6025B091C6AB619F8e2F75170EB69dc57040dc6e')
+      //   .then(res => {
+      //     console.log(bigNumberFormatUnits(res));
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
+    })
+    .catch(e => {
+      console.warn('err:::', e);
+    });
+}
+
+// 创建集合
+// 接口：` metaMaster -> createCollection(string, string, string, uint, string, address, uint)`
+// 权限：public
+// 参数：
+//  -string: collection name
+// -string: collection symbol
+// -string: collection baseURI: 原来代码此处写死https://gateway.pinata.cloud/ipfs/  ？
+//   -uint: 最大供应量，不能超过uint96
+// -string: collection的描述信息，可以是描述，也可以是logo图片地址
+// -address: 接收版权费的地址
+// -uint: 版权费率，单位是BP基点，2.5%即为250
+// 创建后会返回一个地址，即为创建的collection地址，可以按用户查询collection接口获取其地址。
+
+export function createCollection({
+  name,
+  symbol,
+  baseURI, //ipfsId
+  maxNum,
+  logo,
+  address,
+  ratio = 250,
+}) {
+  console.log('contractSingle::', contractSingle);
+  // if (contractSingle) {
+  //   contractSingle
+  //     .createCollection(name, symbol, baseURI, maxNum, logo, address, ratio)
+  //     .then(res => {
+  //       console.log('createCollection:::', res);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // }
 }
