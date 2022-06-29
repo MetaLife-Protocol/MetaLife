@@ -17,7 +17,7 @@ import {
 import {useDialog, useStyle} from '../../../../metalife-base';
 import {useNavigation} from '@react-navigation/native';
 import {uploadPhotonLogDialog} from '../hooks';
-import {getCurrentAccount} from '../../../../utils';
+import {fixWalletAddress, getCurrentAccount} from '../../../../utils';
 
 const PhotonMoreActionsView = ({visible, onSelect, onClose, wallet}) => {
   const styles = useStyle(createSty);
@@ -44,7 +44,7 @@ const PhotonMoreActionsView = ({visible, onSelect, onClose, wallet}) => {
             const currentAccount = getCurrentAccount(wallet);
             // console.log('currentAccount::', currentAccount);
             navigate('ReceivingCode', {
-              token: currentAccount?.address,
+              token: fixWalletAddress(currentAccount?.address),
             });
           }}>
           QR code

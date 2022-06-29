@@ -28,6 +28,13 @@ export function getCurrentAccount(wallet) {
   );
 }
 
+export function fixWalletAddress(address) {
+  if (!address.startsWith('0x')) {
+    address = '0x' + address;
+  }
+  return address;
+}
+
 export function getCurrentBalance(wallet) {
   return (
     (wallet.balance[wallet.current.type] &&

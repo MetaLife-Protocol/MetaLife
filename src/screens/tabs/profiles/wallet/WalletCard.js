@@ -13,6 +13,7 @@ import React, {useState} from 'react';
 import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
 import {
   abbreviationAccount,
+  fixWalletAddress,
   getCurrentAccount,
   getCurrentBalance,
 } from '../../../../utils';
@@ -133,7 +134,7 @@ const WalletCard = ({
               onPress={() => {
                 const currentAccount = getCurrentAccount(wallet);
                 goScreen('ReceivingCode', {
-                  token: currentAccount?.address,
+                  token: fixWalletAddress(currentAccount?.address),
                 });
               }}>
               <Image source={iconDic.receive} />

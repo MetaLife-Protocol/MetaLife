@@ -73,7 +73,7 @@ export function initPhoton({
   if (privateKey.startsWith('0x')) {
     privateKey = privateKey.substring(2);
   }
-  if (!privateKey.startsWith('0x')) {
+  if (!address.startsWith('0x')) {
     address = '0x' + address;
   }
 
