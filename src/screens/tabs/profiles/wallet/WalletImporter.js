@@ -39,12 +39,7 @@ const icon = {
   scanB: require('../../../../assets/image/wallet/icon_scan_default_black.png'),
 };
 
-const WalletImporter = ({
-  cfg: {lang, darkMode, verbose},
-  route: {params},
-  wallet,
-  create,
-}) => {
+const WalletImporter = ({cfg: {darkMode}, route: {params}, wallet, create}) => {
   const {navigate} = useNavigation();
   const {flex1, FG, BG, row, alignSelfCenter, text, marginTop10, modalFG} =
       useSchemaStyles(),
@@ -68,16 +63,13 @@ const WalletImporter = ({
   }
 
   const exportAccount = (address, observer) => {
-    const isExit = wallet.accounts[targetChain].find(item => item.address);
-    if (!isExit) {
-      const count = wallet.accounts[targetChain].length + 1;
-      create({
-        type: targetChain,
-        name: targetChain + '-' + count,
-        address: address,
-        observer,
-      });
-    }
+    const count = wallet.accounts[targetChain].length + 1;
+    create({
+      type: targetChain,
+      name: targetChain + '-' + count,
+      address: address,
+      observer,
+    });
   };
 
   const renderPage = (placeholder, press, tip) => {
@@ -201,7 +193,8 @@ const WalletImporter = ({
         () => {
           importAccountByKeystore(copyInfo, pw, (isExit, res) => {
             if (isExit) {
-              exportAccount(res.keystore.address, false);
+              const keystore = JSON.parse(res.keystore);
+              exportAccount(keystore.address, false);
             } else {
               Toast.show('Wrong password');
             }
