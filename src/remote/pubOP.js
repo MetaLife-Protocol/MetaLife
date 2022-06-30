@@ -3,8 +3,8 @@
  *
  */
 
-const pubIp = ['13.213.41.31'];
-const url = `http://${pubIp[0]}:18008/ssb/api/`;
+const pubIp = ['106.52.171.12', '13.213.41.31'];
+const url = `http://${pubIp[0]}:10008/ssb/api/`;
 const api = ['tipped-who-off', 'id2eth'];
 
 /**

@@ -159,7 +159,8 @@ const WalletCreator = ({
                       setCurrent({type: 'spectrum', index: 0});
                       // getWBalance('spectrum', address, setBalance);
                       // join pub 2
-                      inviteAccept(presetPubs[1].invite, (e, v) => {
+                      inviteAccept(presetPubs[0].invite, (e, v) => {
+                        // inviteAccept(presetPubs[1].invite, (e, v) => {
                         console.log(e ? e.message : 'invite accepted');
                         e || reconnect2pub();
                       });
