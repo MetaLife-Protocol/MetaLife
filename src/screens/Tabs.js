@@ -41,7 +41,7 @@ function Ionicons({name, focused, color, size}) {
   );
 }
 
-const Tabs = ({darkMode, showPullMenu, wallet, cfg, photon}) => {
+const Tabs = ({showPullMenu, wallet, cfg: {darkMode}, photon}) => {
   const contactAddIcon = darkMode
     ? HeaderIcons.contactAddIconWhite
     : HeaderIcons.contactAddIconBlack;

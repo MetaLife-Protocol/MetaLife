@@ -161,7 +161,7 @@ const WalletBackupMnemonicSelect = ({
                   index: 0,
                   routes: [
                     {
-                      name: 'Tabs',
+                      name: params.target,
                       params: {init: true},
                     },
                   ],

@@ -13,6 +13,7 @@ export default ({style = []}) => {
 
   const {pullMenu} = useSelector(state => state.runtime),
     {position, buttons} = pullMenu,
+    {darkMode} = useSelector(state => state.cfg.darkMode),
     dispatch = useDispatch();
 
   const [highLight, setHighLight] = useState(NaN);

@@ -146,7 +146,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
             <Text style={[address]}>0x{getCurrentAccount(wallet).address}</Text>
             <Pressable
               onPress={() => {
-                nativeClipboard.setString('[address]');
+                nativeClipboard.setString(getCurrentAccount(wallet).address);
                 Toast.show('Address copied');
               }}
               onPressIn={() => setPressed(true)}
