@@ -17,10 +17,11 @@ export const localDate = timestamp => {
 
 /*************************** wallet ***************************/
 export function shuffle(mnemonic) {
+  let cMne = mnemonic.concat();
   let res = [];
-  for (const m of mnemonic) {
-    let index = Math.floor(Math.random() * mnemonic.length);
-    res.push(mnemonic.split());
+  while (cMne.length > 0) {
+    let index = Math.floor(Math.random() * cMne.length);
+    res.push(cMne.split(index, 1));
   }
   return res;
 }

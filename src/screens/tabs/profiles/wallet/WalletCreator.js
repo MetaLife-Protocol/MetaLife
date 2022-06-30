@@ -28,6 +28,7 @@ import Toast from 'react-native-tiny-toast';
 import {useRoute} from '@react-navigation/native';
 import {initPhoton} from '../../../photon/PhotonUtils';
 import {getMnemonic} from '../../../../remote/ssb/ssbOP';
+import {shuffle} from '../../../../utils';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -140,7 +141,7 @@ const WalletCreator = ({
                         ...params,
                         account,
                         mnemonic,
-                        shuffleMnemonic(mnemonic),
+                        shuffleMnemonic: shuffle(mnemonic),
                       });
                     },
                   ),
