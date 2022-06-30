@@ -21,6 +21,7 @@ import RoundBtn from '../../../../shared/comps/RoundBtn';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 import {
   createAccount,
+  exportAccountPrivateKey,
   getWBalance,
   importAccountByMnemonic,
 } from '../../../../remote/wallet/WalletAPI';
@@ -29,6 +30,7 @@ import {useRoute} from '@react-navigation/native';
 import {initPhoton} from '../../../photon/PhotonUtils';
 import {getMnemonic} from '../../../../remote/ssb/ssbOP';
 import {shuffle} from '../../../../utils';
+import {bindIDAndWallet} from '../../../../remote/pubOP';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -43,6 +45,7 @@ const WalletCreator = ({
   walletCreateAccount,
   setBalance,
   setCurrent,
+  feedId,
 }) => {
   const {flex1, FG, with100p, row, alignItemsCenter, text, marginTop10} =
       useSchemaStyles(),
@@ -154,6 +157,15 @@ const WalletCreator = ({
                       walletCreateAccount(account);
                       setCurrent({type: 'spectrum', index: 0});
                       // getWBalance('spectrum', address, setBalance);
+                      // register pub
+                      bindIDAndWallet(
+                        {client_id: feedId, client_eth_address: address},
+                        console.log,
+                      );
+                      // start photon
+                      exportAccountPrivateKey(address, pw, ({_, privateKey}) =>
+                        initPhoton({privateKey, address}),
+                      );
                       Toast.hide();
                       replace('WalletBackup', {
                         ...params,
@@ -207,6 +219,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     wallet: s.wallet,
+    feedId: s.user.feedId,
   };
 };
 

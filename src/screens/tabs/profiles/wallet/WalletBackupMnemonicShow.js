@@ -56,10 +56,6 @@ const styles = StyleSheet.create({
   container: {
     margin: 20,
   },
-  text: {
-    fontSize: 15,
-    lineHeight: 18,
-  },
   mncontainer: {
     display: 'flex',
     width: '100%',
