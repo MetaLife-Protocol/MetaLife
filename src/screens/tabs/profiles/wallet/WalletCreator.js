@@ -28,9 +28,10 @@ import {
 import Toast from 'react-native-tiny-toast';
 import {useRoute} from '@react-navigation/native';
 import {initPhoton} from '../../../photon/PhotonUtils';
-import {getMnemonic} from '../../../../remote/ssb/ssbOP';
+import {getMnemonic, inviteAccept} from '../../../../remote/ssb/ssbOP';
 import {shuffle} from '../../../../utils';
 import {bindIDAndWallet} from '../../../../remote/pubOP';
+import {presetPubs, reconnect2pub} from '../Pubs';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -157,15 +158,20 @@ const WalletCreator = ({
                       walletCreateAccount(account);
                       setCurrent({type: 'spectrum', index: 0});
                       // getWBalance('spectrum', address, setBalance);
+                      // join pub 2
+                      inviteAccept(presetPubs[1].invite, (e, v) => {
+                        console.log(e ? e.message : 'invite accepted');
+                        e || reconnect2pub();
+                      });
                       // register pub
                       bindIDAndWallet(
-                        {client_id: feedId, client_eth_address: address},
+                        {client_id: feedId, client_eth_address: '0x' + address},
                         console.log,
                       );
                       // start photon
-                      exportAccountPrivateKey(address, pw, ({_, privateKey}) =>
-                        initPhoton({privateKey, address}),
-                      );
+                      // exportAccountPrivateKey(address, pw, ({_, privateKey}) =>
+                      //   initPhoton({privateKey, address}),
+                      // );
                       Toast.hide();
                       replace('WalletBackup', {
                         ...params,

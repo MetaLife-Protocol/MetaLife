@@ -20,6 +20,7 @@ import {connect} from 'react-redux/lib/exports';
 import {initializeHandlers} from '../../remote/ssb/SsbListeners';
 import {checkAddon} from '../../remote/ssb/SsbHandlers';
 import {useStore} from 'react-redux';
+import {reset} from 'react-native-svg/lib/typescript/lib/Matrix2D';
 
 const Resync = ({
   feedId,
@@ -32,7 +33,8 @@ const Resync = ({
   const {FG, flex1, marginTop10, btnInactiveFG, btnInactiveBG} =
       useSchemaStyles(),
     {border, title} = styles;
-  const {navigate, dispatch, popToTop, getState} = useNavigation();
+  const {navigate, dispatch, replace, reset, popToTop, getState} =
+    useNavigation();
   const store = useStore();
   const [progress, setProgress] = useState(0);
   const [complete, setComplete] = useState(false);
@@ -97,14 +99,36 @@ const Resync = ({
         press={() => {
           setResync(false);
           enableFirewall();
-          initializeHandlers(store),
-            checkAddon('launch'),
-            dispatch({
-              ...StackActions.replace('Tabs'),
-              source: getState().routes[0].key,
-              target: getState().key,
-            });
-          popToTop();
+          initializeHandlers(store);
+          checkAddon('launch');
+          reset({
+            index: 0,
+            routes: [
+              {
+                name: 'Tabs',
+                params: {init: true},
+              },
+            ],
+          });
+        }}
+      />
+      <RoundBtn
+        style={[marginTop10, {marginBottom: 15}]}
+        title={'Skip'}
+        press={() => {
+          setResync(false);
+          enableFirewall();
+          initializeHandlers(store);
+          checkAddon('launch');
+          reset({
+            index: 0,
+            routes: [
+              {
+                name: 'Tabs',
+                params: {init: true},
+              },
+            ],
+          });
         }}
       />
     </SafeAreaView>

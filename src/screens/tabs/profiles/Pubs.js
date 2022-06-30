@@ -27,7 +27,7 @@ import {NormalSeparator} from '../../../shared/comps/SectionSeparators';
 import {HeaderIcons} from '../../../shared/Icons';
 import RoundBtn from '../../../shared/comps/RoundBtn';
 
-const presetPubs = [
+export const presetPubs = [
   {
     name: 'MetaLife Planet 1',
     key: '@1qF7giAqTYBuAUbFsO13ezRy1WhKvwcX23II65jwxUc=.ed25519',
@@ -42,31 +42,31 @@ const presetPubs = [
   },
 ];
 
+export function reconnect2pub() {
+  getConnectedPeers(peers => {
+    // fix pub bug
+    peers.map(([addr, {type, autoconnect, state}]) => {
+      const tAddr = addr && addr.split(':');
+      if (
+        tAddr &&
+        tAddr.length === 5 &&
+        type === 'pub' &&
+        autoconnect &&
+        state === 'connected'
+      ) {
+        tAddr.pop();
+        const tarAddr = tAddr.join(':');
+        disconnectPeer(addr, () => persistentConnectPeer(tarAddr, {type}));
+      }
+    });
+  });
+}
+
 const Pubs = ({darkMode, infoDic, pubs}) => {
   const {flex1, row, alignItemsCenter, text, marginTop10} = useSchemaStyles(),
     {textHolder} = colorsSchema,
     {invite} = styles;
   const [code, setCode] = useState('');
-
-  function reconnect2pub() {
-    getConnectedPeers(peers => {
-      // fix pub bug
-      peers.map(([addr, {type, autoconnect, state}]) => {
-        const tAddr = addr && addr.split(':');
-        if (
-          tAddr &&
-          tAddr.length === 5 &&
-          type === 'pub' &&
-          autoconnect &&
-          state === 'connected'
-        ) {
-          tAddr.pop();
-          const tarAddr = tAddr.join(':');
-          disconnectPeer(addr, () => persistentConnectPeer(tarAddr, {type}));
-        }
-      });
-    });
-  }
 
   return (
     <SafeAreaView>
