@@ -22,7 +22,7 @@ export function shuffle(mnemonic) {
     res = [];
   while (cMne.length > 0) {
     let index = Math.floor(Math.random() * cMne.length);
-    res.push(cMne.splice(index, 1));
+    res.push(cMne.splice(index, 1).join());
   }
   return res;
 }
