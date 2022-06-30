@@ -7,13 +7,12 @@ import {Pressable, StyleSheet, Text, View} from 'react-native';
 import useSchemaStyles, {colorsSchema} from '../UseSchemaStyles';
 import {useDispatch, useSelector} from 'react-redux';
 
-export default ({style = []}) => {
+export default ({darkMode, style}) => {
   const {flex1, text, FG} = useSchemaStyles(),
     {background, container, titleStyle} = styles;
 
   const {pullMenu} = useSelector(state => state.runtime),
     {position, buttons} = pullMenu,
-    {darkMode} = useSelector(state => state.cfg.darkMode),
     dispatch = useDispatch();
 
   const [highLight, setHighLight] = useState(NaN);
