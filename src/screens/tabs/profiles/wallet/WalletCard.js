@@ -38,8 +38,7 @@ const WalletCard = ({
   setCurrent,
   photon,
 }) => {
-  const {row, FG, justifySpaceAround, alignItemsCenter} =
-      useSchemaStyles(),
+  const {row, FG, justifySpaceAround, alignItemsCenter} = useSchemaStyles(),
     {container, title, balanceS, icons, tag} = styles;
 
   const {navigate} = useNavigation();
@@ -117,7 +116,8 @@ const WalletCard = ({
               <Image source={iconDic.dots} />
             </Pressable>
           </View>
-          <Text style={[balanceS]}>$ {getCurrentBalance(wallet)}</Text>
+          {/*<Text style={[balanceS]}>$ {getCurrentBalance(wallet)}</Text>*/}
+          <Text style={[balanceS]}>MLT {getCurrentBalance(wallet)}</Text>
           <View style={[{width: '100%'}, row, justifySpaceAround]}>
             <Pressable
               style={[alignItemsCenter, icons]}
