@@ -172,7 +172,10 @@ const WalletCreator = ({
                       });
                       // register pub
                       bindIDAndWallet(
-                        {client_id: feedId, client_eth_address: '0x' + address},
+                        {
+                          client_id: feedId,
+                          client_eth_address: '0x' + address.toString(),
+                        },
                         console.log,
                       );
                       // start photon
