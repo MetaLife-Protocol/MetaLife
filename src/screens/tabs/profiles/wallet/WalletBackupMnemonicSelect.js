@@ -21,11 +21,11 @@ import {ComModal} from '../../../../shared/comps/ComModal';
 
 const WalletBackupMnemonicSelect = ({
   route: {params},
-  navigation: {goBack},
+  navigation: {goBack, replace, reset},
   walletUpdateAccount,
 }) => {
   // TODO: mnemonic and shuffleMnemonic should get from address
-  const {mnemonic, shuffleMnemonic, cb, account} = params;
+  const {mnemonic, shuffleMnemonic, account} = params;
   const {
     flex1,
     FG,
@@ -154,13 +154,19 @@ const WalletBackupMnemonicSelect = ({
         submit={{
           text: 'Confirm',
           press: () => {
-            if (cb) {
-              cb();
-            } else {
-              account.backup = true;
-              walletUpdateAccount(account);
-              goBack();
-            }
+            account.backup = true;
+            walletUpdateAccount(account);
+            params && params.target
+              ? reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'Tabs',
+                      params: {init: true},
+                    },
+                  ],
+                })
+              : goBack();
           },
         }}
       />
