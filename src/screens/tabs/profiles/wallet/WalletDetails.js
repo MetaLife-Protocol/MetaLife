@@ -60,7 +60,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
     [navigate],
   );
 
-  const [volumeVisible, setVolumeVisible] = useState(false);
+  const [volumeVisible, setVolumeVisible] = useState(true);
   const [coinType, setCoinType] = useState('dollar');
 
   function menuHandler(e) {
@@ -138,7 +138,8 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
               </Pressable>
             </View>
             <Text style={[volume]}>
-              {coinType === 'rmb' ? '¥' : '$'}{' '}
+              {/*{coinType === 'rmb' ? '¥' : '$'}{' '}*/}
+              {coinType === 'rmb' ? 'MLT' : 'MLT'}{' '}
               {volumeVisible ? getCurrentBalance(wallet) : '******'}
             </Text>
           </View>
@@ -147,7 +148,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
             <Pressable
               onPress={() => {
                 nativeClipboard.setString(
-                  '0x' + getCurrentAccount(wallet).address,
+                  '0x' + getCurrentAccount(wallet).address.toString(),
                 );
                 Toast.show('Address copied');
               }}

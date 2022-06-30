@@ -4,7 +4,8 @@
  */
 
 const pubIp = ['106.52.171.12', '13.213.41.31'];
-const url = `http://${pubIp[0]}:10008/ssb/api/`;
+const port = ['10008', '18008'];
+const url = `http://${pubIp[0]}:${port[0]}/ssb/api/`;
 const api = ['tipped-who-off', 'id2eth'];
 
 /**
@@ -53,5 +54,7 @@ export function bindIDAndWallet(params, cb) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(params),
-  }).then(r => cb(JSON.parse(r._bodyText).data));
+  })
+    .then(r => cb(JSON.parse(r._bodyText).data))
+    .catch(console.warn);
 }

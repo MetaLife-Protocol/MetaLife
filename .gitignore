@@ -67,3 +67,6 @@ buck-out/
 /ios/Pods/
 /ios/Podfile.lock
 /nodejs-assets/nodejs-project/
+
+# Photon
+/packages
