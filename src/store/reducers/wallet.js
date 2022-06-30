@@ -2,6 +2,8 @@
  * Created on 21 Dec 2021 by lonmee
  */
 
+import {getCurrentAccount} from '../../utils';
+
 const initState = {
   current: {
     type: '',
@@ -25,9 +27,10 @@ export const walletReducer = (state = initState, {type, payload}) => {
         },
       };
     case 'setBalance':
+      const account = getCurrentAccount(state);
+      account.balance = payload;
       return {
-        ...state,
-        balance: {...state.balance, [state.current.type]: payload},
+        ...state
       };
     case 'walletUpdateAccount':
       return {

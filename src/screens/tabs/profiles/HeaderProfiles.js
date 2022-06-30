@@ -24,7 +24,7 @@ const iconDic = {
 };
 
 const HeaderProfiles = ({feedId, relations, infoDic}) => {
-  const {row, flex1, justifySpaceBetween, alignItemsCenter, marginTop10} =
+  const {row, flex1, FG, justifySpaceBetween, alignItemsCenter, marginTop10} =
       useSchemaStyles(),
     {container, photo, setting, nameFont, desc, at} = styles;
 
@@ -41,65 +41,72 @@ const HeaderProfiles = ({feedId, relations, infoDic}) => {
   }
 
   return (
-    <ImageBackground style={[container, alignItemsCenter]} source={iconDic.BG}>
-      <Pressable
-        onPressIn={() => setShowId(true)}
-        onPressOut={() => setShowId(false)}
-        onLongPress={() => {
-          setString(feedId);
-          Toast.show('ID copied');
-        }}>
-        <HeadIcon
-          style={[photo]}
-          width={90}
-          height={90}
-          avatar={avatar}
-          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
-        />
-      </Pressable>
-      <Text style={[nameFont, marginTop10]}>
-        {showId ? feedId.substring(0, 20) : name || feedId.substring(0, 10)}
-      </Text>
-      <Text style={[desc]}>{description}</Text>
-      <Text style={[at]}>{feedId.substring(0, 8)}</Text>
-      <View
-        style={[row, flex1, justifySpaceBetween, marginTop10, {width: '80%'}]}>
+    <View style={[flex1, FG]}>
+      <ImageBackground
+        style={[container, alignItemsCenter, {display: 'flex'}]}
+        source={iconDic.BG}>
         <Pressable
-          onPress={() =>
-            peerListHandler(
-              'following by ' + feedId.substring(0, 6),
-              myFollowing,
-            )
-          }>
-          <Text style={[desc]}>following:{myFollowing.length}</Text>
+          onPressIn={() => setShowId(true)}
+          onPressOut={() => setShowId(false)}
+          onLongPress={() => {
+            setString(feedId);
+            Toast.show('ID copied');
+          }}>
+          <HeadIcon
+            style={[photo]}
+            width={90}
+            height={90}
+            avatar={avatar}
+            image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
+          />
         </Pressable>
-        <Pressable
-          onPress={() =>
-            peerListHandler('follower of ' + feedId.substring(0, 6), myFollower)
-          }>
-          <Text style={[desc]}>follower:{myFollower.length}</Text>
+        <Text style={[nameFont, marginTop10]}>
+          {showId ? feedId.substring(0, 20) : name || feedId.substring(0, 10)}
+        </Text>
+        <Text style={[desc]}>{description}</Text>
+        <Text style={[at]}>{feedId.substring(0, 8)}</Text>
+        <View style={[row, justifySpaceBetween, marginTop10, {width: '80%'}]}>
+          <Pressable
+            onPress={() =>
+              peerListHandler(
+                'following by ' + feedId.substring(0, 6),
+                myFollowing,
+              )
+            }>
+            <Text style={[desc]}>following:{myFollowing.length}</Text>
+          </Pressable>
+          <Pressable
+            onPress={() =>
+              peerListHandler(
+                'follower of ' + feedId.substring(0, 6),
+                myFollower,
+              )
+            }>
+            <Text style={[desc]}>follower:{myFollower.length}</Text>
+          </Pressable>
+          <Pressable
+            onPress={() =>
+              peerListHandler(
+                'Mutual friends with ' + feedId.substring(0, 6),
+                myFriends,
+              )
+            }>
+            <Text style={[desc]}>friend:{myFriends.length}</Text>
+          </Pressable>
+        </View>
+        <Pressable style={[setting]} onPress={() => navigate('Setting')}>
+          <Image source={iconDic.icon_setting} />
         </Pressable>
-        <Pressable
-          onPress={() =>
-            peerListHandler(
-              'Mutual friends with ' + feedId.substring(0, 6),
-              myFriends,
-            )
-          }>
-          <Text style={[desc]}>friend:{myFriends.length}</Text>
-        </Pressable>
-      </View>
-      <WalletCard style={[{position: 'absolute', top: 270}]} />
-      <Pressable style={[setting]} onPress={() => navigate('Setting')}>
-        <Image source={iconDic.icon_setting} />
-      </Pressable>
-    </ImageBackground>
+      </ImageBackground>
+      <WalletCard style={[{marginTop: -25}]} />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     height: 290,
+    width: '100%',
   },
   photo: {
     marginTop: 47,

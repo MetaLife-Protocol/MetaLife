@@ -187,7 +187,7 @@ const Tabs = ({darkMode, showPullMenu, wallet, cfg, photon}) => {
         component={Profiles}
         options={{
           title: I18n.t('Profiles'),
-          header: () => <HeaderProfiles />,
+          header: () => null,
         }}
       />
     </Navigator>

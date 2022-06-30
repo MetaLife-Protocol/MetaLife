@@ -697,7 +697,9 @@ export function importAccountByPrivateKey(privateKey, pw, cb) {
 
 export function getWBalance(type, wAddr, cb) {
   getBalance(financeConfig.chains[type].rpcURL, wAddr)
-    .then(value => cb && cb(bigNumberFormatUnits(value)))
+    .then(value => {
+      cb && cb(bigNumberFormatUnits(value));
+    })
     .catch(console.warn);
 }
 

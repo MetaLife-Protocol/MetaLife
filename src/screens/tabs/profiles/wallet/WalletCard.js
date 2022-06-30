@@ -38,7 +38,8 @@ const WalletCard = ({
   setCurrent,
   photon,
 }) => {
-  const {row, flex1, justifySpaceAround, alignItemsCenter} = useSchemaStyles(),
+  const {row, FG, justifySpaceAround, alignItemsCenter} =
+      useSchemaStyles(),
     {container, title, balanceS, icons, tag} = styles;
 
   const {navigate} = useNavigation();
@@ -99,10 +100,10 @@ const WalletCard = ({
   }
 
   return (
-    <>
+    <View style={[FG, alignItemsCenter]}>
       <Pressable style={[...style]} onPress={() => goScreen('WalletDetails')}>
         <ImageBackground
-          style={[flex1, container, justifySpaceAround, {alignSelf: 'center'}]}
+          style={[container, justifySpaceAround]}
           source={iconDic.BG}>
           <View style={[row, justifySpaceAround]}>
             <Text style={[title]}>Address</Text>
@@ -176,7 +177,7 @@ const WalletCard = ({
         darkMode={darkMode}
         submitHandler={setCurrent}
       />
-    </>
+    </View>
   );
 };
 

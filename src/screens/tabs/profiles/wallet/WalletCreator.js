@@ -42,6 +42,7 @@ const WalletCreator = ({
   wallet,
   walletCreateAccount,
   setBalance,
+  setCurrent,
 }) => {
   const {flex1, FG, with100p, row, alignItemsCenter, text, marginTop10} =
       useSchemaStyles(),
@@ -139,6 +140,7 @@ const WalletCreator = ({
                         backup: false,
                       };
                       walletCreateAccount(account);
+                      setCurrent({type: 'spectrum', index: 0});
                       // getWBalance('spectrum', address, setBalance);
                       replace('WalletBackup', {
                         ...params,
@@ -168,6 +170,8 @@ const WalletCreator = ({
                     backup: false,
                   };
                   walletCreateAccount(account);
+                  const index = wallet.accounts[targetChain].length;
+                  setCurrent({type: targetChain, index});
                   Toast.show('Wallet created');
                   replace('WalletBackup', {
                     ...params,
@@ -200,6 +204,7 @@ const mdp = d => {
   return {
     setBalance: payload => d({type: 'setBalance', payload}),
     walletCreateAccount: payload => d({type: 'walletCreateAccount', payload}),
+    setCurrent: payload => d({type: 'setCurrent', payload}),
   };
 };
 

@@ -48,8 +48,8 @@ export function fixWalletAddress(address) {
 
 export function getCurrentBalance(wallet) {
   return (
-    (wallet.balance[wallet.current.type] &&
-      wallet.balance[wallet.current.type][wallet.current.index]) ||
+    (wallet.accounts[wallet.current.type] &&
+      wallet.accounts[wallet.current.type][wallet.current.index].balance) ||
     0
   );
 }
