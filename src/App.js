@@ -199,7 +199,7 @@ const App = ({
           initialParams={
             wallet.current.type
               ? {}
-              : {type: 'spectrum', name: 'SPE-1', from: 'guid'}
+              : {type: 'spectrum', name: 'SPE-1', from: 'guid', target: 'Tabs'}
           }
         />
         <Screen

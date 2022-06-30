@@ -121,33 +121,35 @@ const WalletCreator = ({
           // disabled={!(aName && pw && cPw && pw === cPw)}
           press={() =>
             params.from === 'guid'
-              ? console.log(shuffle([1, 2, 3, 4]))
-              : // ? getMnemonic(mnemonic =>
-                //     importAccountByMnemonic(
-                //       mnemonic,
-                //       pw,
-                //       'spectrum',
-                //       (isExit, {keystore: {address}}) => {
-                //         const account = {
-                //           type: 'spectrum',
-                //           name: aName,
-                //           prompt,
-                //           address,
-                //           observer,
-                //           backup,
-                //         };
-                //         walletCreateAccount(account);
-                //         // getWBalance('spectrum', address, setBalance);
-                //         replace('WalletBackup', {
-                //           ...params,
-                //           account,
-                //           mnemonic,
-                //           shuffleMnemonic: shuffle(mnemonic),
-                //         });
-                //       },
-                //     ),
-                //   )
-                createAccount(pw, targetChain, res => {
+              ? getMnemonic(mnemonic =>
+                  importAccountByMnemonic(
+                    mnemonic.trim(),
+                    pw,
+                    'spectrum',
+                    (isExit, res) => {
+                      const {
+                        keystore: {address},
+                      } = res;
+                      const account = {
+                        type: 'spectrum',
+                        name: aName,
+                        prompt,
+                        address,
+                        observer,
+                        backup: false,
+                      };
+                      walletCreateAccount(account);
+                      // getWBalance('spectrum', address, setBalance);
+                      replace('WalletBackup', {
+                        ...params,
+                        account,
+                        mnemonic: mnemonic.trim().split(' '),
+                        shuffleMnemonic: shuffle(mnemonic),
+                      });
+                    },
+                  ),
+                )
+              : createAccount(pw, targetChain, res => {
                   const {
                     keystore: {address},
                     mnemonic,
@@ -163,7 +165,7 @@ const WalletCreator = ({
                     prompt,
                     address,
                     observer,
-                    backup,
+                    backup: false,
                   };
                   walletCreateAccount(account);
                   Toast.show('Wallet created');

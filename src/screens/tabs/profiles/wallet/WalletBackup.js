@@ -10,7 +10,6 @@ import RoundBtn from '../../../../shared/comps/RoundBtn';
  */
 
 const WalletBackup = ({route: {params}, navigation: {replace, goBack}}) => {
-  const {cb} = params;
   const {flex1, FG, text, marginTop10} = useSchemaStyles();
 
   return (
@@ -41,9 +40,7 @@ const WalletBackup = ({route: {params}, navigation: {replace, goBack}}) => {
       <RoundBtn
         style={[{marginBottom: 40}]}
         title={'Backup later'}
-        press={() => {
-          cb ? cb() : goBack();
-        }}
+        press={goBack}
       />
     </SafeAreaView>
   );

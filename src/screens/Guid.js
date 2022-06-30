@@ -21,13 +21,12 @@ const Guid = () => {
 
   function createHandler() {
     channel.post('identity', 'CREATE');
-    // replace('Tabs');
     navigate('WalletCreator', {
       type: 'spectrum',
       name: 'SPE-1',
       from: 'guid', // special implements
+      target: 'Tabs',
     });
-    // navigate('Mnemonic');
   }
 
   return (
