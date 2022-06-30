@@ -4,7 +4,7 @@
  */
 
 const pubIp = ['13.213.41.31'];
-const url = `http://${pubIp[0]}:10008/ssb/api/`;
+const url = `http://${pubIp[0]}:18008/ssb/api/`;
 const api = ['tipped-who-off', 'id2eth'];
 
 /**
@@ -31,7 +31,9 @@ export function report(params, cb) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(params),
-  }).then(r => cb(JSON.parse(r._bodyText).data));
+  })
+    .then(r => cb(JSON.parse(r._bodyText).data))
+    .catch(console.warn);
 }
 
 /**
