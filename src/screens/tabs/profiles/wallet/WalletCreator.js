@@ -65,7 +65,10 @@ const WalletCreator = ({
     setPW('');
     setCPW('');
     setPrompt('');
-    Toast.show('Wallet creating...');
+    Toast.show('Wallet creating...', {
+      loading: true,
+      position: Toast.position.CENTER,
+    });
   }
 
   return (
@@ -151,6 +154,7 @@ const WalletCreator = ({
                       walletCreateAccount(account);
                       setCurrent({type: 'spectrum', index: 0});
                       // getWBalance('spectrum', address, setBalance);
+                      Toast.hide();
                       replace('WalletBackup', {
                         ...params,
                         account,
