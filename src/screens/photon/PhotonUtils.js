@@ -42,6 +42,8 @@ export function startPhoton({
           dialog.dismiss();
           return;
         }
+        dialog.dismiss();
+
         getAccount(currentAccount?.address, (isExit, keystore) => {
           if (isExit) {
             console.log('keystore::', keystore);
@@ -73,7 +75,10 @@ export function initPhoton({
   directToNetworkPage = false,
   navigate,
 }) {
-  //TODO isLogin  & has wallet
+  Toast.show('Photon init...', {
+    loading: true,
+    position: Toast.position.CENTER,
+  });
   if (privateKey.startsWith('0x')) {
     privateKey = privateKey.substring(2);
   }
@@ -83,6 +88,7 @@ export function initPhoton({
 
   console.log('privateKey:', privateKey);
   console.log('address:', address);
+
   startPhotonServer({
     // privateKey:
     //   '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
@@ -94,6 +100,7 @@ export function initPhoton({
   })
     .then(res => {
       console.log('res:::', res);
+      Toast.hide();
       if (res?.logFile) {
         store.dispatch({type: 'setPhotonLogin', payload: res.logFile});
         if (directToNetworkPage && navigate) {
@@ -102,6 +109,7 @@ export function initPhoton({
       }
     })
     .catch(e => {
+      Toast.hide();
       console.log('initPhoton e:::', e);
       Toast.show(e.toString());
     });

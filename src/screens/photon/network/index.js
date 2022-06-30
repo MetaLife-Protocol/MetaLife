@@ -73,18 +73,11 @@ const PhotonNetwork = ({channelRemark, wallet}) => {
           balances.push(array[0]);
         }
       }
+      // if (balances.length === 0) {
+      //   balances.push({});
+      // }
       setBalances(balances);
     });
-    // getBalanceFromPhoton(PhotonUrl.PHOTON_MLT_TOKEN_ADDRESS).then(res => {
-    //   const jsonRes = JSON.parse(res);
-    //   console.log('balance:::', jsonRes);
-    //   if (jsonRes.error_code === 0) {
-    //     const array = jsonRes.data;
-    //     if (array && array.length) {
-    //       setBalance(array[0]);
-    //     }
-    //   }
-    // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
