@@ -51,6 +51,7 @@ const RecordPhoton = () => {
           time={item.time}
           stateDisplay={stateDisplay(item)}
           StateColor={undefined}
+          token_address={item.token_address}
         />
       )}
       ItemSeparatorComponent={() => (

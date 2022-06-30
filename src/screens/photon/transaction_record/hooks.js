@@ -63,7 +63,7 @@ export function useRecordPhotonData() {
         });
         returnList = [...sendListOrigin, ...receivedListOrigin];
         returnList = returnList.sort((a, b) => a.time - b.time);
-        // console.log('returnList::', returnList);
+        console.log('returnList::', returnList);
         setListData(returnList);
       })
       .catch(e => {
