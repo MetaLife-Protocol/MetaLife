@@ -16,7 +16,7 @@ import useSchemaStyles from '../../../../../shared/UseSchemaStyles';
 import {CloseIcons} from '../../../../../shared/Icons';
 import {AccountItem} from '../items/AccountItem';
 import {useDispatch} from 'react-redux';
-import Toast from 'react-native-tiny-toast';
+import {stopAboutWalletAccount} from '../../../../../utils';
 
 export const WalletAccountSwitchModal = ({
   visible,
@@ -65,9 +65,15 @@ export const WalletAccountSwitchModal = ({
               accounts[type].map((v, i) => (
                 <Pressable
                   key={i}
-                  onPress={() =>
-                    i !== index && submitHandler({type, index: i})
-                  }>
+                  onPress={() => {
+                    if (i !== index) {
+                      submitHandler({
+                        type,
+                        index: i,
+                      });
+                      stopAboutWalletAccount();
+                    }
+                  }}>
                   <AccountItem
                     item={v}
                     selected={i === index}
