@@ -53,13 +53,13 @@ const Tabs = ({darkMode, showPullMenu, wallet, cfg, photon}) => {
   }
 
   useEffect(() => {
-    if (!photon.isPhotonLogin) {
-      startPhoton({
-        dialog: dialog,
-        wallet: wallet,
-        directToNetworkPage: false,
-      });
-    }
+    // if (!photon.isPhotonLogin) {
+    startPhoton({
+      dialog: dialog,
+      wallet: wallet,
+      directToNetworkPage: false,
+    });
+    // }
     return () => {
       stopAboutWalletAccount();
     };

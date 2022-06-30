@@ -29,7 +29,7 @@ import PhotonUrl from '../PhotonUrl';
 const PhotonNetwork = ({channelRemark, wallet}) => {
   const styles = useStyle(createSty);
   const [moreActionsVisible, setMoreActionsVisible] = useState(false),
-    [balance, setBalance] = useState({}),
+    [balances, setBalances] = useState([]),
     [channelList, setChannelList] = useState([]);
 
   const navigation = useNavigation();
@@ -51,16 +51,41 @@ const PhotonNetwork = ({channelRemark, wallet}) => {
 
   //get Balance
   useEffect(() => {
-    getBalanceFromPhoton(PhotonUrl.PHOTON_SMT_TOKEN_ADDRESS).then(res => {
-      const jsonRes = JSON.parse(res);
-      console.log('balance:::', jsonRes);
-      if (jsonRes.error_code === 0) {
-        const array = jsonRes.data;
+    const balanceSMT = getBalanceFromPhoton(PhotonUrl.PHOTON_SMT_TOKEN_ADDRESS);
+    const balanceMLT = getBalanceFromPhoton(PhotonUrl.PHOTON_MLT_TOKEN_ADDRESS);
+    Promise.all([balanceSMT, balanceMLT]).then(values => {
+      // console.log('values::', values);
+      const jsonSMTRes = JSON.parse(values[0]);
+      const jsonMLTRes = JSON.parse(values[1]);
+      console.log('jsonSMTRes balance:::', jsonSMTRes);
+      console.log('jsonMLTRes balance:::', jsonMLTRes);
+      if (jsonSMTRes.error_code === 0) {
+        const array = jsonSMTRes.data;
         if (array && array.length) {
-          setBalance(array[0]);
+          // setBalances([array[0]]);
+          balances.push(array[0]);
         }
       }
+      if (jsonMLTRes.error_code === 0) {
+        const array = jsonMLTRes.data;
+        if (array && array.length) {
+          // setBalances([array[0]]);
+          balances.push(array[0]);
+        }
+      }
+      setBalances(balances);
     });
+    // getBalanceFromPhoton(PhotonUrl.PHOTON_MLT_TOKEN_ADDRESS).then(res => {
+    //   const jsonRes = JSON.parse(res);
+    //   console.log('balance:::', jsonRes);
+    //   if (jsonRes.error_code === 0) {
+    //     const array = jsonRes.data;
+    //     if (array && array.length) {
+    //       setBalance(array[0]);
+    //     }
+    //   }
+    // });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //get Channel List
@@ -81,7 +106,7 @@ const PhotonNetwork = ({channelRemark, wallet}) => {
     <SafeAreaView style={styles.container}>
       <PhotonAccountInfoCard
         style={styles.topCard}
-        balance={balance}
+        balances={balances}
         currentAccount={getCurrentAccount(wallet)}
       />
       <View style={styles.channelListContainer}>

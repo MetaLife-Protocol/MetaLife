@@ -6,24 +6,25 @@
  * @desc:
  */
 
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ethNumberFixed, useStyle} from '../../../../metalife-base';
+import {getPhotonTokenSymbol} from '../../PhotonUtils';
 
-const PhotonAccountInfoCard = ({style, balance, currentAccount}) => {
+const PhotonAccountInfoCard = ({style, balances, currentAccount}) => {
   const styles = useStyle(createSty);
 
   // useEffect(() => {
-  //   console.log('currentAccount::', currentAccount);
+  //   console.log('balances::', balances);
   //   // const {balance_in_photon, balance_on_chain, token_address} = balance;
   //   // if (token_address === '0x6601F810eaF2fa749EEa10533Fd4CC23B8C791dc') {
   //   //   if (!balance_in_photon) {
   //   //   }
   //   // }
-  // }, [currentAccount]);
+  // }, [balances]);
 
   const itemView = useCallback(
-    (title, values, showUnit = true, style) => {
+    (title, values, showUnit = true, token_address, style) => {
       return (
         <View style={[styles.itemContainer, style]}>
           <Text style={styles.itemTitle}>{title}</Text>
@@ -32,7 +33,11 @@ const PhotonAccountInfoCard = ({style, balance, currentAccount}) => {
             numberOfLines={1}
             ellipsizeMode={'middle'}>
             {values}
-            {!!showUnit && <Text style={styles.unit}>SMT</Text>}
+            {!!showUnit && (
+              <Text style={styles.unit}>
+                {getPhotonTokenSymbol(token_address)}
+              </Text>
+            )}
           </Text>
         </View>
       );
@@ -48,18 +53,26 @@ const PhotonAccountInfoCard = ({style, balance, currentAccount}) => {
         currentAccount?.address ?? '--',
         false,
       )}
-      {itemView(
-        'On-chain balance',
-        ethNumberFixed(balance?.balance_on_chain),
-        true,
-        styles.marginTop20,
-      )}
-      {itemView(
-        'Channel total balance',
-        ethNumberFixed(balance?.balance_in_photon),
-        true,
-        styles.marginTop20,
-      )}
+      {balances.map((balance, index) => {
+        return (
+          <View key={'index_' + index}>
+            {itemView(
+              'On-chain balance',
+              ethNumberFixed(balance?.balance_on_chain),
+              true,
+              balance?.token_address,
+              styles.marginTop20,
+            )}
+            {itemView(
+              'Channel total balance',
+              ethNumberFixed(balance?.balance_in_photon),
+              true,
+              balance?.token_address,
+              styles.marginTop20,
+            )}
+          </View>
+        );
+      })}
     </View>
   );
 };
