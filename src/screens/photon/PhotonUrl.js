@@ -14,4 +14,11 @@ export default class PhotonUrl {
   static PHOTON_SMT_TOKEN_ADDRESS = GLOBAL_SWITCH_OPEN
     ? '0x6601F810eaF2fa749EEa10533Fd4CC23B8C791dc'
     : '0xF6e8A227cbD5257d2f8a764F5788ce56E3554cB5';
+
+  /**
+   * MTL
+   * @type {string}
+   */
+  static PHOTON_MTL_TOKEN_ADDRESS =
+    '0xa27f8f580c01db0682ce185209ffb84121a2f711';
 }

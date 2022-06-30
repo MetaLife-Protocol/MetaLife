@@ -24,6 +24,7 @@ import PhotonListItemView from './comps/PhotonListItemView';
 import {getBalanceFromPhoton, loadChannelList} from 'react-native-photon';
 import {connect} from 'react-redux';
 import {getCurrentAccount} from '../../../utils';
+import PhotonUrl from '../PhotonUrl';
 
 const PhotonNetwork = ({channelRemark, wallet}) => {
   const styles = useStyle(createSty);
@@ -50,7 +51,7 @@ const PhotonNetwork = ({channelRemark, wallet}) => {
 
   //get Balance
   useEffect(() => {
-    getBalanceFromPhoton().then(res => {
+    getBalanceFromPhoton(PhotonUrl.PHOTON_SMT_TOKEN_ADDRESS).then(res => {
       const jsonRes = JSON.parse(res);
       console.log('balance:::', jsonRes);
       if (jsonRes.error_code === 0) {

@@ -28,6 +28,7 @@ import {useNavigation} from '@react-navigation/native';
 import {createChannel} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {connect} from 'react-redux';
+import PhotonUrl from '../PhotonUrl';
 
 const CreateChannel = ({setChannelRemark}) => {
   const styles = useStyle(createSty);
@@ -45,7 +46,11 @@ const CreateChannel = ({setChannelRemark}) => {
 
   const onCreateChannel = useCallback(() => {
     setChannelRemark({address, remark});
-    createChannel(address, safeDecimal(amount).mul(ETHER).toString())
+    createChannel(
+      PhotonUrl.PHOTON_SMT_TOKEN_ADDRESS,
+      address,
+      safeDecimal(amount).mul(ETHER).toString(),
+    )
       .then(res => {
         const resJson = JSON.parse(res);
         console.log('createChannel res::', resJson);

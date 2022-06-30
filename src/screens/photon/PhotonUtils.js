@@ -118,6 +118,10 @@ export function getPhotonTokenSymbol(photonTokenAddress = '') {
     PhotonUrl.PHOTON_MESH_TOKEN_ADDRESS === photonTokenAddress.toLowerCase()
   ) {
     tokenSymbol = 'MESH';
+  } else if (
+    PhotonUrl.PHOTON_MTL_TOKEN_ADDRESS === photonTokenAddress.toLowerCase()
+  ) {
+    tokenSymbol = 'MTL';
   }
   return tokenSymbol;
 }

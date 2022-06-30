@@ -26,6 +26,7 @@ import Constants from '../../../shared/Constants';
 import {useNavigation} from '@react-navigation/native';
 import {photonTransfer} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
+import PhotonUrl from '../PhotonUrl';
 
 const Payment = () => {
   const styles = useStyle(createSty);
@@ -39,6 +40,7 @@ const Payment = () => {
 
   const transferFun = useCallback(() => {
     photonTransfer({
+      tokenAddress: PhotonUrl.PHOTON_SMT_TOKEN_ADDRESS,
       amount: amountMulEth(amount),
       walletAddress: address,
       isDirect: true,
