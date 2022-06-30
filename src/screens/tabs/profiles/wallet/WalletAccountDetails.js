@@ -21,7 +21,7 @@ import {
   exportAccountPrivateKey,
 } from '../../../../remote/wallet/WalletAPI';
 import NativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
-import {getCurrentAccount} from '../../../../utils';
+import {stopAboutWalletAccount} from '../../../../utils';
 import Toast from 'react-native-tiny-toast';
 
 /**
@@ -31,9 +31,11 @@ import Toast from 'react-native-tiny-toast';
 
 const WalletAccountDetails = ({
   cfg: {darkMode},
+  route: {params},
   wallet,
   walletDeleteAccount,
   walletUpdateAccount,
+  setCurrent,
 }) => {
   const {
     marginTop10,
@@ -48,7 +50,7 @@ const WalletAccountDetails = ({
     placeholderTextColor,
   } = useSchemaStyles();
   const navigation = useNavigation();
-  const {navigate, goBack} = navigation;
+  const {goBack} = navigation;
 
   const [clickIndex, setClickIndex] = useState('');
   const [claimerVisible, setClaimerVisible] = useState(false);
@@ -60,7 +62,7 @@ const WalletAccountDetails = ({
   const [toastVisible, setToastVisible] = useState(false);
   const [toastContent, setToastContent] = useState('');
 
-  const {type, name, address} = getCurrentAccount(wallet);
+  const {type, name, address} = params;
 
   const [editName, setEditName] = useState(name);
   const [edit, setEdit] = useState(false);
@@ -83,13 +85,6 @@ const WalletAccountDetails = ({
     });
   }, [navigation, edit, editName]);
 
-  const goScreen = useCallback(
-    function (name, params) {
-      navigate(name, params);
-    },
-    [navigate],
-  );
-
   function getIcon() {
     switch (type) {
       case 'spectrum':
@@ -109,7 +104,6 @@ const WalletAccountDetails = ({
   };
 
   const checkPasswordCallback = (isCorrect, content) => {
-    console.log('check', isCorrect, content);
     if (isCorrect) {
       setCopyInfo(content);
       setPutPwdVisible(false);
@@ -238,10 +232,17 @@ const WalletAccountDetails = ({
             } else if (clickIndex === 'delete') {
               deleteWalletAccount(address, pwd, isCorrect => {
                 if (isCorrect) {
-                  walletDeleteAccount({type, address});
-                  goBack();
                   setPutPwdVisible(false);
+                  const currentAccount =
+                    wallet.accounts[type][wallet.current.index];
+                  walletDeleteAccount({type, address});
+                  if (address === currentAccount.address) {
+                    const account = wallet.accounts[type][0];
+                    setCurrent({type, index: 0, account});
+                    stopAboutWalletAccount();
+                  }
                   Toast.show('Deleted');
+                  goBack();
                 } else {
                   setToastContent('Wrong password');
                   setToastVisible(true);
@@ -409,6 +410,7 @@ const mdp = d => {
   return {
     walletDeleteAccount: payload => d({type: 'walletDeleteAccount', payload}),
     walletUpdateAccount: payload => d({type: 'walletUpdateAccount', payload}),
+    setCurrent: payload => d({type: 'setCurrent', payload}),
   };
 };
 

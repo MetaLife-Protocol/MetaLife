@@ -24,6 +24,7 @@ const WalletBackupMnemonicSelect = ({
   navigation: {goBack},
   walletUpdateAccount,
 }) => {
+  // TODO: mnemonic and shuffleMnemonic should get from address
   const {mnemonic, shuffleMnemonic, cb, account} = params;
   const {
     flex1,

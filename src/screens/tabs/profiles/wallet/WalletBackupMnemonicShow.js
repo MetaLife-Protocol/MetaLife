@@ -10,6 +10,7 @@ import RoundBtn from '../../../../shared/comps/RoundBtn';
  */
 
 const WalletBackupMnemonicShow = ({route: {params}, navigation: {replace}}) => {
+  // TODO: mnemonic should get from address
   const {mnemonic} = params;
   const {flex1, FG, BG, row, text, marginTop10} = useSchemaStyles();
 

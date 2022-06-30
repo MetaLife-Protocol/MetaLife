@@ -14,8 +14,7 @@ import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {financeConfig} from '../../../../../remote/wallet/WalletAPI';
 import {AccountItem} from '../items/AccountItem';
-import Toast from 'react-native-tiny-toast';
-import WalletAccountDetails from '../WalletAccountDetails';
+import { stopAboutWalletAccount } from '../../../../../utils';
 
 /**
  * Created on 22 Jun 2022 by lonmee
@@ -130,9 +129,12 @@ const WalletCore = ({
               <Pressable
                 key={i}
                 onPress={() => {
-                  setCurrent({type: tIndex, index: i});
-                  manageHandle &&
-                    goScreen('WalletAccountDetails');
+                  if (manageHandle) {
+                    goScreen('WalletAccountDetails', accounts[tIndex][i]);
+                  } else {
+                    setCurrent({type: tIndex, index: i});
+                    stopAboutWalletAccount()
+                  }
                 }}>
                 <AccountItem
                   item={v}

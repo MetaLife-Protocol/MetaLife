@@ -28,6 +28,7 @@ import {
 } from '../../../../remote/wallet/WalletAPI';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation} from '@react-navigation/native';
+import {stopAboutWalletAccount} from '../../../../utils';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -39,7 +40,13 @@ const icon = {
   scanB: require('../../../../assets/image/wallet/icon_scan_default_black.png'),
 };
 
-const WalletImporter = ({cfg: {darkMode}, route: {params}, wallet, create}) => {
+const WalletImporter = ({
+  cfg: {darkMode},
+  route: {params},
+  wallet,
+  create,
+  setCurrent,
+}) => {
   const {navigate, goBack} = useNavigation();
   const {flex1, FG, BG, row, alignSelfCenter, text, marginTop10, modalFG} =
       useSchemaStyles(),
@@ -63,13 +70,29 @@ const WalletImporter = ({cfg: {darkMode}, route: {params}, wallet, create}) => {
   }
 
   const exportAccount = (address, observer) => {
+    const isExit = wallet.accounts[targetChain].find(
+      val => val.address === address,
+    );
+    if (isExit) {
+      Toast.show('Already imported', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
     const count = wallet.accounts[targetChain].length + 1;
     create({
       type: targetChain,
       name: targetChain + '-' + count,
       address: address,
       observer,
+      prompt,
+      backup: true,
     });
+    setCurrent({
+      type: targetChain,
+      index: wallet.accounts[targetChain].length,
+    });
+    stopAboutWalletAccount();
     goBack();
     Toast.show('Import success');
   };
@@ -312,6 +335,7 @@ const msp = s => {
 const mdp = d => {
   return {
     create: payload => d({type: 'walletCreateAccount', payload}),
+    setCurrent: payload => d({type: 'setCurrent', payload}),
   };
 };
 
