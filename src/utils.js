@@ -3,6 +3,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import CameraRoll from '@react-native-community/cameraroll';
 import RNFS from 'react-native-fs';
 import Toast from 'react-native-tiny-toast';
+import {stopCurrentPhoton} from './screens/photon/PhotonUtils';
 
 /**
  * Created on 22 Feb 2022 by lonmee
@@ -153,3 +154,10 @@ export const restrict = event => {
     return false;
   }
 };
+
+/**
+ * 关闭钱包账户相关
+ */
+export function stopAboutWalletAccount() {
+  stopCurrentPhoton();
+}

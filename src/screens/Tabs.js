@@ -2,6 +2,7 @@
  * Created on 11/3/21 by lonmee
  */
 import * as React from 'react';
+import {useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from './tabs/Home';
 import Profiles from './tabs/Profiles';
@@ -15,9 +16,9 @@ import HeaderRightBtn from './tabs/HeaderRightBtn';
 import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {HeaderIcons} from '../shared/Icons';
-import {useEffect} from 'react';
-import {startPhoton, stopCurrentPhoton} from './photon/PhotonUtils';
+import {startPhoton} from './photon/PhotonUtils';
 import {useDialog} from '../metalife-base';
+import {stopAboutWalletAccount} from '../utils';
 
 const iconDic = {
   Home_icon_Default: require('../assets/image/tabBtn/Home_icon_Default.png'),
@@ -40,7 +41,7 @@ function Ionicons({name, focused, color, size}) {
   );
 }
 
-const Tabs = ({darkMode, showPullMenu, wallet, cfg}) => {
+const Tabs = ({darkMode, showPullMenu, wallet, cfg, photon}) => {
   const contactAddIcon = darkMode
     ? HeaderIcons.contactAddIconWhite
     : HeaderIcons.contactAddIconBlack;
@@ -52,15 +53,17 @@ const Tabs = ({darkMode, showPullMenu, wallet, cfg}) => {
   }
 
   useEffect(() => {
-    startPhoton({
-      dialog: dialog,
-      wallet: wallet,
-      directToNetworkPage: false,
-    });
+    if (!photon.isPhotonLogin) {
+      startPhoton({
+        dialog: dialog,
+        wallet: wallet,
+        directToNetworkPage: false,
+      });
+    }
     return () => {
-      stopCurrentPhoton();
+      stopAboutWalletAccount();
     };
-    //
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function menuHandler(e) {
@@ -195,6 +198,7 @@ const msp = s => {
   return {
     cfg: s.cfg,
     wallet: s.wallet,
+    photon: s.photon,
   };
 };
 
