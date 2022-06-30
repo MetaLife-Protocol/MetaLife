@@ -101,7 +101,7 @@ const Payment = ({showPullMenu}) => {
           <Text style={styles.title}>To</Text>
           <Pressable
             onPress={() => {
-              navigate('Scan');
+              navigate('Scan', {onCallbackData: setAddress});
             }}>
             <Image
               source={require('../../../assets/image/photon/icon_scan.png')}
@@ -121,6 +121,7 @@ const Payment = ({showPullMenu}) => {
           </Pressable>*/}
         </View>
         <PureTextInput
+          defaultValue={address}
           onChangeText={setAddress}
           placeholder={'Type or paste address'}
           style={styles.marginTop10}
