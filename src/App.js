@@ -113,7 +113,15 @@ const App = ({
     <NavigationContainer ref={navigationRef} theme={theme}>
       <StatusBar barStyle={barStyle} />
       <Navigator
-        initialRouteName={feedId ? (resync ? 'Resync' : 'Tabs') : 'Guid'}>
+        initialRouteName={
+          feedId
+            ? resync
+              ? 'Resync'
+              : wallet.current.type
+              ? 'Tabs'
+              : 'WalletCreator'
+            : 'Guid'
+        }>
         <Screen name="Guid" component={Guid} options={{headerShown: false}} />
         <Screen name="Restore" component={Restore} />
         <Screen name="Resync" component={Resync} />
@@ -188,6 +196,11 @@ const App = ({
           name="WalletCreator"
           component={WalletCreator}
           options={{title: 'Create account'}}
+          initialParams={
+            wallet.current.type
+              ? {}
+              : {type: 'spectrum', name: 'SPE-1', from: 'guid'}
+          }
         />
         <Screen
           name="WalletBackup"

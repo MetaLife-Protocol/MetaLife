@@ -4,7 +4,7 @@
 
 const initState = {
   current: {
-    type: 'spectrum',
+    type: '',
     index: 0,
   },
   balance: {},

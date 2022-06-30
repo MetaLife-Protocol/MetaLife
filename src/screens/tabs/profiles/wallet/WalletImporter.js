@@ -54,7 +54,7 @@ const WalletImporter = ({cfg: {darkMode}, route: {params}, wallet, create}) => {
 
   const targetChain = params ? params.type : targetChain;
 
-  const tags = ['Mnemoic', 'Keystore', 'Private Key', 'Observe'];
+  const tags = ['Mnemonic', 'Keystore', 'Private Key', 'Observe'];
   const [selected, setSelected] = useState(0);
   const [address, setAddress] = useState('');
 

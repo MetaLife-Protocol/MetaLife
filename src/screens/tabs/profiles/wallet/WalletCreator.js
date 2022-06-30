@@ -118,35 +118,36 @@ const WalletCreator = ({
         <RoundBtn
           style={[{marginBottom: 40}]}
           title={'Create account'}
-          disabled={!(aName && pw && cPw && pw === cPw)}
+          // disabled={!(aName && pw && cPw && pw === cPw)}
           press={() =>
             params.from === 'guid'
-              ? getMnemonic(mnemonic =>
-                  importAccountByMnemonic(
-                    mnemonic,
-                    pw,
-                    'spectrum',
-                    ({keystore: {address}}) => {
-                      const account = {
-                        type: 'spectrum',
-                        name: aName,
-                        prompt,
-                        address,
-                        observer,
-                        backup,
-                      };
-                      walletCreateAccount(account);
-                      // getWBalance('spectrum', address, setBalance);
-                      replace('WalletBackup', {
-                        ...params,
-                        account,
-                        mnemonic,
-                        shuffleMnemonic: shuffle(mnemonic),
-                      });
-                    },
-                  ),
-                )
-              : createAccount(pw, targetChain, res => {
+              ? console.log(shuffle([1, 2, 3, 4]))
+              : // ? getMnemonic(mnemonic =>
+                //     importAccountByMnemonic(
+                //       mnemonic,
+                //       pw,
+                //       'spectrum',
+                //       (isExit, {keystore: {address}}) => {
+                //         const account = {
+                //           type: 'spectrum',
+                //           name: aName,
+                //           prompt,
+                //           address,
+                //           observer,
+                //           backup,
+                //         };
+                //         walletCreateAccount(account);
+                //         // getWBalance('spectrum', address, setBalance);
+                //         replace('WalletBackup', {
+                //           ...params,
+                //           account,
+                //           mnemonic,
+                //           shuffleMnemonic: shuffle(mnemonic),
+                //         });
+                //       },
+                //     ),
+                //   )
+                createAccount(pw, targetChain, res => {
                   const {
                     keystore: {address},
                     mnemonic,
