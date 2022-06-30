@@ -40,7 +40,9 @@ const WalletBackup = ({route: {params}, navigation: {replace, goBack}}) => {
       <RoundBtn
         style={[{marginBottom: 40}]}
         title={'Backup later'}
-        press={goBack}
+        press={() =>
+          params && params.target ? replace(params.target) : goBack()
+        }
       />
     </SafeAreaView>
   );
