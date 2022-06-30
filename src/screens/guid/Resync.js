@@ -3,7 +3,7 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text} from 'react-native';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import RoundBtn from '../../shared/comps/RoundBtn';
 import {StackActions, useNavigation} from '@react-navigation/native';
@@ -62,16 +62,21 @@ const Resync = ({
 
   return (
     <SafeAreaView style={[FG, flex1, marginTop10]}>
-      <Text style={[marginTop10, border, title, btnInactiveFG, btnInactiveBG]}>
-        <Text>{connectedPeers.length === 0 ? 'Searching' : 'Connected\n'}</Text>
-        {connectedPeers
-          .filter(([_, v]) => v.state == 'connected')
-          .map((pObj, i) => (
-            <Text style={[marginTop10]} key={i}>
-              {pObj[1].key.substring(0, 20) + '\n'}
-            </Text>
-          ))}
-      </Text>
+      <ScrollView style={[flex1]}>
+        <Text
+          style={[marginTop10, border, title, btnInactiveFG, btnInactiveBG]}>
+          <Text>
+            {connectedPeers.length === 0 ? 'Searching' : 'Connected\n'}
+          </Text>
+          {connectedPeers
+            .filter(([_, v]) => v.state == 'connected')
+            .map((pObj, i) => (
+              <Text style={[marginTop10]} key={i}>
+                {pObj[1].key.substring(0, 20) + '\n'}
+              </Text>
+            ))}
+        </Text>
+      </ScrollView>
       <RoundBtn
         style={[marginTop10]}
         title={'Add pub with invite code'}

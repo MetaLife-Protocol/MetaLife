@@ -35,7 +35,13 @@ const Restore = ({setResync}) => {
       case 'IDENTITY_READY':
         listener.current.remove();
         setResync(true);
-        return navigate('Resync');
+        // return navigate('Resync');
+        return navigate('WalletCreator', {
+          type: 'spectrum',
+          name: 'SPE-1',
+          from: 'guid', // special implements
+          target: 'Resync',
+        });
       default:
         return Toast.show(res, {position: 0});
     }

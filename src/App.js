@@ -116,7 +116,9 @@ const App = ({
         initialRouteName={
           feedId
             ? resync
-              ? 'Resync'
+              ? wallet.current.type
+                ? 'Resync'
+                : 'WalletCreator'
               : wallet.current.type
               ? 'Tabs'
               : 'WalletCreator'
@@ -199,7 +201,12 @@ const App = ({
           initialParams={
             wallet.current.type
               ? {}
-              : {type: 'spectrum', name: 'SPE-1', from: 'guid', target: 'Tabs'}
+              : {
+                  type: 'spectrum',
+                  name: 'SPE-1',
+                  from: 'guid',
+                  target: resync ? 'Resync' : 'Tabs',
+                }
           }
         />
         <Screen

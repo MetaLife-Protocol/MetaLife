@@ -60,6 +60,14 @@ const WalletCreator = ({
 
   const targetChain = params ? params.type : wallet.current.type;
 
+  function clearInputs() {
+    setAName('');
+    setPW('');
+    setCPW('');
+    setPrompt('');
+    Toast.show('Wallet creating...');
+  }
+
   return (
     <SafeAreaView style={[flex1, FG, marginTop10]}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -119,10 +127,11 @@ const WalletCreator = ({
         <RoundBtn
           style={[{marginBottom: 40}]}
           title={'Create account'}
-          // disabled={!(aName && pw && cPw && pw === cPw)}
+          disabled={!(aName && pw && cPw && pw === cPw)}
           press={() =>
             params.from === 'guid'
-              ? getMnemonic(mnemonic =>
+              ? getMnemonic(mnemonic => {
+                  clearInputs();
                   importAccountByMnemonic(
                     mnemonic.trim(),
                     pw,
@@ -149,18 +158,15 @@ const WalletCreator = ({
                         shuffleMnemonic: shuffle(mnemonic),
                       });
                     },
-                  ),
-                )
+                  );
+                })
               : createAccount(pw, targetChain, res => {
                   const {
                     keystore: {address},
                     mnemonic,
                     shuffleMnemonic,
                   } = res;
-                  setAName('');
-                  setPW('');
-                  setCPW('');
-                  setPrompt('');
+                  clearInputs();
                   const account = {
                     type: targetChain,
                     name: aName,
