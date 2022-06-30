@@ -108,7 +108,8 @@ const Payment = ({showPullMenu}) => {
               style={styles.iconImg}
             />
           </Pressable>
-          <Pressable
+          {/*TODO*/}
+          {/*<Pressable
             onPress={() => {
               //TODO select wallet others address
               navigate('PhotonAddressContact');
@@ -117,7 +118,7 @@ const Payment = ({showPullMenu}) => {
               source={require('../../../assets/image/photon/icon_photon_address.png')}
               style={styles.iconImg}
             />
-          </Pressable>
+          </Pressable>*/}
         </View>
         <PureTextInput
           onChangeText={setAddress}
