@@ -387,7 +387,7 @@ const App = ({
         darkMode={darkMode}
         submitHandler={setCurrent}
       />
-      <PullMenu darkMode={darkMode} />
+      <PullMenu />
     </NavigationContainer>
   );
 };
