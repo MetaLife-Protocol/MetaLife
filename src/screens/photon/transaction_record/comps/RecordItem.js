@@ -3,8 +3,16 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ethNumberFixed, formatDate, useStyle} from '../../../../metalife-base';
 import Constants from '../../../../shared/Constants';
+import {getPhotonTokenSymbol} from '../../PhotonUtils';
 
-const RecordItem = ({amount, stateColor, stateDisplay, time, address}) => {
+const RecordItem = ({
+  amount,
+  stateColor,
+  stateDisplay,
+  time,
+  address,
+  token_address,
+}) => {
   const styles = useStyle(createSty);
   return (
     <View style={styles.container}>
@@ -16,7 +24,7 @@ const RecordItem = ({amount, stateColor, stateDisplay, time, address}) => {
       <View style={[styles.valueContainer, styles.row]}>
         <Text style={[styles.tabValue, styles.firstFlex]}>
           {amount >= 0 ? '+' : ''}
-          {ethNumberFixed(amount ?? 0)} SMT
+          {ethNumberFixed(amount ?? 0)} {getPhotonTokenSymbol(token_address)}
         </Text>
         <Text style={[styles.tabValue, styles.secondFlex, {color: stateColor}]}>
           {stateDisplay}

@@ -19,6 +19,7 @@ import {
 import Constants from '../../../shared/Constants';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {depositChannelMethod} from 'react-native-photon';
+import {getPhotonTokenSymbol} from '../PhotonUtils';
 
 const SupplementaryBalance = () => {
   const styles = useStyle(createSty);
@@ -40,7 +41,11 @@ const SupplementaryBalance = () => {
         </Text>
         <PhotonSeparator />
         <PureTextInput
-          rightComponent={<Text style={styles.coin}>SMT</Text>}
+          rightComponent={
+            <Text style={styles.coin}>
+              {getPhotonTokenSymbol(channelData?.token_address)}
+            </Text>
+          }
           hasSeparator={true}
           onChangeText={setAmount}
           placeholder={'Amount'}

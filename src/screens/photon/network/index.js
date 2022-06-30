@@ -6,11 +6,12 @@
  * @desc:
  */
 
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {
   FlatList,
   Image,
   Pressable,
+  RefreshControl,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -25,12 +26,14 @@ import {getBalanceFromPhoton, loadChannelList} from 'react-native-photon';
 import {connect} from 'react-redux';
 import {getCurrentAccount} from '../../../utils';
 import PhotonUrl from '../PhotonUrl';
+import {getWBalance} from '../../../remote/wallet/WalletAPI';
 
 const PhotonNetwork = ({channelRemark, wallet}) => {
   const styles = useStyle(createSty);
   const [moreActionsVisible, setMoreActionsVisible] = useState(false),
     [balances, setBalances] = useState([]),
-    [channelList, setChannelList] = useState([]);
+    [channelList, setChannelList] = useState([]),
+    [refreshing, setRefreshing] = useState(false);
 
   const navigation = useNavigation();
 
@@ -49,8 +52,7 @@ const PhotonNetwork = ({channelRemark, wallet}) => {
     });
   }, [navigation, styles.moreImg]);
 
-  //get Balance
-  useEffect(() => {
+  const getBalance = () => {
     const balanceSMT = getBalanceFromPhoton(PhotonUrl.PHOTON_SMT_TOKEN_ADDRESS);
     const balanceMLT = getBalanceFromPhoton(PhotonUrl.PHOTON_MLT_TOKEN_ADDRESS);
     Promise.all([balanceSMT, balanceMLT]).then(values => {
@@ -59,37 +61,30 @@ const PhotonNetwork = ({channelRemark, wallet}) => {
       const jsonMLTRes = JSON.parse(values[1]);
       console.log('jsonSMTRes balance:::', jsonSMTRes);
       console.log('jsonMLTRes balance:::', jsonMLTRes);
+      let getBalances = [];
       if (jsonSMTRes.error_code === 0) {
         const array = jsonSMTRes.data;
         if (array && array.length) {
           // setBalances([array[0]]);
-          balances.push(array[0]);
+          getBalances.push(array[0]);
         }
       }
       if (jsonMLTRes.error_code === 0) {
         const array = jsonMLTRes.data;
         if (array && array.length) {
           // setBalances([array[0]]);
-          balances.push(array[0]);
+          getBalances.push(array[0]);
         }
       }
-      setBalances(balances);
+      // if (balances.length === 0) {
+      //   balances.push({});
+      // }
+      setRefreshing(false);
+      setBalances(getBalances);
     });
-    // getBalanceFromPhoton(PhotonUrl.PHOTON_MLT_TOKEN_ADDRESS).then(res => {
-    //   const jsonRes = JSON.parse(res);
-    //   console.log('balance:::', jsonRes);
-    //   if (jsonRes.error_code === 0) {
-    //     const array = jsonRes.data;
-    //     if (array && array.length) {
-    //       setBalance(array[0]);
-    //     }
-    //   }
-    // });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
-  //get Channel List
-  useEffect(() => {
+  const getChannelList = () => {
     loadChannelList().then(res => {
       const jsonRes = JSON.parse(res);
       console.log('loadChannelList:::', jsonRes);
@@ -100,6 +95,11 @@ const PhotonNetwork = ({channelRemark, wallet}) => {
         }
       }
     });
+  };
+
+  useEffect(() => {
+    getBalance();
+    getChannelList();
   }, []);
 
   return (
@@ -115,6 +115,23 @@ const PhotonNetwork = ({channelRemark, wallet}) => {
         </View>
       </View>
       <FlatList
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            enabled={true}
+            colors={['#29DAD7']}
+            tintColor={'#29DAD7'}
+            onRefresh={() => {
+              setRefreshing(true);
+              getBalance();
+              getChannelList();
+              // getWBalance(type, address, res => {
+              //   setRefreshing(false);
+              //   setBalance(res);
+              // });
+            }}
+          />
+        }
         contentContainerStyle={styles.listContainer}
         data={channelList}
         renderItem={({item, index}) => (
