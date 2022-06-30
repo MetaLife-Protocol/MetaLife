@@ -82,7 +82,6 @@ const TransactionRecordItem = ({data}) => {
         }
         break;
     }
-
     return [amount, stateDisplay, stateColor];
   }, [data, theme]);
 
@@ -93,6 +92,7 @@ const TransactionRecordItem = ({data}) => {
       amount={amount}
       address={data?.tx_params?.partner_address ?? ''}
       stateColor={stateColor}
+      token_address={data?.token_address}
     />
   );
 };

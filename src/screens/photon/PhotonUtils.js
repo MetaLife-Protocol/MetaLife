@@ -134,6 +134,16 @@ export function getPhotonTokenSymbol(photonTokenAddress = '') {
   return tokenSymbol;
 }
 
+export function getTokenAddress(symbol) {
+  let address = PhotonUrl.PHOTON_SMT_TOKEN_ADDRESS;
+  if (symbol === 'MLT') {
+    address = PhotonUrl.PHOTON_MLT_TOKEN_ADDRESS;
+  } else if (symbol === 'MESH') {
+    address = PhotonUrl.PHOTON_MESH_TOKEN_ADDRESS;
+  }
+  return address;
+}
+
 /**
  *
  * @param dialog

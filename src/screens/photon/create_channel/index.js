@@ -29,25 +29,24 @@ import {createChannel} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {connect} from 'react-redux';
 import PhotonUrl from '../PhotonUrl';
+import {getTokenAddress} from '../PhotonUtils';
 
-const CreateChannel = ({setChannelRemark}) => {
+const CreateChannel = ({setChannelRemark, showPullMenu}) => {
   const styles = useStyle(createSty);
   const {navigate} = useNavigation();
   const navigation = useNavigation();
 
   const [address, setAddress] = useState(''),
     [amount, setAmount] = useState(''),
-    [remark, setRemark] = useState('');
+    [remark, setRemark] = useState(''),
+    [type, setType] = useState('SMT');
 
-  const btnDisabled = useMemo(
-    () => !(address && amount && remark),
-    [address, amount, remark],
-  );
+  const btnDisabled = useMemo(() => !(address && amount), [address, amount]);
 
   const onCreateChannel = useCallback(() => {
     setChannelRemark({address, remark});
     createChannel(
-      PhotonUrl.PHOTON_SMT_TOKEN_ADDRESS,
+      getTokenAddress(type),
       address,
       safeDecimal(amount).mul(ETHER).toString(),
     )
@@ -66,7 +65,34 @@ const CreateChannel = ({setChannelRemark}) => {
       .catch(e => {
         Toast.show(e.error_message);
       });
-  }, [address, amount, remark, setChannelRemark]);
+  }, [setChannelRemark, address, remark, type, amount]);
+
+  function menuHandler(e) {
+    e.target.measure((x, y, width, height, pageX, pageY) =>
+      showPullMenu({
+        position: {
+          x: pageX - width - 30,
+          y: pageY + height,
+        },
+        buttons: [
+          {
+            title: 'SMT',
+            handler: () => {
+              setType('SMT');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+          {
+            title: 'MTL',
+            handler: () => {
+              setType('MLT');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+        ],
+      }),
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -104,19 +130,21 @@ const CreateChannel = ({setChannelRemark}) => {
       <View style={styles.cardContainer}>
         <View style={styles.row}>
           <Text style={styles.title}>Transfers number</Text>
-          <Text style={styles.coinText}>SMT</Text>
+          <Text style={styles.coinText} onPress={menuHandler}>
+            {type}
+          </Text>
         </View>
         <PureTextInput
           onChangeText={setAmount}
           placeholder={'Enter transfer amoun'}
           style={styles.marginTop10}
         />
-        <PhotonSeparator />
+        {/*   <PhotonSeparator />
         <View style={styles.row}>
           <Text style={styles.title}>Amount</Text>
-          {/*TODO wallet number*/}
+          TODO wallet number
           <Text style={styles.coinAmount}>32748 SMT</Text>
-        </View>
+        </View>*/}
       </View>
 
       <View style={styles.cardContainer}>
@@ -197,6 +225,7 @@ const mdp = d => {
   return {
     setChannelRemark: channelRemark =>
       d({type: 'setChannelRemark', payload: channelRemark}),
+    showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
   };
 };
 export default connect(msp, mdp)(CreateChannel);
