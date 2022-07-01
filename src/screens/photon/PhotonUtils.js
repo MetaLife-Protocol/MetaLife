@@ -15,10 +15,12 @@ import {
 } from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {store} from '../../store/configureStore';
-import {getCurrentAccount} from '../../utils';
+import {checkPubExist, checkSum, getCurrentAccount} from '../../utils';
 import PasswordDialog from '../tabs/profiles/wallet/modal/PasswordDialog';
 import {getAccount} from '../../remote/wallet/WalletAPI';
 import {exportPrivateKeyFromKeystore} from 'react-native-web3-wallet';
+import {bindIDAndWallet} from '../../remote/pubOP';
+import {presetPubs} from '../tabs/profiles/Pubs';
 
 export function startPhoton({
   dialog,
@@ -99,9 +101,23 @@ export function initPhoton({
     // ethRPCEndPoint: 'https://jsonapi1.smartmesh.cn',
   })
     .then(res => {
-      console.log('res:::', res);
       Toast.hide();
       if (res?.logFile) {
+        const {photon, pubs, user} = store.getState();
+        const feedId = user?.feedId;
+        console.log('res:::', res);
+        console.log('feedId:::', feedId);
+        if (!photon?.photonLogined) {
+          //photon is local first login
+          checkPubExist(pubs, presetPubs[0]) &&
+            bindIDAndWallet(
+              {
+                client_id: feedId,
+                client_eth_address: checkSum('0x' + address.toString()),
+              },
+              console.log,
+            );
+        }
         store.dispatch({type: 'setPhotonLogin', payload: res.logFile});
         if (directToNetworkPage && navigate) {
           navigate('PhotonNetwork');
