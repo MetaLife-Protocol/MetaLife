@@ -16,7 +16,7 @@ export const ProfileModal = ({
   holderText,
   submitHandler,
 }) => {
-  const {BG, row} = useSchemaStyles(),
+  const {BG, row, text} = useSchemaStyles(),
     {textHolder} = colorsSchema;
 
   const [valueLocal, setValueLocal] = useState(value);
@@ -30,7 +30,7 @@ export const ProfileModal = ({
       <View style={[styles.centeredView]}>
         <View style={[BG, styles.modalView]}>
           <TextInput
-            style={styles.modalText}
+            style={[text, styles.modalText, {color: 'white'}]}
             autoFocus={true}
             value={valueLocal}
             placeholder={holderText}
