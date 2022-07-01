@@ -4,6 +4,7 @@ import CameraRoll from '@react-native-community/cameraroll';
 import RNFS from 'react-native-fs';
 import Toast from 'react-native-tiny-toast';
 import {stopCurrentPhoton} from './screens/photon/PhotonUtils';
+import {Buffer} from 'buffer';
 
 /**
  * Created on 22 Feb 2022 by lonmee
@@ -17,6 +18,15 @@ export const localDate = timestamp => {
 };
 
 /*************************** wallet ***************************/
+export function checkPubExist(pub, which) {
+  return pub.some(pub => pub.content.address.key === which.key);
+}
+
+/*************************** wallet ***************************/
+export function checkSum(add) {
+  return Buffer.from(add, 'hex');
+}
+
 export function shuffle(mnemonic) {
   let cMne = mnemonic.split(' '),
     res = [];

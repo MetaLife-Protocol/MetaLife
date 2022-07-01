@@ -29,7 +29,7 @@ import Toast from 'react-native-tiny-toast';
 import {useRoute} from '@react-navigation/native';
 import {initPhoton} from '../../../photon/PhotonUtils';
 import {getMnemonic, inviteAccept} from '../../../../remote/ssb/ssbOP';
-import {shuffle} from '../../../../utils';
+import {checkPubExist, checkSum, shuffle} from '../../../../utils';
 import {bindIDAndWallet} from '../../../../remote/pubOP';
 import {presetPubs, reconnect2pub} from '../Pubs';
 
@@ -171,13 +171,16 @@ const WalletCreator = ({
                         e || reconnect2pub();
                       });
                       // register pub
-                      bindIDAndWallet(
-                        {
-                          client_id: feedId,
-                          client_eth_address: '0x' + address.toString(),
-                        },
-                        console.log,
-                      );
+                      // checkPubExist(pubs, presetPubs[0]) &&
+                      //   bindIDAndWallet(
+                      //     {
+                      //       client_id: feedId,
+                      //       client_eth_address: checkSum(
+                      //         '0x' + address.toString(),
+                      //       ),
+                      //     },
+                      //     console.log,
+                      //   );
                       // start photon
                       // exportAccountPrivateKey(address, pw, ({_, privateKey}) =>
                       //   initPhoton({privateKey, address}),
