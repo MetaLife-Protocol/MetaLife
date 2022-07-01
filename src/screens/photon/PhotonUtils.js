@@ -104,11 +104,11 @@ export function initPhoton({
       Toast.hide();
       if (res?.logFile) {
         const {photon, pubs, user} = store.getState();
-        const feedId = user?.feedId;
         console.log('res:::', res);
-        console.log('feedId:::', feedId);
         if (!photon?.photonLogined) {
           //photon is local first login
+          const feedId = user?.feedId;
+          console.log('feedId:::', feedId);
           checkPubExist(pubs, presetPubs[0]) &&
             bindIDAndWallet(
               {
