@@ -98,14 +98,14 @@ const Setting = ({
             </ControllerItem>
           </Pressable>
           <Pressable onPress={() => navigate('AvatarEditor')} hitSlop={10}>
-            <ControllerItem title={'Avatar'}>
+            <ControllerItem title={'My Avatar'}>
               <Image source={ArrowImage} />
             </ControllerItem>
           </Pressable>
         </Section>
         <Section style={[marginTop10]} separator={NormalSeparator}>
           <Pressable onPress={() => navigate('Pubs')} hitSlop={10}>
-            <ControllerItem title={'Connect PUB'}>
+            <ControllerItem title={'Connect to Pub'}>
               <Image source={ArrowImage} />
             </ControllerItem>
           </Pressable>
@@ -125,7 +125,7 @@ const Setting = ({
               onValueChange={() => setDarkMode(!darkMode)}
             />
           </ControllerItem>
-          <ControllerItem title={'En / Zh'}>
+          <ControllerItem title={'En / Ch'}>
             <Switch
               value={lang === 'en'}
               onValueChange={() =>
@@ -144,10 +144,10 @@ const Setting = ({
           style={[marginTop10]}
           title={'Privacy'}
           separator={NormalSeparator}>
-          <ControllerItem title={'Not allowed to view my DAO'}>
+          <ControllerItem title={'Do Not Display my DAO'}>
             <Switch value={lang === 'en'} onValueChange={null} />
           </ControllerItem>
-          <ControllerItem title={'Not allowed to view my NFT'}>
+          <ControllerItem title={'Do Not Display my NFT'}>
             <Switch value={lang === 'en'} onValueChange={null} />
           </ControllerItem>
           <ControllerItem title={'Block messages from stranger'}>

@@ -156,7 +156,7 @@ const App = ({
         <Screen name="PeersListScreen" component={PeersListScreen} />
         <Screen
           name="PeerDetailsScreen"
-          options={{title: 'Peers'}}
+          options={{title: 'Your Network'}}
           component={PeerDetailsScreen}
         />
         {/** wallet **/}
@@ -257,11 +257,19 @@ const App = ({
           component={MessageDetailsScreen}
         />
         {/* Settings */}
-        <Screen name="Setting" component={Setting} />
+        <Screen
+          name="Setting"
+          component={Setting}
+          options={{
+            title: 'Setting',
+          }}
+        />
         <Screen
           name="AvatarEditor"
           component={AvatarEditor}
-          options={{title: 'Avatar Editor'}}
+          options={{
+            title: 'My Avatar',
+          }}
         />
         <Screen name="Avatar" component={Avatar} />
         <Screen name="Pubs" component={Pubs} />

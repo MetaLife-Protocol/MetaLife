@@ -63,6 +63,8 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
   const [volumeVisible, setVolumeVisible] = useState(true);
   const [coinType, setCoinType] = useState('dollar');
 
+  const account = getCurrentAccount(wallet);
+
   function menuHandler(e) {
     e.target.measure((x, y, width, height, pageX, pageY) =>
       showPullMenu({
@@ -124,7 +126,9 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
                   {getCurrentAccount(wallet).name}
                 </Text>
                 <Pressable onPress={() => setVolumeVisible(!volumeVisible)}>
-                  <Image source={iconDic.eyeOpen} />
+                  <Image
+                    source={volumeVisible ? iconDic.eyeOpen : iconDic.eyeClose}
+                  />
                 </Pressable>
                 <Pressable
                   onPress={() =>
@@ -133,9 +137,20 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
                   <Image source={iconDic.dollar} />
                 </Pressable>
               </View>
-              <Pressable onPress={menuHandler}>
-                <Image source={iconDic.dots} />
-              </Pressable>
+              <View style={[row]}>
+                {account.backup ? null : (
+                  <Pressable
+                    style={styles.backup}
+                    onPress={() => {
+                      console.log('backup');
+                    }}>
+                    <Text style={styles.backupText}>Backup</Text>
+                  </Pressable>
+                )}
+                <Pressable onPress={menuHandler}>
+                  <Image source={iconDic.dots} />
+                </Pressable>
+              </View>
             </View>
             <Text style={[volume]}>
               {/*{coinType === 'rmb' ? '¥' : '$'}{' '}*/}
@@ -228,6 +243,20 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 11,
     fontWeight: '500',
+  },
+  backup: {
+    height: 17,
+    width: 55,
+    backgroundColor: '#6A8AEB',
+    borderRadius: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  backupText: {
+    lineHeight: 15,
+    fontSize: 13,
+    color: '#fff',
   },
   icons: {
     marginLeft: 10,
