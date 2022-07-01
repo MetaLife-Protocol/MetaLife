@@ -6,7 +6,7 @@ const en = {
   Messages: 'Messages',
   Contacts: 'Contacts',
   Discover: 'Discover',
-  Profiles: 'Profiles',
+  Profiles: 'Profile',
 };
 
 export default en;

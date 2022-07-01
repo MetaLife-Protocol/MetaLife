@@ -36,12 +36,12 @@ const Guid = () => {
       <View style={[buttons, width100Percent]}>
         <RoundBtn
           style={[{marginBottom: 15}]}
-          title={'Create'}
+          title={'Create Account'}
           press={createHandler}
         />
         <RoundBtn
           style={[{marginBottom: 15}]}
-          title={'Import'}
+          title={'Import Account'}
           press={() => navigate('Restore')}
         />
       </View>

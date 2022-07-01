@@ -144,6 +144,12 @@ const WalletCard = ({
             </Pressable>
             <Pressable
               style={[alignItemsCenter, icons]}
+              onPress={() => goScreen('xx', {})}>
+              <Image source={iconDic.transfer} />
+              <Text style={[tag]}>Send</Text>
+            </Pressable>
+            <Pressable
+              style={[alignItemsCenter, icons]}
               onPress={() => {
                 console.log('photon::', photon);
                 if (photon?.isPhotonLogin) {
@@ -160,12 +166,6 @@ const WalletCard = ({
               }}>
               <Image source={iconDic.photon} />
               <Text style={[tag]}>Photon</Text>
-            </Pressable>
-            <Pressable
-              style={[alignItemsCenter, icons]}
-              onPress={() => goScreen('xx', {})}>
-              <Image source={iconDic.transfer} />
-              <Text style={[tag]}>Transfer</Text>
             </Pressable>
           </View>
         </ImageBackground>

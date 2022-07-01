@@ -31,8 +31,9 @@ const WalletBackupMnemonicShow = ({route: {params}, navigation: {replace}}) => {
             Please backup the mnemonic words
           </Text>
           <Text style={[marginTop10, text, styles.text, {color: '#4E586E'}]}>
-            Those 12 mnemonic words are for recovering your wallet,write down
-            correctly on paper and keep in a safe place
+            The mnemonic words are required for recovering your wallet. Please
+            write these mnemonic words on a piece of paper and store it in a
+            secure location.
           </Text>
           <View style={[styles.mncontainer, row]}>
             {mnemonic.map((item, index) => {

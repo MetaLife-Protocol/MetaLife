@@ -15,19 +15,15 @@ const WalletBackup = ({route: {params}, navigation: {replace, goBack}}) => {
   return (
     <SafeAreaView style={[flex1, FG, marginTop10]}>
       <View style={[flex1, styles.container]}>
-        <Text style={[text, styles.text]}>
-          The last step:back up your wallet immediately
+        <Text style={[text, styles.text]}>IMPORTANT:</Text>
+        <Text style={[marginTop10, text, styles.text]}>
+          Your Recovery Phrase is required to restore your wallet. MetaLife does
+          not save your password nor can we restore your wallet for you. Please
+          backup your Recovery Phrase and store it in a secure location.
         </Text>
         <Text style={[marginTop10, text, styles.text]}>
-          We highly recommend you write the Mnemonic words（Backup Phrase）on
-          paper and keep it in a safe place,anyone get it can access or spend
-          your assets.Also get start with a small amount of assets.{' '}
-        </Text>
-        <Text style={[marginTop10, text, styles.text]}>
-          Note:MetaLife waller does not save user password nor provide
-          backups.All password are required to backup using encrypted private
-          key.We highly recommended to backup and save your private key at the
-          same time,otherwise your wallet can never be retrieved.
+          Never disclose your Recovery Phrase. Anyone with this phrase can take
+          over your account.
         </Text>
       </View>
       <RoundBtn

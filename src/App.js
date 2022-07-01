@@ -197,7 +197,7 @@ const App = ({
         <Screen
           name="WalletCreator"
           component={WalletCreator}
-          options={{title: 'Create account'}}
+          options={{title: 'Create Account'}}
           initialParams={
             wallet.current.type
               ? {}
