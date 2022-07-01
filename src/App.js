@@ -156,7 +156,7 @@ const App = ({
         <Screen name="PeersListScreen" component={PeersListScreen} />
         <Screen
           name="PeerDetailsScreen"
-          options={{title: 'Peers'}}
+          options={{title: 'Your Network'}}
           component={PeerDetailsScreen}
         />
         {/** wallet **/}
