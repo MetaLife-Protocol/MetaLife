@@ -38,6 +38,10 @@ import {stopAboutWalletAccount} from '../../../../utils';
 const icon = {
   scanW: require('../../../../assets/image/wallet/icon_scan_default_white.png'),
   scanB: require('../../../../assets/image/wallet/icon_scan_default_black.png'),
+  eyeOpenW: require('../../../../assets/image/wallet/Login_icon_zhengyan_default_white.png'),
+  eyeCloseW: require('../../../../assets/image/wallet/Login_icon_biyan_default_white.png'),
+  eyeOpenB: require('../../../../assets/image/wallet/Login_icon_zhengyan.png'),
+  eyeCloseB: require('../../../../assets/image/wallet/Login_icon_biyanjing.png'),
 };
 
 const WalletImporter = ({
@@ -64,6 +68,9 @@ const WalletImporter = ({
   const tags = ['Mnemonic', 'Keystore', 'Private Key', 'Observe'];
   const [selected, setSelected] = useState(0);
   const [address, setAddress] = useState('');
+
+  const [pwdSecure, setPwdSecure] = useState(true);
+  const [pwdConfrimSecure, setPwdConfrimSecure] = useState(true);
 
   function goScreen(name, params) {
     navigate(name, params);
@@ -116,19 +123,48 @@ const WalletImporter = ({
                 <TextInput
                   style={[text, flex1]}
                   value={pw}
+                  secureTextEntry={pwdSecure}
                   placeholder={'Set Password'}
                   placeholderTextColor={textHolder}
                   onChangeText={setPW}
                 />
+                <Pressable onPress={() => setPwdSecure(!pwdSecure)}>
+                  <Image
+                    source={
+                      pwdSecure
+                        ? darkMode
+                          ? icon.eyeOpenB
+                          : icon.eyeOpenW
+                        : darkMode
+                        ? icon.eyeCloseB
+                        : icon.eyeCloseW
+                    }
+                  />
+                </Pressable>
               </ControllerItem>
               <ControllerItem>
                 <TextInput
                   style={[text, flex1]}
                   value={cPw}
+                  secureTextEntry={pwdConfrimSecure}
                   placeholder={'Confirm Password'}
                   placeholderTextColor={textHolder}
                   onChangeText={setCPW}
                 />
+                <Pressable
+                  onPress={() => setPwdConfrimSecure(!pwdConfrimSecure)}>
+                  <Image
+                    source={
+                      pwdConfrimSecure
+                        ? darkMode
+                          ? icon.eyeOpenB
+                          : icon.eyeOpenW
+                        : darkMode
+                        ? icon.eyeCloseB
+                        : icon.eyeCloseW
+                    }
+                  />
+                </Pressable>
               </ControllerItem>
               <ControllerItem>
                 <TextInput

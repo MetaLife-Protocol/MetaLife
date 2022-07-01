@@ -1,9 +1,11 @@
 import {connect} from 'react-redux/lib/exports';
-import React, {useCallback, useState} from 'react';
+import React, {useState} from 'react';
 import {
+  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -21,17 +23,22 @@ import RoundBtn from '../../../../shared/comps/RoundBtn';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 import {
   createAccount,
-  exportAccountPrivateKey,
-  getWBalance,
   importAccountByMnemonic,
 } from '../../../../remote/wallet/WalletAPI';
 import Toast from 'react-native-tiny-toast';
-import {useRoute} from '@react-navigation/native';
-import {initPhoton} from '../../../photon/PhotonUtils';
 import {getMnemonic, inviteAccept} from '../../../../remote/ssb/ssbOP';
 import {shuffle} from '../../../../utils';
 import {bindIDAndWallet} from '../../../../remote/pubOP';
 import {presetPubs, reconnect2pub} from '../Pubs';
+
+const icons = {
+  deleteW: require('../../../../assets/image/wallet/Login_icon_delete_white.png'),
+  deleteB: require('../../../../assets/image/wallet/Login_icon_delete.png'),
+  eyeOpenW: require('../../../../assets/image/wallet/Login_icon_zhengyan_default_white.png'),
+  eyeCloseW: require('../../../../assets/image/wallet/Login_icon_biyan_default_white.png'),
+  eyeOpenB: require('../../../../assets/image/wallet/Login_icon_zhengyan.png'),
+  eyeCloseB: require('../../../../assets/image/wallet/Login_icon_biyanjing.png'),
+};
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -57,8 +64,10 @@ const WalletCreator = ({
     [pw, setPW] = useState(''),
     [cPw, setCPW] = useState(''),
     [prompt, setPrompt] = useState(''),
-    [observer, setObserver] = useState(false),
-    [backup, setBackup] = useState(false);
+    [observer, setObserver] = useState(false);
+
+  const [pwdSecure, setPwdSecure] = useState(true);
+  const [pwdConfrimSecure, setPwdConfrimSecure] = useState(true);
 
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
 
@@ -82,36 +91,67 @@ const WalletCreator = ({
           <Section separator={NormalSeparator}>
             <ControllerItem>
               <TextInput
-                style={[inputs, text, with100p]}
+                style={[inputs, text, flex1]}
                 value={aName}
-                placeholder={'Account name'}
+                placeholder={'Wallet name'}
                 placeholderTextColor={textHolder}
                 onChangeText={setAName}
               />
+              <Pressable onPress={() => setAName('')}>
+                <Image source={darkMode ? icons.deleteB : icons.deleteW} />
+              </Pressable>
             </ControllerItem>
             <ControllerItem>
               <TextInput
-                style={[inputs, text, with100p]}
+                style={[inputs, text, flex1]}
                 value={pw}
+                secureTextEntry={pwdSecure}
                 placeholder={'Password'}
                 placeholderTextColor={textHolder}
                 onChangeText={setPW}
               />
+              <Pressable onPress={() => setPwdSecure(!pwdSecure)}>
+                <Image
+                  source={
+                    pwdSecure
+                      ? darkMode
+                        ? icons.eyeOpenB
+                        : icons.eyeOpenW
+                      : darkMode
+                      ? icons.eyeCloseB
+                      : icons.eyeCloseW
+                  }
+                />
+              </Pressable>
             </ControllerItem>
             <ControllerItem>
               <TextInput
-                style={[inputs, text, with100p]}
+                style={[inputs, text, flex1]}
                 value={cPw}
+                secureTextEntry={pwdConfrimSecure}
                 placeholder={'Confirm password'}
                 placeholderTextColor={textHolder}
                 onChangeText={setCPW}
               />
+              <Pressable onPress={() => setPwdConfrimSecure(!pwdConfrimSecure)}>
+                <Image
+                  source={
+                    pwdConfrimSecure
+                      ? darkMode
+                        ? icons.eyeOpenB
+                        : icons.eyeOpenW
+                      : darkMode
+                      ? icons.eyeCloseB
+                      : icons.eyeCloseW
+                  }
+                />
+              </Pressable>
             </ControllerItem>
             <ControllerItem>
               <TextInput
-                style={[inputs, text, with100p]}
+                style={[inputs, text, flex1]}
                 value={prompt}
-                placeholder={'Password prompt (optional)'}
+                placeholder={'Password hint'}
                 placeholderTextColor={textHolder}
                 onChangeText={setPrompt}
               />
@@ -130,7 +170,7 @@ const WalletCreator = ({
       </TouchableWithoutFeedback>
       <KeyboardAvoidingView
         keyboardVerticalOffset={isIPhoneX_deprecated ? 94 : 64}
-        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <RoundBtn
           style={[{marginBottom: 40}]}
           title={'Create account'}
@@ -227,7 +267,14 @@ const WalletCreator = ({
 
 const styles = StyleSheet.create({
   inputs: {
+    height: 30,
     fontSize: 16,
+  },
+  image: {
+    height: 30,
+    width: 30,
+    justifyContent: 'center',
+    alignContent: 'center',
   },
 });
 
