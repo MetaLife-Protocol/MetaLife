@@ -3,11 +3,12 @@
  *
  */
 
-import React, {useRef} from 'react';
+import React, {useLayoutEffect, useRef} from 'react';
 import {WebView} from 'react-native-webview';
 import {connect} from 'react-redux/lib/exports';
 import Toast from 'react-native-tiny-toast';
 import {setAbout, setAboutImage} from '../../remote/ssb/ssbOP';
+import {useNavigation} from '@react-navigation/native';
 
 const subdomain = 'metalifesocial';
 //uri: `https://metalifesocial.readyplayer.me/avatar?frameApi`,
@@ -16,11 +17,20 @@ let isSubscribed = false;
 
 const Avatar = ({
   setAvatar,
+  route: {params},
   cfg: {darkMode, lang, verbose},
   feedId,
   infoDic,
 }) => {
+  const navigation = useNavigation();
   const webview = useRef();
+  const {title} = params;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: title,
+    });
+  }, [navigation, title]);
 
   function submit(type, value) {
     type === 'image'

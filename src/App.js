@@ -257,8 +257,20 @@ const App = ({
           component={MessageDetailsScreen}
         />
         {/* Settings */}
-        <Screen name="Setting" component={Setting} />
-        <Screen name="AvatarEditor" component={AvatarEditor} />
+        <Screen
+          name="Setting"
+          component={Setting}
+          options={{
+            title: 'Setting',
+          }}
+        />
+        <Screen
+          name="AvatarEditor"
+          component={AvatarEditor}
+          options={{
+            title: 'My Avatar',
+          }}
+        />
         <Screen name="Avatar" component={Avatar} />
         <Screen name="Pubs" component={Pubs} />
         <Group screenOptions={{presentation: 'modal'}} />

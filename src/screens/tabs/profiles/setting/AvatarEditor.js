@@ -111,15 +111,15 @@ const AvatarEditor = ({feedId, infoDic, avatar}) => {
       <View style={[flex1, {height: '100%'}]} />
       <RoundBtn
         style={[{height: 40, marginBottom: 20}]}
-        title={'Use this frame as avatar'}
+        title={'Use this avatar for my profile'}
         press={() => {
           webview.current.injectJavaScript(capture);
         }}
       />
       <RoundBtn
         style={[{height: 40, marginBottom: 20}]}
-        title={'Refine avatar'}
-        press={() => navigate('Avatar')}
+        title={'Edit my avatar'}
+        press={() => navigate('Avatar', {title: 'Adjust Photo'})}
       />
     </SafeAreaView>
   ) : (
@@ -133,9 +133,13 @@ const AvatarEditor = ({feedId, infoDic, avatar}) => {
       ]}>
       <Text style={[text, {fontSize: 20}]}>No avatar available</Text>
       <View style={[{height: 30}]} />
-      <Link to={'/Avatar'}>
+      <Link
+        to={{
+          screen: 'Avatar',
+          params: {title: 'Avatar Editor'},
+        }}>
         <Text style={[{color: colorsSchema.primary, fontSize: 20}]}>
-          Go to create one
+          Create avatar
         </Text>
       </Link>
     </View>
