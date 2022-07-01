@@ -8,6 +8,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import useSchemaStyles, {
@@ -19,6 +20,8 @@ import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeC
 import {TokenItem} from './items/TokenItem';
 import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
 import {getCurrentAccount, getCurrentBalance} from '../../../../utils';
+import {ComModal} from '../../../../shared/comps/ComModal';
+import {exportAccountMnemonic} from '../../../../remote/wallet/WalletAPI';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -35,6 +38,8 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
       justifySpaceAround,
       justifySpaceBetween,
       alignSelfCenter,
+      alignItemsCenter,
+      placeholderTextColor,
     } = useSchemaStyles(),
     {
       container,
@@ -62,6 +67,10 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
 
   const [volumeVisible, setVolumeVisible] = useState(true);
   const [coinType, setCoinType] = useState('dollar');
+  const [pwdVisible, setPwdVisible] = useState(false);
+  const [pwd, setPwd] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastContent, setToastContent] = useState('');
 
   const account = getCurrentAccount(wallet);
 
@@ -142,7 +151,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
                   <Pressable
                     style={styles.backup}
                     onPress={() => {
-                      console.log('backup');
+                      // setPwdVisible(true);
                     }}>
                     <Text style={styles.backupText}>Backup</Text>
                   </Pressable>
@@ -203,6 +212,59 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
         wallet={wallet}
         darkMode={darkMode}
         submitHandler={setCurrent}
+      />
+      <ComModal
+        visible={pwdVisible}
+        setVisible={setPwdVisible}
+        title={'Enter Password'}
+        darkMode={darkMode}
+        content={
+          <View style={[alignItemsCenter, styles.inputContiner, row]}>
+            <TextInput
+              keyboardType={'ascii-capable'}
+              autoCapitalize={'none'}
+              textAlign={'left'}
+              value={pwd}
+              textContentType={'password'}
+              secureTextEntry={true}
+              placeholder={'Wallet password'}
+              placeholderTextColor={placeholderTextColor.color}
+              onChangeText={setPwd}
+              style={[text, styles.input]}
+            />
+            <Pressable onPress={() => setPwd('')}>
+              <Image
+                style={styles.delete}
+                source={darkMode ? iconDic.deleteIconB : iconDic.deleteIconB}
+              />
+            </Pressable>
+          </View>
+        }
+        toastVisible={toastVisible}
+        setToastVisible={setToastVisible}
+        toastContent={toastContent}
+        submit={{
+          text: 'Confirm',
+          press: () => {
+            exportAccountMnemonic(account.address, pwd, (isSuccess, res) => {
+              console.log('hhh', res);
+              if (isSuccess) {
+                console.log('hhh', res);
+                goScreen('WalletBackup', {
+                  account,
+                });
+              } else {
+                setToastContent('Wrong password');
+              }
+            });
+          },
+        }}
+        cancel={{
+          text: 'Cancel',
+          press: () => {
+            setPwd('');
+          },
+        }}
       />
     </SafeAreaView>
   );
@@ -278,6 +340,20 @@ const styles = StyleSheet.create({
     width: 33,
     marginTop: 5,
     backgroundColor: colorsSchema.primary,
+  },
+  inputContiner: {
+    display: 'flex',
+    borderColor: '#4E586E',
+    borderRadius: 12,
+    height: 46,
+    paddingHorizontal: 15,
+    marginVertical: 15,
+    borderWidth: 0.5,
+  },
+  input: {
+    flexGrow: 1,
+    fontSize: 15,
+    lineHeight: 20,
   },
 });
 

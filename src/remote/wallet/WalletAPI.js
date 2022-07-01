@@ -12,6 +12,7 @@ import {
   bigNumberFormatUnits,
   createWallet,
   exportKeystore,
+  exportMnemonicFromKeystore,
   exportPrivateKeyFromKeystore,
   getBalance,
   getContractBalance,
@@ -671,7 +672,6 @@ export function importAccountByKeystore(keystore, pw, cb) {
       saveAccounts(res.keystore.address, res.keystore, (success, err) => {
         console.log('save', success, err);
       });
-      m;
       cb && cb(true, res);
     })
     .catch(reason => {
@@ -683,7 +683,6 @@ export function importAccountByKeystore(keystore, pw, cb) {
 export function importAccountByPrivateKey(privateKey, pw, cb) {
   importPrivateKey(privateKey, pw, true)
     .then(res => {
-      console.log('hhhhhh', res);
       saveAccounts(res.keystore.address, res.keystore, (success, err) => {
         console.log('save', success, err);
       });
@@ -866,6 +865,21 @@ export function deleteWalletAccount(address, pw, cb) {
       exportKeystore(JSON.stringify(keystore), pw)
         .then(res => {
           deleteAccount(address, cb);
+        })
+        .catch(error => {
+          cb && cb(false);
+          console.warn(error);
+        });
+    }
+  });
+}
+
+export function exportAccountMnemonic(address, pw, cb) {
+  getAccount(address, (isExit, keystore) => {
+    if (isExit) {
+      exportMnemonicFromKeystore(JSON.stringify(keystore), pw)
+        .then(res => {
+          cb && cb(true, res);
         })
         .catch(error => {
           cb && cb(false);

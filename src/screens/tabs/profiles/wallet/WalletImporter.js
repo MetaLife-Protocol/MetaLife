@@ -133,11 +133,11 @@ const WalletImporter = ({
                     source={
                       pwdSecure
                         ? darkMode
-                          ? icon.eyeOpenB
-                          : icon.eyeOpenW
+                          ? icon.eyeCloseB
+                          : icon.eyeCloseW
                         : darkMode
-                        ? icon.eyeCloseB
-                        : icon.eyeCloseW
+                        ? icon.eyeOpenB
+                        : icon.eyeOpenW
                     }
                   />
                 </Pressable>
@@ -157,11 +157,11 @@ const WalletImporter = ({
                     source={
                       pwdConfrimSecure
                         ? darkMode
-                          ? icon.eyeOpenB
-                          : icon.eyeOpenW
+                          ? icon.eyeCloseB
+                          : icon.eyeCloseW
                         : darkMode
-                        ? icon.eyeCloseB
-                        : icon.eyeCloseW
+                        ? icon.eyeOpenB
+                        : icon.eyeOpenW
                     }
                   />
                 </Pressable>
@@ -180,7 +180,7 @@ const WalletImporter = ({
         </TouchableWithoutFeedback>
         <KeyboardAvoidingView
           keyboardVerticalOffset={isIPhoneX_deprecated ? 94 : 64}
-          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <RoundBtn
             style={[{marginBottom: 50}]}
             title={'Start Importing'}

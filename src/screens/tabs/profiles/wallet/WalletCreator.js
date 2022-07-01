@@ -115,11 +115,11 @@ const WalletCreator = ({
                   source={
                     pwdSecure
                       ? darkMode
-                        ? icons.eyeOpenB
-                        : icons.eyeOpenW
+                        ? icons.eyeCloseB
+                        : icons.eyeCloseW
                       : darkMode
-                      ? icons.eyeCloseB
-                      : icons.eyeCloseW
+                      ? icons.eyeOpenB
+                      : icons.eyeOpenW
                   }
                 />
               </Pressable>
@@ -138,11 +138,11 @@ const WalletCreator = ({
                   source={
                     pwdConfrimSecure
                       ? darkMode
-                        ? icons.eyeOpenB
-                        : icons.eyeOpenW
+                        ? icons.eyeCloseB
+                        : icons.eyeCloseW
                       : darkMode
-                      ? icons.eyeCloseB
-                      : icons.eyeCloseW
+                      ? icons.eyeOpenB
+                      : icons.eyeOpenW
                   }
                 />
               </Pressable>

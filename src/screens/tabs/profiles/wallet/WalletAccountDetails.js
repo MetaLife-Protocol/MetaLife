@@ -237,8 +237,11 @@ const WalletAccountDetails = ({
                     wallet.accounts[type][wallet.current.index];
                   walletDeleteAccount({type, address});
                   if (address === currentAccount.address) {
-                    const account = wallet.accounts[type][0];
-                    setCurrent({type, index: 0, account});
+                    if (wallet.accounts.length <= 0) {
+                      setCurrent({type: '', index: 0});
+                    } else {
+                      setCurrent({type, index: 0});
+                    }
                     stopAboutWalletAccount();
                   }
                   Toast.show('Deleted');
