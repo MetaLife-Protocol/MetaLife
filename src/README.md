@@ -52,3 +52,7 @@
 > ### Android local.properties  
 >> sdk.dir=/Users/lonmee/Library/Android/sdk  
 >> ndk.dir=/Users/lonmee/Library/Android/sdk/ndk/21.4.7075529  
+> 
+> ### arm64-v8a;arm64 bypassed for photon for temp  
+>> line:20 @ tools/backend/build-native-modules.sh    
+>> line:19 @ tools/backend/post-remove-unused-files.sh  
