@@ -2,6 +2,7 @@
  * Created on 08 Nov 2021 by lonmee
  */
 import React, {useState} from 'react';
+import {producer, build, version as appVersion} from '../../../../app.json';
 import {
   Image,
   Pressable,
@@ -140,18 +141,32 @@ const Setting = ({
             />
           </ControllerItem>
         </Section>
+        {/*<Section*/}
+        {/*  style={[marginTop10]}*/}
+        {/*  title={'Privacy'}*/}
+        {/*  separator={NormalSeparator}>*/}
+        {/*  <ControllerItem title={'Do Not Display my DAO'}>*/}
+        {/*    <Switch value={lang === 'en'} onValueChange={null} />*/}
+        {/*  </ControllerItem>*/}
+        {/*  <ControllerItem title={'Do Not Display my NFT'}>*/}
+        {/*    <Switch value={lang === 'en'} onValueChange={null} />*/}
+        {/*  </ControllerItem>*/}
+        {/*  <ControllerItem title={'Block messages from stranger'}>*/}
+        {/*    <Switch value={lang === 'en'} onValueChange={null} />*/}
+        {/*  </ControllerItem>*/}
+        {/*</Section>*/}
         <Section
           style={[marginTop10]}
-          title={'Privacy'}
+          title={'About'}
           separator={NormalSeparator}>
-          <ControllerItem title={'Do Not Display my DAO'}>
-            <Switch value={lang === 'en'} onValueChange={null} />
+          <ControllerItem title={'Version'}>
+            <Text style={[text]}>{appVersion}</Text>
           </ControllerItem>
-          <ControllerItem title={'Do Not Display my NFT'}>
-            <Switch value={lang === 'en'} onValueChange={null} />
+          <ControllerItem title={'Built on'}>
+            <Text style={[text]}>{build}</Text>
           </ControllerItem>
-          <ControllerItem title={'Block messages from stranger'}>
-            <Switch value={lang === 'en'} onValueChange={null} />
+          <ControllerItem title={'Powered by'}>
+            <Text style={[text]}>{producer}</Text>
           </ControllerItem>
         </Section>
       </ScrollView>

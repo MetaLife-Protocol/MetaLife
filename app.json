@@ -1,4 +1,7 @@
 {
   "name": "MetaLife",
-  "displayName": "MetaLife"
+  "displayName": "MetaLife",
+  "version": "alpha",
+  "build": "220702",
+  "producer": "METALIFE FOUNDATION PTE. LTD."
 }
