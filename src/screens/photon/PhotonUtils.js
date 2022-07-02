@@ -109,14 +109,22 @@ export function initPhoton({
           //photon is local first login
           const feedId = user?.feedId;
           console.log('feedId:::', feedId);
-          checkPubExist(pubs, presetPubs[0]) &&
-            bindIDAndWallet(
-              {
-                client_id: feedId,
-                client_eth_address: checkSum('0x' + address.toString()),
-              },
-              console.log,
-            );
+          bindIDAndWallet(
+            {
+              client_id: feedId,
+              client_eth_address: checkSum('0x' + address.toString()),
+            },
+            console.log,
+            1,
+          );
+          bindIDAndWallet(
+            {
+              client_id: feedId,
+              client_eth_address: checkSum('0x' + address.toString()),
+            },
+            console.log,
+            2,
+          );
         }
         store.dispatch({type: 'setPhotonLogin', payload: res.logFile});
         if (directToNetworkPage && navigate) {

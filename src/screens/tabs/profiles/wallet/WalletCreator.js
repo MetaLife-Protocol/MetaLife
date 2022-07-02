@@ -27,8 +27,7 @@ import {
 } from '../../../../remote/wallet/WalletAPI';
 import Toast from 'react-native-tiny-toast';
 import {getMnemonic, inviteAccept} from '../../../../remote/ssb/ssbOP';
-import {checkPubExist, checkSum, shuffle} from '../../../../utils';
-import {bindIDAndWallet} from '../../../../remote/pubOP';
+import {shuffle} from '../../../../utils';
 import {presetPubs, reconnect2pub} from '../Pubs';
 
 const icons = {
@@ -46,17 +45,14 @@ const icons = {
  */
 
 const WalletCreator = ({
-  cfg: {lang, darkMode, verbose},
+  cfg: {darkMode},
   route: {params},
   navigation: {replace},
   wallet,
   walletCreateAccount,
-  setBalance,
   setCurrent,
-  feedId,
 }) => {
-  const {flex1, FG, with100p, row, alignItemsCenter, text, marginTop10} =
-      useSchemaStyles(),
+  const {flex1, FG, text, marginTop10} = useSchemaStyles(),
     {textHolder} = colorsSchema,
     {inputs} = styles;
 
@@ -67,7 +63,7 @@ const WalletCreator = ({
     [observer, setObserver] = useState(false);
 
   const [pwdSecure, setPwdSecure] = useState(true);
-  const [pwdConfrimSecure, setPwdConfrimSecure] = useState(true);
+  const [pwdConfirmSecure, setPwdConfirmSecure] = useState(true);
 
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
 
@@ -128,15 +124,15 @@ const WalletCreator = ({
               <TextInput
                 style={[inputs, text, flex1]}
                 value={cPw}
-                secureTextEntry={pwdConfrimSecure}
+                secureTextEntry={pwdConfirmSecure}
                 placeholder={'Confirm password'}
                 placeholderTextColor={textHolder}
                 onChangeText={setCPW}
               />
-              <Pressable onPress={() => setPwdConfrimSecure(!pwdConfrimSecure)}>
+              <Pressable onPress={() => setPwdConfirmSecure(!pwdConfirmSecure)}>
                 <Image
                   source={
-                    pwdConfrimSecure
+                    pwdConfirmSecure
                       ? darkMode
                         ? icons.eyeCloseB
                         : icons.eyeCloseW
@@ -285,7 +281,6 @@ const msp = s => {
   return {
     cfg: s.cfg,
     wallet: s.wallet,
-    feedId: s.user.feedId,
   };
 };
 

@@ -24,7 +24,7 @@ const Restore = ({setResync}) => {
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
   const [mnemonic, setMnemonic] = useState('');
   const {channel} = nodejs;
-  const {navigate} = useNavigation();
+  const {reset} = useNavigation();
   const listener = useRef();
   useEffect(() => {
     listener.current = channel.addListener('identity', responseHandler);
@@ -35,12 +35,19 @@ const Restore = ({setResync}) => {
       case 'IDENTITY_READY':
         listener.current.remove();
         setResync(true);
-        // return navigate('Resync');
-        return navigate('WalletCreator', {
-          type: 'spectrum',
-          name: 'SPE-1',
-          from: 'guid', // special implements
-          target: 'Resync',
+        return reset({
+          index: 0,
+          routes: [
+            {
+              name: 'WalletCreator',
+              params: {
+                type: 'spectrum',
+                name: 'SPE-1',
+                from: 'guid', // special implements
+                target: 'Resync',
+              },
+            },
+          ],
         });
       default:
         return Toast.show(res, {position: 0});

@@ -4,8 +4,9 @@
  */
 
 const pubIp = ['106.52.171.12', '13.213.41.31'];
-const port = ['10008', '18008'];
+const port = ['10008'];
 const url = `http://${pubIp[0]}:${port[0]}/ssb/api/`;
+const url2 = `http://${pubIp[1]}:${port[0]}/ssb/api/`;
 const api = ['tipped-who-off', 'id2eth'];
 
 /**
@@ -46,8 +47,8 @@ export function report(params, cb) {
  * }
  * @param cb
  */
-export function bindIDAndWallet(params, cb) {
-  fetch(url + api[1], {
+export function bindIDAndWallet(params, cb, pubNum) {
+  fetch((pubNum === 1 ? url : url2) + api[1], {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -55,6 +56,6 @@ export function bindIDAndWallet(params, cb) {
     },
     body: JSON.stringify(params),
   })
-    .then(r => cb(JSON.parse(r._bodyText).data))
+    .then(r => cb(r))
     .catch(console.warn);
 }
