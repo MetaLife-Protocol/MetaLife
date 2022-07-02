@@ -17,11 +17,8 @@ import {
   getCurrentAccount,
   getCurrentBalance,
 } from '../../../../utils';
-import {initPhoton, startPhoton} from '../../../photon/PhotonUtils';
-import {exportPrivateKeyFromKeystore} from 'react-native-web3-wallet';
-import {getAccount} from '../../../../remote/wallet/WalletAPI';
+import {startPhoton} from '../../../photon/PhotonUtils';
 import {useDialog} from '../../../../metalife-base';
-import PasswordDialog from './modal/PasswordDialog';
 import Toast from 'react-native-tiny-toast';
 
 /**
