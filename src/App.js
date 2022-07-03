@@ -20,7 +20,7 @@ import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import Pubs from './screens/tabs/profiles/Pubs';
-import {Modal, Pressable, StatusBar, Text, View} from 'react-native';
+import {Modal, Platform, Pressable, StatusBar, Text, View} from 'react-native';
 import CommentEditor from './screens/tabs/home/post/CommentEditor';
 import PullMenu from './shared/comps/PullMenu';
 import Avatar from './shared/screens/Avatar';
@@ -69,6 +69,10 @@ import WalletAccountDetails from './screens/tabs/profiles/wallet/WalletAccountDe
 import WalletBackup from './screens/tabs/profiles/wallet/WalletBackup';
 import WalletBackupMnemonicSelect from './screens/tabs/profiles/wallet/WalletBackupMnemonicSelect';
 import WalletBackupMnemonicShow from './screens/tabs/profiles/wallet/WalletBackupMnemonicShow';
+import {getRandomPathName, savePicture} from './utils';
+import ImagePicker from 'react-native-image-crop-picker';
+import RNFetchBlob from 'rn-fetch-blob';
+import Toast from 'react-native-tiny-toast';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -93,6 +97,22 @@ const App = ({
   const navigationRef = useNavigationContainerRef();
 
   const [switchVisible, setSwitchVisible] = useState(false);
+
+  function saveHandler({nativeEvent: {data}}) {
+    const {type, content} = JSON.parse(data);
+    let path;
+    switch (type) {
+      case 'capture':
+        Platform.OS === 'ios'
+          ? savePicture(content, 'photo', 'MetaLife', r =>
+              Toast.show('photo saved in: ', r),
+            )
+          : savePicture(content, 'photo', 'MetaLife', r =>
+              Toast.show('photo saved in: ', r),
+            );
+        break;
+    }
+  }
 
   // todo: loading bar test
   useEffect(() => {
@@ -389,6 +409,8 @@ const App = ({
           enableSwipeDown={true}
           useNativeDriver={true}
           onSwipeDown={() => setViewImages({index: 0, imgs: []})}
+          onClick={() => setViewImages({index: 0, imgs: []})}
+          onSave={saveHandler}
           imageUrls={viewImages.imgs}
         />
       </Modal>
