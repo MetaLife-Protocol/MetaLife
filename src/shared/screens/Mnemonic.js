@@ -9,17 +9,11 @@ import {getMnemonic} from '../../remote/ssb/ssbOP';
 import RoundBtn from '../comps/RoundBtn';
 import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
-import {
-  getWBalance,
-  importAccountByMnemonic,
-} from '../../remote/wallet/WalletAPI';
-import {useDispatch} from 'react-redux';
 
 const Mnemonic = () => {
   const {FG, flex1, marginTop10, text} = useSchemaStyles();
   const [mnemonic, setMnemonic] = useState();
   useLayoutEffect(() => getMnemonic(setMnemonic), []);
-  const dispatch = useDispatch();
   return (
     <SafeAreaView style={[FG, flex1, marginTop10]}>
       <View
@@ -42,29 +36,6 @@ const Mnemonic = () => {
         press={() => {
           nativeClipboard.setString(mnemonic);
           Toast.show('Mnemonic copied');
-        }}
-      />
-      <RoundBtn
-        style={[{marginBottom: 40}]}
-        title={'Create wallet with this mnemonic'}
-        press={() => {
-          importAccountByMnemonic(
-            mnemonic,
-            '1234',
-            'spectrum',
-            ({keystore: {address}}) => {
-              dispatch({
-                type: 'walletCreateAccount',
-                payload: {
-                  type: 'spectrum',
-                  name: 'default',
-                  address,
-                  observer: false,
-                },
-              });
-              getWBalance('spectrum', address, v => dispatch('setBalance', v));
-            },
-          );
         }}
       />
     </SafeAreaView>
