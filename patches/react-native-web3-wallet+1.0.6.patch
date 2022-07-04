@@ -1,21 +1,12 @@
 diff --git a/node_modules/react-native-web3-wallet/index.js b/node_modules/react-native-web3-wallet/index.js
-index 51551ba..cf2c86a 100644
+index 51551ba..70e493f 100644
 --- a/node_modules/react-native-web3-wallet/index.js
 +++ b/node_modules/react-native-web3-wallet/index.js
-@@ -8,20 +8,28 @@ import "@ethersproject/shims"
+@@ -8,7 +8,20 @@ import "@ethersproject/shims"
  import { ethers } from "ethers";
  
  //Fisher–Yates shuffle
 -Array.prototype.shuffle = function () {
--    var array = this;
--    var m = array.length,
--      t,
--      i;
--    while (m) {
--      i = Math.floor(Math.random() * m--);
--      t = array[m];
--      array[m] = array[i];
--      array[i] = t;
 +// Array.prototype.shuffle = function () {
 +//     var array = this;
 +//     var m = array.length,
@@ -29,22 +20,19 @@ index 51551ba..cf2c86a 100644
 +//     }
 +//     return array;
 +// };
-+function shuffle(mnemonic) {
-+    let cMne = mnemonic.split(' '),
-+        res = [];
-+    while (cMne.length > 0) {
-+        let index = Math.floor(Math.random() * cMne.length);
-+        res.push(cMne.splice(index, 1)[0]);
-     }
--    return array;
--};
--
-+    return res;
-+}
++shuffle = function () {
+     var array = this;
+     var m = array.length,
+       t,
+@@ -22,7 +35,6 @@ Array.prototype.shuffle = function () {
+     return array;
+ };
  
+-
  export function createWallet(password, path = "m/44'/60'/0'/0/0", seedByte = 16, needPrivateKey = false, needPublicKey = false){
      return new Promise((fulfill, reject)=>{
-@@ -37,36 +45,41 @@ export function createWallet(password, path = "m/44'/60'/0'/0/0", seedByte = 16,
+         try {
+@@ -37,36 +49,41 @@ export function createWallet(password, path = "m/44'/60'/0'/0/0", seedByte = 16,
              var end = performance.now();
              console.log('mnemonic done', `${end - start}ms\n`);
  
@@ -108,7 +96,7 @@ index 51551ba..cf2c86a 100644
          } catch (error) {
              reject(error);
          }
-@@ -176,8 +189,13 @@ export function getContractNfts(network, contractAddress, contractAbi, address){
+@@ -176,8 +193,13 @@ export function getContractNfts(network, contractAddress, contractAbi, address){
  export function exportPrivateKeyFromMnemonic(mnemonic, path){
      return new Promise((fulfill, reject)=>{
          try {
@@ -124,7 +112,7 @@ index 51551ba..cf2c86a 100644
          } catch (error) {
              reject(error);
          }
-@@ -195,6 +213,23 @@ export function exportPrivateKeyFromKeystore(keystore, password){
+@@ -195,6 +217,23 @@ export function exportPrivateKeyFromKeystore(keystore, password){
      });
  }
  
@@ -148,7 +136,7 @@ index 51551ba..cf2c86a 100644
  export function exportKeystore(keystore, password){
      return new Promise((fulfill, reject)=>{
          ethers.Wallet.fromEncryptedJson(keystore,password).then(res=>{
-@@ -243,25 +278,31 @@ export function importPrivateKey(privateKey, password, needPrivateKey = false, n
+@@ -243,25 +282,31 @@ export function importPrivateKey(privateKey, password, needPrivateKey = false, n
  export function importMnemonic(mnemonic, password, path = "m/44'/60'/0'/0/0", needPrivateKey = false, needPublicKey = false){
      return new Promise((fulfill, reject)=>{
          try {
