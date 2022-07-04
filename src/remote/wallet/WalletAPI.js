@@ -694,8 +694,15 @@ export function importAccountByPrivateKey(privateKey, pw, cb) {
     });
 }
 
+const timeout = new Promise((resolve, reject) => {
+  const timer = setTimeout(() => {
+    clearTimeout(timer);
+    resolve(0);
+  }, 3000);
+});
+
 export function getWBalance(type, wAddr, cb) {
-  getBalance(financeConfig.chains[type].rpcURL, wAddr)
+  Promise.race([getBalance(financeConfig.chains[type].rpcURL, wAddr), timeout])
     .then(value => {
       cb && cb(bigNumberFormatUnits(value));
     })
