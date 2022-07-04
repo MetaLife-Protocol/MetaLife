@@ -20,7 +20,16 @@ import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import Pubs from './screens/tabs/profiles/Pubs';
-import {Modal, Platform, Pressable, StatusBar, Text, View} from 'react-native';
+import {
+  Image,
+  ImageBackground,
+  Modal,
+  Platform,
+  Pressable,
+  StatusBar,
+  Text,
+  View,
+} from 'react-native';
 import CommentEditor from './screens/tabs/home/post/CommentEditor';
 import PullMenu from './shared/comps/PullMenu';
 import Avatar from './shared/screens/Avatar';
@@ -73,6 +82,8 @@ import {getRandomPathName, savePicture} from './utils';
 import ImagePicker from 'react-native-image-crop-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import Toast from 'react-native-tiny-toast';
+import Earnings from './screens/tabs/profiles/earnings/Earnings';
+import EarningsShare from './screens/tabs/profiles/earnings/EarningsShare';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -275,6 +286,34 @@ const App = ({
           name="MessageDetailsScreen"
           options={{title: 'Message'}}
           component={MessageDetailsScreen}
+        />
+        {/* earnings */}
+        <Screen
+          name="Earnings"
+          component={Earnings}
+          options={({navigation}) => ({
+            title: 'Earnings',
+            headerBackground: () => (
+              <ImageBackground
+                style={[{height: 215}]}
+                source={require('./assets/image/profiles/earings_bg.png')}
+              />
+            ),
+            headerRight: () => (
+              <Pressable
+                onPress={() => navigation.navigate('EarningsShare')}
+                style={{padding: 8}}>
+                <Image source={require('./assets/image/profiles/share.png')} />
+              </Pressable>
+            ),
+          })}
+        />
+        <Screen
+          name="EarningsShare"
+          component={EarningsShare}
+          options={{
+            header: () => null,
+          }}
         />
         {/* Settings */}
         <Screen

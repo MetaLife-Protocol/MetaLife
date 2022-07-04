@@ -35,7 +35,7 @@ const WalletCard = ({
   setCurrent,
   photon,
 }) => {
-  const {row, FG, justifySpaceAround, alignItemsCenter} = useSchemaStyles(),
+  const {row, BG, justifySpaceAround, alignItemsCenter} = useSchemaStyles(),
     {container, title, balanceS, icons, tag} = styles;
 
   const {navigate} = useNavigation();
@@ -96,7 +96,7 @@ const WalletCard = ({
   }
 
   return (
-    <View style={[FG, alignItemsCenter]}>
+    <View style={[BG, alignItemsCenter]}>
       <Pressable style={[...style]} onPress={() => goScreen('WalletDetails')}>
         <ImageBackground
           style={[container, justifySpaceAround]}
