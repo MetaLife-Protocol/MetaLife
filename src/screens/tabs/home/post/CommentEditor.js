@@ -2,7 +2,7 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React, {useLayoutEffect, useRef, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {Keyboard, SafeAreaView, ScrollView} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
@@ -22,8 +22,6 @@ const PostMsgEditor = ({commentDic}) => {
   const [shownMsg, setShownMsg] = useState(shownMsgInit);
   const {key, value} = shownMsg,
     commentArr = commentDic[key] || [];
-
-  const scrollView = useRef();
 
   useLayoutEffect(() => {
     name && setOptions({title: `comment to ${name}`});
@@ -73,7 +71,7 @@ const PostMsgEditor = ({commentDic}) => {
     <SafeAreaView style={[flex1, FG]}>
       {value && (
         <>
-          <ScrollView style={[flex1]} ref={scrollView} overScrollMode={'auto'}>
+          <ScrollView style={[flex1]} overScrollMode={'auto'}>
             <Section>
               <PostItem item={shownMsg} showPanel={false} />
             </Section>

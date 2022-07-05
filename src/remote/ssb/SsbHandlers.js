@@ -24,7 +24,7 @@ function update(store) {
   feedId = feedIdRef;
   feed = feedRef;
   privateMsg = privateRef;
-  updatesPeers = [feedId, ...relations[0], ...relations[1]];
+  updatesPeers = [...relations[0], ...relations[1]];
   // console.guid('populated update');
 }
 

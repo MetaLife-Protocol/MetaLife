@@ -19,9 +19,9 @@ const MsgInput = ({sendHandler}) => {
   const {FG, input, row, alignItemsCenter, flex1, text, placeholderTextColor} =
       useSchemaStyles(),
     {inner, round, textInput, sender} = styles;
-  const [content, setContent] = useState(''),
-    [offset, setOffset] = useState(0);
+  const [content, setContent] = useState('');
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
+  const offset = isIPhoneX_deprecated ? 94 : 64;
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={offset}
@@ -31,8 +31,6 @@ const MsgInput = ({sendHandler}) => {
           <TextInput
             style={[flex1, textInput, text]}
             placeholder="Write a comment …"
-            autoFocus={true}
-            onBlur={() => setOffset(isIPhoneX_deprecated ? 94 : 64)}
             value={content}
             onChangeText={setContent}
             placeholderTextColor={placeholderTextColor.color}
