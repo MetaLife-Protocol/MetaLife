@@ -72,10 +72,12 @@ export function getPubsRewardList(params) {
       .then(res => res.json())
       .then(res =>
         resovle(
-          res.data.map(it => {
-            it.pub = 'MetaLife Planet 1';
-            return it;
-          }),
+          res.data
+            .filter(it => it.grant_success === 'success')
+            .map(it => {
+              it.pub = 'MetaLife Planet 1';
+              return it;
+            }),
         ),
       )
       .catch(e => reject(e));
@@ -91,10 +93,12 @@ export function getPubsRewardList(params) {
       .then(res => res.json())
       .then(res =>
         resovle(
-          res.data.map(it => {
-            it.pub = 'MetaLife Planet 2';
-            return it;
-          }),
+          res.data
+            .filter(it => it.grant_success === 'success')
+            .map(it => {
+              it.pub = 'MetaLife Planet 2';
+              return it;
+            }),
         ),
       )
       .catch(e => reject(e));
