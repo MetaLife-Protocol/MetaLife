@@ -1,50 +1,89 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
-import {ImageBackground, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  FlatList,
+  ImageBackground,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
+import {formatDate} from '../../../../metalife-base/src/utils/DateUtils';
+import {getPubsRewardList} from '../../../../remote/pubOP';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 
-const Item = () => {
+const Item = ({title, pub, number, time}) => {
   const {text, row, justifySpaceBetween, FG, marginTop10} = useSchemaStyles();
   return (
     <View style={[row, justifySpaceBetween, marginTop10, FG, styles.item]}>
       <View>
-        <Text style={[text, styles.item_text1]}>Login</Text>
-        <Text style={[text, marginTop10, styles.item_text2]}>
-          From MetaLife Planet 1
-        </Text>
+        <Text style={[text, styles.item_text1]}>{title}</Text>
+        <Text style={[text, marginTop10, styles.item_text2]}>From {pub}</Text>
       </View>
       <View>
-        <Text style={[styles.item_text3]}>+10 MLT</Text>
-        <Text style={[text, marginTop10, styles.item_text4]}>
-          2022.06.29 10:30
-        </Text>
+        <Text style={[styles.item_text3]}>+{number} MLT</Text>
+        <Text style={[text, marginTop10, styles.item_text4]}>{time}</Text>
       </View>
     </View>
   );
 };
 
-const Earnings = ({}) => {
-  const {text, alignItemsCenter, justifyCenter} = useSchemaStyles();
+const Earnings = ({feedId}) => {
+  const {text, alignItemsCenter, justifyCenter, flex1} = useSchemaStyles();
+  const [rewardList, setRewardList] = useState([]);
 
   const navigation = useNavigation();
+  const getRewardList = () => {
+    const hour24 = new Date();
+    hour24.setHours(hour24.getHours() - 24);
+    getPubsRewardList({
+      client_id: feedId,
+      time_from: 0,
+      time_to: Date.now(),
+    })
+      .then(res => {
+        const list = res[0]
+          .concat(res[1])
+          .sort((a, b) => b.reward_time - a.reward_time);
+        setRewardList(list);
+      })
+      .catch(e => console.warn(e));
+  };
+
+  useEffect(() => {
+    getRewardList();
+  }, []);
 
   return (
-    <>
-      <ImageBackground
-        style={[styles.header]}
-        source={require('../../../../assets/image/profiles/earings_bg.png')}>
+    <SafeAreaView style={[flex1]}>
+      <ImageBackground style={[styles.header]} source={icons.shareBg}>
         <View style={[alignItemsCenter, justifyCenter, styles.earnContent]}>
           <Text style={[text, styles.mltText]}>24 Hours</Text>
           <Text style={[styles.mlt]}>150 MLT</Text>
         </View>
       </ImageBackground>
-      <View style={[styles.margin15]}>
-        <Text style={[text]}>Detail</Text>
-        <Item />
-      </View>
-    </>
+      <FlatList
+        style={[styles.margin15]}
+        ListHeaderComponent={<Text style={[text]}>Detail</Text>}
+        data={rewardList}
+        renderItem={({item, index}) => (
+          <Item
+            title={item.reward_reason}
+            keyExtractor={index}
+            pub={item.pub}
+            number={bigNumberFormatUnits(item.grant_token_amount.toString())}
+            time={formatDate({time: item.reward_time})}
+          />
+        )}
+      />
+    </SafeAreaView>
   );
+};
+
+const icons = {
+  shareBg: require('../../../../assets/image/profiles/earings_bg.png'),
 };
 
 const styles = StyleSheet.create({

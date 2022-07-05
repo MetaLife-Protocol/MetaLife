@@ -65,7 +65,7 @@ const WalletCard = ({
           {
             title: 'Create account',
             handler: () => {
-              goScreen('WalletCreator');
+              goScreen('WalletCreator', {type: wallet.current.type});
               showPullMenu({position: {}, buttons: []});
             },
           },

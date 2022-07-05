@@ -92,7 +92,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
           {
             title: 'Create account',
             handler: () => {
-              goScreen('WalletCreator');
+              goScreen('WalletCreator', {type: wallet.current.type});
               showPullMenu({position: {}, buttons: []});
             },
           },
@@ -247,9 +247,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
           text: 'Confirm',
           press: () => {
             exportAccountMnemonic(account.address, pwd, (isSuccess, res) => {
-              console.log('hhh', res);
               if (isSuccess) {
-                console.log('hhh', res);
                 goScreen('WalletBackup', {
                   account,
                 });

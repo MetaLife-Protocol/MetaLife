@@ -355,8 +355,17 @@ const App = ({
         <Screen name="Scan" options={{headerTitle: 'Scan'}} component={Scan} />
         <Screen
           name="ReceivingCode"
-          options={{
+          options={({navigation}) => ({
             headerTitle: 'ReceivingCode',
+            headerLeft: () => (
+              <Pressable
+                onPress={() => navigation.goBack()}
+                style={{padding: 8}}>
+                <Image
+                  source={require('./assets/image/profiles/ArrowLeft.png')}
+                />
+              </Pressable>
+            ),
             headerBackground: () => (
               <View
                 style={{
@@ -366,7 +375,7 @@ const App = ({
                 }}
               />
             ),
-          }}
+          })}
           component={ReceivingCode}
         />
         <Screen

@@ -2,7 +2,7 @@
  * Created on 09 Mar 2022 by lonmee
  */
 import React, {useState} from 'react';
-import {Alert, Modal, StyleSheet, TextInput, View} from 'react-native';
+import {Modal, StyleSheet, TextInput, View} from 'react-native';
 import useSchemaStyles, {
   colorsBasics,
   colorsSchema,
@@ -16,7 +16,7 @@ export const ProfileModal = ({
   holderText,
   submitHandler,
 }) => {
-  const {BG, row, text} = useSchemaStyles(),
+  const {BG, row, text, justifySpaceBetween, flex1} = useSchemaStyles(),
     {textHolder} = colorsSchema;
 
   const [valueLocal, setValueLocal] = useState(value);
@@ -29,29 +29,30 @@ export const ProfileModal = ({
       onRequestClose={null}>
       <View style={[styles.centeredView]}>
         <View style={[BG, styles.modalView]}>
-          <TextInput
-            style={[text, styles.modalText, {color: 'white'}]}
-            autoFocus={true}
-            value={valueLocal}
-            placeholder={holderText}
-            placeholderTextColor={textHolder}
-            onChangeText={setValueLocal}
-          />
-          <View style={[row]}>
-            <RoundBtn
-              style={[{width: 80, height: 30}]}
-              title={'cancel'}
-              press={() => setVisible(false)}
+          <View style={[styles.inputContinar]}>
+            <TextInput
+              style={[text, flex1, styles.modalText, {color: 'white'}]}
+              autoFocus={true}
+              value={valueLocal}
+              placeholder={holderText}
+              placeholderTextColor={textHolder}
+              onChangeText={setValueLocal}
             />
-            <RoundBtn
-              style={[{width: 80, height: 30}]}
-              disabled={value === valueLocal}
-              title={'confirm'}
-              press={() => {
-                submitHandler(valueLocal);
-                setVisible(false);
-              }}
-            />
+          </View>
+          <View style={[row, justifySpaceBetween, styles.buttonView]}>
+            <View style={[flex1]}>
+              <RoundBtn title={'cancel'} press={() => setVisible(false)} />
+            </View>
+            <View style={[flex1]}>
+              <RoundBtn
+                disabled={value === valueLocal}
+                title={'confirm'}
+                press={() => {
+                  submitHandler(valueLocal);
+                  setVisible(false);
+                }}
+              />
+            </View>
           </View>
         </View>
       </View>
@@ -62,30 +63,25 @@ export const ProfileModal = ({
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginHorizontal: 15,
   },
   modalView: {
-    margin: 20,
+    flex: 1,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: colorsBasics.primary,
-    padding: 35,
-    alignItems: 'center',
+    padding: 15,
   },
-  openButton: {
-    backgroundColor: '#F194FF',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
+  inputContinar: {height: 60, display: 'flex'},
+  buttonView: {display: 'flex', height: 44},
   modalText: {
     marginBottom: 15,
+    width: '100%',
+    height: 60,
+    lineHeight: 17,
     textAlign: 'center',
   },
 });

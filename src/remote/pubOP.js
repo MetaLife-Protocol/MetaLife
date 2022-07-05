@@ -59,3 +59,49 @@ export function bindIDAndWallet(params, cb, pubNum) {
     .then(r => cb(r))
     .catch(console.warn);
 }
+
+export function getPubsRewardList(params) {
+  const pub1 = new Promise((resovle, reject) => {
+    fetch(url + 'get-reward-info', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    })
+      .then(res => res.json())
+      .then(res =>
+        resovle(
+          res.data
+            .filter(it => it.grant_success === 'success')
+            .map(it => {
+              it.pub = 'MetaLife Planet 1';
+              return it;
+            }),
+        ),
+      )
+      .catch(e => reject(e));
+  });
+  const pub2 = new Promise((resovle, reject) => {
+    fetch(url2 + 'get-reward-info', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    })
+      .then(res => res.json())
+      .then(res =>
+        resovle(
+          res.data
+            .filter(it => it.grant_success === 'success')
+            .map(it => {
+              it.pub = 'MetaLife Planet 2';
+              return it;
+            }),
+        ),
+      )
+      .catch(e => reject(e));
+  });
+  return Promise.all([pub1, pub2]);
+}

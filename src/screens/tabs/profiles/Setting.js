@@ -94,7 +94,7 @@ const Setting = ({
             </ControllerItem>
           </Pressable>
           <Pressable onPress={() => setPdVisible(true)} hitSlop={10}>
-            <ControllerItem title={'Introduction'}>
+            <ControllerItem title={'Bios'}>
               <Text style={[text]}>{description}</Text>
             </ControllerItem>
           </Pressable>

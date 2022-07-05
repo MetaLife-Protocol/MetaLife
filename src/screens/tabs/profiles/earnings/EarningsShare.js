@@ -6,6 +6,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
@@ -20,15 +21,15 @@ const EarningsShare = ({feedId, infoDic}) => {
 
   const {navigate, goBack} = useNavigation();
   const {name, description, image, avatar} = infoDic[feedId] || {};
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
 
   return (
     <ImageBackground
-      style={[flex1]}
-      source={require('../../../../assets/image/profiles/earnings_share_bg.png')}>
+      style={[flex1, {height: windowHeight, width: windowWidth}]}
+      source={icons.shareBg}>
       <Pressable style={[styles.back]} onPress={() => goBack()}>
-        <Image
-          source={require('../../../../assets/image/profiles/ArrowLeft.png')}
-        />
+        <Image source={icons.arrowLeft} />
       </Pressable>
       <View style={[alignItemsCenter]}>
         <Text style={[text, styles.title1]}>Earning in 24 hours</Text>
@@ -53,25 +54,17 @@ const EarningsShare = ({feedId, infoDic}) => {
             row,
             marginTop10,
           ]}>
-          <Image
-            source={require('../../../../assets/image/profiles/green_left.png')}
-          />
+          <Image source={icons.greenLeft} />
           <Text style={[styles.nickName]}>
             {name || feedId.substring(0, 10)}
           </Text>
-          <Image
-            source={require('../../../../assets/image/profiles/green_right.png')}
-          />
+          <Image source={icons.greenRight} />
         </View>
         <Text style={[marginTop10, styles.desc]}>
           MetaLife is a truly Web3 decentralized social network that support
           creator economy with or without internet
         </Text>
-        <View style={styles.qrcodeContainer}>
-          <Image
-            source={require('../../../../assets/image/profiles/ArrowLeft.png')}
-          />
-        </View>
+        <Image source={icons.qrcode} style={styles.qrcodeContainer} />
         <View style={[row, {marginTop: 20}]}>
           <Text style={styles.matelife}>MetaLife.</Text>
           <Text style={[styles.greenColor]}>social</Text>
@@ -82,6 +75,14 @@ const EarningsShare = ({feedId, infoDic}) => {
   );
 };
 
+const icons = {
+  shareBg: require('../../../../assets/image/profiles/earnings_share_bg.png'),
+  arrowLeft: require('../../../../assets/image/profiles/ArrowLeft.png'),
+  greenLeft: require('../../../../assets/image/profiles/green_left.png'),
+  greenRight: require('../../../../assets/image/profiles/green_right.png'),
+  qrcode: require('../../../../assets/image/profiles/qrcode.png'),
+};
+
 const styles = StyleSheet.create({
   back: {
     marginTop: 45,
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
   },
   title1: {
     color: '#000',
-    marginTop: 156,
+    marginTop: 150,
     marginLeft: -10,
     fontSize: 17.5,
     fontWeight: 'bold',
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   qrcodeContainer: {
-    marginTop: 50,
+    marginTop: 30,
     height: 102,
     width: 102,
     justifyContent: 'center',

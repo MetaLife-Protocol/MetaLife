@@ -63,7 +63,7 @@ const WalletImporter = ({
 
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
 
-  const targetChain = params ? params.type : targetChain;
+  const targetChain = params.type;
 
   const tags = ['Mnemonic', 'Keystore', 'Private Key', 'Observe'];
   const [selected, setSelected] = useState(0);
