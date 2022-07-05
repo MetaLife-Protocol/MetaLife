@@ -29,8 +29,11 @@ export const ComModal = ({
   const {flex1, modalBG, row, text, justifySpaceBetween} = useSchemaStyles();
 
   useEffect(() => {
-    if(toastVisible){
-      const timer = setTimeout(() => setToastVisible && setToastVisible(false), toastDuriation);
+    if (toastVisible) {
+      const timer = setTimeout(
+        () => setToastVisible && setToastVisible(false),
+        toastDuriation,
+      );
       return () => {
         clearTimeout(timer);
       };
@@ -43,9 +46,7 @@ export const ComModal = ({
       transparent={true}
       visible={visible}
       onRequestClose={null}>
-      <Pressable
-        style={styles.centeredView}
-        >
+      <Pressable style={styles.centeredView}>
         <View style={[styles.modalView, modalBG]}>
           <View style={[row, justifySpaceBetween, styles.paddingHorizontal]}>
             <Text style={[styles.title, text, flex1]}>{title}</Text>
@@ -120,6 +121,6 @@ const styles = StyleSheet.create({
   },
   toastText: {
     color: '#fff',
-    fontSize:16
+    fontSize: 16,
   },
 });
