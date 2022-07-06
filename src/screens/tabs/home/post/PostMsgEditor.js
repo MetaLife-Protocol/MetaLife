@@ -2,13 +2,7 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React, {
-  useCallback,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useReducer, useState} from 'react';
 import {
   Image,
   PixelRatio,
@@ -49,6 +43,7 @@ const PostMsgEditor = ({
   const {goBack} = useNavigation();
   const {scale} = useWindowDimensions();
   const [content, setContent] = useState(cachedContent.content),
+    [offset, setOffset] = useState(0),
     [photo, dispatch] = useReducer(reducer, cachedContent.photo);
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
 
@@ -124,15 +119,13 @@ const PostMsgEditor = ({
     [photo, content],
   );
 
-  const inputRef = useRef();
-  const offset = isIPhoneX_deprecated ? 94 : 64;
-
   return (
     <SafeAreaView style={[flex1, FG]}>
       <ScrollView style={[flex1]} overScrollMode={'auto'}>
         <TextInput
-          ref={inputRef}
           style={[text, {paddingHorizontal: 15}]}
+          autoFocus={true}
+          onBlur={() => setOffset(isIPhoneX_deprecated ? 94 : 64)}
           multiline={true}
           placeholder={'write a public message'}
           placeholderTextColor={placeholderTextColor.color}
