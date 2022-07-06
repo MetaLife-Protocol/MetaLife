@@ -97,7 +97,7 @@ export function initPhoton({
     privateKey: privateKey,
     address: address,
     // address: '0x096F7368bC01f438f8De8775DAFD71a566413C6f',
-    ethRPCEndPoint: '', //公链节点host,http协议 默认：http://transport01.smartmesh.cn:44444
+    ethRPCEndPoint: 'https://jsonapi1.smartmesh.io', //公链节点host,http协议 默认：http://transport01.smartmesh.cn:44444
     // ethRPCEndPoint: 'https://jsonapi1.smartmesh.cn',
   })
     .then(res => {
