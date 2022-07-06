@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Image,
   Pressable,
@@ -10,7 +10,10 @@ import {
   View,
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import {getWBalance} from '../../remote/wallet/WalletAPI';
+import {
+  getWBalance,
+  getWBalanceByContract,
+} from '../../remote/wallet/WalletAPI';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {getCurrentAccount} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
@@ -32,6 +35,12 @@ const Profiles = ({wallet, setBalance}) => {
   const [refreshing, setRefreshing] = useState(false);
   const {navigate} = useNavigation();
 
+  useEffect(() => {
+    getWBalanceByContract(type, 'MLT', address, res => {
+      setBalance(res);
+    });
+  }, []);
+
   return (
     <ScrollView
       stickyHeaderIndices={[0]}
@@ -43,7 +52,7 @@ const Profiles = ({wallet, setBalance}) => {
           tintColor={'#29DAD7'}
           onRefresh={() => {
             setRefreshing(true);
-            getWBalance(type, address, res => {
+            getWBalanceByContract(type, 'MLT', address, res => {
               setRefreshing(false);
               setBalance(res);
             });
@@ -69,7 +78,7 @@ const Profiles = ({wallet, setBalance}) => {
             styles.earnContent,
           ]}>
           <Text style={[text, styles.mltText]}>24 Hours（MLT）</Text>
-          <Text style={[text, styles.mlt]}>150</Text>
+          <Text style={[text, styles.mlt]}>0</Text>
         </View>
       </Pressable>
     </ScrollView>

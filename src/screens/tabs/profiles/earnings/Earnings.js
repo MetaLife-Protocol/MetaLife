@@ -40,7 +40,7 @@ const Earnings = ({feedId}) => {
     hour24.setHours(hour24.getHours() - 24);
     getPubsRewardList({
       client_id: feedId,
-      time_from: 0,
+      time_from: hour24.getTime(),
       time_to: Date.now(),
     })
       .then(res => {
@@ -61,7 +61,7 @@ const Earnings = ({feedId}) => {
       <ImageBackground style={[styles.header]} source={icons.shareBg}>
         <View style={[alignItemsCenter, justifyCenter, styles.earnContent]}>
           <Text style={[text, styles.mltText]}>24 Hours</Text>
-          <Text style={[styles.mlt]}>150 MLT</Text>
+          <Text style={[styles.mlt]}>0 MLT</Text>
         </View>
       </ImageBackground>
       <FlatList

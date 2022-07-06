@@ -694,13 +694,6 @@ export function importAccountByPrivateKey(privateKey, pw, cb) {
     });
 }
 
-const timeout = new Promise((resolve, reject) => {
-  const timer = setTimeout(() => {
-    clearTimeout(timer);
-    resolve(0);
-  }, 3000);
-});
-
 /**
  * smt token
  * @param type
@@ -715,27 +708,23 @@ export function getWBalance(type, wAddr, cb) {
     .catch(console.warn);
 }
 
-// export function getWBalance(type, wAddr, cb) {
-//   Promise.race([getBalance(financeConfig.chains[type].rpcURL, wAddr), timeout])
-//     .then(value => {
-//       cb && cb(bigNumberFormatUnits(value));
-//     })
-//     .catch(console.warn);
-// }
-
 /**
  * by contract
  * @param type
  * @param cType contract type
  * @param wAddr
  */
-export function getWBalanceByContract(type, cType, wAddr) {
+export function getWBalanceByContract(type, cType, wAddr, cb) {
   getContractBalance(
     financeConfig.chains[type].rpcURL,
     financeConfig.contracts[type][cType].address,
     financeConfig.contractABIs[financeConfig.contracts[type][cType].abi],
     wAddr,
-  );
+  )
+    .then(value => {
+      cb && cb(bigNumberFormatUnits(value));
+    })
+    .catch(console.warn);
 }
 
 function saveAccounts(address, keystore, cb) {
