@@ -31,7 +31,7 @@ const ReceivingCode = () => {
   let logoFromFile = require('../../../assets/image/nft/logo.png');
 
   const saveQrToDisk = useCallback(() => {
-    console.log('svg.current::', svg.current);
+    // console.log('svg.current::', svg.current);
     svg.current &&
       svg.current.toDataURL(data => {
         RNFS.writeFile(
@@ -61,8 +61,8 @@ const ReceivingCode = () => {
             }}
             size={220}
             value={token}
-            logo={logoFromFile}
-            logoSize={50}
+            // logo={logoFromFile}
+            // logoSize={50}
             logoBackgroundColor="transparent"
           />
         </View>
