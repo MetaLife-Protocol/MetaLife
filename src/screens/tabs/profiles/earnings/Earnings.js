@@ -1,8 +1,10 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   FlatList,
+  Image,
   ImageBackground,
+  Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -11,7 +13,7 @@ import {
 import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
 import {formatDate} from '../../../../metalife-base/src/utils/DateUtils';
-import {getPubsRewardList} from '../../../../remote/pubOP';
+import {getPubsRewardList, getPubsRewardTotal} from '../../../../remote/pubOP';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 
 const Item = ({title, pub, number, time}) => {
@@ -33,8 +35,22 @@ const Item = ({title, pub, number, time}) => {
 const Earnings = ({feedId}) => {
   const {text, alignItemsCenter, justifyCenter, flex1} = useSchemaStyles();
   const [rewardList, setRewardList] = useState([]);
+  const [amount, setAmount] = useState(0);
 
   const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Pressable
+          onPress={() => navigation.navigate('EarningsShare', {amount})}
+          style={{padding: 8}}>
+          <Image source={icons.share} />
+        </Pressable>
+      ),
+    });
+  }, [navigation, amount]);
+
   const getRewardList = () => {
     const hour24 = new Date();
     hour24.setHours(hour24.getHours() - 24);
@@ -50,6 +66,21 @@ const Earnings = ({feedId}) => {
         setRewardList(list);
       })
       .catch(e => console.warn(e));
+    getPubsRewardTotal({
+      client_id: feedId,
+      time_from: hour24.getTime(),
+      time_to: Date.now(),
+    })
+      .then(res => {
+        console.log('total', res);
+        let total = 0;
+        const list = res[0].concat(res[1]);
+        for (let i = 0; i < list.length; i++) {
+          total = list[i].grant_token_amount_subtotals + total;
+        }
+        setAmount(bigNumberFormatUnits(total.toString()));
+      })
+      .catch(e => console.warn(e));
   };
 
   useEffect(() => {
@@ -61,7 +92,7 @@ const Earnings = ({feedId}) => {
       <ImageBackground style={[styles.header]} source={icons.shareBg}>
         <View style={[alignItemsCenter, justifyCenter, styles.earnContent]}>
           <Text style={[text, styles.mltText]}>24 Hours</Text>
-          <Text style={[styles.mlt]}>0 MLT</Text>
+          <Text style={[styles.mlt]}>{amount} MLT</Text>
         </View>
       </ImageBackground>
       <FlatList
@@ -84,6 +115,7 @@ const Earnings = ({feedId}) => {
 
 const icons = {
   shareBg: require('../../../../assets/image/profiles/earings_bg.png'),
+  share: require('../../../../assets/image/profiles/share.png'),
 };
 
 const styles = StyleSheet.create({

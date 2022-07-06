@@ -105,3 +105,30 @@ export function getPubsRewardList(params) {
   });
   return Promise.all([pub1, pub2]);
 }
+export function getPubsRewardTotal(params) {
+  const pub1 = new Promise((resovle, reject) => {
+    fetch(url + 'get-reward-subtotals', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    })
+      .then(res => res.json())
+      .then(res => resovle(res.data))
+      .catch(e => reject(e));
+  });
+  const pub2 = new Promise((resovle, reject) => {
+    fetch(url2 + 'get-reward-subtotals', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(params),
+    })
+      .then(res => res.json())
+      .then(res => resovle(res.data))
+      .catch(e => reject(e));
+  });
+  return Promise.all([pub1, pub2]);
+}

@@ -299,13 +299,6 @@ const App = ({
                 source={require('./assets/image/profiles/earings_bg.png')}
               />
             ),
-            headerRight: () => (
-              <Pressable
-                onPress={() => navigation.navigate('EarningsShare')}
-                style={{padding: 8}}>
-                <Image source={require('./assets/image/profiles/share.png')} />
-              </Pressable>
-            ),
           })}
         />
         <Screen

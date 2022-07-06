@@ -48,10 +48,6 @@ const PostMsgEditor = ({
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
-
-  useEffect(() => {
     cachePostContent({content, photo});
   }, [content, photo]);
 

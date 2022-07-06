@@ -9,16 +9,15 @@ import {
   Text,
   View,
 } from 'react-native';
+import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
-import {
-  getWBalance,
-  getWBalanceByContract,
-} from '../../remote/wallet/WalletAPI';
+import {getPubsRewardTotal} from '../../remote/pubOP';
+import {getWBalanceByContract} from '../../remote/wallet/WalletAPI';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {getCurrentAccount} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
 
-const Profiles = ({wallet, setBalance}) => {
+const Profiles = ({feedId, wallet, setBalance}) => {
   const {
     text,
     flex1,
@@ -34,11 +33,34 @@ const Profiles = ({wallet, setBalance}) => {
 
   const [refreshing, setRefreshing] = useState(false);
   const {navigate} = useNavigation();
+  const [amount, setAmount] = useState(0);
 
-  useEffect(() => {
+  const getInfo = () => {
     getWBalanceByContract(type, 'MLT', address, res => {
       setBalance(res);
+      setRefreshing(false);
     });
+    const hour24 = new Date();
+    hour24.setHours(hour24.getHours() - 24);
+    getPubsRewardTotal({
+      client_id: feedId,
+      time_from: hour24.getTime(),
+      time_to: Date.now(),
+    })
+      .then(res => {
+        let total = 0;
+        const list = res[0].concat(res[1]);
+        for (let i = 0; i < list.length; i++) {
+          total = list[i].grant_token_amount_subtotals + total;
+        }
+        setAmount(bigNumberFormatUnits(total.toString()));
+        setRefreshing(false);
+      })
+      .catch(e => console.warn(e));
+  };
+
+  useEffect(() => {
+    getInfo();
   }, []);
 
   return (
@@ -52,10 +74,7 @@ const Profiles = ({wallet, setBalance}) => {
           tintColor={'#29DAD7'}
           onRefresh={() => {
             setRefreshing(true);
-            getWBalanceByContract(type, 'MLT', address, res => {
-              setRefreshing(false);
-              setBalance(res);
-            });
+            getInfo();
           }}
         />
       }>
@@ -78,7 +97,7 @@ const Profiles = ({wallet, setBalance}) => {
             styles.earnContent,
           ]}>
           <Text style={[text, styles.mltText]}>24 Hours（MLT）</Text>
-          <Text style={[text, styles.mlt]}>0</Text>
+          <Text style={[text, styles.mlt]}>{amount}</Text>
         </View>
       </Pressable>
     </ScrollView>

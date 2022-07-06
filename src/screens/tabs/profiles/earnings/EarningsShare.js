@@ -15,11 +15,12 @@ import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
 
-const EarningsShare = ({feedId, infoDic}) => {
+const EarningsShare = ({feedId, infoDic, route: {params}}) => {
   const {text, row, flex1, alignItemsCenter, justifySpaceBetween, marginTop10} =
     useSchemaStyles();
+  const {amount} = params;
 
-  const {navigate, goBack} = useNavigation();
+  const {goBack} = useNavigation();
   const {name, description, image, avatar} = infoDic[feedId] || {};
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
@@ -34,7 +35,7 @@ const EarningsShare = ({feedId, infoDic}) => {
       <View style={[alignItemsCenter]}>
         <Text style={[text, styles.title1]}>Earning in 24 hours</Text>
         <View style={[row, styles.title2]}>
-          <Text style={styles.number}>150</Text>
+          <Text style={styles.number}>{amount}</Text>
           <Text style={styles.mlt}>MLT</Text>
         </View>
       </View>
