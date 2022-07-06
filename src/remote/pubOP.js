@@ -106,13 +106,17 @@ export function getPubsRewardList(params) {
   return Promise.all([pub1, pub2]);
 }
 export function getPubsRewardTotal(params) {
+  const postParams = {
+    ...params,
+    grant_success: 'success',
+  };
   const pub1 = new Promise((resovle, reject) => {
     fetch(url + 'get-reward-subtotals', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(params),
+      body: JSON.stringify(postParams),
     })
       .then(res => res.json())
       .then(res => resovle(res.data))
@@ -124,7 +128,7 @@ export function getPubsRewardTotal(params) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(params),
+      body: JSON.stringify(postParams),
     })
       .then(res => res.json())
       .then(res => resovle(res.data))
