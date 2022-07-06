@@ -12,7 +12,7 @@ const network = financeConfig.chains.spectrum.rpcURL,
   // collection address
   collectionAddress = 0x5e1b7bd5dbd7cc4c5983d13219ba541e0cdc9283;
 
-export async function getNFTSum(address) {
+export async function getNFTSum(address = collectionAddress) {
   const nfts = await getContractNfts(
     network,
     contractAddress,
