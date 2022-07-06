@@ -12,9 +12,9 @@ import useSchemaStyles, {
 } from '../../../../../shared/UseSchemaStyles';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {financeConfig} from '../../../../../remote/wallet/WalletAPI';
 import {AccountItem} from '../items/AccountItem';
-import { stopAboutWalletAccount } from '../../../../../utils';
+import {stopAboutWalletAccount} from '../../../../../utils';
+import {financeConfig} from '../../../../../remote/wallet/financeConfig';
 
 /**
  * Created on 22 Jun 2022 by lonmee
@@ -133,7 +133,7 @@ const WalletCore = ({
                     goScreen('WalletAccountDetails', accounts[tIndex][i]);
                   } else {
                     setCurrent({type: tIndex, index: i});
-                    stopAboutWalletAccount()
+                    stopAboutWalletAccount();
                   }
                 }}>
                 <AccountItem
