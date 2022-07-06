@@ -701,14 +701,34 @@ const timeout = new Promise((resolve, reject) => {
   }, 3000);
 });
 
+/**
+ * smt token
+ * @param type
+ * @param wAddr
+ * @param cb
+ */
 export function getWBalance(type, wAddr, cb) {
-  Promise.race([getBalance(financeConfig.chains[type].rpcURL, wAddr), timeout])
+  getBalance(financeConfig.chains[type].rpcURL, wAddr)
     .then(value => {
       cb && cb(bigNumberFormatUnits(value));
     })
     .catch(console.warn);
 }
 
+// export function getWBalance(type, wAddr, cb) {
+//   Promise.race([getBalance(financeConfig.chains[type].rpcURL, wAddr), timeout])
+//     .then(value => {
+//       cb && cb(bigNumberFormatUnits(value));
+//     })
+//     .catch(console.warn);
+// }
+
+/**
+ * by contract
+ * @param type
+ * @param cType contract type
+ * @param wAddr
+ */
 export function getWBalanceByContract(type, cType, wAddr) {
   getContractBalance(
     financeConfig.chains[type].rpcURL,
