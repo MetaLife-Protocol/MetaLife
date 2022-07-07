@@ -41,6 +41,7 @@ let needAddIsEnableCmd = false;
 let IsStartCentral = false;
 let IsStartPeripheral = false;
 let payloadData = {};
+let IsStopScan = false;
 
 export const bluetoothBridge = function (options) {
   var localHost = '127.0.0.1';
@@ -191,7 +192,16 @@ export const bluetoothBridge = function (options) {
   BLEWormhole.DisconnectHandler = deviceID => {
     console.log('disconnect', deviceID);
     if (connectedDevices[deviceID] !== undefined) {
+      let deviceName = connectedDevices[deviceID];
       delete connectedDevices[deviceID];
+      if (clientIncomings[deviceName]) {
+        clientIncomings[deviceName].destroy();
+        delete clientIncomings[deviceName];
+      }
+      if (clientOutgoings[deviceName]) {
+        clientOutgoings[deviceName].destroy();
+        delete clientOutgoings[deviceName];
+      }
     }
   };
   BLEWormhole.ReceiveHandler = characteristic => {
@@ -318,6 +328,9 @@ export const bluetoothBridge = function (options) {
 
   BLEWormhole.DiscoverDeviceStopHandler = () => {
     console.log('stop scan');
+    if (IsStopScan) {
+      return;
+    }
     commandResponseBuffer.push({
       command: 'discovered',
       arguments: {devices: deviceProperties},
@@ -425,6 +438,14 @@ export const bluetoothBridge = function (options) {
       // deviceProperties = [];
       BLEWormhole.Scan([bleServiceUUID], dicoveredSeconds, true);
     } else if (command === 'makeDiscoverable') {
+      if (IsStopScan) {
+        return;
+      }
+      IsStopScan = false;
+      setTimeout(() => {
+        IsStopScan = true;
+      }, cmd_arguments.forTime);
+
       if (IsStartCentral) {
         commandResponseBuffer.push({
           command: 'discoverable',
