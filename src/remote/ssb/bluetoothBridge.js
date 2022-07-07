@@ -25,8 +25,6 @@ const connectCharaUUIDs = [
   controlCharaUUID,
 ];
 
-// let awaitingOutgoingConnection = []
-
 let deviceInfos = {};
 let deviceID_Name = {};
 let deviceName_ID = {};
@@ -47,18 +45,57 @@ let payloadData = {};
 export const bluetoothBridge = function (options) {
   var localHost = '127.0.0.1';
   console.log('bluetoothBridge init');
-  let clientIncoming;
-  let clientOutgoing;
-  function createConnection() {
-    clientIncoming = TcpSocket.createConnection(
+  let clientIncomings = {};
+  let clientOutgoings = {};
+
+  function createControllConnection() {
+    let clientControll = TcpSocket.createConnection(
+      {port: options.controlPort, host: localHost},
+      () => {
+        var duplexConnection = toPull.duplex(clientControll);
+
+        // Send commands to the control server
+        pull(
+          controlSocketSource,
+          pullJson.stringify(),
+          pull.map(mapCommand),
+          duplexConnection.sink,
+        );
+
+        // Receive and process commands from the control server
+        pull(duplexConnection.source, pullJson.parse(), pull.drain(doCommand));
+      },
+    );
+
+    clientControll.on('error', function (error) {
+      console.log('clientControll error:', error);
+    });
+    clientControll.on('close', function (error) {
+      console.log('clientControll close:', error);
+    });
+  }
+
+  function createIncommingConnection(remoteAddress, cb) {
+    if (clientIncomings[remoteAddress]) {
+      cb && cb();
+      return;
+    }
+    console.log('createIncommingConnection', remoteAddress);
+
+    let clientIncoming = TcpSocket.createConnection(
       {port: options.incomingPort, host: localHost},
-      () => {},
+      () => {
+        cb && cb();
+      },
     );
     clientIncoming.on('error', function (error) {
       console.log('clientIncoming error:', error);
     });
+    clientIncoming.on('close', function (error) {
+      console.log('clientIncoming close:', error);
+    });
     clientIncoming.on('data', function (data) {
-      console.log('Received Incoming', data);
+      console.log('clientIncoming receive:', data);
       for (let connectedDeviceID in connectedDevices) {
         if (!connectedDevices.hasOwnProperty(connectedDeviceID)) {
           continue;
@@ -66,6 +103,8 @@ export const bluetoothBridge = function (options) {
 
         let connectedDeviceName = connectedDevices[connectedDeviceID];
         if (connectedDeviceName !== undefined) {
+          console.log('clientIncoming sendBle');
+
           BLEWormhole.SendBuffer(
             connectedDeviceName,
             connectedDeviceID,
@@ -76,6 +115,68 @@ export const bluetoothBridge = function (options) {
         }
       }
     });
+    clientIncomings[remoteAddress] = clientIncoming;
+
+    if (clientIncomings[remoteAddress]) {
+      commandResponseBuffer.push({
+        command: 'connected',
+        arguments: {remoteAddress: remoteAddress, isIncoming: true},
+      });
+      DeviceEventEmitter.emit('commandPop');
+    } else {
+      commandResponseBuffer.push({
+        command: 'connectionFailure',
+        arguments: {
+          remoteAddress: remoteAddress,
+          isIncoming: true,
+          reason: 'Already connected.',
+        },
+      });
+      DeviceEventEmitter.emit('commandPop');
+    }
+  }
+
+  function createOutgoingConnection(remoteAddress) {
+    if (clientOutgoings[remoteAddress]) {
+      return;
+    }
+    console.log('createOutgoingConnection', remoteAddress);
+    let clientOutgoing = TcpSocket.createConnection(
+      {port: options.outgoingPort, host: localHost},
+      () => {},
+    );
+    clientOutgoing.on('error', function (error) {
+      console.log('clientOutgoing error:', error);
+    });
+    clientOutgoing.on('close', function (error) {
+      console.log('clientOutgoing close:', error);
+    });
+    clientOutgoing.on('data', function (data) {
+      console.log('clientOutgoing receive:', data);
+
+      if (data !== undefined) {
+        for (let disconnectedDeviceID in connectedDevices) {
+          if (!connectedDevices.hasOwnProperty(disconnectedDeviceID)) {
+            continue;
+          }
+          let disconnectedDeviceName = connectedDevices[disconnectedDeviceID];
+          if (disconnectedDeviceName !== undefined) {
+            var sendBuffer = Buffer.from(data);
+            console.log('clientOutgoing sendBle');
+
+            BLEWormhole.SendBuffer(
+              disconnectedDeviceName,
+              disconnectedDeviceID,
+              bleServiceUUID,
+              outgoingCharaUUID,
+              sendBuffer,
+            );
+          }
+        }
+      }
+    });
+
+    clientOutgoings[remoteAddress] = clientOutgoing;
   }
 
   DeviceEventEmitter.addListener('commandPop', () => {
@@ -172,41 +273,42 @@ export const bluetoothBridge = function (options) {
           if (deviceName !== undefined) {
             if (deviceName === BLEWormhole.deviceUUID) {
             } else {
-              if (clientIncoming === undefined) {
-                createConnection();
-              }
-              if (connectedDevices[deviceID] === undefined) {
-                commandResponseBuffer.push({
-                  command: 'connected',
-                  arguments: {remoteAddress: deviceName, isIncoming: true},
-                });
-                DeviceEventEmitter.emit('commandPop');
-                connectedDevices[deviceID] = deviceName;
-              } else {
-                commandResponseBuffer.push({
-                  command: 'connectionFailure',
-                  arguments: {
-                    remoteAddress: deviceName,
-                    isIncoming: true,
-                    reason: 'Already connected.',
-                  },
-                });
-                DeviceEventEmitter.emit('commandPop');
-              }
+              connectedDevices[deviceID] = deviceName;
             }
           }
         }
-      } else if (characteristic.uuid === incomingCharaUUID) {
+      } else if (
+        characteristic.uuid.toLowerCase() === incomingCharaUUID.toLowerCase()
+      ) {
+        var deviceID = characteristic.device;
+        var deviceName = deviceID_Name[deviceID];
+
         if (characteristic.value === undefined) {
           console.log('incoming no data');
         } else {
-          clientIncoming.write(characteristic.value);
+          console.log('incoming send data');
+
+          let succes = clientOutgoings[deviceName].write(
+            Buffer.from(characteristic.value),
+          );
+          console.log('clientOutgoing write', succes);
         }
-      } else if (characteristic.uuid === outgoingCharaUUID) {
+      } else if (
+        characteristic.uuid.toLowerCase() === outgoingCharaUUID.toLowerCase()
+      ) {
+        var deviceID = characteristic.device;
+        var deviceName = deviceID_Name[deviceID];
+
         if (characteristic.value === undefined) {
           console.log('outgoing no data');
         } else {
-          clientOutgoing.write(characteristic.value);
+          console.log('outgoing send data');
+          createIncommingConnection(deviceName, () => {
+            let succes = clientIncomings[deviceName].write(
+              Buffer.from(characteristic.value),
+            );
+            console.log('clientIncoming write', succes);
+          });
         }
       } else {
       }
@@ -312,7 +414,7 @@ export const bluetoothBridge = function (options) {
         },
       });
       DeviceEventEmitter.emit('commandPop');
-      // awaitingOutgoingConnection.push(remoteAddress);
+      createOutgoingConnection(remoteAddress);
     } else if (command === 'ownMacAddress') {
       commandResponseBuffer.push({
         command: 'ownMacAddress',
@@ -415,51 +517,6 @@ export const bluetoothBridge = function (options) {
   BLEWormhole.GenerateDeviceID().then(res => {
     BLEWormhole.CreatServer(bleServiceUUID, connectCharaUUIDs, res);
 
-    let clientControll = TcpSocket.createConnection(
-      {port: options.controlPort, host: localHost},
-      () => {
-        var duplexConnection = toPull.duplex(clientControll);
-
-        // Send commands to the control server
-        pull(
-          controlSocketSource,
-          pullJson.stringify(),
-          pull.map(mapCommand),
-          duplexConnection.sink,
-        );
-
-        // Receive and process commands from the control server
-        pull(duplexConnection.source, pullJson.parse(), pull.drain(doCommand));
-      },
-    );
-
-    clientOutgoing = TcpSocket.createConnection(
-      {port: options.outgoingPort, host: localHost},
-      () => {},
-    );
-    clientOutgoing.on('error', function (error) {
-      console.log('clientOutgoing error:', error);
-    });
-    clientOutgoing.on('data', function (data) {
-      if (data !== undefined) {
-        for (let disconnectedDeviceID in connectedDevices) {
-          if (!connectedDevices.hasOwnProperty(disconnectedDeviceID)) {
-            continue;
-          }
-          let disconnectedDeviceName = connectedDevices[disconnectedDeviceID];
-          if (disconnectedDeviceName !== undefined) {
-            var sendBuffer = Buffer.from(data);
-
-            BLEWormhole.SendBuffer(
-              disconnectedDeviceName,
-              disconnectedDeviceID,
-              bleServiceUUID,
-              outgoingCharaUUID,
-              sendBuffer,
-            );
-          }
-        }
-      }
-    });
+    createControllConnection();
   });
 };
