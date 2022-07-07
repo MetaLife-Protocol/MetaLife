@@ -84,6 +84,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import Toast from 'react-native-tiny-toast';
 import Earnings from './screens/tabs/profiles/earnings/Earnings';
 import EarningsShare from './screens/tabs/profiles/earnings/EarningsShare';
+import NftCollectionDetail from './screens/ntfPreview/NftCollectionDetail';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -304,6 +305,14 @@ const App = ({
         <Screen
           name="EarningsShare"
           component={EarningsShare}
+          options={{
+            header: () => null,
+          }}
+        />
+        {/* Nft */}
+        <Screen
+          name="NftCollectionDetail"
+          component={NftCollectionDetail}
           options={{
             header: () => null,
           }}
