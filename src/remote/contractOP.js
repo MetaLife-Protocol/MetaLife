@@ -74,6 +74,10 @@ async function getCollectionInfo() {
   return {name, symbol};
 }
 
+/**
+ * amount of collection
+ * @returns {{result: Error}} bigNum
+ */
 async function getCollectionTotal() {
   const contract = getContract(
     network,
@@ -84,6 +88,11 @@ async function getCollectionTotal() {
   return total;
 }
 
+/**
+ * NFT item info
+ * @param wAddr option user wallet address for self or undefined for all
+ * @returns {{result: Error}}
+ */
 async function getNFTInfos(wAddr = undefined) {
   const contract = getContract(network, collectionAddress, ERC721EnumerableAbi);
   var nftCount;
