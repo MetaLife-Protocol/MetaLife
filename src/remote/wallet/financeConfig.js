@@ -1,6 +1,6 @@
 /**
  *
- * @type {{chains: {}, contracts: {}, contractABIs: {NFTCollection: {}, erc20: [], erc720: []}}}
+ * @type {{chains: {}, contracts: {}, contractABIs: {NFTCollection: {}, erc20: [], erc721: []}}}
  */
 export const financeConfig = {
   chains: {
@@ -255,7 +255,7 @@ export const financeConfig = {
         type: 'function',
       },
     ],
-    erc720: [
+    erc721: [
       {
         anonymous: false,
         inputs: [

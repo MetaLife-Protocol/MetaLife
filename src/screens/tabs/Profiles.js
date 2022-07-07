@@ -16,6 +16,8 @@ import {getWBalanceByContract} from '../../remote/wallet/WalletAPI';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {getCurrentAccount} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
+import RoundBtn from '../../shared/comps/RoundBtn';
+import {callAuto, callOnce} from '../../remote/contractOP';
 
 const Profiles = ({feedId, wallet, setBalance}) => {
   const {
@@ -34,6 +36,10 @@ const Profiles = ({feedId, wallet, setBalance}) => {
   const [refreshing, setRefreshing] = useState(false);
   const {navigate} = useNavigation();
   const [amount, setAmount] = useState(0);
+
+  useEffect(() => {
+    callAuto();
+  }, []);
 
   const getInfo = () => {
     getWBalanceByContract(type, 'MLT', address, res => {
@@ -100,6 +106,7 @@ const Profiles = ({feedId, wallet, setBalance}) => {
           <Text style={[text, styles.mlt]}>{amount}</Text>
         </View>
       </Pressable>
+      <RoundBtn title={'contact test'} press={() => callOnce(console.log)} />
       <View style={[styles.earnContainer, flex1]}>
         <View style={[row, flex1, justifySpaceBetween, alignItemsCenter]}>
           <Text style={[text, styles.earnText]}>NFT</Text>
