@@ -21,7 +21,7 @@
 >> export PATH=$PATH:$ANDROID_HOME/platform-tools  
 >> export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
 
->> sdkmanager 'build-tools;28.0.3' 'cmake;3.6.4111459' 'ndk;21.4.7075529' 'platforms;android-29' 'tools'
+>> sdkmanager 'build-tools;28.0.3' 'cmake;3.10.2.4988404' 'ndk;21.4.7075529' 'platforms;android-29' 'tools'
 
 > ### install compile tools
 >> brew install coreutils libtool autoconf automake
