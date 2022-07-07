@@ -2,14 +2,7 @@
  * Nft Item
  */
 import React from 'react';
-import {
-  Text,
-  View,
-  DeviceEventEmitter,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import ComCollectItem from './ComCollectItem';
 
@@ -18,7 +11,7 @@ const MyNftCollection = ({navigation}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('MyNftDetailView');
+          navigation.navigate('NftCollectionDetail');
         }}>
         <ComCollectItem item={item} />
       </TouchableOpacity>

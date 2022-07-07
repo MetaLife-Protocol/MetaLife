@@ -31,8 +31,7 @@ export const ProfileModal = ({
         <View style={[BG, styles.modalView]}>
           <View style={[styles.inputContinar]}>
             <TextInput
-              style={[text, flex1, styles.modalText, {color: 'white'}]}
-              autoFocus={true}
+              style={[flex1, styles.modalText, text]}
               value={valueLocal}
               placeholder={holderText}
               placeholderTextColor={textHolder}

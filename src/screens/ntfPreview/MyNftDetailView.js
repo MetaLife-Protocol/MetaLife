@@ -10,12 +10,12 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
-import {pxToDp, screenWidth} from '../../../../tools/device';
-import useSchemaStyles, {colorsBasics} from '../../../shared/UseSchemaStyles';
-const bg = require('../../../assets/image/profiles/Profiles_backgroud.png');
-const btn = require('../../../assets/image/profiles/photo.png');
-const down = require('../../../assets/image/nft/arrow_down.png');
-const uparr = require('../../../assets/image/nft/up_arrow.png');
+import {pxToDp, screenWidth} from '../../utils';
+import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
+const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
+const btn = require('../../assets/image/profiles/photo.png');
+const down = require('../../assets/image/nft/arrow_down.png');
+const uparr = require('../../assets/image/nft/up_arrow.png');
 
 const MyNftDetailView = () => {
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
@@ -100,7 +100,7 @@ const MyNftDetailView = () => {
             </View>
           </>
         ) : null}
-        <View style={styles.bottom}/>
+        <View style={styles.bottom} />
       </View>
     </ScrollView>
   );

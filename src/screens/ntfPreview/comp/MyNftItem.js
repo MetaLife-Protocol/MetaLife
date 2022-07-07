@@ -1,20 +1,20 @@
 /**
  * Nft Item
  */
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import {
-  Text,
-  View,
-  DeviceEventEmitter,
-  FlatList,
-  StyleSheet,
-} from 'react-native';
+import {View, FlatList, StyleSheet, Pressable} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import NftItem from './NftItem';
 
-const MyNftItem = () => {
+const MyNftItem = ({}) => {
+  const {navigate} = useNavigation();
   const renderItem = ({item, index}) => {
-    return <NftItem index={index} />;
+    return (
+      <Pressable onPress={() => navigate('MyNftDetailView')}>
+        <NftItem index={index} />
+      </Pressable>
+    );
   };
   return (
     <View style={{flex: 1}}>
@@ -30,8 +30,7 @@ const MyNftItem = () => {
 const styles = StyleSheet.create({
   flatList: {
     flex: 1,
-    marginHorizontal: 15,
-    marginVertical: 10,
+    marginTop: 10,
   },
   item: {height: 200, width: 200, backgroundColor: '#fff'},
 });
