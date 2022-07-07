@@ -1,5 +1,5 @@
 diff --git a/node_modules/ssb-mobile-bluetooth-manager/index.js b/node_modules/ssb-mobile-bluetooth-manager/index.js
-index 536f9f6..c7f1ad4 100644
+index 536f9f6..4a9fc18 100644
 --- a/node_modules/ssb-mobile-bluetooth-manager/index.js
 +++ b/node_modules/ssb-mobile-bluetooth-manager/index.js
 @@ -14,19 +14,20 @@ const uuidv4 = require('uuid/v4');
@@ -65,7 +65,7 @@ index 536f9f6..c7f1ad4 100644
  
      var controlSocket = net.createServer(function(stream){
  
-@@ -125,13 +126,18 @@ function makeManager (opts) {
+@@ -125,13 +126,20 @@ function makeManager (opts) {
        // Receive and process commands from the control server
        pull(duplexConnection.source, pullJson.parse(), pull.drain(doCommand));
  
@@ -76,16 +76,41 @@ index 536f9f6..c7f1ad4 100644
  
      controlSocket.on('closed', function() {
        debug("Control socket closed");
-     })
++      rnBridge.channel.post('log4RN', "Control socket closed");
++
++    })
 +    controlSocket.on('error', function(err) {
 +      debug("Control socket error",err);
 +      rnBridge.channel.post('exception', err);
-+    })
+     })
 +    rnBridge.channel.post('log4RN', 'control socket create');
  
      debug("Created control socket");
    }
-@@ -189,6 +195,8 @@ function makeManager (opts) {
+@@ -154,9 +162,13 @@ function makeManager (opts) {
+ 
+         if (connectionOutcome.success) {
+           debug("Calling back multiserve with successful outgoing connection to " + outgoingAddress);
++          rnBridge.channel.post('log4RN', "Calling back multiserve with successful outgoing connection to " + outgoingAddress);
++
+           cb(null, stream);
+         } else {
+-          debug("Calling back with unsuccessful connection to multiserver for address: " + outgoingAddress)
++          debug("Calling back with unsuccessful connection to multiserver for address: " + outgoingAddress);
++          rnBridge.channel.post('log4RN', "Calling back with unsuccessful connection to multiserver for address: " + outgoingAddress);
++
+           cb(new Error(connectionOutcome.failureReason));
+         }
+       })
+@@ -169,6 +181,7 @@ function makeManager (opts) {
+         let address = results[1].address;
+ 
+         stream.address = address;
++        rnBridge.channel.post('log4RN', 'incoming bluetooth connection:' + JSON.stringify(stream));
+ 
+         debug("Calling back to multiserve with incoming bluetooth connection from " + address);
+         onIncomingConnection(null, stream);
+@@ -189,6 +202,8 @@ function makeManager (opts) {
      debug("Received command: ");
      debug(command);
  
@@ -94,7 +119,7 @@ index 536f9f6..c7f1ad4 100644
      let commandName = command.command;
  
      if (commandName === "connected" && !command.arguments.isIncoming) {
-@@ -303,13 +311,13 @@ function makeManager (opts) {
+@@ -303,19 +318,19 @@ function makeManager (opts) {
    }
  
    function listenForOutgoingEstablished() {
@@ -113,10 +138,22 @@ index 536f9f6..c7f1ad4 100644
  
      var server = net.createServer(function(stream){
        debug("bluetooth: Outgoing connection established proxy connection.")
-@@ -326,8 +334,14 @@ function makeManager (opts) {
+ 
+       var item = {
+-        stream: logDuplexStreams(toPull.duplex(stream))
++        stream: logDuplexStreams(toPull.duplex(stream), 'outgoing')
+       }
+ 
+       outgoingConnectionsEstablished.push(item);
+@@ -326,8 +341,19 @@ function makeManager (opts) {
        debug("Server listening for outgoing connections. Starting control unix socket.");
        makeControlSocket();
      });
++    server.on('close', function (e) {
++      rnBridge.channel.post('log4RN', "outgoing socket closed: " + e);
++
++      debug("bt_bridge socket closed: " + e);
++    });
 +    server.on('error', function(err) {
 +      debug("outgoing socket error",err);
 +      rnBridge.channel.post('exception', err);
@@ -129,7 +166,7 @@ index 536f9f6..c7f1ad4 100644
    }
  
    // For some reason, .server gets called twice...
-@@ -339,12 +353,12 @@ function makeManager (opts) {
+@@ -339,27 +365,36 @@ function makeManager (opts) {
  
      if(started) return
  
@@ -147,25 +184,35 @@ index 536f9f6..c7f1ad4 100644
  
      var server = net.createServer(function (incomingStream) {
  
-@@ -355,11 +369,15 @@ function makeManager (opts) {
-         stream: logDuplexStreams( toPull.duplex(incomingStream) )
-       })
+       // We only call back with the connection when we later receive the address over the control
+       // bridge. See the 'onCommand' function.
+ 
+-      incomingConnectionEstablished.push({
+-        stream: logDuplexStreams( toPull.duplex(incomingStream) )
+-      })
++      var item = {
++        stream: logDuplexStreams(toPull.duplex(incomingStream), 'incoming')
++      }
++      rnBridge.channel.post('log4RN', 'incoming socket stream:' + JSON.stringify(item.stream));
  
 -    }).listen(socket);
--
++      incomingConnectionEstablished.push(item)
+ 
 +    }).listen({host:localHost,port:opts.incomingPort});
 +    server.on('error', function(err) {
 +      debug("incoming socket error",err);
 +      rnBridge.channel.post('exception', err);
 +    })
      server.on('close', function (e) {
++      rnBridge.channel.post('log4RN', "incoming socket closed: " + e);
++
        debug("bt_bridge socket closed: " + e);
      });
 +    rnBridge.channel.post('log4RN', 'incoming socket create');
  
      started = true;
  
-@@ -492,6 +510,7 @@ function makeManager (opts) {
+@@ -492,6 +527,7 @@ function makeManager (opts) {
  
    function makeDeviceDiscoverable(forTime, cb) {
      debug("Making device discoverable");
@@ -173,7 +220,41 @@ index 536f9f6..c7f1ad4 100644
  
      if (awaitingDiscoverableResponse != null) {
        cb(new Error("Already requesting to make device discoverable."), null)
-@@ -689,6 +708,7 @@ function makeManager (opts) {
+@@ -662,14 +698,15 @@ function makeManager (opts) {
+    * If 'opts.logStreams' is true, logs out incoming and outgoing data streams.
+    * @param {} duplexStream
+    */
+-  function logDuplexStreams(duplexStream) {
+-    if (!opts.logStreams) {
+-      return duplexStream;
+-    } else {
++  function logDuplexStreams(duplexStream, tag) {
++    // if (!opts.logStreams) {
++    //   return duplexStream;
++    // } else {
+ 
+       duplexStream.source = pull(duplexStream.source, pull.map(
+         buff => {
+           debug( "[source] " + buff.toString() )
++          rnBridge.channel.post('log4RN',  tag + "[source] " + buff.toString() );
+           return buff;
+         }
+       ));
+@@ -677,18 +714,20 @@ function makeManager (opts) {
+       duplexStream.sink = pull(
+         pull.map(outgoingBuff => {
+           debug( "[sink] " + outgoingBuff.toString() )
++          rnBridge.channel.post('log4RN', tag + "[sink] " + outgoingBuff.toString());
+           return outgoingBuff;
+         }),
+         duplexStream.sink
+       )
+ 
+       return duplexStream;
+-    }
++    // }
+   }
+ 
  
    listenForOutgoingEstablished();
    makeFullyEstablishConnectionsHandler();
