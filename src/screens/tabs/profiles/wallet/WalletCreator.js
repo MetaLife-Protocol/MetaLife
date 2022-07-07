@@ -83,12 +83,13 @@ const WalletCreator = ({
   return (
     <SafeAreaView style={[flex1, FG, marginTop10]}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={[flex1]}>
+        <View style={[flex1, Platform.OS === 'android' ? null : marginTop10]}>
           <Section
             separator={style =>
               NormalSeparator({
                 ...style,
-                marginVertical: 3,
+                marginTop: Platform.OS === 'android' ? 3 : 18,
+                marginBottom: Platform.OS === 'android' ? 3 : 18,
               })
             }>
             <ControllerItem>
