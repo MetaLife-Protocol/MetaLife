@@ -3,7 +3,7 @@
  *
  */
 import {abi as metaMasterAbi} from './wallet/metaMaster.json';
-import {abi as NFTCollectionAbi} from './wallet/NFTCollectionx.json';
+import {abi as NFTCollectionAbi} from './wallet/NFTCollection.json';
 import {financeConfig} from './wallet/financeConfig';
 import {
   bigNumberFormatUnits,
