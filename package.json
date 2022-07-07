@@ -53,6 +53,7 @@
     "axios": "^0.27.2",
     "buffer": "^6.0.3",
     "decimal.js": "^10.3.1",
+    "ethers": "^5.6.9",
     "fbjs": "^3.0.4",
     "form-data": "^4.0.0",
     "nodejs-mobile-react-native": "^0.7.0",

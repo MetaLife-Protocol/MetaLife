@@ -2,8 +2,9 @@
 //
 // SPDX-License-Identifier: MPL-2.0
 
-import {ContactContent, Msg, VoteContent} from 'ssb-typescript';
+import {ContactContent, FeedId, Msg, VoteContent} from 'ssb-typescript';
 import {Callback} from './helpers/types';
+const QuickLRU = require('@alloc/quick-lru');
 const pull = require('pull-stream');
 const pullAsync = require('pull-async');
 const cat = require('pull-cat');
@@ -40,6 +41,7 @@ export = {
   name: 'dbUtils',
   version: '1.0.0',
   manifest: {
+    warmUpJITDB: 'sync',
     rawLogReversed: 'source',
     mentionsMe: 'source',
     postsCount: 'async',
@@ -47,10 +49,12 @@ export = {
     selfPublicRoots: 'source',
     selfPublicReplies: 'source',
     selfPrivateRootIdsLive: 'source',
+    introducer: 'async',
   },
   permissions: {
     master: {
       allow: [
+        'warmUpJITDB',
         'rawLogReversed',
         'mentionsMe',
         'postsCount',
@@ -58,6 +62,7 @@ export = {
         'selfPublicRoots',
         'selfPublicReplies',
         'selfPrivateRootIdsLive',
+        'introducer',
       ],
     },
   },
@@ -72,6 +77,7 @@ export = {
       author,
       contact,
       votesFor,
+      about,
       fullMentions: mentions,
       isRoot,
       hasRoot,
@@ -86,6 +92,8 @@ export = {
     } = ssb.db.operators;
 
     const BATCH_SIZE = 100; // about 50 KB per batch
+
+    const introducerCache = new QuickLRU({maxSize: 1000, maxAge: 30e3});
 
     const reactionsCount = {
       _map: new Map<string, number>(),
@@ -106,42 +114,53 @@ export = {
       },
     };
 
-    // Eagerly build some indexes to make the UI progress bar more stable.
-    // (Knowing up-front all the "work" that has to be done makes it easier to
-    // know how much work is left to do.) We always need these indexes anyway.
-    const eagerIndexes = [
-      // value_author.32prefix:
-      author(ssb.id, {dedicated: false}),
-      // value_author_@SELFSSBID.index:
-      author(ssb.id, {dedicated: true}),
-      // value_content_contact__map.32prefixmap
-      // value_content_type_contact.index:
-      contact(ssb.id),
-      // value_content_fork__map.32prefixmap
-      hasFork('whatever'),
-      // value_content_root_.index
-      isRoot(),
-      // value_content_root__map.32prefixmap
-      hasRoot('whatever'),
-      // value_content_type_post.index
-      type('post'),
-      // value_content_type_pub.index
-      type('pub'),
-      // value_content_type_roomx2Falias.index
-      type('room/alias'),
-      // value_content_type_vote.index:
-      // value_content_vote_link__map.32prefixmap:
-      votesFor('whatever'),
-      // meta_.index:
-      isPublic(),
-      // meta_private_true.index:
-      isPrivate(),
-    ];
-    for (const index of eagerIndexes) {
-      ssb.db.prepare(index, () => {});
+    /**
+     * Eagerly build some indexes to make the UI progress bar more stable.
+     * (Knowing up-front all the "work" that has to be done makes it easier to
+     * know how much work is left to do.) We always need these indexes anyway.
+     */
+    function warmUpJITDB() {
+      const eagerIndexes = or(
+        // value_author.32prefix:
+        author(ssb.id, {dedicated: false}),
+        // value_author_@SELFSSBID.index:
+        author(ssb.id, {dedicated: true}),
+        // value_content_about__map.32prefixmap:
+        // value_content_type_about.index:
+        about(ssb.id),
+        // value_content_contact__map.32prefixmap
+        // value_content_type_contact.index:
+        contact(ssb.id),
+        // value_content_fork__map.32prefixmap
+        hasFork('whatever'),
+        // value_content_root_.index
+        isRoot(),
+        // value_content_root__map.32prefixmap
+        hasRoot('whatever'),
+        // value_content_type_gathering.index:
+        type('gathering'),
+        // value_content_type_post.index
+        type('post'),
+        // value_content_type_pub.index
+        type('pub'),
+        // value_content_type_roomx2Falias.index
+        type('room/alias'),
+        // value_content_type_vote.index:
+        // value_content_vote_link__map.32prefixmap:
+        votesFor('whatever'),
+        // meta_.index:
+        isPublic(),
+        // meta_private_true.index:
+        isPrivate(),
+      );
+      ssb.db.prepare(eagerIndexes, () => {});
     }
 
+    warmUpJITDB(); // call it ASAP
+
     return {
+      warmUpJITDB,
+
       rawLogReversed() {
         return ssb.db.query(descending(), batch(BATCH_SIZE), toPullStream());
       },
@@ -263,6 +282,44 @@ export = {
             toPullStream(),
           ),
           pull.map((msg: Msg) => msg.key),
+        );
+      },
+
+      introducer(feedId: FeedId, cb: Callback<readonly [FeedId, number]>) {
+        if (feedId === ssb.id) return cb(null, [ssb.id, 0]);
+
+        if (introducerCache.has(feedId)) {
+          cb(null, introducerCache.get(feedId)!);
+          return;
+        }
+
+        ssb.friends.hops(
+          {start: ssb.id, reverse: false},
+          (err: any, myHops: any) => {
+            if (err) return cb(err);
+            if (feedId in myHops && myHops[feedId] === 1) {
+              introducerCache.set(feedId, [feedId, 1]);
+              return cb(null, [feedId, 1]);
+            }
+
+            ssb.friends.hops(
+              {start: feedId, reverse: true, max: 1},
+              (err: any, theirHops: any) => {
+                if (err) return cb(err);
+                const theirFollowers = Object.keys(theirHops).filter(
+                  (id) => theirHops[id] > 0,
+                );
+                const closest = Object.entries<number>(myHops)
+                  .filter(([, dist]) => dist > 0)
+                  .filter(([id]) => theirFollowers.includes(id))
+                  .map(([id, dist]) => [id, dist + 1] as const)
+                  .sort(([, dist1], [, dist2]) => dist1 - dist2)[0];
+                if (!closest) return cb(new Error('could not find introducer'));
+                introducerCache.set(feedId, closest);
+                return cb(null, closest);
+              },
+            );
+          },
         );
       },
     };
