@@ -80,7 +80,7 @@ const Profiles = ({feedId, wallet, setBalance}) => {
       }>
       <HeaderProfiles />
       <Pressable
-        style={[styles.earnContinar, flex1]}
+        style={[styles.earnContainer, flex1]}
         onPress={() => {
           navigate('Earnings');
         }}>
@@ -100,14 +100,50 @@ const Profiles = ({feedId, wallet, setBalance}) => {
           <Text style={[text, styles.mlt]}>{amount}</Text>
         </View>
       </Pressable>
+      <View style={[styles.earnContainer, flex1]}>
+        <View style={[row, flex1, justifySpaceBetween, alignItemsCenter]}>
+          <Text style={[text, styles.earnText]}>NFT</Text>
+          <Image source={require('../../assets/image/shared/back.png')} />
+        </View>
+        <View style={[row]}>
+          <Pressable
+            onPress={() => {
+              navigate('NftCollectionDetail');
+            }}
+            style={[
+              flex1,
+              alignItemsCenter,
+              justifyCenter,
+              FG,
+              marginTop10,
+              styles.nftContent,
+            ]}>
+            <Text style={[text, styles.mltText]}>Item</Text>
+            <Text style={[text, styles.mlt]}>0</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => {}}
+            style={[
+              flex1,
+              alignItemsCenter,
+              justifyCenter,
+              FG,
+              marginTop10,
+              styles.nftContent,
+            ]}>
+            <Text style={[text, styles.mltText]}>Collection</Text>
+            <Text style={[text, styles.mlt]}>0</Text>
+          </Pressable>
+        </View>
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  earnContinar: {
-    paddingHorizontal: 30,
-    paddingVertical: 20,
+  earnContainer: {
+    paddingHorizontal: 15,
+    paddingTop: 10,
   },
   earnText: {
     fontWeight: 'bold',
@@ -117,6 +153,11 @@ const styles = StyleSheet.create({
   earnContent: {
     height: 90,
     borderRadius: 12,
+  },
+  nftContent: {
+    height: 90,
+    borderRadius: 12,
+    margin: 5,
   },
   mltText: {
     color: '#4E586E',

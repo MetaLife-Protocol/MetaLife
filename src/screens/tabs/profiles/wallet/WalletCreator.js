@@ -84,7 +84,13 @@ const WalletCreator = ({
     <SafeAreaView style={[flex1, FG, marginTop10]}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={[flex1]}>
-          <Section separator={NormalSeparator}>
+          <Section
+            separator={style =>
+              NormalSeparator({
+                ...style,
+                marginVertical: 3,
+              })
+            }>
             <ControllerItem>
               <TextInput
                 style={[inputs, text, flex1]}
@@ -266,7 +272,6 @@ const WalletCreator = ({
 
 const styles = StyleSheet.create({
   inputs: {
-    height: 30,
     fontSize: 16,
   },
   image: {

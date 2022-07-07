@@ -314,7 +314,7 @@ const App = ({
           name="NftCollectionDetail"
           component={NftCollectionDetail}
           options={{
-            header: () => null,
+            title: '',
           }}
         />
         {/* Settings */}

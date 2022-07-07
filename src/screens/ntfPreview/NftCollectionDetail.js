@@ -1,8 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useLayoutEffect, useState} from 'react';
+import React from 'react';
 import {
   FlatList,
-  Image,
   ImageBackground,
   StyleSheet,
   Text,
@@ -18,7 +17,7 @@ const NftCollectionDetail = ({feedId}) => {
     useSchemaStyles();
   const windowWidth = useWindowDimensions().width;
 
-  const navigation = useNavigation();
+  const {goBack} = useNavigation();
 
   const Header = () => {
     return (
@@ -26,10 +25,11 @@ const NftCollectionDetail = ({feedId}) => {
         <ImageBackground
           style={[styles.header, {width: windowWidth}]}
           source={icons.shareBg}>
-          <Image
-            source={require('../../assets/image/profiles/ArrowLeft.png')}
-            style={styles.arrowLeft}
-          />
+          {/* <Pressable onPress={() => goBack()} style={styles.arrowLeft}>
+            <Image
+              source={require('../../assets/image/profiles/ArrowLeft.png')}
+            />
+          </Pressable> */}
         </ImageBackground>
         <View style={[styles.roundView]}></View>
         <Text style={[text, styles.title]}>PXN: Ghost Division</Text>
@@ -61,8 +61,9 @@ const icons = {
 const styles = StyleSheet.create({
   arrowLeft: {
     position: 'absolute',
-    top: 60,
+    top: 50,
     left: 30,
+    padding: 5,
   },
   listHeader: {
     paddingBottom: 15,

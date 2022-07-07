@@ -4,6 +4,7 @@ import {
   Image,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -158,8 +159,13 @@ const WalletAccountDetails = ({
           style={[styles.button]}
           title={'Delete'}
           press={() => {
-            setClickIndex('delete');
-            setPutPwdVisible(true);
+            const count = wallet.accounts[type].length;
+            if (count <= 1) {
+              Toast.show('Cannot delete last one');
+            } else {
+              setClickIndex('delete');
+              setPutPwdVisible(true);
+            }
           }}
         />
       </View>
@@ -269,7 +275,8 @@ const WalletAccountDetails = ({
         }
         darkMode={darkMode}
         content={
-          <View>
+          <ScrollView
+            style={[clickIndex === 'keystore' ? {height: '80%'} : null]}>
             <View style={[modalFG, styles.privateKeyContainer, {marginTop: 0}]}>
               <Text style={[styles.grennColor, styles.keyTitle]}>
                 Security warning:
@@ -281,7 +288,7 @@ const WalletAccountDetails = ({
                 {copyInfo}
               </Text>
             </View>
-          </View>
+          </ScrollView>
         }
         toastContent={toastContent}
         toastVisible={toastVisible}
