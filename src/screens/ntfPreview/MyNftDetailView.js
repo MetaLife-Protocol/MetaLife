@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
-import {pxToDp, screenWidth} from '../../../tools/device';
+import {pxToDp, screenWidth} from '../../utils';
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
