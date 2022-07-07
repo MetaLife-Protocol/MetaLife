@@ -4,6 +4,7 @@
  */
 import {abi as metaMasterAbi} from './wallet/metaMaster.json';
 import {abi as NFTCollectionAbi} from './wallet/NFTCollection.json';
+import {abi as ERC721EnumerableAbi} from './wallet/ERC721Enumerable.json';
 import {financeConfig} from './wallet/financeConfig';
 import {
   bigNumberFormatUnits,
@@ -73,14 +74,40 @@ async function getCollectionInfo() {
   return {name, symbol};
 }
 
-async function getNFTIPFSAddress() {
+async function getCollectionTotal() {
   const contract = getContract(
     network,
     collectionAddress,
     financeConfig.contractABIs.erc721,
   );
-  console.log(contract);
-  const name = await contract.tokenURI();
-  const symbol = await contract.symbol();
-  return {name, symbol};
+  const total = await contract.totalSupply();
+  return total;
+}
+
+async function getNFTInfos(wAddr = undefined) {
+  const contract = getContract(network, collectionAddress, ERC721EnumerableAbi);
+  var nftCount;
+  if (wAddr === undefined) {
+    nftCount = await contract.balanceOf();
+  } else {
+    nftCount = await contract.balanceOf(wAddr);
+  }
+
+  let token_idxs = [...Array(nftCount.toNumber()).keys()];
+
+  let nftInfos = [];
+  for await (const idx of token_idxs) {
+    var token_id;
+    if (wAddr === undefined) {
+      token_id = await contract.tokenByIndex(idx);
+    } else {
+      token_id = await contract.tokenOfOwnerByIndex(wAddr, idx);
+    }
+
+    let token_uri = await contract.tokenURI(token_id);
+
+    let nftInfo = {id: token_id, uri: token_uri};
+    nftInfos.push(nftInfo);
+  }
+  return nftInfos;
 }
