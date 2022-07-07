@@ -28,7 +28,10 @@ const Discover = ({darkMode}) => {
       title: 'NFT',
       bgImg: iconDic.NFT,
       onPress: () => {
-        navigate('NftCollection');
+        navigate('NftCollection', {
+          tab: 'Item',
+          title: 'Open Galaxy',
+        });
       },
     },
     {title: 'Play to earn', bgImg: iconDic.pte},

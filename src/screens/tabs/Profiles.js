@@ -108,7 +108,10 @@ const Profiles = ({feedId, wallet, setBalance}) => {
         <View style={[row]}>
           <Pressable
             onPress={() => {
-              navigate('NftCollectionDetail');
+              navigate('NftCollection', {
+                tab: 'Item',
+                title: 'My NFT',
+              });
             }}
             style={[
               flex1,
@@ -122,7 +125,12 @@ const Profiles = ({feedId, wallet, setBalance}) => {
             <Text style={[text, styles.mlt]}>0</Text>
           </Pressable>
           <Pressable
-            onPress={() => {}}
+            onPress={() => {
+              navigate('NftCollection', {
+                tab: 'Collection',
+                title: 'My NFT',
+              });
+            }}
             style={[
               flex1,
               alignItemsCenter,

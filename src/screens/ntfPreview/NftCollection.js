@@ -11,9 +11,19 @@ import TabBar from './comp/TabBar';
 import {colorsSchema} from '../../shared/UseSchemaStyles';
 import MyNftItem from './comp/MyNftItem';
 import MyNftCollection from './comp/MyNftCollection';
-const NftCollection = ({navigation}) => {
+import {useNavigation} from '@react-navigation/native';
+const NftCollection = ({route: {params}}) => {
+  const {tab, title} = params;
+  const navigation = useNavigation();
   const {text, flex1, BG, FG} = useSchemaStyles();
   const {primary} = colorsSchema;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title,
+    });
+  }, [navigation, title]);
+
   const LIST_CONFIG = [
     {
       text: 'Item',
@@ -28,15 +38,9 @@ const NftCollection = ({navigation}) => {
       component: MyNftCollection,
     },
   ];
-  const indexName = 0; // 默认下标
   return (
     <View style={[flex1]}>
-      <TabBar
-        config={LIST_CONFIG}
-        indexName={indexName}
-        bg={primary}
-        fg={text}
-      />
+      <TabBar config={LIST_CONFIG} indexName={tab} bg={primary} fg={text} />
     </View>
   );
 };

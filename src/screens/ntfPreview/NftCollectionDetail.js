@@ -3,6 +3,7 @@ import React from 'react';
 import {
   FlatList,
   ImageBackground,
+  Pressable,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -17,7 +18,7 @@ const NftCollectionDetail = ({feedId}) => {
     useSchemaStyles();
   const windowWidth = useWindowDimensions().width;
 
-  const {goBack} = useNavigation();
+  const {goBack, navigate} = useNavigation();
 
   const Header = () => {
     return (
@@ -47,7 +48,11 @@ const NftCollectionDetail = ({feedId}) => {
         ListHeaderComponent={<Header />}
         data={[1, 2, 3, 4, 5]}
         numColumns={2}
-        renderItem={({item, index}) => <NftItem index={index} />}
+        renderItem={({item, index}) => (
+          <Pressable onPress={() => navigate('MyNftDetailView')}>
+            <NftItem index={index} />
+          </Pressable>
+        )}
       />
     </View>
   );

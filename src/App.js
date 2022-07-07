@@ -73,7 +73,6 @@ import NFTDetailNew from './screens/nft/nft_details_new';
 import NFTList from './screens/nft/nft_list';
 import MyNFTList from './screens/nft/my_nft_list/MyNFTList';
 import NftCollection from './screens/ntfPreview/NftCollection';
-import MyNftDetailView from './screens/ntfPreview/comp/MyNftDetailView';
 import Scan from './screens/photon/scan';
 import MaskView from './shared/comps/MaskView';
 import WalletAccountDetails from './screens/tabs/profiles/wallet/WalletAccountDetails';
@@ -87,6 +86,7 @@ import Toast from 'react-native-tiny-toast';
 import Earnings from './screens/tabs/profiles/earnings/Earnings';
 import EarningsShare from './screens/tabs/profiles/earnings/EarningsShare';
 import NftCollectionDetail from './screens/ntfPreview/NftCollectionDetail';
+import MyNftDetailView from './screens/ntfPreview/MyNftDetailView';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -453,11 +453,7 @@ const App = ({
           options={{headerTitle: 'NFT'}}
           component={MyNFTList}
         />
-        <Screen
-          name="NftCollection"
-          options={{headerTitle: 'My NFT'}}
-          component={NftCollection}
-        />
+        <Screen name="NftCollection" component={NftCollection} />
         <Screen
           name="MyNftDetailView"
           component={MyNftDetailView}
