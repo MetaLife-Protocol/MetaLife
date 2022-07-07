@@ -2,7 +2,15 @@
  * Created on 09 Mar 2022 by lonmee
  */
 import React, {useEffect, useRef, useState} from 'react';
-import {Image, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  Image,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import useSchemaStyles from '../UseSchemaStyles';
 import RoundBtn from './RoundBtn';
 
