@@ -118,7 +118,14 @@ const WalletImporter = ({
               placeholderTextColor={textHolder}
               onChangeText={setCopyInfo}
             />
-            <Section separator={NormalSeparator}>
+            <Section
+              separator={style =>
+                NormalSeparator({
+                  ...style,
+                  marginTop: Platform.OS === 'android' ? 3 : 18,
+                  marginBottom: Platform.OS === 'android' ? 3 : 18,
+                })
+              }>
               <ControllerItem>
                 <TextInput
                   style={[text, flex1]}
