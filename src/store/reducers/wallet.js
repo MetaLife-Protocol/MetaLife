@@ -30,7 +30,7 @@ export const walletReducer = (state = initState, {type, payload}) => {
       const account = getCurrentAccount(state);
       account.balance = payload;
       return {
-        ...state
+        ...state,
       };
     case 'walletUpdateAccount':
       return {

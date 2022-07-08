@@ -5,6 +5,7 @@ import React from 'react';
 import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import ComCollectItem from './ComCollectItem';
+import ListEmpty from './ListEmpty';
 
 const MyNftCollection = ({navigation}) => {
   const renderItem = ({item}) => {
@@ -17,6 +18,9 @@ const MyNftCollection = ({navigation}) => {
       </TouchableOpacity>
     );
   };
+  const emptyComponent = () => {
+    return <ListEmpty />;
+  };
   return (
     <View style={{flex: 1}}>
       <FlatList
@@ -24,6 +28,8 @@ const MyNftCollection = ({navigation}) => {
         numColumns={2}
         renderItem={renderItem}
         style={styles.flatList}
+        ListEmptyComponent={emptyComponent}
+        keyExtractor={(item, index) => item + index}
       />
     </View>
   );

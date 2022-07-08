@@ -114,7 +114,14 @@ const WalletCard = ({
             </Pressable>
           </View>
           {/*<Text style={[balanceS]}>$ {getCurrentBalance(wallet)}</Text>*/}
-          <Text style={[balanceS]}>MLT {getCurrentBalance(wallet)}</Text>
+          <Text style={[balanceS]}>
+            {wallet.current.type === 'spectrum'
+              ? 'MLT'
+              : wallet.current.type === 'ethereum'
+              ? 'ETH'
+              : ''}{' '}
+            {getCurrentBalance(wallet)}
+          </Text>
           <View style={[{width: '100%'}, row, justifySpaceAround]}>
             <Pressable
               style={[alignItemsCenter, icons]}

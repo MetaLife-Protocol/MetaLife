@@ -12,7 +12,10 @@ import {
 import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
 import {getPubsRewardTotal} from '../../remote/pubOP';
-import {getWBalanceByContract} from '../../remote/wallet/WalletAPI';
+import {
+  getWBalance,
+  getWBalanceByContract,
+} from '../../remote/wallet/WalletAPI';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {getCurrentAccount} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
@@ -42,10 +45,18 @@ const Profiles = ({feedId, wallet, setBalance}) => {
   }, []);
 
   const getInfo = () => {
-    getWBalanceByContract(type, 'MLT', address, res => {
-      setBalance(res);
-      setRefreshing(false);
-    });
+    if (type === 'spectrum') {
+      getWBalanceByContract(type, 'MLT', address, res => {
+        setBalance(res);
+        setRefreshing(false);
+      });
+    } else if (type === 'ethereum') {
+      getWBalance(type, address, res => {
+        setBalance(res);
+        setRefreshing(false);
+      });
+    }
+
     const hour24 = new Date();
     hour24.setHours(hour24.getHours() - 24);
     getPubsRewardTotal({

@@ -14,13 +14,13 @@ import {stopCurrentPhoton} from './screens/photon/PhotonUtils';
 import {Buffer} from 'buffer';
 import {getStatusBarHeight} from 'react-native-iphone-x-helper';
 
-let screenWidth = Dimensions.get('window').width;
-let screenH = Dimensions.get('window').height;
-let androidScreenHeight =
+const screenWidth = Dimensions.get('window').width;
+const screenH = Dimensions.get('window').height;
+const androidScreenHeight =
   Dimensions.get('window').height / Dimensions.get('window').width > 1.8
     ? screenH + NativeModules.StatusBarManager.HEIGHT
     : screenH; //适配安卓全面屏
-let screenHeight = Platform.OS == 'android' ? androidScreenHeight : screenH;
+const screenHeight = Platform.OS == 'android' ? androidScreenHeight : screenH;
 
 // 设计稿宽度
 const DISING_WIDTH = 750;

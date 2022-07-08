@@ -45,7 +45,9 @@ export const financeConfig = {
       },
     },
     ethereum: {
-      rpcURL: 'https://mainnet.infura.io/v3/',
+      // Corporate networks are restricted，empty string internal retrieval suitable eth node
+      // rpcURL: 'https://mainnet.infura.io/v3/',
+      rpcURL: '',
       chainID: 1,
       explorerURL: 'https://etherscan.io',
       decmis: 18,
