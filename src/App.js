@@ -176,6 +176,7 @@ const App = ({
               <HeaderRightBtn
                 btnIcon={darkMode ? bluetoothIconWhite : bluetoothIconBlack}
                 btnHandler={() => {
+                  setTimeout(() => {}, 20e3);
                   console.log('search');
                   bluetoothSearch(20e3, res => {
                     console.log('bluetooth search', res);
