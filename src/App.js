@@ -83,6 +83,7 @@ import Earnings from './screens/tabs/profiles/earnings/Earnings';
 import EarningsShare from './screens/tabs/profiles/earnings/EarningsShare';
 import NftCollectionDetail from './screens/ntfPreview/NftCollectionDetail';
 import MyNftDetailView from './screens/ntfPreview/MyNftDetailView';
+import DaoContentView from './screens/daoPreview/DaoContentView';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -442,6 +443,11 @@ const App = ({
           name="MyNftDetailView"
           component={MyNftDetailView}
           options={{headerTitle: ''}}
+        />
+        <Screen
+          name="DaoContentView"
+          component={DaoContentView}
+          options={{headerTitle: 'DAO'}}
         />
       </Navigator>
       <MaskView darkMode={darkMode} enabled={masked} eventEnabled={false} />
