@@ -20,6 +20,7 @@ import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {getCurrentAccount} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
 import {NetworkInfo} from 'react-native-network-info';
+import {getNFTInfos} from '../../remote/contractOP';
 
 const Profiles = ({feedId, wallet, setBalance}) => {
   const {
@@ -46,6 +47,9 @@ const Profiles = ({feedId, wallet, setBalance}) => {
     // NetworkInfo.getIPV4Address().then(console.log);
     // NetworkInfo.getSubnet().then(console.log);
     // NetworkInfo.getGatewayIPAddress().then(console.log);
+    // getNFTInfos('0x993f846fdc1dd6de2abf3087424af0bc36a7cd78', info =>
+    //   console.log(info),
+    // );
   }, []);
 
   const getInfo = () => {

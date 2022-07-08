@@ -15,8 +15,10 @@ import {
 const network = financeConfig.chains.spectrum.rpcURL,
   // metaMaster contract
   contractAddress = '0x0dcc00b3f7c664aaa884c87a66f7a0ce80d9367c',
+  // dev collection address
+  devCollectionAddress = '0x5e1b7bd5dbd7cc4c5983d13219ba541e0cdc9283',
   // collection address
-  collectionAddress = '0x5e1b7bd5dbd7cc4c5983d13219ba541e0cdc9283';
+  collectionAddress = '';
 
 export async function callAuto() {
   // console.log(getCollectionInfo());
@@ -56,7 +58,7 @@ async function getOwnedItems(keystore, pw, walletAddress) {
  * @returns {{result: Error}}
  */
 async function getCollectionIPFSAddress() {
-  const contract = getContract(network, collectionAddress, NFTCollectionAbi);
+  const contract = getContract(network, devCollectionAddress, NFTCollectionAbi);
   console.log(contract);
   const info = await contract.metaInfo();
   return info;
@@ -65,7 +67,7 @@ async function getCollectionIPFSAddress() {
 async function getCollectionInfo() {
   const contract = getContract(
     network,
-    collectionAddress,
+    devCollectionAddress,
     financeConfig.contractABIs.erc721,
   );
   console.log(contract);
@@ -81,7 +83,7 @@ async function getCollectionInfo() {
 async function getCollectionTotal() {
   const contract = getContract(
     network,
-    collectionAddress,
+    devCollectionAddress,
     financeConfig.contractABIs.erc721,
   );
   const total = await contract.totalSupply();
@@ -93,8 +95,12 @@ async function getCollectionTotal() {
  * @param wAddr option user wallet address for self or undefined for all
  * @returns {{result: Error}}
  */
-async function getNFTInfos(wAddr = undefined) {
-  const contract = getContract(network, collectionAddress, ERC721EnumerableAbi);
+export async function getNFTInfos(wAddr = undefined, cb = null) {
+  const contract = getContract(
+    network,
+    devCollectionAddress,
+    ERC721EnumerableAbi,
+  );
   var nftCount;
   if (wAddr === undefined) {
     nftCount = await contract.totalSupply();
@@ -118,5 +124,5 @@ async function getNFTInfos(wAddr = undefined) {
     let nftInfo = {id: token_id, uri: token_uri};
     nftInfos.push(nftInfo);
   }
-  return nftInfos;
+  return cb && cb(nftInfos);
 }
