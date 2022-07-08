@@ -254,7 +254,9 @@ const WalletCreator = ({
                     backup: false,
                   };
                   walletCreateAccount(account);
-                  const index = wallet.accounts[targetChain].length;
+                  const index = wallet.accounts[targetChain]
+                    ? wallet.accounts[targetChain].length
+                    : 0;
                   setCurrent({type: targetChain, index});
                   Toast.show('Wallet created');
                   replace('WalletBackup', {

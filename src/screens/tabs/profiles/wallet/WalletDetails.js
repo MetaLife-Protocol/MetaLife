@@ -163,7 +163,11 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
             </View>
             <Text style={[volume]}>
               {/*{coinType === 'rmb' ? '¥' : '$'}{' '}*/}
-              {coinType === 'rmb' ? 'MLT' : 'MLT'}{' '}
+              {wallet.current.type === 'spectrum'
+                ? 'MLT'
+                : wallet.current.type === 'ethereum'
+                ? 'ETH'
+                : ''}{' '}
               {volumeVisible ? getCurrentBalance(wallet) : '******'}
             </Text>
           </View>

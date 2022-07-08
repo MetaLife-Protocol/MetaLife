@@ -239,17 +239,17 @@ const WalletAccountDetails = ({
               deleteWalletAccount(address, pwd, isCorrect => {
                 if (isCorrect) {
                   setPutPwdVisible(false);
-                  const currentAccount =
-                    wallet.accounts[type][wallet.current.index];
-                  walletDeleteAccount({type, address});
-                  if (address === currentAccount.address) {
-                    if (wallet.accounts.length <= 0) {
-                      setCurrent({type: '', index: 0});
-                    } else {
-                      setCurrent({type, index: 0});
-                    }
+                  const addressIndex = wallet.accounts[type]
+                    .map(it => it.address)
+                    .indexOf(address);
+                  if (addressIndex < wallet.current.index) {
+                    setCurrent({type, index: wallet.current.index - 1});
+                  }
+                  if (addressIndex === wallet.current.index) {
+                    setCurrent({type, index: 0});
                     stopAboutWalletAccount();
                   }
+                  walletDeleteAccount({type, address});
                   Toast.show('Deleted');
                   goBack();
                 } else {
