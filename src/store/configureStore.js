@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import I18n from 'react-native-i18n';
 import {populateStyles} from '../shared/UseSchemaStyles';
 import {devToolsEnhancer} from 'redux-devtools-extension';
+import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 
 /**
  * todo: version control for persist, when data struct update
@@ -15,6 +16,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   blacklist: ['runtime'],
+  stateReconciler: autoMergeLevel2,
 };
 const persistedReducer = persistReducer(persistConfig, reducer);
 
