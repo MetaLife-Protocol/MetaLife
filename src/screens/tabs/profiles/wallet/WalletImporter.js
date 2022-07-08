@@ -113,6 +113,7 @@ const WalletImporter = ({
             <TextInput
               style={[text, styles.copyBorder]}
               multiline={true}
+              textAlignVertical={'top'}
               value={copyInfo}
               placeholder={placeholder}
               placeholderTextColor={textHolder}
@@ -130,6 +131,7 @@ const WalletImporter = ({
                 <TextInput
                   style={[text, flex1]}
                   value={pw}
+                  textAlignVertical={'top'}
                   secureTextEntry={pwdSecure}
                   placeholder={'Set Password'}
                   placeholderTextColor={textHolder}
@@ -153,6 +155,7 @@ const WalletImporter = ({
                 <TextInput
                   style={[text, flex1]}
                   value={cPw}
+                  textAlignVertical={'top'}
                   secureTextEntry={pwdConfrimSecure}
                   placeholder={'Confirm Password'}
                   placeholderTextColor={textHolder}
@@ -177,6 +180,7 @@ const WalletImporter = ({
                 <TextInput
                   style={[text, flex1]}
                   value={prompt}
+                  textAlignVertical={'top'}
                   placeholder={'Password prompt (optional)'}
                   placeholderTextColor={textHolder}
                   onChangeText={setPrompt}
