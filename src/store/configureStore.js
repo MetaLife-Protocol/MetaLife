@@ -15,6 +15,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   blacklist: ['runtime'],
+  timeout: null,
 };
 
 export const store = configureStore({
