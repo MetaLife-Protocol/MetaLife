@@ -19,8 +19,7 @@ import {
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {getCurrentAccount} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
-import RoundBtn from '../../shared/comps/RoundBtn';
-import {callAuto, callOnce} from '../../remote/contractOP';
+import {NetworkInfo} from 'react-native-network-info';
 
 const Profiles = ({feedId, wallet, setBalance}) => {
   const {
@@ -41,7 +40,12 @@ const Profiles = ({feedId, wallet, setBalance}) => {
   const [amount, setAmount] = useState(0);
 
   useEffect(() => {
-    callAuto();
+    // NetworkInfo.getBSSID().then(console.log);
+    // NetworkInfo.getBroadcast().then(console.log);
+    // NetworkInfo.getIPAddress().then(console.log);
+    // NetworkInfo.getIPV4Address().then(console.log);
+    // NetworkInfo.getSubnet().then(console.log);
+    // NetworkInfo.getGatewayIPAddress().then(console.log);
   }, []);
 
   const getInfo = () => {
