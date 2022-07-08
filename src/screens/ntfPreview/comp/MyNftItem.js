@@ -6,6 +6,7 @@ import React from 'react';
 import {View, FlatList, StyleSheet, Pressable} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import NftItem from './NftItem';
+import ListEmpty from './ListEmpty';
 
 const MyNftItem = ({}) => {
   const {navigate} = useNavigation();
@@ -16,6 +17,9 @@ const MyNftItem = ({}) => {
       </Pressable>
     );
   };
+  const emptyComponent = () => {
+    return <ListEmpty />;
+  };
   return (
     <View style={{flex: 1}}>
       <FlatList
@@ -23,6 +27,8 @@ const MyNftItem = ({}) => {
         numColumns={2}
         renderItem={renderItem}
         style={styles.flatList}
+        ListEmptyComponent={emptyComponent}
+        keyExtractor={(item, index) => item + index}
       />
     </View>
   );
