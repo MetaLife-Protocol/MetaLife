@@ -29,3 +29,4 @@ export const CloseIcons = {
 export const ArrowImage = require('../assets/image/shared/back.png');
 export const bluetoothIconBlack = require('../assets/image/shared/Bluetooth-black.png');
 export const bluetoothIconWhite = require('../assets/image/shared/Bluetooth-white.png');
+export const bluetoothIconLight = require('../assets/image/shared/Bluetooth-normal-highlight-.png');

@@ -39,17 +39,13 @@ import Mnemonic from './shared/screens/Mnemonic';
 import {startSSB} from './remote/ssb/starter';
 import {initializeHandlers} from './remote/ssb/SsbListeners';
 import {checkAddon} from './remote/ssb/SsbHandlers';
-import {bluetoothSearch, getConnectedPeers} from './remote/ssb/ssbOP';
+import {getConnectedPeers} from './remote/ssb/ssbOP';
 import {useStore} from 'react-redux';
 import nodejs from 'nodejs-mobile-react-native';
 import Resync from './screens/guid/Resync';
 import HeaderRightBtn from './screens/tabs/HeaderRightBtn';
 import Post from './screens/tabs/home/Post';
-import {
-  bluetoothIconBlack,
-  bluetoothIconWhite,
-  HeaderIcons,
-} from './shared/Icons';
+import {HeaderIcons} from './shared/Icons';
 import AvatarEditor from './screens/tabs/profiles/setting/AvatarEditor';
 import WalletCreator from './screens/tabs/profiles/wallet/WalletCreator';
 import WalletImporter from './screens/tabs/profiles/wallet/WalletImporter';
@@ -171,19 +167,6 @@ const App = ({
           //fixme: large title causes twinkle unusually
           options={{
             title: 'Peers',
-            /*, headerLargeTitle: true*/
-            headerRight: props => (
-              <HeaderRightBtn
-                btnIcon={darkMode ? bluetoothIconWhite : bluetoothIconBlack}
-                btnHandler={() => {
-                  setTimeout(() => {}, 20e3);
-                  console.log('search');
-                  bluetoothSearch(20e3, res => {
-                    console.log('bluetooth search', res);
-                  });
-                }}
-              />
-            ),
           }}
           component={PeersScreen}
         />

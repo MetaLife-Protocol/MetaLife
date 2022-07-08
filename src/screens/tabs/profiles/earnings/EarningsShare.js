@@ -3,6 +3,7 @@ import React from 'react';
 import {
   Image,
   ImageBackground,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -14,6 +15,8 @@ import HeadIcon from '../../../../shared/comps/HeadIcon';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
+import {pxToDp} from '../../../../utils';
+import {isIphoneX} from 'react-native-iphone-x-helper';
 
 const EarningsShare = ({feedId, infoDic, route: {params}}) => {
   const {text, row, flex1, alignItemsCenter, justifySpaceBetween, marginTop10} =
@@ -86,18 +89,18 @@ const icons = {
 
 const styles = StyleSheet.create({
   back: {
-    marginTop: 45,
+    marginTop: Platform.OS === 'ios' ? (isIphoneX ? 45 : 25) : 5,
     marginLeft: 20,
     padding: 10,
   },
   title1: {
     color: '#000',
-    marginTop: 150,
+    marginTop: pxToDp(150),
     marginLeft: -10,
     fontSize: 17.5,
     fontWeight: 'bold',
   },
-  title2: {alignItems: 'flex-end', marginBottom: 60},
+  title2: {alignItems: 'flex-end', marginBottom: pxToDp(40)},
   number: {
     fontSize: 65,
     fontWeight: 'bold',
