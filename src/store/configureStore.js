@@ -1,11 +1,11 @@
 import reducer from './reducers/Reducer';
-import {createStore} from 'redux';
 import persistReducer from 'redux-persist/es/persistReducer';
 import persistStore from 'redux-persist/es/persistStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import I18n from 'react-native-i18n';
 import {populateStyles} from '../shared/UseSchemaStyles';
-import {devToolsEnhancer} from 'redux-devtools-extension';
+import {configureStore} from '@reduxjs/toolkit';
+import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
 
 /**
  * todo: version control for persist, when data struct update
@@ -15,15 +15,22 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   blacklist: ['runtime'],
-  // stateReconciler: autoMergeLevel1, // default
-  timeout: null,
 };
-const persistedReducer = persistReducer(persistConfig, reducer);
 
-export const store = createStore(
-  persistedReducer,
-  devToolsEnhancer(/*applyMiddleware(thunk)*/),
-);
+export const store = configureStore({
+  reducer: persistReducer(persistConfig, reducer),
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // Ignore these action types
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        // Ignore these field paths in all actions
+        ignoredActionPaths: [],
+        // Ignore these paths in the state
+        ignoredPaths: [],
+      },
+    }),
+});
 
 export const persistor = persistStore(store, [
   {manualPersist: false},
