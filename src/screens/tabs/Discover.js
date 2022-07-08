@@ -23,7 +23,13 @@ const Discover = ({darkMode}) => {
   };
 
   const DATA = [
-    {title: 'DAO', bgImg: iconDic.DAO},
+    {
+      title: 'DAO',
+      bgImg: iconDic.DAO,
+      onPress: () => {
+        navigate('DaoContentView');
+      },
+    },
     {
       title: 'NFT',
       bgImg: iconDic.NFT,
