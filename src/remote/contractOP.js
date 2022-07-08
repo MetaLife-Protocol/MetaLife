@@ -97,7 +97,7 @@ async function getNFTInfos(wAddr = undefined) {
   const contract = getContract(network, collectionAddress, ERC721EnumerableAbi);
   var nftCount;
   if (wAddr === undefined) {
-    nftCount = await contract.balanceOf();
+    nftCount = await contract.totalSupply();
   } else {
     nftCount = await contract.balanceOf(wAddr);
   }
@@ -108,9 +108,9 @@ async function getNFTInfos(wAddr = undefined) {
   for await (const idx of token_idxs) {
     var token_id;
     if (wAddr === undefined) {
-      token_id = await contract.tokenByIndex(idx);
+      token_id = (await contract.tokenByIndex(idx)).toNumber();
     } else {
-      token_id = await contract.tokenOfOwnerByIndex(wAddr, idx);
+      token_id = (await contract.tokenOfOwnerByIndex(wAddr, idx)).toNumber();
     }
 
     let token_uri = await contract.tokenURI(token_id);
