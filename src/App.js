@@ -75,9 +75,7 @@ import WalletAccountDetails from './screens/tabs/profiles/wallet/WalletAccountDe
 import WalletBackup from './screens/tabs/profiles/wallet/WalletBackup';
 import WalletBackupMnemonicSelect from './screens/tabs/profiles/wallet/WalletBackupMnemonicSelect';
 import WalletBackupMnemonicShow from './screens/tabs/profiles/wallet/WalletBackupMnemonicShow';
-import {getRandomPathName, savePicture} from './utils';
-import ImagePicker from 'react-native-image-crop-picker';
-import RNFetchBlob from 'rn-fetch-blob';
+import {savePicture} from './utils';
 import Toast from 'react-native-tiny-toast';
 import Earnings from './screens/tabs/profiles/earnings/Earnings';
 import EarningsShare from './screens/tabs/profiles/earnings/EarningsShare';

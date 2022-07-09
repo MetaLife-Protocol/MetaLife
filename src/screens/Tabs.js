@@ -75,7 +75,7 @@ const Tabs = ({showPullMenu, wallet, cfg: {darkMode}, photon}) => {
         },
         buttons: [
           {
-            title: 'Create nft',
+            title: 'Create NFT',
             handler: () => {
               goScreen('');
               showPullMenu({position: {}, buttons: []});

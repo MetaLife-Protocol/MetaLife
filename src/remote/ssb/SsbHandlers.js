@@ -64,7 +64,7 @@ export const publicHandler = key =>
         'type: ' + content.type,
         'relation: ' + updatesPeers.includes(author),
       );
-      content.branch ||
+      (content.branch && !updatesPeers.includes(author)) ||
       content.type === 'contact' ||
       !updatesPeers.includes(author)
         ? checkMarkedMsgCB({fId: author, msg: msg})
