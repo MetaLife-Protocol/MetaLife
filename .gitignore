@@ -70,3 +70,4 @@ buck-out/
 
 # Photon
 /packages
+/src/backend/package-lock.json

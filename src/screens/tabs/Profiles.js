@@ -1,26 +1,13 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  Image,
-  Pressable,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View,} from 'react-native';
 import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
 import {getPubsRewardTotal} from '../../remote/pubOP';
-import {
-  getWBalance,
-  getWBalanceByContract,
-} from '../../remote/wallet/WalletAPI';
+import {getWBalance, getWBalanceByContract,} from '../../remote/wallet/WalletAPI';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {getCurrentAccount} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
-import {NetworkInfo} from 'react-native-network-info';
-import {getNFTInfos} from '../../remote/contractOP';
 
 const Profiles = ({feedId, wallet, setBalance}) => {
   const {
@@ -41,12 +28,6 @@ const Profiles = ({feedId, wallet, setBalance}) => {
   const [amount, setAmount] = useState(0);
 
   useEffect(() => {
-    // NetworkInfo.getBSSID().then(console.log);
-    // NetworkInfo.getBroadcast().then(console.log);
-    // NetworkInfo.getIPAddress().then(console.log);
-    // NetworkInfo.getIPV4Address().then(console.log);
-    // NetworkInfo.getSubnet().then(console.log);
-    // NetworkInfo.getGatewayIPAddress().then(console.log);
     // getNFTInfos('0x993f846fdc1dd6de2abf3087424af0bc36a7cd78', info =>
     //   console.log(info),
     // );
