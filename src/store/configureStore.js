@@ -8,7 +8,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
 
 /**
- * todo: version control for persist, when data struct update
+ * use default reconciler - autoMergeLevel1
  * Created on 11 Nov 2021 by lonmee
  */
 const persistConfig = {
