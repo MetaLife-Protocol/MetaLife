@@ -91,14 +91,14 @@ export function initPhoton({
   console.log('privateKey:', privateKey);
   console.log('address:', address);
 
+  /**
+   * 公链节点host,http协议 默认：http://transport01.smartmesh.cn:44444
+   * ethRPCEndPoint: 'https://jsonapi1.smartmesh.cn',
+   */
   startPhotonServer({
-    // privateKey:
-    //   '0f82bb8f558af8e5b57b7d05159665a8f9175322e42a7093286974a7758c41be',
     privateKey: privateKey,
     address: address,
-    // address: '0x096F7368bC01f438f8De8775DAFD71a566413C6f',
-    ethRPCEndPoint: 'https://jsonapi1.smartmesh.io', //公链节点host,http协议 默认：http://transport01.smartmesh.cn:44444
-    // ethRPCEndPoint: 'https://jsonapi1.smartmesh.cn',
+    ethRPCEndPoint: 'https://jsonapi1.smartmesh.io',
   })
     .then(res => {
       Toast.hide();
@@ -112,17 +112,17 @@ export function initPhoton({
           bindIDAndWallet(
             {
               client_id: feedId,
-              client_eth_address: checkSum('0x' + address.toString()),
+              client_eth_address: address,
             },
-            console.log,
+            r => console.log('pub1 register:', r),
             1,
           );
           bindIDAndWallet(
             {
               client_id: feedId,
-              client_eth_address: checkSum('0x' + address.toString()),
+              client_eth_address: address,
             },
-            console.log,
+            r => console.log('pub2 register:', r),
             2,
           );
         }
