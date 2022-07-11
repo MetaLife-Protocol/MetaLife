@@ -137,15 +137,16 @@ export async function getNFTInfos(wAddr = undefined, cb) {
     }
 
     let token_uri = await contract.tokenURI(token_id);
-    let name = await contract.name();
-    let ownerOf = await contract.ownerOf(token_id);
 
     let nftInfo = {
       id: token_id,
       uri: token_uri,
-      name,
-      ownerOf,
     };
+
+    if (wAddr === undefined) {
+      let ownerOf = await contract.ownerOf(token_id);
+      nftInfo.ownerOf = ownerOf;
+    }
     nftInfos.push(nftInfo);
   }
   // return nftInfos;
