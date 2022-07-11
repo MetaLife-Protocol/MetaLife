@@ -3,18 +3,17 @@
  *
  */
 
-const initState = {suggest: null, pubs: []};
+const initState = [];
 
 export const pubReducer = (state = initState, {type, payload}) => {
   switch (type) {
     case 'suggestPubs':
-      return {...state, suggest: payload};
+      // todo: implements
+      return state;
     case 'addPub':
-      return state.pubs.includes(payload)
-        ? state
-        : {...state, pubs: [...state.pubs, payload]};
+      return state.includes(payload) ? state : [...state, payload];
     case 'removePub':
-      return {...state, pubs: state.filter(p => p.content.contact !== payload)};
+      return state.filter(p => p.content.contact !== payload);
     default:
       return state;
   }

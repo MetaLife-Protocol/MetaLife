@@ -166,7 +166,7 @@ const msp = s => {
   return {
     darkMode: s.cfg.darkMode,
     infoDic: s.info,
-    pubs: s.pubs.pubs,
+    pubs: s.pubs,
     stagedPeers: s.contact.stagedPeers,
   };
 };

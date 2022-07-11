@@ -80,7 +80,7 @@ const msp = s => {
     cfg: s.cfg,
     infoDic: s.info,
     privateMsg: s.private,
-    pubs: s.pubs.pubs,
+    pubs: s.pubs,
     connectedPeers: s.contact.connectedPeers,
   };
 };
