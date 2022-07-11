@@ -16,17 +16,16 @@ const network = financeConfig.chains.spectrum.rpcURL,
   // metaMaster contract
   contractAddress = '0x0dcc00b3f7c664aaa884c87a66f7a0ce80d9367c',
   // dev collection address
-  devCollectionAddress = '0x5e1b7bd5dbd7cc4c5983d13219ba541e0cdc9283',
+  devCollectionAddress = '0x221b9814d507bC912534A96C37a15356cc995C0E',
   // collection address
   collectionAddress = '';
 
 export async function callAuto() {
-  // console.log(getCollectionInfo());
+  console.log(await getCollectionInfo());
 }
 
-export async function callOnce(cb) {
-  const info = await getCollectionInfo();
-  cb && cb(info);
+export async function callOnce() {
+  console.log(await getNFTInfos());
 }
 
 async function getOwnedCollections(keystore, pw, walletAddress) {
@@ -70,7 +69,6 @@ async function getCollectionInfo() {
     devCollectionAddress,
     financeConfig.contractABIs.erc721,
   );
-  console.log(contract);
   const name = await contract.name();
   const symbol = await contract.symbol();
   return {name, symbol};
@@ -95,7 +93,7 @@ async function getCollectionTotal() {
  * @param wAddr option user wallet address for self or undefined for all
  * @returns {{result: Error}}
  */
-export async function getNFTInfos(wAddr = undefined, cb = null) {
+export async function getNFTInfos(wAddr = undefined) {
   const contract = getContract(
     network,
     devCollectionAddress,
@@ -111,6 +109,8 @@ export async function getNFTInfos(wAddr = undefined, cb = null) {
   let token_idxs = [...Array(nftCount.toNumber()).keys()];
 
   let nftInfos = [];
+
+  console.log(contract);
   for await (const idx of token_idxs) {
     var token_id;
     if (wAddr === undefined) {
@@ -120,9 +120,16 @@ export async function getNFTInfos(wAddr = undefined, cb = null) {
     }
 
     let token_uri = await contract.tokenURI(token_id);
+    let name = await contract.name();
+    let ownerOf = await contract.ownerOf(token_id);
 
-    let nftInfo = {id: token_id, uri: token_uri};
+    let nftInfo = {
+      id: token_id,
+      uri: token_uri,
+      name,
+      ownerOf,
+    };
     nftInfos.push(nftInfo);
   }
-  return cb && cb(nftInfos);
+  return nftInfos;
 }

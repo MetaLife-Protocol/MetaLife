@@ -1,6 +1,3 @@
-import FormData from 'form-data';
-import axios from 'axios';
-
 /**
  * Created on 06 Jul 2022 by lonmee
  *
@@ -27,3 +24,10 @@ export function getNftAssetsJson(cid) {
     },
   }).then(r => console.log);
 }
+
+/**
+ * e.g. https://metalife.mypinata.cloud/ipfs/bafkreigtmwt6s7uetx7qjv3th3xb5lzc5v6ssolqvjuwauo2ftd3hf2hna
+ * @param cid
+ * @returns {Promise<Response>}
+ */
+export const getNftAssets = cid => fetch(ipfsBaseURL + cid);
