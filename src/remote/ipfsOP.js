@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 /**
  * Created on 06 Jul 2022 by lonmee
  *
@@ -15,14 +17,17 @@
 const gateways = 'metalife.mypinata.cloud';
 const ipfsBaseURL = `https://${gateways}/ipfs/`;
 
-export function getNftAssetsJson(cid) {
-  fetch(ipfsBaseURL + cid, {
-    maxBodyLength: 'Infinity',
+export function getNftAssetsJson(uri) {
+  const cid = uri.split('/').pop();
+  return axios.get(ipfsBaseURL + cid, {
+    maxBodyLength: 'Infinity', //this is needed to prevent axios from erroring out with large files
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
+      Authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4MzVjNGJmNS1hY2UzLTQ1ODgtODEyYS1mMTc1NTc0MzIwODMiLCJlbWFpbCI6ImhlbnJ5QHNtYXJ0bWVzaC5pbyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJjNjc5Yjg0M2E2NTBkOTdlZTc0YyIsInNjb3BlZEtleVNlY3JldCI6ImVmYjYyYTIzMjYwNjAxOTE2YmFjMjQyYjc5NDAzMWE4NTJkZmU0ZjAzMjRlMjc4MDkzM2M3NTRmYjdjYjk3ZTciLCJpYXQiOjE2NTY1NjU0MzF9.5fm8vAbpsLF4-eNpCZW_gRV42eANUykBACF-p9PkYUU',
     },
-  }).then(r => console.log);
+  });
 }
 
 /**
@@ -31,6 +36,7 @@ export function getNftAssetsJson(cid) {
  * @returns {Promise<Response>}
  */
 export const getNftAssets = cid => fetch(ipfsBaseURL + cid);
+export const getNftAssetsUri = uri => fetch(ipfsBaseURL + uri);
 
 export async function getList(uri, cb) {
   // let responst = await fetch(uri, {method: 'GET'})
