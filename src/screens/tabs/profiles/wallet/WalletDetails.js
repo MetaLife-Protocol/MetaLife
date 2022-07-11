@@ -5,23 +5,26 @@ import {
   ImageBackground,
   Pressable,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
 import useSchemaStyles, {
+  colorsBasics,
   colorsSchema,
 } from '../../../../shared/UseSchemaStyles';
 import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
-import {TokenItem} from './items/TokenItem';
 import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
 import {getCurrentAccount, getCurrentBalance} from '../../../../utils';
 import {ComModal} from '../../../../shared/comps/ComModal';
 import {exportAccountMnemonic} from '../../../../remote/wallet/WalletAPI';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import WalletCoinTabScreen from './WalletCoinTabScreen';
+import WalletDaoTabScreen from './WalletDaoTabScreen';
+import WalletNFTTabScreen from './WalletNFTTabScreen';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -40,6 +43,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
       alignSelfCenter,
       alignItemsCenter,
       placeholderTextColor,
+      modalFG,
     } = useSchemaStyles(),
     {
       container,
@@ -51,6 +55,8 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
       tagActive,
       indicator,
     } = styles;
+
+  const Tab = createMaterialTopTabNavigator();
 
   const {navigate} = useNavigation();
 
@@ -71,6 +77,8 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
   const [pwd, setPwd] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastContent, setToastContent] = useState('');
+
+  const [tipVisible, setTipVisible] = useState(false);
 
   const account = getCurrentAccount(wallet);
 
@@ -151,7 +159,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
                   <Pressable
                     style={styles.backup}
                     onPress={() => {
-                      // setPwdVisible(true);
+                      setTipVisible(true);
                     }}>
                     <Text style={styles.backupText}>Backup</Text>
                   </Pressable>
@@ -189,24 +197,42 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
             </Pressable>
           </View>
         </ImageBackground>
-        <View style={[marginTop10, row]}>
-          {tags.map((value, index) => (
-            <Pressable key={index} onPress={() => setSelected(index)}>
-              <Text
-                style={selected === index ? [text, tagActive] : [tagDefault]}>
-                {value}
-              </Text>
-              {selected === index && (
-                <View style={[indicator, alignSelfCenter]} />
-              )}
-            </Pressable>
-          ))}
-        </View>
-        <ScrollView>
-          <TokenItem title={'SMT'} quantity={100} price={1.0} amount={888} />
-          <TokenItem title={'MESH'} quantity={100} price={1.0} amount={888} />
-          <TokenItem title={'MLT'} quantity={100} price={1.0} amount={888} />
-        </ScrollView>
+        <Tab.Navigator
+          style={[FG, marginTop10]}
+          lazy={true}
+          initialRouteName={'Coin'}
+          backBehavior={'none'}
+          screenOptions={{
+            tabBarItemStyle: {
+              width: 70,
+            },
+            tabBarLabelStyle: {
+              fontSize: 16,
+              fontWeight: 'bold',
+              textTransform: 'none',
+            },
+            tabBarIndicatorStyle: {
+              width: 40,
+              marginLeft: 15,
+              marginRight: 15,
+            },
+          }}>
+          <Tab.Screen
+            name={'Coin'}
+            initialParams={''}
+            component={WalletCoinTabScreen}
+          />
+          <Tab.Screen
+            name={'DAO'}
+            initialParams={''}
+            component={WalletDaoTabScreen}
+          />
+          <Tab.Screen
+            name={'NFT'}
+            initialParams={''}
+            component={WalletNFTTabScreen}
+          />
+        </Tab.Navigator>
       </View>
       <WalletAccountSwitchModal
         visible={switchVisible}
@@ -216,6 +242,51 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
         wallet={wallet}
         darkMode={darkMode}
         submitHandler={setCurrent}
+      />
+      <ComModal
+        visible={tipVisible}
+        setVisible={setTipVisible}
+        title={'Please backup your wallet now'}
+        darkMode={darkMode}
+        content={
+          <>
+            <View style={[modalFG, styles.tipContainer, {marginTop: 0}]}>
+              <Text style={[styles.greenColor]}>
+                Unlike traditional website accounts, blockchain wallet is a
+                decentralized account system based on cryptography.
+              </Text>
+              <Text style={[styles.greenColor, marginTop10]}>
+                You must keep the private key and transaction password of your
+                wallet. Any accident will lead to the loss of assets.
+              </Text>
+              <Text style={[styles.greenColor, marginTop10]}>
+                We suggest to do a double backup first, then enter a small test,
+                and finally start to use happily.
+              </Text>
+            </View>
+            <Text style={[marginTop10, styles.tipTitle, text]}>
+              Backup private key
+            </Text>
+            <Text style={[marginTop10, styles.tipDesc]}>
+              When you lose your wallet or forget your password, you can restore
+              your wallet
+            </Text>
+            <Text style={[marginTop10, styles.tipTitle, text]}>
+              Backing up keystore files
+            </Text>
+            <Text style={[marginTop10, styles.tipDesc]}>
+              Official wallet format, private key file protected by transaction
+              password
+            </Text>
+          </>
+        }
+        submit={{
+          text: 'Backup now',
+          press: () => {
+            setTipVisible(false);
+            setPwdVisible(true);
+          },
+        }}
       />
       <ComModal
         visible={pwdVisible}
@@ -252,8 +323,11 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
           press: () => {
             exportAccountMnemonic(account.address, pwd, (isSuccess, res) => {
               if (isSuccess) {
+                setPwdVisible(false);
                 goScreen('WalletBackup', {
                   account,
+                  mnemonic: res.mnemonic,
+                  shuffleMnemonic: res.shuffleMnemonic,
                 });
               } else {
                 setToastContent('Wrong password');
@@ -271,8 +345,6 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
     </SafeAreaView>
   );
 };
-
-const tags = ['Coin', 'DAO', 'NFT'];
 
 const iconDic = {
   BG: require('../../../../assets/image/wallet/wallet_backgroud.png'),
@@ -356,6 +428,28 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     fontSize: 15,
     lineHeight: 20,
+  },
+  tipContainer: {
+    borderRadius: 8,
+    marginHorizontal: 15,
+    marginTop: 15,
+    padding: 15,
+  },
+  greenColor: {
+    color: colorsBasics.primary,
+    fontSize: 14,
+    lineHeight: 17,
+  },
+  tipTitle: {
+    fontWeight: 'bold',
+    fontSize: 15,
+    lineHeight: 19,
+    marginHorizontal: 15,
+  },
+  tipDesc: {
+    color: '#8E8E92',
+    fontSize: 16,
+    marginHorizontal: 15,
   },
 });
 

@@ -98,14 +98,14 @@ async function getNFTInfo(cb) {
  * amount of collection
  * @returns {{result: Error}} bigNum
  */
-async function getNFTTotal() {
+export async function getNFTTotal() {
   const contract = getContract(
     network,
     devCollectionAddress,
     financeConfig.contractABIs.erc721,
   );
   const total = await contract.totalSupply();
-  return total;
+  return total.toNumber();
 }
 
 /**
