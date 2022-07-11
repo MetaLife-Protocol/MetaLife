@@ -3,13 +3,29 @@
  *
  */
 
-import React from 'react';
-import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useEffect} from 'react';
+import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import ComCollectItem from './comp/ComCollectItem';
 import ListEmpty from './comp/ListEmpty';
+import {getCollectionInfo, getNFTInfos} from '../../remote/contractOP';
+import {getNftAssetsJson} from '../../remote/ipfsOP';
 
-const OpenGalaxyCollection = ({navigation}) => {
+const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
+  useEffect(() => {
+    getCollectionInfo(value => {
+      addCollections(value);
+      getNFTInfos(undefined, nftCInfo => {
+        getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
+          nftJInfo.headers['content-type'] === 'application/json' &&
+            addNft({
+              ...nftCInfo,
+              ...nftJInfo.data,
+            });
+        });
+      });
+    });
+  }, []);
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -52,7 +68,10 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {};
+  return {
+    addCollections: payload => d({type: 'addCollections', payload}),
+    addNft: payload => d({type: 'addNft', payload}),
+  };
 };
 
 export default connect(msp, mdp)(OpenGalaxyCollection);

@@ -55,7 +55,7 @@ async function getOwnedItems(keystore, pw, walletAddress) {
  * get collection info via IPFS address
  * @returns {{result: Error}}
  */
-async function getCollectionInfo(cb) {
+export async function getCollectionInfo(cb) {
   const contract = getContract(network, devCollectionAddress, NFTCollectionAbi);
   const name = await contract.name();
   const symbol = await contract.symbol();
@@ -143,6 +143,7 @@ export async function getNFTInfos(wAddr = undefined, cb) {
 
     let nftInfo = {
       id: token_id,
+      collectionAddress: devCollectionAddress,
       uri: token_uri,
     };
 
@@ -150,8 +151,9 @@ export async function getNFTInfos(wAddr = undefined, cb) {
       let ownerOf = await contract.ownerOf(token_id);
       nftInfo.ownerOf = ownerOf;
     }
-    nftInfos.push(nftInfo);
+    cb && cb(nftInfo);
+    // nftInfos.push(nftInfo);
   }
   // return nftInfos;
-  cb && cb(nftInfos);
+  // cb && cb(nftInfos);
 }

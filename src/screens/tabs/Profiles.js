@@ -41,7 +41,7 @@ const Profiles = ({feedId, wallet, setBalance}) => {
   const [amount, setAmount] = useState(0);
 
   useFocusEffect(() => {
-    callAuto();
+    // callAuto();
   });
 
   // todo: refactor to wallet API
@@ -98,6 +98,7 @@ const Profiles = ({feedId, wallet, setBalance}) => {
         />
       }>
       <HeaderProfiles />
+      {/*<RoundBtn title={'contact test'} press={callOnce} />*/}
       <Pressable
         style={[styles.earnContainer, flex1]}
         onPress={() => {
@@ -119,7 +120,6 @@ const Profiles = ({feedId, wallet, setBalance}) => {
           <Text style={[text, styles.mlt]}>{amount}</Text>
         </View>
       </Pressable>
-      <RoundBtn title={'contact test'} press={callOnce} />
       <View style={[styles.earnContainer, flex1]}>
         <View style={[row, flex1, justifySpaceBetween, alignItemsCenter]}>
           <Text style={[text, styles.earnText]}>NFT</Text>
