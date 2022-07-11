@@ -31,3 +31,20 @@ export function getNftAssetsJson(cid) {
  * @returns {Promise<Response>}
  */
 export const getNftAssets = cid => fetch(ipfsBaseURL + cid);
+
+export async function getList(uri, cb) {
+  // let responst = await fetch(uri, {method: 'GET'})
+  //   .then(response => response.json())
+  //   .then(responseJson => {
+  //     cb && cb(responseJson);
+  //   });
+  try {
+    let response = await fetch(uri, {method: 'GET'});
+    console.log('res2', response);
+    let responseJson = await response.json();
+    console.log('res1', responseJson);
+    return responseJson;
+  } catch (error) {
+    console.log('error1', error);
+  }
+}

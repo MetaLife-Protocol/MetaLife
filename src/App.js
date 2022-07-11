@@ -83,6 +83,8 @@ import NftCollectionDetail from './screens/ntfPreview/NftCollectionDetail';
 import MyNftDetailView from './screens/ntfPreview/MyNftDetailView';
 import DaoContentView from './screens/daoPreview/DaoContentView';
 import {pubHostByIp} from './remote/pubOP';
+import DaoDetailView from './screens/daoPreview/DaoDetailView';
+import OpenGalaxyCollection from './screens/ntfPreview/OpenGalaxyCollection';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -464,6 +466,16 @@ const App = ({
           name="DaoContentView"
           component={DaoContentView}
           options={{headerTitle: 'DAO'}}
+        />
+        <Screen
+          name="DaoDetailView"
+          component={DaoDetailView}
+          options={{headerTitle: 'metaverse.tokenship'}}
+        />
+        <Screen
+          name="OpenGalaxyCollection"
+          component={OpenGalaxyCollection}
+          options={{headerTitle: 'Open Galaxy'}}
         />
       </Navigator>
       <MaskView darkMode={darkMode} enabled={masked} eventEnabled={false} />

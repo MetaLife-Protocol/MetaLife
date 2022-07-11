@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  Pressable,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import ListEmpty from '../ntfPreview/comp/ListEmpty';
@@ -15,13 +16,18 @@ import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {screenWidth} from '../../utils';
 import SearchBar from '../../shared/comps/SearchBar';
+import {useNavigation} from '@react-navigation/native';
 const headImg = require('../../assets/image/profiles/Profiles_backgroud.png');
 
 const DaoContentView = () => {
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
+  const navigation = useNavigation();
+  const gotoDetail = () => {
+    navigation.navigate('DaoDetailView');
+  };
   const renderItem = () => {
     return (
-      <View style={[FG, styles.listItem]}>
+      <Pressable style={[FG, styles.listItem]} onPress={gotoDetail}>
         <FastImage source={headImg} style={styles.headImg} />
         <View style={styles.listLeft}>
           <Text style={[text, styles.liftText]}>Metaverse.metalift</Text>
@@ -30,7 +36,7 @@ const DaoContentView = () => {
             anvtime and jion the valiable
           </Text>
         </View>
-      </View>
+      </Pressable>
     );
   };
 

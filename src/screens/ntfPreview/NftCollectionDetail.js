@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   ImageBackground,
@@ -12,6 +12,8 @@ import {
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import NftItem from './comp/NftItem';
+import {getNFTInfos} from '../../remote/contractOP';
+import {getList} from '../../remote/ipfsOP';
 
 const NftCollectionDetail = ({feedId}) => {
   const {text, alignItemsCenter, justifyCenter, flex1, BG, FG} =
@@ -19,6 +21,27 @@ const NftCollectionDetail = ({feedId}) => {
   const windowWidth = useWindowDimensions().width;
 
   const {goBack, navigate} = useNavigation();
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    getNFTInfos(undefined, async d => {
+      // console.log('ddddd', d.slice(-12));
+      // alert(JSON.stringify(d));
+      if (d) {
+        // setData(d.slice(-12));
+        const newList = d.splice(11, d.length - 1);
+        let array = [];
+        for (let i = 0; i < newList.length; i++) {
+          console.log('iiiii', newList[i]);
+          const list = await getList(newList[i].uri);
+          console.log('listsss', list);
+          array.push(list);
+        }
+        setData(array);
+        // setData(array);
+      }
+      // alert(JSON.stringify(d));
+    });
+  }, []);
 
   const Header = () => {
     return (
@@ -32,7 +55,7 @@ const NftCollectionDetail = ({feedId}) => {
             />
           </Pressable> */}
         </ImageBackground>
-        <View style={[styles.roundView]}></View>
+        <View style={[styles.roundView]} />
         <Text style={[text, styles.title]}>PXN: Ghost Division</Text>
         <Text style={[styles.desc]}>
           The underbelly of Web3. A shadow vague, formless, but eternal.
@@ -46,11 +69,11 @@ const NftCollectionDetail = ({feedId}) => {
       {/* <Header /> */}
       <FlatList
         ListHeaderComponent={<Header />}
-        data={[1, 2, 3, 4, 5]}
+        data={data}
         numColumns={2}
         renderItem={({item, index}) => (
           <Pressable onPress={() => navigate('MyNftDetailView')}>
-            <NftItem index={index} />
+            <NftItem index={index} item={item} />
           </Pressable>
         )}
       />

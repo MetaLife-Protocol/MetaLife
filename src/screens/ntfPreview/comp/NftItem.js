@@ -7,7 +7,7 @@ import React from 'react';
 import {Text, View, StyleSheet, Image, useWindowDimensions} from 'react-native';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 
-const NftItem = ({index}) => {
+const NftItem = ({item, index}) => {
   const windowWidth = useWindowDimensions().width;
   const {text, FG} = useSchemaStyles();
 
@@ -29,7 +29,7 @@ const NftItem = ({index}) => {
           },
         ]}
       />
-      <Text style={styles.text1}>PXN: Ghost Division</Text>
+      <Text style={styles.text1}>{`PXN: ${item.name}`}</Text>
       <Text style={[text, styles.text2]}>Ghost #2039Ghost #2037</Text>
     </View>
   );

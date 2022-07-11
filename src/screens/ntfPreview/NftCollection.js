@@ -12,17 +12,28 @@ import {colorsSchema} from '../../shared/UseSchemaStyles';
 import MyNftItem from './comp/MyNftItem';
 import MyNftCollection from './comp/MyNftCollection';
 import {useNavigation} from '@react-navigation/native';
-const NftCollection = ({route: {params}}) => {
+import {getNFTInfos} from '../../remote/contractOP';
+import {getCurrentAccount} from '../../utils';
+const NftCollection = ({route: {params}, wallet}) => {
   const {tab, title} = params;
   const navigation = useNavigation();
   const {text, flex1, BG, FG} = useSchemaStyles();
   const {primary} = colorsSchema;
+  const account = getCurrentAccount(wallet);
+  // console.log(JSON.stringify(account.address));
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title,
     });
   }, [navigation, title]);
+
+  useEffect(() => {
+    // const data = getNFTInfos(undefined, d => {
+    //   console.log('ddddd', JSON.stringify(d));
+    //   // alert(JSON.stringify(d));
+    // });
+  }, []);
 
   const LIST_CONFIG = [
     {

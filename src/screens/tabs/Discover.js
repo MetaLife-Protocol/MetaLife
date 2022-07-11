@@ -34,9 +34,9 @@ const Discover = ({darkMode}) => {
       title: 'NFT',
       bgImg: iconDic.NFT,
       onPress: () => {
-        navigate('NftCollection', {
-          tab: 'Item',
-          title: 'Open Galaxy',
+        navigate('OpenGalaxyCollection', {
+          // tab: 'Item',
+          // title: 'Open Galaxy',
         });
       },
     },
