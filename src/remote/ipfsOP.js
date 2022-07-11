@@ -13,7 +13,7 @@
  */
 
 const gateways = 'metalife.mypinata.cloud';
-const ipfsBaseURL = `https://${gateways}/ipfs/`;
+export const ipfsBaseURL = `https://${gateways}/ipfs/`;
 
 export function getNftAssetsJson(cid) {
   fetch(ipfsBaseURL + cid, {
