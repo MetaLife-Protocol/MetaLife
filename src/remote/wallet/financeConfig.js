@@ -2,7 +2,7 @@
  *
  * @type {{chains: {}, contracts: {}, contractABIs: {NFTCollection: {}, erc20: [], erc721: []}}}
  */
-import {abi as NFTCollectionAbi} from './wallet/NFTCollection.json';
+import {abi as NFTCollectionAbi} from './NFTCollection.json';
 
 export const financeConfig = {
   chains: {
