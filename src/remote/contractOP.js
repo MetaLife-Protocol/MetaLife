@@ -55,14 +55,30 @@ async function getOwnedItems(keystore, pw, walletAddress) {
  * get collection info via IPFS address
  * @returns {{result: Error}}
  */
-async function getCollectionIPFSAddress() {
+async function getCollectionInfo(cb) {
   const contract = getContract(network, devCollectionAddress, NFTCollectionAbi);
-  console.log(contract);
-  const info = await contract.metaInfo();
-  return info;
+  const name = await contract.name();
+  const symbol = await contract.symbol();
+  const metaInfo = await contract.metaInfo();
+  const totalSupply = (await contract.totalSupply()).toNumber();
+  const maxSupply = (await contract.MAX_SUPPLY()).toNumber();
+  const royaltiesReceiver = await contract.royaltiesReceiver();
+  const royaltiesPercentageInBips = (
+    await contract.royaltiesPercentageInBips()
+  ).toNumber();
+  cb &&
+    cb({
+      name,
+      symbol,
+      metaInfo,
+      totalSupply,
+      maxSupply,
+      royaltiesReceiver,
+      royaltiesPercentageInBips,
+    });
 }
 
-async function getCollectionInfo(cb) {
+async function getNFTInfo(cb) {
   const contract = getContract(
     network,
     devCollectionAddress,
@@ -78,7 +94,7 @@ async function getCollectionInfo(cb) {
  * amount of collection
  * @returns {{result: Error}} bigNum
  */
-async function getCollectionTotal() {
+async function getNFTTotal() {
   const contract = getContract(
     network,
     devCollectionAddress,
