@@ -20,11 +20,11 @@ const network = financeConfig.chains.spectrum.rpcURL,
   collectionAddress = '';
 
 export async function callAuto() {
-  console.log(await getCollectionInfo());
+  console.log(await getCollectionInfo(console.log));
 }
 
 export async function callOnce() {
-  console.log(await getNFTInfos());
+  console.log(await getNFTInfos(undefined, console.log));
 }
 
 async function getOwnedCollections(keystore, pw, walletAddress) {
