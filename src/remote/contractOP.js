@@ -63,7 +63,7 @@ async function getCollectionIPFSAddress() {
   return info;
 }
 
-async function getCollectionInfo() {
+async function getCollectionInfo(cb) {
   const contract = getContract(
     network,
     devCollectionAddress,
@@ -71,7 +71,8 @@ async function getCollectionInfo() {
   );
   const name = await contract.name();
   const symbol = await contract.symbol();
-  return {name, symbol};
+  // return {name, symbol};
+  cb && cb({name, symbol});
 }
 
 /**
@@ -93,7 +94,7 @@ async function getCollectionTotal() {
  * @param wAddr option user wallet address for self or undefined for all
  * @returns {{result: Error}}
  */
-export async function getNFTInfos(wAddr = undefined) {
+export async function getNFTInfos(wAddr = undefined, cb) {
   const contract = getContract(
     network,
     devCollectionAddress,
@@ -131,5 +132,6 @@ export async function getNFTInfos(wAddr = undefined) {
     };
     nftInfos.push(nftInfo);
   }
-  return nftInfos;
+  // return nftInfos;
+  cb && cb(nftInfos);
 }
