@@ -4,7 +4,6 @@
  */
 import {abi as metaMasterAbi} from './wallet/metaMaster.json';
 import {abi as NFTCollectionAbi} from './wallet/NFTCollection.json';
-import {abi as ERC721EnumerableAbi} from './wallet/ERC721Enumerable.json';
 import {financeConfig} from './wallet/financeConfig';
 import {
   bigNumberFormatUnits,
@@ -98,7 +97,8 @@ export async function getNFTInfos(wAddr = undefined, cb) {
   const contract = getContract(
     network,
     devCollectionAddress,
-    ERC721EnumerableAbi,
+    // ERC721EnumerableAbi,
+    NFTCollectionAbi,
   );
   var nftCount;
   if (wAddr === undefined) {
