@@ -2,6 +2,8 @@
  *
  * @type {{chains: {}, contracts: {}, contractABIs: {NFTCollection: {}, erc20: [], erc721: []}}}
  */
+import {abi as NFTCollectionAbi} from './wallet/NFTCollection.json';
+
 export const financeConfig = {
   chains: {
     spectrum: {
@@ -37,9 +39,9 @@ export const financeConfig = {
         ],
         nft: [
           {
-            address: '0x0dcc00b3f7c664aaa884c87a66f7a0ce80d9367c',
+            address: '0x221b9814d507bC912534A96C37a15356cc995C0E',
             decmis: 0,
-            symbol: 'Mesh',
+            symbol: 'GGT',
           },
         ],
       },
@@ -68,10 +70,16 @@ export const financeConfig = {
         symbol: 'MLT',
         abi: 'erc20',
       },
+      GGT: {
+        address: '0x221b9814d507bC912534A96C37a15356cc995C0E',
+        decmis: 0,
+        symbol: 'GGT',
+        abi: 'NFTCollectionAbi',
+      },
     },
   },
   contractABIs: {
-    NFTCollection: [],
+    NFTCollectionAbi: NFTCollectionAbi,
     erc20: [
       {
         anonymous: false,
