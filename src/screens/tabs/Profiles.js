@@ -1,13 +1,26 @@
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {Image, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View,} from 'react-native';
+import {
+  Image,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
 import {getPubsRewardTotal} from '../../remote/pubOP';
-import {getWBalance, getWBalanceByContract,} from '../../remote/wallet/WalletAPI';
+import {
+  getWBalance,
+  getWBalanceByContract,
+} from '../../remote/wallet/WalletAPI';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {getCurrentAccount} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
+import {callAuto, callOnce} from '../../remote/contractOP';
+import {RoundBtn} from '../../metalife-base';
 
 const Profiles = ({feedId, wallet, setBalance}) => {
   const {
@@ -27,12 +40,11 @@ const Profiles = ({feedId, wallet, setBalance}) => {
   const {navigate} = useNavigation();
   const [amount, setAmount] = useState(0);
 
-  useEffect(() => {
-    // getNFTInfos('0x993f846fdc1dd6de2abf3087424af0bc36a7cd78', info =>
-    //   console.log(info),
-    // );
-  }, []);
+  useFocusEffect(() => {
+    callAuto();
+  });
 
+  // todo: refactor to wallet API
   const getInfo = () => {
     if (type === 'spectrum') {
       getWBalanceByContract(type, 'MLT', address, res => {
@@ -68,6 +80,7 @@ const Profiles = ({feedId, wallet, setBalance}) => {
   useEffect(() => {
     getInfo();
   }, []);
+  // todo: refactor end
 
   return (
     <ScrollView
@@ -106,7 +119,7 @@ const Profiles = ({feedId, wallet, setBalance}) => {
           <Text style={[text, styles.mlt]}>{amount}</Text>
         </View>
       </Pressable>
-      {/*<RoundBtn title={'contact test'} press={() => callOnce(console.log)} />*/}
+      <RoundBtn title={'contact test'} press={callOnce} />
       <View style={[styles.earnContainer, flex1]}>
         <View style={[row, flex1, justifySpaceBetween, alignItemsCenter]}>
           <Text style={[text, styles.earnText]}>NFT</Text>
