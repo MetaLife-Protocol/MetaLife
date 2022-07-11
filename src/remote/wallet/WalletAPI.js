@@ -112,7 +112,13 @@ export function getWBalanceByContract(type, cType, wAddr, cb) {
     wAddr,
   )
     .then(value => {
-      cb && cb(bigNumberFormatUnits(value));
+      cb &&
+        cb(
+          bigNumberFormatUnits(
+            value,
+            financeConfig.contracts[type][cType].decmis,
+          ),
+        );
     })
     .catch(console.warn);
 }

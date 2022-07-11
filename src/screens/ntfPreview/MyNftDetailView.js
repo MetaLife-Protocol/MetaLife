@@ -17,7 +17,7 @@ const btn = require('../../assets/image/profiles/photo.png');
 const down = require('../../assets/image/nft/arrow_down.png');
 const uparr = require('../../assets/image/nft/up_arrow.png');
 
-const MyNftDetailView = () => {
+const MyNftDetailView = ({data}) => {
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   const [isShow, setIsShow] = useState([false]);
   const downPress = useCallback(() => {
@@ -31,9 +31,7 @@ const MyNftDetailView = () => {
     <ScrollView style={[flex1, BG]} showsVerticalScrollIndicator={false}>
       <FastImage source={bg} style={styles.topImg} />
       <View style={[FG, styles.topView]}>
-        <Text style={{color: colorsBasics.primary}}>
-          {'PXN: Ghost Division'}
-        </Text>
+        <Text style={{color: colorsBasics.primary}}>{`PXN: ${data.name}`}</Text>
         <Text style={[text, styles.bend]}>{'julie pacino:Aroud the bend'}</Text>
         <Text style={[text, styles.under]}>
           {'The underbelly of Web3.A shadow wague,formless, but eternal'}
@@ -62,10 +60,7 @@ const MyNftDetailView = () => {
               <Image source={btn} style={styles.ghImg} />
               <Text style={styles.ghText}>{'PXN: Ghost Division'}</Text>
             </View>
-            <Text style={styles.ghDetail}>
-              {'Chimpers are a collection of 5,555 generative NFT pixel characters created by @TimpersHD. Chimpers are your ' +
-                'digital identity for the Chimpverse and your passport to adventure. !CHIMP'}
-            </Text>
+            <Text style={styles.ghDetail}>{data.description}</Text>
           </>
         ) : null}
         <View style={styles.line} />
@@ -224,7 +219,9 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {};
+  return {
+    data: {},
+  };
 };
 
 export default connect(msp, mdp)(MyNftDetailView);

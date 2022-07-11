@@ -6,6 +6,10 @@
 import React from 'react';
 import {Text, View, StyleSheet, Image, useWindowDimensions} from 'react-native';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
+import FastImage from 'react-native-fast-image';
+import {ipfsBaseURL} from '../../../remote/ipfsOP';
+// const gateways = 'metalife.mypinata.cloud';
+// const ipfsBaseURL = `https://${gateways}/ipfs/`;
 
 const NftItem = ({item, index}) => {
   const windowWidth = useWindowDimensions().width;
@@ -17,10 +21,11 @@ const NftItem = ({item, index}) => {
     index % 2 === 0
       ? {marginLeft: 10, marginRight: 5}
       : {marginLeft: 5, marginRight: 10};
+  // console.log(ipfsBaseURL + item.image.split('ipfs://')[1]);
   return (
     <View style={[styles.container, FG, {width: itemWidth}, itemMargin]}>
-      <Image
-        source={require('../../../assets/image/contacts/nft_icon.png')}
+      <FastImage
+        source={{uri: ipfsBaseURL + item?.image.split('ipfs://')[1]}}
         style={[
           styles.img,
           {
