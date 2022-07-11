@@ -19,7 +19,7 @@ import PostMsgEditor from './screens/tabs/home/post/PostMsgEditor';
 import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
-import Pubs from './screens/tabs/profiles/Pubs';
+import Pubs, {reconnect2pub} from './screens/tabs/profiles/Pubs';
 import {
   Image,
   ImageBackground,
@@ -39,7 +39,7 @@ import Mnemonic from './shared/screens/Mnemonic';
 import {startSSB} from './remote/ssb/starter';
 import {initializeHandlers} from './remote/ssb/SsbListeners';
 import {checkAddon} from './remote/ssb/SsbHandlers';
-import {getConnectedPeers} from './remote/ssb/ssbOP';
+import {getConnectedPeers, inviteAccept} from './remote/ssb/ssbOP';
 import {useStore} from 'react-redux';
 import nodejs from 'nodejs-mobile-react-native';
 import Resync from './screens/guid/Resync';
@@ -82,6 +82,7 @@ import EarningsShare from './screens/tabs/profiles/earnings/EarningsShare';
 import NftCollectionDetail from './screens/ntfPreview/NftCollectionDetail';
 import MyNftDetailView from './screens/ntfPreview/MyNftDetailView';
 import DaoContentView from './screens/daoPreview/DaoContentView';
+import {pubHostByIp} from './remote/pubOP';
 
 process.nextTick = process.nextTick || setImmediate;
 
@@ -96,6 +97,7 @@ const App = ({
   wallet,
   setCurrent,
   masked,
+  suggestPubs,
 }) => {
   const {barStyle, row, theme, justifySpaceBetween, alignItemsCenter} =
     useSchemaStyles();
@@ -129,7 +131,23 @@ const App = ({
     window.ssb ||
       startSSB().then(ssb => {
         window.ssb = ssb;
-        setFeedId(ssb.id);
+        feedId ||
+          (setFeedId(ssb.id),
+          // join suggest pub for first entry
+          pubHostByIp()
+            .then(value => {
+              const respObj = JSON.parse(value._bodyText);
+              suggestPubs(respObj.data);
+              inviteAccept(
+                respObj.data.first_choice_pub_invite_code,
+                (e, v) => {
+                  console.log(e ? e.message : 'invite accepted');
+                  e || reconnect2pub();
+                },
+              );
+            })
+            .catch(console.warn));
+        // resync if restore mode
         resync ||
           (initializeHandlers(store),
           checkAddon('launch'),
@@ -490,6 +508,7 @@ const mdp = d => {
     setViewImages: imgs => d({type: 'images', payload: imgs}),
     walletCreateAccount: payload => d({type: 'walletCreateAccount', payload}),
     setCurrent: payload => d({type: 'setCurrent', payload}),
+    suggestPubs: payload => d({type: 'suggestPubs', payload}),
   };
 };
 

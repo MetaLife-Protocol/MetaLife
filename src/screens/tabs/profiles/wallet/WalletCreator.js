@@ -29,6 +29,7 @@ import Toast from 'react-native-tiny-toast';
 import {getMnemonic, inviteAccept} from '../../../../remote/ssb/ssbOP';
 import {shuffle} from '../../../../utils';
 import {presetPubs, reconnect2pub} from '../Pubs';
+import {pubHostByIp} from '../../../../remote/pubOP';
 
 const icons = {
   deleteW: require('../../../../assets/image/wallet/Login_icon_delete_white.png'),
@@ -51,6 +52,7 @@ const WalletCreator = ({
   wallet,
   walletCreateAccount,
   setCurrent,
+  suggestPubs,
 }) => {
   const {flex1, FG, text, marginTop10} = useSchemaStyles(),
     {textHolder} = colorsSchema,
@@ -200,34 +202,6 @@ const WalletCreator = ({
                       };
                       walletCreateAccount(account);
                       setCurrent({type: 'spectrum', index: 0});
-                      // getWBalance('spectrum', address, setBalance);
-                      // join pub 1
-                      inviteAccept(presetPubs[0].invite, (e, v) => {
-                        // inviteAccept(presetPubs[1].invite, (e, v) => {
-                        console.log(e ? e.message : 'invite accepted');
-                        e || reconnect2pub();
-                      });
-                      // join pub 2
-                      inviteAccept(presetPubs[1].invite, (e, v) => {
-                        // inviteAccept(presetPubs[1].invite, (e, v) => {
-                        console.log(e ? e.message : 'invite accepted');
-                        e || reconnect2pub();
-                      });
-                      // register pub
-                      // checkPubExist(pubs, presetPubs[0]) &&
-                      //   bindIDAndWallet(
-                      //     {
-                      //       client_id: feedId,
-                      //       client_eth_address: checkSum(
-                      //         '0x' + address.toString(),
-                      //       ),
-                      //     },
-                      //     console.log,
-                      //   );
-                      // start photon
-                      // exportAccountPrivateKey(address, pw, ({_, privateKey}) =>
-                      //   initPhoton({privateKey, address}),
-                      // );
                       Toast.hide();
                       replace('WalletBackup', {
                         ...params,

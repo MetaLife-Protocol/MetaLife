@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
-import {getPubsRewardTotal} from '../../remote/pubOP';
+import {getPubsRewardTotal, pubHostByIp} from '../../remote/pubOP';
 import {
   getWBalance,
   getWBalanceByContract,
@@ -41,7 +41,10 @@ const Profiles = ({feedId, wallet, setBalance}) => {
   const [amount, setAmount] = useState(0);
 
   useFocusEffect(() => {
-    callAuto();
+    // callAuto();
+    pubHostByIp()
+      .then(value => console.log(JSON.parse(value._bodyText).data))
+      .catch(console.warn);
   });
 
   // todo: refactor to wallet API

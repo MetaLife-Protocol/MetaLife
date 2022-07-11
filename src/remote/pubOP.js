@@ -7,7 +7,7 @@ const pubIp = ['106.52.171.12', '13.213.41.31'];
 const port = ['10008'];
 const url = `http://${pubIp[0]}:${port[0]}/ssb/api/`;
 const url2 = `http://${pubIp[1]}:${port[0]}/ssb/api/`;
-const api = ['tipped-who-off', 'id2eth'];
+const api = ['tipped-who-off', 'id2eth', 'get-pubhost-by-ip'];
 
 /**
  * Body:
@@ -36,6 +36,10 @@ export function report(params, cb) {
   })
     .then(r => cb(JSON.parse(r._bodyText).data))
     .catch(console.warn);
+}
+
+export function pubHostByIp() {
+  return fetch(url + api[2]);
 }
 
 /**
