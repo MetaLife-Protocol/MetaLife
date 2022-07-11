@@ -41,7 +41,7 @@ const Profiles = ({feedId, wallet, setBalance}) => {
   const [amount, setAmount] = useState(0);
 
   useFocusEffect(() => {
-    callAuto();
+    // callAuto();
   });
 
   // todo: refactor to wallet API
