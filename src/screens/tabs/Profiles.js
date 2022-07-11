@@ -119,7 +119,7 @@ const Profiles = ({feedId, wallet, setBalance}) => {
           <Text style={[text, styles.mlt]}>{amount}</Text>
         </View>
       </Pressable>
-      <RoundBtn title={'contact test'} press={callOnce} />
+      {/* <RoundBtn title={'contact test'} press={callOnce} /> */}
       <View style={[styles.earnContainer, flex1]}>
         <View style={[row, flex1, justifySpaceBetween, alignItemsCenter]}>
           <Text style={[text, styles.earnText]}>NFT</Text>
