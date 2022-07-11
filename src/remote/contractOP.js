@@ -59,6 +59,7 @@ async function getCollectionInfo(cb) {
   const contract = getContract(network, devCollectionAddress, NFTCollectionAbi);
   const name = await contract.name();
   const symbol = await contract.symbol();
+  const owner = await contract.owner();
   const metaInfo = await contract.metaInfo();
   const totalSupply = (await contract.totalSupply()).toNumber();
   const maxSupply = (await contract.MAX_SUPPLY()).toNumber();
@@ -70,6 +71,7 @@ async function getCollectionInfo(cb) {
     cb({
       name,
       symbol,
+      owner,
       metaInfo,
       totalSupply,
       maxSupply,
