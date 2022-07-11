@@ -20,11 +20,11 @@ const network = financeConfig.chains.spectrum.rpcURL,
   collectionAddress = '';
 
 export async function callAuto() {
-  console.log(await getCollectionInfo(console.log));
+  getNFTInfos(undefined, console.log);
 }
 
 export async function callOnce() {
-  console.log(await getNFTInfos(undefined, console.log));
+  getCollectionInfo(console.log);
 }
 
 async function getOwnedCollections(keystore, pw, walletAddress) {
@@ -60,6 +60,7 @@ async function getCollectionInfo(cb) {
   const name = await contract.name();
   const symbol = await contract.symbol();
   const owner = await contract.owner();
+  const address = contract.address;
   const metaInfo = await contract.metaInfo();
   const totalSupply = (await contract.totalSupply()).toNumber();
   const maxSupply = (await contract.MAX_SUPPLY()).toNumber();
@@ -72,6 +73,7 @@ async function getCollectionInfo(cb) {
       name,
       symbol,
       owner,
+      address,
       metaInfo,
       totalSupply,
       maxSupply,
@@ -129,7 +131,6 @@ export async function getNFTInfos(wAddr = undefined, cb) {
 
   let nftInfos = [];
 
-  console.log(contract);
   for await (const idx of token_idxs) {
     var token_id;
     if (wAddr === undefined) {
