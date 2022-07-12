@@ -25,7 +25,7 @@ const NftItem = ({item, index}) => {
   return (
     <View style={[styles.container, FG, {width: itemWidth}, itemMargin]}>
       <FastImage
-        source={{uri: ipfsBaseURL + item?.image.split('ipfs://')[1]}}
+        source={{uri: ipfsBaseURL + item?.image?.split('ipfs://')[1]}}
         style={[
           styles.img,
           {
@@ -35,7 +35,7 @@ const NftItem = ({item, index}) => {
         ]}
       />
       <Text style={styles.text1}>{`PXN: ${item.name}`}</Text>
-      <Text style={[text, styles.text2]}>Ghost #2039Ghost #2037</Text>
+      <Text style={[text, styles.text2]}>{`Ghost #${item.id}`}</Text>
     </View>
   );
 };

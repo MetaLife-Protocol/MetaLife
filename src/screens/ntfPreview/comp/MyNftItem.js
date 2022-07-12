@@ -12,7 +12,7 @@ const MyNftItem = ({}) => {
   const {navigate} = useNavigation();
   const renderItem = ({item, index}) => {
     return (
-      <Pressable onPress={() => navigate('MyNftDetailView')}>
+      <Pressable onPress={() => navigate('MyNftDetailView', {item: {}})}>
         <NftItem index={index} />
       </Pressable>
     );
@@ -23,7 +23,7 @@ const MyNftItem = ({}) => {
   return (
     <View style={{flex: 1}}>
       <FlatList
-        data={[{}, {}, {}]}
+        data={[]}
         numColumns={2}
         renderItem={renderItem}
         style={styles.flatList}

@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  Pressable,
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import Text from '../../shared/screens/Text';
@@ -14,6 +15,7 @@ import FastImage from 'react-native-fast-image';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import ListEmpty from '../ntfPreview/comp/ListEmpty';
 import Slider from '@react-native-community/slider';
+import Toast from 'react-native-tiny-toast';
 const headImg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const votimg = require('../../assets/image/icons/finance.png');
 
@@ -22,12 +24,12 @@ const DaoDetailView = () => {
   const emptyComponent = () => {
     return <ListEmpty />;
   };
-  const renderItem = ({}) => {
+  const renderItem = ({item}) => {
     return (
       <View style={[FG, styles.introduces]}>
         <View style={styles.financeView}>
           <FastImage source={votimg} style={styles.finance} />
-          <Text style={[text, styles.votText]}>Voting</Text>
+          <Text style={[text, styles.votText]}>{item.icon}</Text>
           <View style={flex1} />
           <Text style={[text]}>{'Open'}</Text>
         </View>
@@ -35,17 +37,19 @@ const DaoDetailView = () => {
           #32: Include an image import option or a gallery within the proposal
           function
         </Text>
-        <Text style={[styles.turnText]}>Turnout(215/431)</Text>
+        <Text style={[styles.turnText]}>{`Turnout(${item.text})`}</Text>
         <View style={styles.slider}>
           <Slider
             style={{width: 300, height: 40, marginLeft: -10}}
             minimumValue={0}
             maximumValue={1}
+            value={item.num}
             thumbTintColor="#29DAD7"
             minimumTrackTintColor="#29DAD7"
             maximumTrackTintColor="#DADADA"
+            // disabled={true}
           />
-          <Text style={[text]}>{'50%'}</Text>
+          <Text style={[text]}>{item.percent}</Text>
         </View>
       </View>
     );
@@ -71,15 +75,23 @@ const DaoDetailView = () => {
       </View>
       <Text style={[text, styles.event]}>Events</Text>
       <FlatList
-        data={[{}, {}, {}]}
+        data={[
+          {text: '215/431', percent: '50%', icon: 'Voting', num: 0.5},
+          {text: '353/431', percent: '82%', icon: 'Finance', num: 0.8},
+          {text: '35/431', percent: '8%', icon: 'Finance', num: 0.1},
+        ]}
         renderItem={renderItem}
         style={styles.flatList}
         ListEmptyComponent={emptyComponent}
         keyExtractor={(item, index) => item + index}
       />
-      <View style={styles.joinView}>
+      <Pressable
+        style={styles.joinView}
+        onPress={() => {
+          Toast.show('Failed. Admission by NFT.');
+        }}>
         <Text>Join</Text>
-      </View>
+      </Pressable>
     </ScrollView>
   );
 };
