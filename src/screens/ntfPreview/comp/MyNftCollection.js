@@ -9,21 +9,21 @@ import ListEmpty from './ListEmpty';
 import {getCollectionInfo, getNFTInfos} from '../../../remote/contractOP';
 import {getNftAssetsJson} from '../../../remote/ipfsOP';
 
-const MyNftCollection = ({navigation, addCollections, addNft}) => {
-  useEffect(() => {
-    getCollectionInfo(value => {
-      addCollections(value);
-      getNFTInfos(undefined, nftCInfo => {
-        getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
-          nftJInfo.headers['content-type'] === 'application/json' &&
-            addNft({
-              ...nftCInfo,
-              ...nftJInfo.data,
-            });
-        });
-      });
-    });
-  }, []);
+const MyNftCollection = ({navigation}) => {
+  // useEffect(() => {
+  //   getCollectionInfo(value => {
+  //     addCollections(value);
+  //     getNFTInfos(undefined, nftCInfo => {
+  //       getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
+  //         nftJInfo.headers['content-type'] === 'application/json' &&
+  //           addNft({
+  //             ...nftCInfo,
+  //             ...nftJInfo.data,
+  //           });
+  //       });
+  //     });
+  //   });
+  // }, []);
 
   const renderItem = ({item}) => {
     return (
@@ -68,8 +68,8 @@ const msp = s => {
 
 const mdp = d => {
   return {
-    addCollections: payload => d({type: 'addCollections', payload}),
-    addNft: payload => d({type: 'addNft', payload}),
+    // addCollections: payload => d({type: 'addCollections', payload}),
+    // addNft: payload => d({type: 'addNft', payload}),
   };
 };
 
