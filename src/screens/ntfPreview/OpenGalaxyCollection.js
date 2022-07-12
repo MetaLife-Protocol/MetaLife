@@ -16,7 +16,9 @@ const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
     getCollectionInfo(value => {
       addCollections(value);
       getNFTInfos(undefined, nftCInfo => {
+        console.log('collection got: ', nftCInfo);
         getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
+          console.log('nft got: ', nftJInfo);
           nftJInfo.headers['content-type'] === 'application/json' &&
             addNft({
               ...nftCInfo,

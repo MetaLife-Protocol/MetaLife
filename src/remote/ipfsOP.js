@@ -20,7 +20,7 @@ export const ipfsBaseURL = `https://${gateways}/ipfs/`;
 export function getNftAssetsJson(uri) {
   const cid = uri.split('/').pop();
   return axios.get(ipfsBaseURL + cid, {
-    maxBodyLength: 'Infinity', //this is needed to prevent axios from erroring out with large files
+    maxBodyLength: 'Infinity', //this is needed to prevent axios from error out with large files
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
