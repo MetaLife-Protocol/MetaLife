@@ -11,7 +11,7 @@ import {ipfsBaseURL} from '../../../remote/ipfsOP';
 // const gateways = 'metalife.mypinata.cloud';
 // const ipfsBaseURL = `https://${gateways}/ipfs/`;
 
-const NftItem = ({item, index}) => {
+const NftItem = ({item, index, symbol}) => {
   const windowWidth = useWindowDimensions().width;
   const {text, FG} = useSchemaStyles();
 
@@ -34,8 +34,10 @@ const NftItem = ({item, index}) => {
           },
         ]}
       />
-      <Text style={styles.text1}>{`PXN: ${item.name}`}</Text>
-      <Text style={[text, styles.text2]}>{`Ghost #${item.id}`}</Text>
+      <Text style={styles.text1}>{`${item.name}`}</Text>
+      <Text style={[text, styles.text2]}>{`${symbol || 'GGT'} #${
+        item.id
+      }`}</Text>
     </View>
   );
 };

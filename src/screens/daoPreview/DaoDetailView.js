@@ -39,16 +39,27 @@ const DaoDetailView = () => {
         </Text>
         <Text style={[styles.turnText]}>{`Turnout(${item.text})`}</Text>
         <View style={styles.slider}>
-          <Slider
-            style={{width: 300, height: 40, marginLeft: -10}}
-            minimumValue={0}
-            maximumValue={1}
-            value={item.num}
-            thumbTintColor="#29DAD7"
-            minimumTrackTintColor="#29DAD7"
-            maximumTrackTintColor="#DADADA"
-            // disabled={true}
-          />
+          {/*<Slider*/}
+          {/*  style={{width: 300, height: 40, marginLeft: -10}}*/}
+          {/*  minimumValue={0}*/}
+          {/*  maximumValue={1}*/}
+          {/*  value={item.num}*/}
+          {/*  thumbTintColor="#29DAD7"*/}
+          {/*  minimumTrackTintColor="#29DAD7"*/}
+          {/*  maximumTrackTintColor="#DADADA"*/}
+          {/*  // disabled={true}*/}
+          {/*/>*/}
+          <View style={styles.lineView}>
+            <View
+              style={{
+                width: 266 * item.num,
+                height: 3.5,
+                backgroundColor: '#29DAD7',
+                borderRadius: 1.75,
+              }}
+            />
+            <View style={styles.dot} />
+          </View>
           <Text style={[text]}>{item.percent}</Text>
         </View>
       </View>
@@ -182,6 +193,8 @@ const styles = StyleSheet.create({
   slider: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
   },
   joinView: {
     width: 345,
@@ -192,6 +205,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+  },
+  dot: {
+    width: 13,
+    height: 13,
+    borderRadius: 13,
+    backgroundColor: '#29DAD7',
+    top: -5,
+  },
+  lineView: {
+    width: 266,
+    height: 3.5,
+    borderRadius: 1.75,
+    backgroundColor: '#DADADA',
+    marginLeft: 2,
+    flexDirection: 'row',
   },
 });
 
