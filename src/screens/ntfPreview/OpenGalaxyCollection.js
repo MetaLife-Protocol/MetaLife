@@ -3,7 +3,7 @@
  *
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import ComCollectItem from './comp/ComCollectItem';
@@ -12,9 +12,12 @@ import {getCollectionInfo, getNFTInfos} from '../../remote/contractOP';
 import {getNftAssetsJson} from '../../remote/ipfsOP';
 
 const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
+  const [info, setInfo] = useState({});
   useEffect(() => {
     getCollectionInfo(value => {
+      console.log('ddddd', value);
       addCollections(value);
+      setInfo(value);
       getNFTInfos(undefined, nftCInfo => {
         console.log('collection got: ', nftCInfo);
         getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
@@ -32,7 +35,7 @@ const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('NftCollectionDetail');
+          navigation.navigate('NftCollectionDetail', {item: item});
         }}>
         <ComCollectItem item={item} />
       </TouchableOpacity>
@@ -44,7 +47,7 @@ const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
   return (
     <View style={{flex: 1}}>
       <FlatList
-        data={[{}]}
+        data={[info]}
         numColumns={2}
         renderItem={renderItem}
         style={styles.flatList}

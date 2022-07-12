@@ -1,35 +1,36 @@
 /**
  * Nft Item
  */
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import ComCollectItem from './ComCollectItem';
 import ListEmpty from './ListEmpty';
 import {getCollectionInfo, getNFTInfos} from '../../../remote/contractOP';
-import {getNftAssetsJson} from '../../../remote/ipfsOP';
 
 const MyNftCollection = ({navigation}) => {
-  // useEffect(() => {
-  //   getCollectionInfo(value => {
-  //     addCollections(value);
-  //     getNFTInfos(undefined, nftCInfo => {
-  //       getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
-  //         nftJInfo.headers['content-type'] === 'application/json' &&
-  //           addNft({
-  //             ...nftCInfo,
-  //             ...nftJInfo.data,
-  //           });
-  //       });
-  //     });
-  //   });
-  // }, []);
+  const [info, setInfo] = useState({});
+  useEffect(() => {
+    getCollectionInfo(value => {
+      setInfo(value);
+      // addCollections(value);
+      // getNFTInfos(undefined, nftCInfo => {
+      //   getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
+      //     nftJInfo.headers['content-type'] === 'application/json' &&
+      //       addNft({
+      //         ...nftCInfo,
+      //         ...nftJInfo.data,
+      //       });
+      //   });
+      // });
+    });
+  }, []);
 
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('NftCollectionDetail');
+          navigation.navigate('NftCollectionDetail', {item: item});
         }}>
         <ComCollectItem item={item} />
       </TouchableOpacity>
@@ -41,7 +42,7 @@ const MyNftCollection = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
       <FlatList
-        data={[{}]}
+        data={[info]}
         numColumns={2}
         renderItem={renderItem}
         style={styles.flatList}

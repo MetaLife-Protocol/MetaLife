@@ -13,7 +13,7 @@ import useSchemaStyles from '../../../shared/UseSchemaStyles';
 const width = Dimensions.get('window').width;
 const bg = require('../../../assets/image/nft/collection_bg.png');
 const btn = require('../../../assets/image/nft/tiny_head.png');
-const ComCollectItem = () => {
+const ComCollectItem = ({item}) => {
   const {text, alignItemsCenter, justifyCenter, flex1, BG, FG} =
     useSchemaStyles();
   return (
@@ -23,8 +23,8 @@ const ComCollectItem = () => {
           <FastImage source={btn} style={styles.imageBtn} />
         </View>
       </ImageBackground>
-      <Text style={[text, styles.top]}>{'PXN:Ghost Division'}</Text>
-      <Text style={styles.bottom}>Phantom</Text>
+      <Text style={[text, styles.top]}>{item.symbol || 'GGT'}</Text>
+      <Text style={styles.bottom}>{item.name || 'Genesis GWEITEST'}</Text>
     </View>
   );
 };

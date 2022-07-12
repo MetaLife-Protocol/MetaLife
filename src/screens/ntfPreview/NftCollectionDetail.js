@@ -11,18 +11,22 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
-import FastImage from "react-native-fast-image";
+import FastImage from 'react-native-fast-image';
 import NftItem from './comp/NftItem';
 const nftHead = require('../../assets/image/nft/nft_head.png');
 
-const NftCollectionDetail = ({darkMode, nft}) => {
+const NftCollectionDetail = ({route: {params}, darkMode, nft}) => {
+  const {item} = params;
   const nftKey = Object.keys(nft).length > 0 ? Object.keys(nft)[0] : '',
     nfts = nftKey
       ? nft[nftKey].nfts && nft[nftKey].nfts.length > 0
         ? nft[nftKey].nfts
         : []
       : [];
-  console.log(nftKey, nfts);
+  const info = nft[nftKey].metaInfo;
+  const symbol = nft[nftKey].symbol;
+  const name = nft[nftKey].name;
+  console.log('nftnftnft', nft);
   const {text, alignItemsCenter, justifyCenter, flex1, BG, FG} =
     useSchemaStyles();
   const windowWidth = useWindowDimensions().width;
@@ -41,10 +45,10 @@ const NftCollectionDetail = ({darkMode, nft}) => {
           </Pressable> */}
         </ImageBackground>
         <FastImage style={[styles.roundView]} source={nftHead} />
-        <Text style={[text, styles.title]}>PXN: Ghost Division</Text>
-        <Text style={[styles.desc]}>
-          The underbelly of Web3. A shadow vague, formless, but eternal.
-        </Text>
+        <Text style={[text, styles.title]}>{`${item?.symbol || symbol}: ${
+          item?.name || name
+        }`}</Text>
+        <Text style={[styles.desc]}>{item?.metaInfo || info}</Text>
       </View>
     );
   };
