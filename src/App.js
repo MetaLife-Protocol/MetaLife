@@ -86,8 +86,6 @@ import {pubHostByIp} from './remote/pubOP';
 import DaoDetailView from './screens/daoPreview/DaoDetailView';
 import OpenGalaxyCollection from './screens/ntfPreview/OpenGalaxyCollection';
 
-process.nextTick = process.nextTick || setImmediate;
-
 const App = ({
   feedId,
   resync,
