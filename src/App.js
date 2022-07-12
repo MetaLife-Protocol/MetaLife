@@ -111,7 +111,6 @@ const App = ({
 
   function saveHandler({nativeEvent: {data}}) {
     const {type, content} = JSON.parse(data);
-    let path;
     switch (type) {
       case 'capture':
         Platform.OS === 'ios'
@@ -131,22 +130,21 @@ const App = ({
     window.ssb ||
       startSSB().then(ssb => {
         window.ssb = ssb;
-        feedId ||
-          (setFeedId(ssb.id),
+        if (!feedId) {
+          setFeedId(ssb.id);
           // join suggest pub for first entry
           pubHostByIp()
-            .then(value => {
-              const respObj = JSON.parse(value._bodyText);
-              suggestPubs(respObj.data);
-              inviteAccept(
-                respObj.data.first_choice_pub_invite_code,
-                (e, v) => {
+            .then(value =>
+              value.json().then(({data}) => {
+                suggestPubs(data);
+                inviteAccept(data.first_choice_pub_invite_code, (e, v) => {
                   console.log(e ? e.message : 'invite accepted');
                   e || reconnect2pub();
-                },
-              );
-            })
-            .catch(console.warn));
+                });
+              }),
+            )
+            .catch(console.warn);
+        }
         // resync if restore mode
         resync ||
           (initializeHandlers(store),
