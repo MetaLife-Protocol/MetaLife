@@ -3,6 +3,8 @@
  *
  */
 
+import axios from 'axios';
+
 const pubIp = ['106.52.171.12', '13.213.41.31'];
 const port = ['10008'];
 const url = `http://${pubIp[0]}:${port[0]}/ssb/api/`;
@@ -64,79 +66,74 @@ export function bindIDAndWallet(params, cb, pubNum) {
     .catch(console.warn);
 }
 
-export function getPubsRewardList(params) {
-  const pub1 = new Promise((resovle, reject) => {
-    fetch(url + 'get-reward-info', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-      .then(res => res.json())
-      .then(res =>
-        resovle(
-          res.data
-            .filter(it => it.grant_success === 'success')
-            .map(it => {
-              it.pub = 'MetaLife Planet 1';
-              return it;
-            }),
-        ),
-      )
-      .catch(e => reject(e));
-  });
-  const pub2 = new Promise((resovle, reject) => {
-    fetch(url2 + 'get-reward-info', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(params),
-    })
-      .then(res => res.json())
-      .then(res =>
-        resovle(
-          res.data
-            .filter(it => it.grant_success === 'success')
-            .map(it => {
-              it.pub = 'MetaLife Planet 2';
-              return it;
-            }),
-        ),
-      )
-      .catch(e => reject(e));
-  });
-  return Promise.all([pub1, pub2]);
+export async function getPubsRewardList(params) {
+  const config = {
+    timeout: 3000,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  let result = [];
+  try {
+    const pub1 = await axios.post(url + 'get-reward-info', params, config);
+    if (pub1.status === 200 && pub1.data.error_code === 0) {
+      result = result.concat(
+        pub1.data.data
+          .filter(it => it.grant_success === 'success')
+          .map(it => {
+            it.pub = 'MetaLife Planet 1';
+            return it;
+          }),
+      );
+    }
+  } catch (e) {}
+  try {
+    const pub2 = await axios.post(url2 + 'get-reward-info', params, config);
+    if (pub2.status === 200 && pub2.data.error_code === 0) {
+      result = result.concat(
+        pub2.data.data
+          .filter(it => it.grant_success === 'success')
+          .map(it => {
+            it.pub = 'MetaLife Planet 1';
+            return it;
+          }),
+      );
+    }
+  } catch (e) {}
+  return result;
 }
-export function getPubsRewardTotal(params) {
+export async function getPubsRewardTotal(params) {
   const postParams = {
     ...params,
     grant_success: 'success',
   };
-  const pub1 = new Promise((resovle, reject) => {
-    fetch(url + 'get-reward-subtotals', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(postParams),
-    })
-      .then(res => res.json())
-      .then(res => resovle(res.data))
-      .catch(e => reject(e));
-  });
-  const pub2 = new Promise((resovle, reject) => {
-    fetch(url2 + 'get-reward-subtotals', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(postParams),
-    })
-      .then(res => res.json())
-      .then(res => resovle(res.data))
-      .catch(e => reject(e));
-  });
-  return Promise.all([pub1, pub2]);
+  const config = {
+    timeout: 3000,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  let result = [];
+  try {
+    const pub1 = await axios.post(
+      url + 'get-reward-subtotals',
+      postParams,
+      config,
+    );
+    if (pub1.status === 200 && pub1.data.error_code === 0) {
+      result = result.concat(pub1.data.data);
+    }
+  } catch (e) {}
+  try {
+    const pub2 = await axios.post(
+      url2 + 'get-reward-subtotals',
+      postParams,
+      config,
+    );
+    if (pub2.status === 200 && pub2.data.error_code === 0) {
+      result = result.concat(pub2.data.data);
+    }
+  } catch (e) {}
+
+  return result;
 }

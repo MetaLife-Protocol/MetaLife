@@ -60,9 +60,7 @@ const Earnings = ({feedId}) => {
       time_to: Date.now(),
     })
       .then(res => {
-        const list = res[0]
-          .concat(res[1])
-          .sort((a, b) => b.reward_time - a.reward_time);
+        const list = res.sort((a, b) => b.reward_time - a.reward_time);
         setRewardList(list);
       })
       .catch(e => console.warn(e));
@@ -72,9 +70,8 @@ const Earnings = ({feedId}) => {
       time_to: Date.now(),
     })
       .then(res => {
-        console.log('total', res);
         let total = 0;
-        const list = res[0].concat(res[1]);
+        const list = res;
         for (let i = 0; i < list.length; i++) {
           total = list[i].grant_token_amount_subtotals + total;
         }

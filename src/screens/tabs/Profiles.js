@@ -67,7 +67,7 @@ const Profiles = ({feedId, wallet, setBalance}) => {
     })
       .then(res => {
         let total = 0;
-        const list = res[0].concat(res[1]);
+        const list = res;
         for (let i = 0; i < list.length; i++) {
           total = list[i].grant_token_amount_subtotals + total;
         }
