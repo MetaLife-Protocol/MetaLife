@@ -23,9 +23,9 @@ const NftCollectionDetail = ({route: {params}, darkMode, nft}) => {
         ? nft[nftKey].nfts
         : []
       : [];
-  const info = nft[nftKey].metaInfo;
-  const symbol = nft[nftKey].symbol;
-  const name = nft[nftKey].name;
+  const info = nft[nftKey]?.metaInfo;
+  const symbol = nft[nftKey]?.symbol;
+  const name = nft[nftKey]?.name;
   console.log('nftnftnft', nft);
   const {text, alignItemsCenter, justifyCenter, flex1, BG, FG} =
     useSchemaStyles();
