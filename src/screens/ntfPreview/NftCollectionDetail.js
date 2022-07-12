@@ -52,10 +52,10 @@ const NftCollectionDetail = ({feedId, nft}) => {
       {/* <Header /> */}
       <FlatList
         ListHeaderComponent={<Header />}
-        data={[]}
+        data={nfts}
         numColumns={2}
         renderItem={({item, index}) => (
-          <Pressable onPress={() => navigate('MyNftDetailView')}>
+          <Pressable onPress={() => navigate('MyNftDetailView', {item: item})}>
             <NftItem index={index} item={item} />
           </Pressable>
         )}

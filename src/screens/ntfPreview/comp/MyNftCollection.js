@@ -1,13 +1,30 @@
 /**
  * Nft Item
  */
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import ComCollectItem from './ComCollectItem';
 import ListEmpty from './ListEmpty';
+import {getCollectionInfo, getNFTInfos} from '../../../remote/contractOP';
+import {getNftAssetsJson} from '../../../remote/ipfsOP';
 
-const MyNftCollection = ({navigation}) => {
+const MyNftCollection = ({navigation, addCollections, addNft}) => {
+  useEffect(() => {
+    getCollectionInfo(value => {
+      addCollections(value);
+      getNFTInfos(undefined, nftCInfo => {
+        getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
+          nftJInfo.headers['content-type'] === 'application/json' &&
+            addNft({
+              ...nftCInfo,
+              ...nftJInfo.data,
+            });
+        });
+      });
+    });
+  }, []);
+
   const renderItem = ({item}) => {
     return (
       <TouchableOpacity
@@ -24,7 +41,7 @@ const MyNftCollection = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
       <FlatList
-        data={[{}, {}, {}]}
+        data={[{}]}
         numColumns={2}
         renderItem={renderItem}
         style={styles.flatList}
@@ -50,7 +67,10 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {};
+  return {
+    addCollections: payload => d({type: 'addCollections', payload}),
+    addNft: payload => d({type: 'addNft', payload}),
+  };
 };
 
 export default connect(msp, mdp)(MyNftCollection);

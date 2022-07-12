@@ -18,10 +18,12 @@ import {screenWidth} from '../../utils';
 import SearchBar from '../../shared/comps/SearchBar';
 import {useNavigation} from '@react-navigation/native';
 const headImg = require('../../assets/image/profiles/Profiles_backgroud.png');
+const star = require('../../assets/image/icons/star.png');
 
 const DaoContentView = () => {
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   const navigation = useNavigation();
+  const [data, setData] = useState(['Metaverse.metalift']);
   const gotoDetail = () => {
     navigation.navigate('DaoDetailView');
   };
@@ -36,6 +38,10 @@ const DaoContentView = () => {
             anvtime and jion the valiable
           </Text>
         </View>
+        <View style={styles.starView}>
+          <FastImage source={star} style={styles.starImg} />
+          <Text style={styles.starText}>431</Text>
+        </View>
       </Pressable>
     );
   };
@@ -43,7 +49,12 @@ const DaoContentView = () => {
   const emptyComponent = () => {
     return <ListEmpty />;
   };
-  const changeTextHandler = () => {};
+  const changeTextHandler = text => {
+    const na = ['Metaverse.metalift'].filter(name => {
+      return name.toUpperCase().includes(text.toUpperCase());
+    });
+    setData(na);
+  };
   return (
     <View>
       <SearchBar
@@ -52,7 +63,7 @@ const DaoContentView = () => {
         changeTextHandler={changeTextHandler}
       />
       <FlatList
-        data={[{}, {}]}
+        data={data}
         renderItem={renderItem}
         style={styles.flatList}
         ListEmptyComponent={emptyComponent}
@@ -89,6 +100,26 @@ const styles = StyleSheet.create({
     maxWidth: screenWidth - 100,
   },
   searchBar: {marginVertical: 10},
+  starText: {
+    fontSize: 11,
+    color: '#308AD0',
+  },
+  starView: {
+    flexDirection: 'row',
+    width: 47,
+    height: 23,
+    borderRadius: 11.5,
+    backgroundColor: '#BCF3FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    right: 20,
+    top: 15,
+  },
+  starImg: {
+    width: 10,
+    height: 10,
+  },
 });
 
 const msp = s => {

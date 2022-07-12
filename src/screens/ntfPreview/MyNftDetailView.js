@@ -12,12 +12,20 @@ import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
 import {pxToDp, screenWidth} from '../../utils';
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
+import {ipfsBaseURL} from '../../remote/ipfsOP';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
 const down = require('../../assets/image/nft/arrow_down.png');
 const uparr = require('../../assets/image/nft/up_arrow.png');
 
-const MyNftDetailView = ({data}) => {
+const MyNftDetailView = ({route: {params}, data, nft}) => {
+  const {item} = params;
+  // const nftKey = Object.keys(nft).length > 0 ? Object.keys(nft)[0] : '';
+  // const data =
+  //   nft[nftKey].nfts && nft[nftKey].nfts.length > 0
+  //     ? nft[nftKey].nfts[index]
+  //     : {};
+  console.log('ddddd', item);
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   const [isShow, setIsShow] = useState([false]);
   const downPress = useCallback(() => {
@@ -29,19 +37,22 @@ const MyNftDetailView = ({data}) => {
   }, [isDetail]);
   return (
     <ScrollView style={[flex1, BG]} showsVerticalScrollIndicator={false}>
-      <FastImage source={bg} style={styles.topImg} />
+      <FastImage
+        source={{uri: ipfsBaseURL + item?.image?.split('ipfs://')[1]}}
+        style={styles.topImg}
+      />
       <View style={[FG, styles.topView]}>
-        <Text style={{color: colorsBasics.primary}}>{`PXN: ${data.name}`}</Text>
+        <Text style={{color: colorsBasics.primary}}>{`PXN: ${item?.name}`}</Text>
         <Text style={[text, styles.bend]}>{'julie pacino:Aroud the bend'}</Text>
         <Text style={[text, styles.under]}>
           {'The underbelly of Web3.A shadow wague,formless, but eternal'}
         </Text>
-        {[{}, {}].map((item, index) => {
+        {[{}].map((items, index) => {
           return (
             <View style={styles.rowView}>
               <FastImage source={btn} style={styles.headImg} />
-              <Text style={styles.create}>{'Created by'}</Text>
-              <Text style={[styles.textWork]}>{'PhantomNetwork'}</Text>
+              <Text style={styles.create}>{'Owned by'}</Text>
+              <Text style={[styles.textWork]}>{item?.ownerOf}</Text>
             </View>
           );
         })}
@@ -58,9 +69,9 @@ const MyNftDetailView = ({data}) => {
           <>
             <View style={styles.ghRow}>
               <Image source={btn} style={styles.ghImg} />
-              <Text style={styles.ghText}>{'PXN: Ghost Division'}</Text>
+              <Text style={styles.ghText}>{`PXN: ${item?.name}`}</Text>
             </View>
-            <Text style={styles.ghDetail}>{data.description}</Text>
+            <Text style={styles.ghDetail}>{item?.description}</Text>
           </>
         ) : null}
         <View style={styles.line} />
@@ -75,11 +86,11 @@ const MyNftDetailView = ({data}) => {
           <>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Contract Address</Text>
-              <Text style={styles.address}>0x8033...0baa</Text>
+              <Text style={styles.address}>{item?.collectionAddress}</Text>
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Token ID</Text>
-              <Text style={styles.tokenText}>2918</Text>
+              <Text style={styles.tokenText}>{item?.id}</Text>
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Token Standard</Text>
@@ -91,7 +102,7 @@ const MyNftDetailView = ({data}) => {
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Creator Fees</Text>
-              <Text style={styles.tokenText}>{'5.5%'}</Text>
+              <Text style={styles.tokenText}>{'2.5%'}</Text>
             </View>
           </>
         ) : null}
@@ -131,6 +142,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colorsBasics.primary,
     marginLeft: pxToDp(5),
+    maxWidth: 250,
   },
   bend: {
     fontSize: 16,
@@ -190,6 +202,7 @@ const styles = StyleSheet.create({
   address: {
     fontSize: 15,
     color: colorsBasics.primary,
+    maxWidth: 250,
   },
   detailItem: {
     flexDirection: 'row',
@@ -215,6 +228,7 @@ const msp = s => {
     cfg: s.cfg,
     feedId: s.user.feedId,
     wallet: s.wallet,
+    nft: s.nft,
   };
 };
 
