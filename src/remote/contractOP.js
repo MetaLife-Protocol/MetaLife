@@ -113,7 +113,7 @@ export async function getNFTTotal() {
  * @param wAddr option user wallet address for self or undefined for all
  * @returns {{result: Error}}
  */
-export async function getNFTInfos(wAddr = undefined, cb) {
+export async function getNFTInfos(wAddr = undefined, cb, page = 0, limit = 0) {
   const contract = getContract(
     network,
     devCollectionAddress,
@@ -129,6 +129,13 @@ export async function getNFTInfos(wAddr = undefined, cb) {
 
   let token_idxs = [...Array(nftCount.toNumber()).keys()];
 
+  if (limit === 0) {
+    limit = token_idxs.length;
+  }
+  let lastPage = Math.ceil(token_idxs / limit);
+  if (page >= 0 && page < lastPage) {
+    token_idxs = token_idxs.slice(page * limit, page * limit + limit);
+  }
   let nftInfos = [];
 
   for await (const idx of token_idxs) {
