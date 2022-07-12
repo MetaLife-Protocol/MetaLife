@@ -134,14 +134,12 @@ const Setting = ({
               }
             />
           </ControllerItem>
-          {__DEV__ && (
-            <ControllerItem title={'MSG verbose'}>
-              <Switch
-                value={verbose}
-                onValueChange={() => setVerbose(!verbose)}
-              />
-            </ControllerItem>
-          )}
+          <ControllerItem title={'MSG verbose'}>
+            <Switch
+              value={verbose}
+              onValueChange={() => setVerbose(!verbose)}
+            />
+          </ControllerItem>
         </Section>
         {/*<Section*/}
         {/*  style={[marginTop10]}*/}
