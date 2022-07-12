@@ -100,6 +100,10 @@ export function abbreviationAccount(addr, pre, post) {
   return addr ? '0x' + addr.substring(0, pre) + '...' + addr.substr(-post) : '';
 }
 
+export function nftreviationAccount(addr, pre, post) {
+  return addr ? addr.substring(0, pre) + '...' + addr.substr(-post) : '';
+}
+
 export function getCurrentAccount(wallet) {
   return (
     (wallet.accounts[wallet.current.type] &&

@@ -18,7 +18,9 @@ const ComCollectItem = ({item}) => {
     useSchemaStyles();
   return (
     <View style={[styles.con, FG]}>
-      <ImageBackground source={bg} style={styles.image}>
+      <ImageBackground
+        source={bg}
+        style={[styles.image]}>
         <View style={styles.btnBg}>
           <FastImage source={btn} style={styles.imageBtn} />
         </View>
@@ -41,6 +43,7 @@ const styles = StyleSheet.create({
     height: 89,
     marginTop: 10,
     borderRadius: 10,
+    // borderWidth: 1,
   },
   imageBtn: {
     width: 42,

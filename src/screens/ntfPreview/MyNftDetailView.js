@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
-import {abbreviationAccount, pxToDp, screenWidth} from '../../utils';
+import {nftreviationAccount, pxToDp, screenWidth} from '../../utils';
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 import {ipfsBaseURL} from '../../remote/ipfsOP';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
@@ -54,7 +54,7 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
               <FastImage source={btn} style={styles.headImg} />
               <Text style={styles.create}>{'Owned by'}</Text>
               <Text style={[styles.textWork]}>
-                {abbreviationAccount(item?.ownerOf, 6, 4)}
+                {nftreviationAccount(item?.ownerOf, 6, 4)}
               </Text>
             </View>
           );
@@ -90,7 +90,7 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Contract Address</Text>
               <Text style={styles.address}>
-                {abbreviationAccount(item?.collectionAddress, 6, 4)}
+                {nftreviationAccount(item?.collectionAddress, 6, 4)}
               </Text>
             </View>
             <View style={styles.detailItem}>
