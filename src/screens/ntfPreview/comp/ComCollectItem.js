@@ -11,8 +11,8 @@ import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 const width = Dimensions.get('window').width;
-const bg = require('../../../assets/image/profiles/Profiles_backgroud.png');
-const btn = require('../../../assets/image/profiles/photo.png');
+const bg = require('../../../assets/image/nft/collection_bg.png');
+const btn = require('../../../assets/image/nft/tiny_head.png');
 const ComCollectItem = () => {
   const {text, alignItemsCenter, justifyCenter, flex1, BG, FG} =
     useSchemaStyles();
@@ -43,9 +43,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   imageBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
   },
   bottom: {
     color: '#8E8E92',

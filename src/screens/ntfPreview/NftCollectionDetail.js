@@ -11,9 +11,11 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
+import FastImage from "react-native-fast-image";
 import NftItem from './comp/NftItem';
+const nftHead = require('../../assets/image/nft/nft_head.png');
 
-const NftCollectionDetail = ({feedId, nft}) => {
+const NftCollectionDetail = ({darkMode, nft}) => {
   const nftKey = Object.keys(nft).length > 0 ? Object.keys(nft)[0] : '',
     nfts = nftKey
       ? nft[nftKey].nfts && nft[nftKey].nfts.length > 0
@@ -31,14 +33,14 @@ const NftCollectionDetail = ({feedId, nft}) => {
       <View style={[alignItemsCenter, justifyCenter, styles.listHeader]}>
         <ImageBackground
           style={[styles.header, {width: windowWidth}]}
-          source={icons.shareBg}>
+          source={darkMode ? icons.blackBg : icons.whiteBg}>
           {/* <Pressable onPress={() => goBack()} style={styles.arrowLeft}>
             <Image
               source={require('../../assets/image/profiles/ArrowLeft.png')}
             />
           </Pressable> */}
         </ImageBackground>
-        <View style={[styles.roundView]} />
+        <FastImage style={[styles.roundView]} source={nftHead} />
         <Text style={[text, styles.title]}>PXN: Ghost Division</Text>
         <Text style={[styles.desc]}>
           The underbelly of Web3. A shadow vague, formless, but eternal.
@@ -59,13 +61,15 @@ const NftCollectionDetail = ({feedId, nft}) => {
             <NftItem index={index} item={item} />
           </Pressable>
         )}
+        keyExtractor={(_, i) => i}
       />
     </View>
   );
 };
 
 const icons = {
-  shareBg: require('../../assets/image/profiles/earings_bg.png'),
+  whiteBg: require('../../assets/image/nft/nft_white_bg.png'),
+  blackBg: require('../../assets/image/nft/nft_dark_bg.png'),
   share: require('../../assets/image/profiles/share.png'),
 };
 
@@ -87,7 +91,6 @@ const styles = StyleSheet.create({
     height: 130,
     width: 130,
     borderRadius: 65,
-    backgroundColor: '#0f0',
     marginTop: -90,
     zIndex: 20,
   },
@@ -113,6 +116,7 @@ const msp = s => {
     feedId: s.user.feedId,
     wallet: s.wallet,
     nft: s.nft,
+    darkMode: s.cfg.darkMode,
   };
 };
 

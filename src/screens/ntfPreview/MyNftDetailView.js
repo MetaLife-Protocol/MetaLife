@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
-import {pxToDp, screenWidth} from '../../utils';
+import {abbreviationAccount, pxToDp, screenWidth} from '../../utils';
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 import {ipfsBaseURL} from '../../remote/ipfsOP';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
@@ -42,7 +42,8 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
         style={styles.topImg}
       />
       <View style={[FG, styles.topView]}>
-        <Text style={{color: colorsBasics.primary}}>{`PXN: ${item?.name}`}</Text>
+        <Text
+          style={{color: colorsBasics.primary}}>{`PXN: ${item?.name}`}</Text>
         <Text style={[text, styles.bend]}>{'julie pacino:Aroud the bend'}</Text>
         <Text style={[text, styles.under]}>
           {'The underbelly of Web3.A shadow wague,formless, but eternal'}
@@ -52,7 +53,9 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
             <View style={styles.rowView}>
               <FastImage source={btn} style={styles.headImg} />
               <Text style={styles.create}>{'Owned by'}</Text>
-              <Text style={[styles.textWork]}>{item?.ownerOf}</Text>
+              <Text style={[styles.textWork]}>
+                {abbreviationAccount(item?.ownerOf, 6, 4)}
+              </Text>
             </View>
           );
         })}
@@ -86,7 +89,9 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
           <>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Contract Address</Text>
-              <Text style={styles.address}>{item?.collectionAddress}</Text>
+              <Text style={styles.address}>
+                {abbreviationAccount(item?.collectionAddress, 6, 4)}
+              </Text>
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Token ID</Text>
