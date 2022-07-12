@@ -11,7 +11,7 @@ export const cfgReducer = (state = initState, {type, payload}) => {
       return {...state, darkMode: payload};
     case 'setVerbose':
       return {...state, verbose: payload};
-    case 'reset':
+    case 'resetCfg':
       return initState;
     default:
       return state;

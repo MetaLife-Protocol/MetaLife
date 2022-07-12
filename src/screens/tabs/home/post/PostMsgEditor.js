@@ -163,7 +163,7 @@ const mdp = d => {
   return {
     cachePostContent: content =>
       d({type: 'cachePostContent', payload: content}),
-    resetPostContent: () => d({type: 'reset'}),
+    resetPostContent: () => d({type: 'resetRuntime'}),
     showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
   };
 };

@@ -18,7 +18,7 @@ export const runtimeReducer = (state = initState, {type, payload}) => {
       return {...state, postContent: payload};
     case 'images':
       return {...state, images: payload};
-    case 'reset':
+    case 'resetRuntime':
       return initState;
     default:
       return state;
