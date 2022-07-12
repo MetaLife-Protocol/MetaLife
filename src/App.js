@@ -127,7 +127,7 @@ const App = ({
     }
   }
 
-  // todo: loading bar test
+  // todo: loading bar testing
   useEffect(() => {
     SplashScreen.hide();
     window.ssb ||
