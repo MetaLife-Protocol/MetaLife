@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   FlatList,
   ImageBackground,
@@ -12,36 +12,19 @@ import {
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import NftItem from './comp/NftItem';
-import {getNFTInfos} from '../../remote/contractOP';
-import {getList} from '../../remote/ipfsOP';
 
-const NftCollectionDetail = ({feedId}) => {
+const NftCollectionDetail = ({feedId, nft}) => {
+  const nftKey = Object.keys(nft).length > 0 ? Object.keys(nft)[0] : '',
+    nfts = nftKey
+      ? nft[nftKey].nfts && nft[nftKey].nfts.length > 0
+        ? nft[nftKey].nfts
+        : []
+      : [];
+  console.log(nftKey, nfts);
   const {text, alignItemsCenter, justifyCenter, flex1, BG, FG} =
     useSchemaStyles();
   const windowWidth = useWindowDimensions().width;
-
   const {goBack, navigate} = useNavigation();
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    getNFTInfos(undefined, async d => {
-      // console.log('ddddd', d.slice(-12));
-      // alert(JSON.stringify(d));
-      if (d) {
-        // setData(d.slice(-12));
-        const newList = d.splice(11, d.length - 1);
-        let array = [];
-        for (let i = 0; i < newList.length; i++) {
-          console.log('iiiii', newList[i]);
-          const list = await getList(newList[i].uri);
-          console.log('listsss', list);
-          array.push(list);
-        }
-        setData(array);
-        // setData(array);
-      }
-      // alert(JSON.stringify(d));
-    });
-  }, []);
 
   const Header = () => {
     return (
@@ -69,7 +52,7 @@ const NftCollectionDetail = ({feedId}) => {
       {/* <Header /> */}
       <FlatList
         ListHeaderComponent={<Header />}
-        data={data}
+        data={[]}
         numColumns={2}
         renderItem={({item, index}) => (
           <Pressable onPress={() => navigate('MyNftDetailView')}>
@@ -129,6 +112,7 @@ const msp = s => {
     cfg: s.cfg,
     feedId: s.user.feedId,
     wallet: s.wallet,
+    nft: s.nft,
   };
 };
 
