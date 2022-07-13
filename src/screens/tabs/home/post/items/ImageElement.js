@@ -1,4 +1,4 @@
-import {Image, Linking, Text} from 'react-native';
+import {Linking, Text} from 'react-native';
 import useSchemaStyles from '../../../../../shared/UseSchemaStyles';
 import React from 'react';
 import FastImage from 'react-native-fast-image';
@@ -12,19 +12,6 @@ export default ({index, link, url, verbose = false}) => {
   const {text} = useSchemaStyles();
   return (
     <>
-      {/*<Image*/}
-      {/*  style={[*/}
-      {/*    {*/}
-      {/*      width: '100%',*/}
-      {/*      height: '100%',*/}
-      {/*      borderRadius: 10,*/}
-      {/*      alignSelf: index % 2 ? 'flex-end' : 'flex-start',*/}
-      {/*    },*/}
-      {/*  ]}*/}
-      {/*  height={200}*/}
-      {/*  width={200}*/}
-      {/*  source={{uri: url}}*/}
-      {/*/>*/}
       <FastImage
         style={[
           {

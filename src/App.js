@@ -75,7 +75,7 @@ import WalletAccountDetails from './screens/tabs/profiles/wallet/WalletAccountDe
 import WalletBackup from './screens/tabs/profiles/wallet/WalletBackup';
 import WalletBackupMnemonicSelect from './screens/tabs/profiles/wallet/WalletBackupMnemonicSelect';
 import WalletBackupMnemonicShow from './screens/tabs/profiles/wallet/WalletBackupMnemonicShow';
-import {savePicture} from './utils';
+import {getRandomPathName, savePicture} from './utils';
 import Toast from 'react-native-tiny-toast';
 import Earnings from './screens/tabs/profiles/earnings/Earnings';
 import EarningsShare from './screens/tabs/profiles/earnings/EarningsShare';
@@ -109,19 +109,14 @@ const App = ({
 
   const [switchVisible, setSwitchVisible] = useState(false);
 
-  function saveHandler({nativeEvent: {data}}) {
-    const {type, content} = JSON.parse(data);
-    switch (type) {
-      case 'capture':
-        Platform.OS === 'ios'
-          ? savePicture(content, 'photo', 'MetaLife', r =>
-              Toast.show('photo saved in: ', r),
-            )
-          : savePicture(content, 'photo', 'MetaLife', r =>
-              Toast.show('photo saved in: ', r),
-            );
-        break;
-    }
+  function saveHandler(url) {
+    Platform.OS === 'ios'
+      ? savePicture(url, 'photo', 'MetaLife', r => {
+          console.log('photo saved in: ', r);
+        })
+      : savePicture(url, 'photo', 'MetaLife', r => {
+          console.log('photo saved in: ', r);
+        });
   }
 
   // todo: loading bar testing
