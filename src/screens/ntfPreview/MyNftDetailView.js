@@ -62,7 +62,7 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
         </Text>
         {[{}].map((items, index) => {
           return (
-            <View style={styles.rowView}>
+            <View style={styles.rowView} key={index}>
               <FastImage source={btn} style={styles.headImg} />
               <Text style={styles.create}>{'Owned by'}</Text>
               <Text style={[styles.textWork]}>
