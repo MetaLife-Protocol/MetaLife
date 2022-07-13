@@ -24,19 +24,23 @@ const DaoDetailView = () => {
   const emptyComponent = () => {
     return <ListEmpty />;
   };
-  const renderItem = ({item}) => {
+  const renderItem = ({item, index}) => {
     return (
       <View style={[FG, styles.introduces]}>
         <View style={styles.financeView}>
           <FastImage source={votimg} style={styles.finance} />
           <Text style={[text, styles.votText]}>{item.icon}</Text>
           <View style={flex1} />
-          <Text style={[text]}>{'Open'}</Text>
+          <Text
+            style={{
+              color:
+                index == 0 ? text.color : index == 1 ? '#46C288' : '#E73553',
+              fontSize: 13,
+            }}>
+            {index == 0 ? 'Open' : index == 1 ? 'Pressed' : 'Rejected'}
+          </Text>
         </View>
-        <Text style={[text, styles.content]}>
-          #32: Include an image import option or a gallery within the proposal
-          function
-        </Text>
+        <Text style={[text, styles.content]}>{item.content}</Text>
         <Text style={[styles.turnText]}>{`Turnout(${item.text})`}</Text>
         <View style={styles.slider}>
           {/*<Slider*/}
@@ -87,9 +91,31 @@ const DaoDetailView = () => {
       <Text style={[text, styles.event]}>Events</Text>
       <FlatList
         data={[
-          {text: '215/431', percent: '50%', icon: 'Voting', num: 0.5},
-          {text: '353/431', percent: '82%', icon: 'Finance', num: 0.8},
-          {text: '35/431', percent: '8%', icon: 'Finance', num: 0.1},
+          {
+            text: '215/431',
+            percent: '50%',
+            icon: 'Voting',
+            num: 0.5,
+            content:
+              '#32：Include an image import option or a gallery within the proposal function',
+          },
+          {
+            text: '353/431',
+            percent: '82%',
+            icon: 'Finance',
+            num: 0.8,
+            content:
+              '#31：Create a new payment of 1550 MLT to ' +
+              "0xecB5…64f7  for 'https://docs.google.co...",
+          },
+          {
+            text: '35/431',
+            percent: '8%',
+            icon: 'Finance',
+            num: 0.1,
+            content:
+              '#30：A new reward token is needed to support future growth',
+          },
         ]}
         renderItem={renderItem}
         style={styles.flatList}
