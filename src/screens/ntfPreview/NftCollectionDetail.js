@@ -61,7 +61,10 @@ const NftCollectionDetail = ({route: {params}, darkMode, nft}) => {
         data={nfts}
         numColumns={2}
         renderItem={({item, index}) => (
-          <Pressable onPress={() => navigate('MyNftDetailView', {item: item})}>
+          <Pressable
+            onPress={() =>
+              navigate('MyNftDetailView', {item: item, symbol: symbol})
+            }>
             <NftItem index={index} item={item} symbol={symbol} />
           </Pressable>
         )}

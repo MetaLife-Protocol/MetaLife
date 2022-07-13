@@ -19,7 +19,7 @@ const down = require('../../assets/image/nft/arrow_down.png');
 const uparr = require('../../assets/image/nft/up_arrow.png');
 
 const MyNftDetailView = ({route: {params}, data, nft}) => {
-  const {item} = params;
+  const {item, symbol} = params;
   // const nftKey = Object.keys(nft).length > 0 ? Object.keys(nft)[0] : '';
   // const data =
   //   nft[nftKey].nfts && nft[nftKey].nfts.length > 0
@@ -55,7 +55,9 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
       />
       <View style={[FG, styles.topView]}>
         <Text
-          style={{color: colorsBasics.primary}}>{`PXN: ${item?.name}`}</Text>
+          style={{
+            color: colorsBasics.primary,
+          }}>{`${symbol}: ${item?.name}`}</Text>
         <Text style={[text, styles.bend]}>{'julie pacino:Aroud the bend'}</Text>
         <Text style={[text, styles.under]}>
           {'The underbelly of Web3.A shadow wague,formless, but eternal'}
@@ -84,7 +86,7 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
           <>
             <View style={styles.ghRow}>
               <Image source={btn} style={styles.ghImg} />
-              <Text style={styles.ghText}>{`PXN: ${item?.name}`}</Text>
+              <Text style={styles.ghText}>{`${symbol}: ${item?.name}`}</Text>
             </View>
             <Text style={styles.ghDetail}>{item?.description}</Text>
           </>
