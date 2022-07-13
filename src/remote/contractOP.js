@@ -17,7 +17,7 @@ const network = financeConfig.chains.spectrum.rpcURL,
   // dev collection address
   devCollectionAddress = '0x221b9814d507bC912534A96C37a15356cc995C0E',
   // collection address
-  collectionAddress = '';
+  collectionAddress = '0xf0fa86596F770E66d013f19E90C97A5d09122106';
 
 export async function callAuto() {
   getNFTInfos(undefined, console.log);
@@ -56,7 +56,7 @@ async function getOwnedItems(keystore, pw, walletAddress) {
  * @returns {{result: Error}}
  */
 export async function getCollectionInfo(cb) {
-  const contract = getContract(network, devCollectionAddress, NFTCollectionAbi);
+  const contract = getContract(network, collectionAddress, NFTCollectionAbi);
   const name = await contract.name();
   const symbol = await contract.symbol();
   const owner = await contract.owner();
@@ -85,7 +85,7 @@ export async function getCollectionInfo(cb) {
 async function getNFTInfo(cb) {
   const contract = getContract(
     network,
-    devCollectionAddress,
+    collectionAddress,
     financeConfig.contractABIs.erc721,
   );
   const name = await contract.name();
@@ -101,7 +101,7 @@ async function getNFTInfo(cb) {
 export async function getNFTTotal() {
   const contract = getContract(
     network,
-    devCollectionAddress,
+    collectionAddress,
     financeConfig.contractABIs.erc721,
   );
   const total = await contract.totalSupply();
@@ -116,7 +116,7 @@ export async function getNFTTotal() {
 export async function getNFTInfos(wAddr = undefined, cb, page = 0, limit = 0) {
   const contract = getContract(
     network,
-    devCollectionAddress,
+    collectionAddress,
     // ERC721EnumerableAbi,
     NFTCollectionAbi,
   );
@@ -150,7 +150,7 @@ export async function getNFTInfos(wAddr = undefined, cb, page = 0, limit = 0) {
 
     let nftInfo = {
       id: token_id,
-      collectionAddress: devCollectionAddress,
+      collectionAddress: collectionAddress,
       uri: token_uri,
     };
 
