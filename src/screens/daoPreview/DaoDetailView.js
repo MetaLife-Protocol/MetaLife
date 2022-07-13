@@ -17,7 +17,8 @@ import ListEmpty from '../ntfPreview/comp/ListEmpty';
 import Slider from '@react-native-community/slider';
 import Toast from 'react-native-tiny-toast';
 const headImg = require('../../assets/image/profiles/Profiles_backgroud.png');
-const votimg = require('../../assets/image/icons/finance.png');
+const votimg = require('../../assets/image/icons/voting.png');
+const finaceimg = require('../../assets/image/icons/dao_finance.png');
 
 const DaoDetailView = () => {
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
@@ -28,7 +29,10 @@ const DaoDetailView = () => {
     return (
       <View style={[FG, styles.introduces]}>
         <View style={styles.financeView}>
-          <FastImage source={votimg} style={styles.finance} />
+          <FastImage
+            source={index == 0 ? votimg : finaceimg}
+            style={styles.finance}
+          />
           <Text style={[text, styles.votText]}>{item.icon}</Text>
           <View style={flex1} />
           <Text
@@ -37,7 +41,7 @@ const DaoDetailView = () => {
                 index == 0 ? text.color : index == 1 ? '#46C288' : '#E73553',
               fontSize: 13,
             }}>
-            {index == 0 ? 'Open' : index == 1 ? 'Pressed' : 'Rejected'}
+            {index == 0 ? 'Open' : index == 1 ? 'Passed' : 'Rejected'}
           </Text>
         </View>
         <Text style={[text, styles.content]}>{item.content}</Text>

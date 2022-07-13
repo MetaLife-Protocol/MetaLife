@@ -30,16 +30,14 @@ const Mnemonic = () => {
         <Text style={[text, {fontSize: 20}]}>{mnemonic}</Text>
       </View>
       <View style={[flex1]} />
-      {__DEV__ && (
-        <RoundBtn
-          style={[{marginBottom: 40}]}
-          title={'Copy'}
-          press={() => {
-            nativeClipboard.setString(mnemonic);
-            Toast.show('Mnemonic copied');
-          }}
-        />
-      )}
+      <RoundBtn
+        style={[{marginBottom: 40}]}
+        title={'Copy'}
+        press={() => {
+          nativeClipboard.setString(mnemonic);
+          Toast.show('Mnemonic copied');
+        }}
+      />
     </SafeAreaView>
   );
 };
