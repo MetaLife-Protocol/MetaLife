@@ -35,22 +35,22 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
   const upPress = useCallback(() => {
     setIsDetail(!isDetail);
   }, [isDetail]);
-  const [height, setHeight] = useState();
-  useEffect(() => {
-    Image.getSize(
-      ipfsBaseURL + item?.image?.split('ipfs://')[1],
-      (width, height) => {
-        const heights = Math.floor((screenWidth / width) * height);
-        setHeight(heights);
-      },
-    );
-  }, []);
+  // const [height, setHeight] = useState();
+  // useEffect(() => {
+  //   Image.getSize(
+  //     ipfsBaseURL + item?.image?.split('ipfs://')[1],
+  //     (width, height) => {
+  //       const heights = Math.floor((screenWidth / width) * height);
+  //       setHeight(heights);
+  //     },
+  //   );
+  // }, []);
 
   return (
     <ScrollView style={[flex1, BG]} showsVerticalScrollIndicator={false}>
       <FastImage
         source={{uri: ipfsBaseURL + item?.image?.split('ipfs://')[1]}}
-        style={[styles.topImg, {height: height}]}
+        style={[styles.topImg]}
         resizeMode="contain"
       />
       <View style={[FG, styles.topView]}>
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
   topImg: {
     width: '90%',
     // minHeight: 260,
+    height: 345,
     alignSelf: 'center',
   },
   topView: {
