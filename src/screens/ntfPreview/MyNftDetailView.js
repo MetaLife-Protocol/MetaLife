@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -35,11 +35,23 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
   const upPress = useCallback(() => {
     setIsDetail(!isDetail);
   }, [isDetail]);
+  const [height, setHeight] = useState();
+  useEffect(() => {
+    Image.getSize(
+      ipfsBaseURL + item?.image?.split('ipfs://')[1],
+      (width, height) => {
+        const heights = Math.floor((screenWidth / width) * height);
+        setHeight(heights);
+      },
+    );
+  }, []);
+
   return (
     <ScrollView style={[flex1, BG]} showsVerticalScrollIndicator={false}>
       <FastImage
         source={{uri: ipfsBaseURL + item?.image?.split('ipfs://')[1]}}
-        style={styles.topImg}
+        style={[styles.topImg, {height: height}]}
+        resizeMode="contain"
       />
       <View style={[FG, styles.topView]}>
         <Text
@@ -119,8 +131,8 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
 
 const styles = StyleSheet.create({
   topImg: {
-    width: pxToDp(345),
-    height: pxToDp(345),
+    width: '90%',
+    // minHeight: 260,
     alignSelf: 'center',
   },
   topView: {

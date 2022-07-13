@@ -33,6 +33,7 @@ const NftItem = ({item, index, symbol}) => {
             width: imageWidth,
           },
         ]}
+        resizeMode="contain"
       />
       <Text style={styles.text1}>{`${item.name}`}</Text>
       <Text style={[text, styles.text2]}>{`${symbol || 'GGT'} #${
