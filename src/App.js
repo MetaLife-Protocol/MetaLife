@@ -75,7 +75,7 @@ import WalletAccountDetails from './screens/tabs/profiles/wallet/WalletAccountDe
 import WalletBackup from './screens/tabs/profiles/wallet/WalletBackup';
 import WalletBackupMnemonicSelect from './screens/tabs/profiles/wallet/WalletBackupMnemonicSelect';
 import WalletBackupMnemonicShow from './screens/tabs/profiles/wallet/WalletBackupMnemonicShow';
-import {savePicture} from './utils';
+import {getRandomPathName, savePicture} from './utils';
 import Earnings from './screens/tabs/profiles/earnings/Earnings';
 import EarningsShare from './screens/tabs/profiles/earnings/EarningsShare';
 import NftCollectionDetail from './screens/ntfPreview/NftCollectionDetail';
@@ -84,6 +84,7 @@ import DaoContentView from './screens/daoPreview/DaoContentView';
 import {pubHostByIp} from './remote/pubOP';
 import DaoDetailView from './screens/daoPreview/DaoDetailView';
 import OpenGalaxyCollection from './screens/ntfPreview/OpenGalaxyCollection';
+import RNFS from 'react-native-fs';
 
 const App = ({
   feedId,
@@ -109,9 +110,20 @@ const App = ({
   const [switchVisible, setSwitchVisible] = useState(false);
 
   function saveHandler(url) {
-    savePicture(url, 'photo', 'MetaLife', r => {
-      console.log('photo saved in: ', r);
-    });
+    let path;
+    Platform.OS === 'ios'
+      ? savePicture(url, 'photo', 'MetaLife', r => {
+          console.log('photo saved in: ', r);
+        })
+      : RNFS.downloadFile({
+          fromUrl: url,
+          background: false,
+          toFile: (path = getRandomPathName()),
+        }).promise.then(_ =>
+          savePicture(path, 'photo', 'MetaLife', r =>
+            console.log('photo saved in: ', r),
+          ),
+        );
   }
 
   // todo: loading bar testing
