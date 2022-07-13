@@ -75,7 +75,8 @@ const Earnings = ({feedId}) => {
         for (let i = 0; i < list.length; i++) {
           total = list[i].grant_token_amount_subtotals + total;
         }
-        setAmount(bigNumberFormatUnits(total.toString()));
+        const totalString = Number(total).toLocaleString().replace(/,/g, '');
+        setAmount(bigNumberFormatUnits(totalString, 18));
       })
       .catch(e => console.warn(e));
   };
@@ -101,7 +102,10 @@ const Earnings = ({feedId}) => {
             title={item.reward_reason}
             keyExtractor={index}
             pub={item.pub}
-            number={bigNumberFormatUnits(item.grant_token_amount.toString())}
+            number={bigNumberFormatUnits(
+              item.grant_token_amount.toLocaleString().replace(/,/g, ''),
+              18,
+            )}
             time={formatDate({time: item.reward_time})}
           />
         )}
