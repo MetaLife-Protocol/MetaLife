@@ -15,23 +15,25 @@ const Discover = ({darkMode}) => {
   const {navigate} = useNavigation();
 
   const iconDic = {
-    DAO: require('../../assets/image/discover/Discover_backgroud_DAO.png'),
+    DAO: require('../../assets/image/discover/DAOVerse.png'),
     fc: require('../../assets/image/discover/Discover_backgroud_Featured_Content.png'),
-    NFT: require('../../assets/image/discover/Discover_backgroud_NFT.png'),
+    NFT: require('../../assets/image/discover/OpenGalaxy.png'),
     pte: require('../../assets/image/discover/Discover_backgroud_Play_to_earn.png'),
-    vis: require('../../assets/image/discover/Discover_backgroud_VISwap.png'),
+    vis: require('../../assets/image/discover/VISwap.png'),
   };
 
   const DATA = [
     {
-      title: 'DAO',
+      title: 'DAOverse',
+      subTitle: '(DAO of DAOs)',
       bgImg: iconDic.DAO,
       onPress: () => {
         navigate('DaoContentView');
       },
     },
     {
-      title: 'NFT',
+      title: 'Open Galaxy',
+      subTitle: '(NFT MarketPlace)',
       bgImg: iconDic.NFT,
       onPress: () => {
         navigate('OpenGalaxyCollection', {
@@ -40,16 +42,20 @@ const Discover = ({darkMode}) => {
         });
       },
     },
-    {title: 'Play to earn', bgImg: iconDic.pte},
-    {title: 'VISwap', bgImg: iconDic.vis},
-    {title: 'Featured Content', bgImg: iconDic.fc},
+    // {title: 'Play to earn', bgImg: iconDic.pte},
+    // {title: 'VISwap', subTitle: '(Value Internet Swap)', bgImg: iconDic.vis},
+    // {title: 'Featured Content', bgImg: iconDic.fc},
   ];
 
-  const Item = ({item: {title, bgImg, onPress}}) => {
+  const Item = ({item: {title, subTitle, bgImg, onPress}}) => {
     return (
       <Pressable onPress={() => (onPress ? onPress() : navigate('SubScreen'))}>
-        <ImageBackground style={[styles.item, justifyCenter]} source={bgImg}>
+        <ImageBackground
+          style={[styles.item, justifyCenter]}
+          source={bgImg}
+          imageStyle={styles.img}>
           <Text style={styles.title}>{title}</Text>
+          <Text style={styles.subTitle}>{subTitle}</Text>
         </ImageBackground>
       </Pressable>
     );
@@ -73,14 +79,24 @@ const Discover = ({darkMode}) => {
 };
 const styles = StyleSheet.create({
   item: {
-    height: 112,
     marginVertical: 8,
+    paddingVertical: 31,
     marginHorizontal: 16,
+  },
+  img: {
+    borderRadius: 12,
   },
   title: {
     color: 'white',
     fontSize: 22,
-    marginLeft: 64,
+    marginLeft: 20,
+  },
+  subTitle: {
+    color: 'white',
+    fontSize: 15,
+    marginLeft: 20,
+    fontStyle: 'italic',
+    marginTop: 10,
   },
 });
 
