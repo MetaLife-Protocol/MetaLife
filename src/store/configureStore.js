@@ -30,6 +30,8 @@ export const store = configureStore({
         // Ignore these paths in the state
         ignoredPaths: [],
       },
+      immutableCheck: false,
+      thunk: false,
     }),
 });
 
