@@ -71,7 +71,8 @@ const Profiles = ({feedId, wallet, setBalance}) => {
         for (let i = 0; i < list.length; i++) {
           total = list[i].grant_token_amount_subtotals + total;
         }
-        setAmount(bigNumberFormatUnits(total.toString()));
+        const totalString = Number(total).toLocaleString().replace(/,/g, '');
+        setAmount(bigNumberFormatUnits(totalString, 18));
         setRefreshing(false);
       })
       .catch(e => console.warn(e));
