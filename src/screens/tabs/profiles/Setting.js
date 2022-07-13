@@ -10,7 +10,6 @@ import {
   ScrollView,
   Switch,
   Text,
-  View,
 } from 'react-native';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
@@ -113,9 +112,7 @@ const Setting = ({
           </Pressable>
           {__DEV__ && (
             <>
-              <View
-                style={[BG, {height: 1, marginLeft: 15, marginVertical: 15}]}
-              />
+              <NormalSeparator {...BG} />
               <Pressable onPress={() => navigate('Mnemonic')} hitSlop={10}>
                 <ControllerItem title={'Mnemonic'}>
                   <Image source={ArrowImage} />
