@@ -74,7 +74,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
   const [volumeVisible, setVolumeVisible] = useState(true);
   const [coinType, setCoinType] = useState('dollar');
   const [pwdVisible, setPwdVisible] = useState(false);
-  const [pwd, setPwd] = useState(false);
+  const [pwd, setPwd] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
   const [toastContent, setToastContent] = useState('');
 
@@ -199,10 +199,10 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
         </ImageBackground>
         <Tab.Navigator
           style={[FG, marginTop10]}
-          lazy={true}
           initialRouteName={'Coin'}
           backBehavior={'none'}
           screenOptions={{
+            lazy: true,
             tabBarItemStyle: {
               width: 70,
             },

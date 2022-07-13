@@ -38,7 +38,9 @@ export const walletReducer = (state = initState, {type, payload}) => {
         accounts: {
           ...state.accounts,
           [payload.type]: state.accounts[payload.type].map(item => {
-            return item.address === payload.address ? payload : item;
+            return item.address === payload.address
+              ? {...item, ...payload}
+              : item;
           }),
         },
       };
