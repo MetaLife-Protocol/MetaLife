@@ -297,6 +297,8 @@ export function exportAccountMnemonic(address, pw, cb) {
           cb && cb(false);
           console.warn(error);
         });
+    } else {
+      cb && cb(false);
     }
   });
 }
