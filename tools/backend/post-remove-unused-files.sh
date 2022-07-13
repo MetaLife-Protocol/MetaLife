@@ -16,7 +16,7 @@ function onFailure() {
 
 declare -a archs=(
   "armeabi-v7a"
-  # "arm64-v8a"
+  "arm64-v8a"
   # "x86"
   # "x86_64"
 )
