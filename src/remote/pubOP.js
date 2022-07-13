@@ -94,7 +94,7 @@ export async function getPubsRewardList(params) {
         pub2.data.data
           .filter(it => it.grant_success === 'success')
           .map(it => {
-            it.pub = 'MetaLife Planet 1';
+            it.pub = 'MetaLife Planet 2';
             return it;
           }),
       );
