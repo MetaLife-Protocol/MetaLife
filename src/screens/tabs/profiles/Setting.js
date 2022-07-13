@@ -10,6 +10,7 @@ import {
   ScrollView,
   Switch,
   Text,
+  View,
 } from 'react-native';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
@@ -36,7 +37,7 @@ const Setting = ({
   setLang,
   setVerbose,
 }) => {
-  const {flex1, alignItemsCenter, marginTop10, text} = useSchemaStyles();
+  const {flex1, alignItemsCenter, marginTop10, text, BG} = useSchemaStyles();
 
   const {name, description, image} = infoDic[feedId] || {};
 
@@ -111,11 +112,16 @@ const Setting = ({
             </ControllerItem>
           </Pressable>
           {__DEV__ && (
-            <Pressable onPress={() => navigate('Mnemonic')} hitSlop={10}>
-              <ControllerItem title={'Mnemonic'}>
-                <Image source={ArrowImage} />
-              </ControllerItem>
-            </Pressable>
+            <>
+              <View
+                style={[BG, {height: 1, marginLeft: 15, marginVertical: 15}]}
+              />
+              <Pressable onPress={() => navigate('Mnemonic')} hitSlop={10}>
+                <ControllerItem title={'Mnemonic'}>
+                  <Image source={ArrowImage} />
+                </ControllerItem>
+              </Pressable>
+            </>
           )}
         </Section>
         <Section
