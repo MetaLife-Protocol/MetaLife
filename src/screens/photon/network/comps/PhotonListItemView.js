@@ -38,6 +38,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {
   ethNumberFixed,
   NormalDialog,
+  numberToString,
   useDialog,
   useStyle,
 } from '../../../../metalife-base';
@@ -120,7 +121,7 @@ const PhotonListItemView = ({data, channelRemarks}) => {
   const withdrawAction = useCallback(() => {
     photonWithDraw({
       channelIdentifierHashStr: data.channel_identifier + '',
-      amountStr: data?.balance + '' ?? '0',
+      amountStr: numberToString(data?.balance) ?? '0',
       op: '',
     }).then(res => {
       const resJson = JSON.parse(res);
