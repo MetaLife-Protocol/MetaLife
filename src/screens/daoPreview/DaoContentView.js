@@ -32,7 +32,7 @@ const DaoContentView = () => {
       <Pressable style={[FG, styles.listItem]} onPress={gotoDetail}>
         <FastImage source={headImg} style={styles.headImg} />
         <View style={styles.listLeft}>
-          <Text style={[text, styles.liftText]}>Metaverse.metalift</Text>
+          <Text style={[text, styles.liftText]}>Metaverse.metalife</Text>
           <Text style={styles.content} numberOfLines={2}>
             A person with a "virtual" identity can access the virtual world
             anvtime and jion the valiable

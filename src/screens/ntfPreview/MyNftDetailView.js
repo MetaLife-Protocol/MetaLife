@@ -58,10 +58,10 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
           style={{
             color: colorsBasics.primary,
           }}>{`${symbol}: ${item?.name}`}</Text>
-        <Text style={[text, styles.bend]}>{'julie pacino:Aroud the bend'}</Text>
-        <Text style={[text, styles.under]}>
-          {'The underbelly of Web3.A shadow wague,formless, but eternal'}
-        </Text>
+        {/*<Text style={[text, styles.bend]}>{'julie pacino:Aroud the bend'}</Text>*/}
+        {/*<Text style={[text, styles.under]}>*/}
+        {/*  {'The underbelly of Web3.A shadow wague,formless, but eternal'}*/}
+        {/*</Text>*/}
         {[{}].map((items, index) => {
           return (
             <View style={styles.rowView} key={index}>
