@@ -5,9 +5,10 @@ import {
   ImageBackground,
   Pressable,
   StyleSheet,
-  Text,
+  // Text,
   View,
 } from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import {connect} from 'react-redux/lib/exports';
 import React, {useState} from 'react';
 import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';

@@ -1,4 +1,5 @@
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';

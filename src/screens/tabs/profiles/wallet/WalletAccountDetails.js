@@ -6,10 +6,11 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
+  // Text,
   TextInput,
   View,
 } from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import useSchemaStyles, {
   colorsBasics,
 } from '../../../../shared/UseSchemaStyles';

@@ -10,7 +10,7 @@ interface BaseTextProps extends TextProps {
   margin?: Array<Number>; //数组顺序：上下左右
 }
 
-const BaseText = (props: BaseTextProps) => {
+const ComText = (props: BaseTextProps) => {
   let {
     style,
     fontSize,
@@ -51,4 +51,4 @@ const styles = StyleSheet.create({
   },
   iosStyle: {},
 });
-export default BaseText;
+export default ComText;

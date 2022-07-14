@@ -2,7 +2,8 @@
  * Created on 11/4/21 by lonmee
  */
 import React, {useState} from 'react';
-import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
+import Text from '../../shared/comps/ComText';
 import useSchemaStyles from '../UseSchemaStyles';
 
 const RoundBtn = ({title, press, disabled = false, style = null}) => {

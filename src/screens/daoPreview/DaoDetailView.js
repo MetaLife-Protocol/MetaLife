@@ -10,7 +10,7 @@ import {
   Pressable,
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
-import Text from '../../shared/screens/Text';
+import Text from '../../shared/comps/ComText';
 import FastImage from 'react-native-fast-image';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import ListEmpty from '../ntfPreview/comp/ListEmpty';

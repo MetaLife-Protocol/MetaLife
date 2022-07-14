@@ -4,9 +4,10 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
+  // Text,
   View,
 } from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import useSchemaStyles, {colorsBasics} from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';

@@ -1,6 +1,5 @@
 import React, {useCallback, useState} from 'react';
 import {
-  Text,
   View,
   StyleSheet,
   Dimensions,
@@ -10,6 +9,7 @@ import {
   FlatList,
   Pressable,
 } from 'react-native';
+import Text from '../../shared/comps/ComText';
 import FastImage from 'react-native-fast-image';
 import ListEmpty from '../ntfPreview/comp/ListEmpty';
 import {connect} from 'react-redux/lib/exports';

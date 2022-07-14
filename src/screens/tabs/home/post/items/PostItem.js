@@ -6,10 +6,11 @@ import {
   PixelRatio,
   Pressable,
   StyleSheet,
-  Text,
+  // Text,
   useWindowDimensions,
   View,
 } from 'react-native';
+import Text from '../../../../../shared/comps/ComText';
 import useSchemaStyles, {
   colorsBasics,
 } from '../../../../../shared/UseSchemaStyles';

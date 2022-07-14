@@ -2,7 +2,8 @@
  * Created on 22 Feb 2022 by lonmee
  */
 import React from 'react';
-import {Image, Pressable, Text, View} from 'react-native';
+import {Image, Pressable, View} from 'react-native';
+import Text from '../../../../../shared/comps/ComText';
 import useSchemaStyles from '../../../../../shared/UseSchemaStyles';
 
 const iconDic = {

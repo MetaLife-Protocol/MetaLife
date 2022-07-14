@@ -12,9 +12,10 @@ import {
   Pressable,
   SafeAreaView,
   StyleSheet,
-  Text,
+  // Text,
   View,
 } from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import Constants from '../../../shared/Constants';
 import {
   PhotonSeparator,

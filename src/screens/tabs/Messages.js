@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
+import Text from '../../shared/comps/ComText';
 import useSchemaStyles, {colorsSchema} from '../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import SearchBar from '../../shared/comps/SearchBar';

@@ -9,10 +9,11 @@ import React, {useCallback, useRef} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
-  Text,
+  // Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import QRCode from 'react-native-qrcode-svg';
 import {useStyle} from '../../../metalife-base';
 import {useRoute} from '@react-navigation/native';

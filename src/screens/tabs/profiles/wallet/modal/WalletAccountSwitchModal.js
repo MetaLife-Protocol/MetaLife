@@ -9,9 +9,10 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
+  // Text,
   View,
 } from 'react-native';
+import Text from '../../../../../shared/comps/ComText';
 import useSchemaStyles from '../../../../../shared/UseSchemaStyles';
 import {CloseIcons} from '../../../../../shared/Icons';
 import {AccountItem} from '../items/AccountItem';

@@ -6,10 +6,11 @@ import {
   Pressable,
   SafeAreaView,
   StyleSheet,
-  Text,
+  // Text,
   TextInput,
   View,
 } from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import useSchemaStyles, {
   colorsBasics,
   colorsSchema,

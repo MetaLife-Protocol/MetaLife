@@ -5,10 +5,11 @@ import {
   ImageBackground,
   Pressable,
   StyleSheet,
-  Text,
+  // Text,
   useWindowDimensions,
   View,
 } from 'react-native';
+import Text from '../../shared/comps/ComText';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import FastImage from 'react-native-fast-image';

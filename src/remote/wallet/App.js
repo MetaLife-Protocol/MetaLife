@@ -13,10 +13,11 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
+  // Text,
   useColorScheme,
   View,
 } from 'react-native';
+import Text from '../../shared/comps/ComText';
 
 import {
   Colors,

@@ -5,7 +5,8 @@
  */
 'use strict';
 import React, {memo} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 
 const SelectDialog = ({visible = false, listData = [], style, onPress}) => {

@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Pressable, ScrollView, StyleSheet, Text} from 'react-native';
+import {Pressable, ScrollView, StyleSheet} from 'react-native';
+import Text from '../../shared/comps/ComText';
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useTimer} from '../../shared/Hooks';

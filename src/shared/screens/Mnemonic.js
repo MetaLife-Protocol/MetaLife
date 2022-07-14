@@ -3,7 +3,8 @@
  */
 
 import React, {useLayoutEffect, useState} from 'react';
-import {SafeAreaView, Text, View} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
+import Text from '../../shared/comps/ComText';
 import useSchemaStyles, {colorsBasics} from '../UseSchemaStyles';
 import {getMnemonic} from '../../remote/ssb/ssbOP';
 import RoundBtn from '../comps/RoundBtn';

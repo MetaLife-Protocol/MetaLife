@@ -4,7 +4,8 @@
  */
 
 import React from 'react';
-import {Text, View, StyleSheet, Image, useWindowDimensions} from 'react-native';
+import {View, StyleSheet, Image, useWindowDimensions} from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import FastImage from 'react-native-fast-image';
 import {ipfsBaseURL} from '../../../remote/ipfsOP';

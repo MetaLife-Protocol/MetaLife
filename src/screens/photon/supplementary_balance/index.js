@@ -7,7 +7,8 @@
  */
 
 import React, {useMemo, useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import {
   PhotonSeparator,
   PureTextInput,

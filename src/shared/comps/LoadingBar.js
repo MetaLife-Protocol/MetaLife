@@ -1,7 +1,8 @@
 /**
  * Created on 30 Mar 2022 by lonmee
  */
-import {ActivityIndicator, Text, View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
+import Text from '../../shared/comps/ComText';
 import React from 'react';
 import useSchemaStyles from '../UseSchemaStyles';
 

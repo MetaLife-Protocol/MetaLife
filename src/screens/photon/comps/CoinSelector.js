@@ -7,7 +7,8 @@
  */
 
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import {colorsSchema, SchemaStyles} from '../../../metalife-base';
 
 const iconDic = {

@@ -1,5 +1,6 @@
 import React from 'react';
-import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {Image, ImageBackground, StyleSheet, View} from 'react-native';
+import Text from '../shared/comps/ComText';
 import RoundBtn from '../shared/comps/RoundBtn';
 import useSchemaStyles from '../shared/UseSchemaStyles';
 import {useNavigation} from '@react-navigation/native';

@@ -1,4 +1,5 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import Text from '../../shared/comps/ComText';
 import React from 'react';
 import useSchemaStyles, {colorsSchema} from '../UseSchemaStyles';
 

@@ -9,10 +9,11 @@ import {WebView} from 'react-native-webview';
 import {
   Platform,
   SafeAreaView,
-  Text,
+  // Text,
   useWindowDimensions,
   View,
 } from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import {Link, useNavigation} from '@react-navigation/native';
 import useSchemaStyles, {
   colorsSchema,

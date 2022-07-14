@@ -1,12 +1,13 @@
 import React from 'react';
 import {
-  Text,
+  // Text,
   View,
   StyleSheet,
   Dimensions,
   ImageBackground,
   Image,
 } from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
@@ -18,9 +19,7 @@ const ComCollectItem = ({item}) => {
     useSchemaStyles();
   return (
     <View style={[styles.con, FG]}>
-      <ImageBackground
-        source={bg}
-        style={[styles.image]}>
+      <ImageBackground source={bg} style={[styles.image]}>
         <View style={styles.btnBg}>
           <FastImage source={btn} style={styles.imageBtn} />
         </View>

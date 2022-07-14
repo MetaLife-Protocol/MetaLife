@@ -4,11 +4,12 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
+  // Text,
   Pressable,
   View,
   Image,
 } from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
 import Toast from 'react-native-tiny-toast';

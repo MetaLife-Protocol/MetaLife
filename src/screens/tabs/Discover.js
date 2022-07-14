@@ -4,8 +4,9 @@ import {
   ImageBackground,
   Pressable,
   StyleSheet,
-  Text,
+  // Text,
 } from 'react-native';
+import Text from '../../shared/comps/ComText';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import {useNavigation} from '@react-navigation/native';

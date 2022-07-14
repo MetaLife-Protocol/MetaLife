@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
-  Text,
+  // Text,
   View,
   StyleSheet,
   Dimensions,
@@ -8,6 +8,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import Text from '../../shared/comps/ComText';
 import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
 import {nftreviationAccount, pxToDp, screenWidth} from '../../utils';

@@ -9,8 +9,9 @@ import {
   SafeAreaView,
   ScrollView,
   Switch,
-  Text,
+  // Text,
 } from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {connect} from 'react-redux/lib/exports';
 import ControllerItem from '../../../shared/comps/ControllerItem';

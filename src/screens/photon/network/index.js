@@ -14,9 +14,10 @@ import {
   RefreshControl,
   SafeAreaView,
   StyleSheet,
-  Text,
+  // Text,
   View,
 } from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import {useStyle} from '../../../metalife-base';
 import PhotonAccountInfoCard from './comps/PhotonAccountInfoCard';
 import {useNavigation} from '@react-navigation/native';

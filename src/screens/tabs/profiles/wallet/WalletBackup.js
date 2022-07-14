@@ -1,6 +1,7 @@
 import {connect} from 'react-redux/lib/exports';
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import RoundBtn from '../../../../shared/comps/RoundBtn';
 

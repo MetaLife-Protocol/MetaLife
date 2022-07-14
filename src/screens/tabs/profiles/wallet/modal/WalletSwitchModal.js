@@ -3,7 +3,8 @@
  *
  */
 import React, {useEffect, useRef} from 'react';
-import {Image, Modal, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Image, Modal, Pressable, StyleSheet, View} from 'react-native';
+import Text from '../../../../../shared/comps/ComText';
 import useSchemaStyles from '../../../../../shared/UseSchemaStyles';
 import {CloseIcons} from '../../../../../shared/Icons';
 import WalletCore from '../comp/WalletCore';

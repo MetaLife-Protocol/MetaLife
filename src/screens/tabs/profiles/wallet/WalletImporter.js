@@ -8,11 +8,12 @@ import {
   Pressable,
   SafeAreaView,
   StyleSheet,
-  Text,
+  // Text,
   TextInput,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import Section from '../../../../shared/comps/Section';
 import {NormalSeparator} from '../../../../shared/comps/SectionSeparators';
 import ControllerItem from '../../../../shared/comps/ControllerItem';

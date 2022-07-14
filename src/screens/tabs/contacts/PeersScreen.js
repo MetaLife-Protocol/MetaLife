@@ -1,5 +1,6 @@
 import React, {useLayoutEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, Text} from 'react-native';
+import {SafeAreaView, ScrollView} from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {useTimer} from '../../../shared/Hooks';

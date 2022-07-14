@@ -6,9 +6,10 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
-  Text,
+  // Text,
   View,
 } from 'react-native';
+import Text from '../../shared/comps/ComText';
 import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
 import {getPubsRewardTotal, pubHostByIp} from '../../remote/pubOP';

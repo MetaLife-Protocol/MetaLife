@@ -4,7 +4,8 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {Text, View, StyleSheet, ImageBackground} from 'react-native';
+import {View, StyleSheet, ImageBackground} from 'react-native';
+import Text from '../../../../../shared/comps/ComText';
 import {getNFTTotal} from '../../../../../remote/contractOP';
 import {getWBalanceByContract} from '../../../../../remote/wallet/WalletAPI';
 import useSchemaStyles from '../../../../../shared/UseSchemaStyles';

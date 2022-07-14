@@ -4,9 +4,10 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
+  // Text,
   View,
 } from 'react-native';
+import Text from '../../../../../shared/comps/ComText';
 import useSchemaStyles, {
   colorsSchema,
 } from '../../../../../shared/UseSchemaStyles';

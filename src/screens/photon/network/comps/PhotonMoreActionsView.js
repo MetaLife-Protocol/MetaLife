@@ -9,11 +9,12 @@
 import React, {memo, useCallback} from 'react';
 import {
   StyleSheet,
-  Text,
+  // Text,
   TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import {useDialog, useStyle} from '../../../../metalife-base';
 import {useNavigation} from '@react-navigation/native';
 import {uploadPhotonLogDialog} from '../hooks';

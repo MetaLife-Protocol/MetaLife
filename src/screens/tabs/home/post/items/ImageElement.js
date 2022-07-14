@@ -1,4 +1,5 @@
-import {Linking, Text} from 'react-native';
+import {Linking} from 'react-native';
+import Text from '../../../../../shared/comps/ComText';
 import useSchemaStyles from '../../../../../shared/UseSchemaStyles';
 import React from 'react';
 import FastImage from 'react-native-fast-image';

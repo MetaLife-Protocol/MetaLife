@@ -4,7 +4,8 @@
 import React, {memo} from 'react';
 import PostItem from './items/PostItem';
 import {colorsSchema} from '../../../../shared/UseSchemaStyles';
-import {Text} from 'react-native';
+// import {Text} from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 
 const ItemAgent = ({info: {item}, verbose = false}) => {
   const {

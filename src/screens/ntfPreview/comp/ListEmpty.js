@@ -1,8 +1,9 @@
 import React from 'react';
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {View, StyleSheet, Pressable} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {pxToDp} from '../../../utils';
 import {connect} from 'react-redux/lib/exports';
+import Text from '../../../shared/comps/ComText';
 const dark = require('../../../assets/image/nft/dark_empty.png');
 const white = require('../../../assets/image/nft/white_empty.png');
 

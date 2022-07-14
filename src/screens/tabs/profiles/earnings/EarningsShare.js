@@ -6,10 +6,11 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  Text,
+  // Text,
   useWindowDimensions,
   View,
 } from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import {connect} from 'react-redux/lib/exports';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
