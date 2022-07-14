@@ -14,10 +14,10 @@ export function sddsafsadf(originKey, data, cb) {
 
   storeWithSession(originKey, signedMessage, data)
     .then(() => {
-      cb(true, null);
+      cb && cb(true, null);
     })
     .catch(err => {
-      cb(false, err);
+      cb && cb(false, err);
     });
 }
 
@@ -25,9 +25,9 @@ export function yjggfjgjghfg(originKey, cb) {
   let signedMessage = getSignedSecretSession(originKey);
   retrieveWithSession(originKey, signedMessage)
     .then(res => {
-      cb(true, res);
+      cb && cb(true, res);
     })
     .catch(err => {
-      cb(false, err);
+      cb && cb(false, err);
     });
 }
