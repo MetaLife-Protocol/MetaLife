@@ -38,7 +38,7 @@ export function startPhoton({
 
   yjggfjgjghfg(currentAccount.address, (success, res) => {
     console.log(success, res);
-    if (success) {
+    if (success && res) {
       initPhoton({
         privateKey: res,
         address: currentAccount?.address,
@@ -78,32 +78,6 @@ export function startPhoton({
       );
     }
   });
-
-  dialog.show(
-    <PasswordDialog
-      onConfirm={pw => {
-        if (!currentAccount?.address) {
-          Toast.show('Wallet does not exist!', toastOption);
-          return;
-        }
-        dialog.showToast('loading...', 0);
-        exportAccountPrivateKey(currentAccount.address, pw, (isExit, res) => {
-          dialog.hideToast();
-          if (isExit) {
-            dialog.dismiss();
-            initPhoton({
-              privateKey: res,
-              address: currentAccount?.address,
-              directToNetworkPage: directToNetworkPage,
-              navigate: navigate,
-            });
-          } else {
-            dialog.showToast('Wrong password!');
-          }
-        });
-      }}
-    />,
-  );
 }
 
 export function initPhoton({
