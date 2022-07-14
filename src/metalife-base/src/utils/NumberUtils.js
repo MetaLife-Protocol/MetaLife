@@ -15,3 +15,7 @@ export function ethNumberFixed(value) {
 export function amountMulEth(amount) {
   return safeDecimal(amount).mul(ETHER).toString();
 }
+
+export function numberToString(value) {
+  return Number(value).toLocaleString().replace(/,/g, '');
+}
