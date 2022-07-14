@@ -24,10 +24,10 @@ const ComText = (props: BaseTextProps) => {
     fontSize,
     color,
     fontWeight,
-    marginTop: margin[0] ? margin[0] : 0,
-    marginBottom: margin[1] ? margin[1] : 0,
-    marginLeft: margin[2] ? margin[2] : 0,
-    marginRight: margin[3] ? margin[3] : 0,
+    // marginTop: margin[0] ? margin[0] : 0,
+    // marginBottom: margin[1] ? margin[1] : 0,
+    // marginLeft: margin[2] ? margin[2] : 0,
+    // marginRight: margin[3] ? margin[3] : 0,
   };
   return (
     <Text
