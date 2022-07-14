@@ -7,7 +7,8 @@
  */
 
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import {useStyle} from '../../../../metalife-base';
 
 const DetailTitle = ({title, style}) => {

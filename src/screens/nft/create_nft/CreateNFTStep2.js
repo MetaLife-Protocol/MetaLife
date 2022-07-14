@@ -8,7 +8,7 @@
 
 import React, {useState} from 'react';
 import {
-  Text,
+  // Text,
   View,
   StyleSheet,
   SafeAreaView,
@@ -17,6 +17,7 @@ import {
   Image,
   Slider,
 } from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import StepView from './comps/StepView';
 import {
   NormalSeparator,

@@ -8,13 +8,14 @@
 
 import React from 'react';
 import {
-  Text,
+  // Text,
   View,
   StyleSheet,
   Image,
   SafeAreaView,
   ScrollView,
 } from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import {useStyle} from '../../../metalife-base';
 import CollectionView from './comps/CollectionView';
 import DetailTitle from './comps/DetailTitle';

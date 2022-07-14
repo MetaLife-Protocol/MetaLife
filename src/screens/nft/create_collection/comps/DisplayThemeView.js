@@ -6,7 +6,8 @@
  */
 
 import React, {useCallback} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import {useStyle} from '../../../../metalife-base';
 
 const tokens = [

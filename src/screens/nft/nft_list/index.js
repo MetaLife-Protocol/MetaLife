@@ -8,7 +8,7 @@
 
 import React, {useCallback, useLayoutEffect} from 'react';
 import {
-  Text,
+  // Text,
   View,
   StyleSheet,
   SafeAreaView,
@@ -17,6 +17,7 @@ import {
   Pressable,
   TouchableOpacity,
 } from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import NFTListItem from './comps/NFTListItem';
 import {useNavigation} from '@react-navigation/native';
 import {useStyle} from '../../../metalife-base';

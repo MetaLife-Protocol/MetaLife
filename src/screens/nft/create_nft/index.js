@@ -11,10 +11,11 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  Text,
+  // Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import {
   PureTextInput,
   RoundBtn,

@@ -7,7 +7,8 @@
  */
 
 import React from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import {useStyle} from '../../../../metalife-base';
 
 const CreateNFTInformationView = ({file = {}, name = '', description = ''}) => {

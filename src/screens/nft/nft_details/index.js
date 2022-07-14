@@ -7,13 +7,14 @@
  */
 import React, {useState} from 'react';
 import {
-  Text,
+  // Text,
   View,
   StyleSheet,
   SafeAreaView,
   Image,
   ScrollView,
 } from 'react-native';
+import Text from '../../../shared/comps/ComText';
 import {RoundBtn, useStyle} from '../../../metalife-base';
 
 const NFTDetails = ({}) => {

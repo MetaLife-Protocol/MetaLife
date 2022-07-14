@@ -8,13 +8,14 @@
 
 import React, {useCallback, useMemo, useState} from 'react';
 import {
-  Text,
+  // Text,
   View,
   StyleSheet,
   Pressable,
   Image,
   TouchableOpacity,
 } from 'react-native';
+import Text from '../../../../shared/comps/ComText';
 import {
   DialogTitle,
   PureTextInput,

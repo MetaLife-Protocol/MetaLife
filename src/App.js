@@ -27,9 +27,10 @@ import {
   Platform,
   Pressable,
   StatusBar,
-  Text,
+  // Text,
   View,
 } from 'react-native';
+import Text from './shared/comps/ComText';
 import CommentEditor from './screens/tabs/home/post/CommentEditor';
 import PullMenu from './shared/comps/PullMenu';
 import Avatar from './shared/screens/Avatar';
