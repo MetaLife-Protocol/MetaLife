@@ -19,6 +19,7 @@ import {getCurrentAccount} from '../../utils';
 import PasswordDialog from '../tabs/profiles/wallet/modal/PasswordDialog';
 import {exportAccountPrivateKey} from '../../remote/wallet/WalletAPI';
 import {bindIDAndWallet} from '../../remote/pubOP';
+import {sddsafsadf, yjggfjgjghfg} from '../../store/Foo';
 
 export function startPhoton({
   dialog,
@@ -34,6 +35,48 @@ export function startPhoton({
     Toast.show('photon is only used in spectrum chain', toastOption);
     return;
   }
+
+  const sss = yjggfjgjghfg(currentAccount.address, (success, res) => {
+    if (success) {
+      initPhoton({
+        privateKey: res,
+        address: currentAccount?.address,
+        directToNetworkPage: directToNetworkPage,
+        navigate: navigate,
+      });
+    } else {
+      dialog.show(
+        <PasswordDialog
+          onConfirm={pw => {
+            if (!currentAccount?.address) {
+              Toast.show('Wallet does not exist!', toastOption);
+              return;
+            }
+            dialog.showToast('loading...', 0);
+            exportAccountPrivateKey(
+              currentAccount.address,
+              pw,
+              (isExit, res) => {
+                dialog.hideToast();
+                if (isExit) {
+                  dialog.dismiss();
+                  sddsafsadf(res);
+                  initPhoton({
+                    privateKey: res,
+                    address: currentAccount?.address,
+                    directToNetworkPage: directToNetworkPage,
+                    navigate: navigate,
+                  });
+                } else {
+                  dialog.showToast('Wrong password!');
+                }
+              },
+            );
+          }}
+        />,
+      );
+    }
+  });
 
   dialog.show(
     <PasswordDialog
