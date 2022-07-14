@@ -51,7 +51,7 @@ const PasswordDialog = ({onConfirm}) => {
       }
       onConfirm={() => {
         if (!pwd) {
-          Toast.show('password is empty!');
+          Toast.show('password is empty!', {position: Toast.position.TOP});
           return;
         }
         onConfirm && onConfirm(pwd);
