@@ -322,6 +322,8 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
         submit={{
           text: 'Confirm',
           press: () => {
+            setToastVisible(true);
+            setToastContent('loading...');
             exportAccountMnemonic(account.address, pwd, (isSuccess, res) => {
               if (isSuccess) {
                 setPwdVisible(false);
@@ -331,6 +333,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
                   shuffleMnemonic: res.shuffleMnemonic,
                 });
               } else {
+                setToastVisible(true);
                 setToastContent('Wrong password');
               }
             });

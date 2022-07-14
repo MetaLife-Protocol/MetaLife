@@ -106,6 +106,7 @@ const WalletAccountDetails = ({
   };
 
   const checkPasswordCallback = (isCorrect, content) => {
+    setToastVisible(false);
     if (isCorrect) {
       setCopyInfo(content);
       setPutPwdVisible(false);
@@ -223,6 +224,8 @@ const WalletAccountDetails = ({
         submit={{
           text: 'Confirm',
           press: () => {
+            setToastVisible(true);
+            setToastContent('loading...');
             if (clickIndex === 'keystore') {
               setTipList([
                 'The private key is not encrypted, and there  is a risk in exporting. It is recommended to use keystore for backup.',
@@ -238,6 +241,7 @@ const WalletAccountDetails = ({
               exportAccountPrivateKey(address, pwd, checkPasswordCallback);
             } else if (clickIndex === 'delete') {
               deleteWalletAccount(address, pwd, isCorrect => {
+                setToastVisible(false);
                 if (isCorrect) {
                   setPutPwdVisible(false);
                   const addressIndex = wallet.accounts[type]

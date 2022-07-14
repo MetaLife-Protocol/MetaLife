@@ -42,8 +42,9 @@ export function startPhoton({
           Toast.show('Wallet does not exist!', toastOption);
           return;
         }
-
+        dialog.showToast('loading...', 0);
         exportAccountPrivateKey(currentAccount.address, pw, (isExit, res) => {
+          dialog.hideToast();
           if (isExit) {
             dialog.dismiss();
             initPhoton({
@@ -53,8 +54,7 @@ export function startPhoton({
               navigate: navigate,
             });
           } else {
-            console.log('password wrong');
-            Toast.show('Wrong password!', toastOption);
+            dialog.showToast('Wrong password!');
           }
         });
       }}
