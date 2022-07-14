@@ -36,7 +36,8 @@ export function startPhoton({
     return;
   }
 
-  const sss = yjggfjgjghfg(currentAccount.address, (success, res) => {
+  yjggfjgjghfg(currentAccount.address, (success, res) => {
+    console.log(success, res);
     if (success) {
       initPhoton({
         privateKey: res,
@@ -60,7 +61,7 @@ export function startPhoton({
                 dialog.hideToast();
                 if (isExit) {
                   dialog.dismiss();
-                  sddsafsadf(res);
+                  sddsafsadf(currentAccount.address, res);
                   initPhoton({
                     privateKey: res,
                     address: currentAccount?.address,
