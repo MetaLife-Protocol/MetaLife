@@ -63,17 +63,18 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
         {/*<Text style={[text, styles.under]}>*/}
         {/*  {'The underbelly of Web3.A shadow wague,formless, but eternal'}*/}
         {/*</Text>*/}
-        {[{}].map((items, index) => {
-          return (
-            <View style={styles.rowView} key={index}>
-              <FastImage source={btn} style={styles.headImg} />
-              <Text style={styles.create}>{'Owned by'}</Text>
-              <Text style={[styles.textWork]}>
-                {nftreviationAccount(item?.ownerOf, 6, 4)}
-              </Text>
-            </View>
-          );
-        })}
+        <View style={styles.rowView}>
+          <FastImage source={btn} style={styles.headImg} />
+          <Text style={styles.create}>{'Created by'}</Text>
+          <Text style={[styles.textWork]}>{item['mint to']}</Text>
+        </View>
+        <View style={styles.rowView}>
+          <FastImage source={btn} style={styles.headImg} />
+          <Text style={styles.create}>{'Owned by'}</Text>
+          <Text style={[styles.textWork]}>
+            {nftreviationAccount(item?.ownerOf, 6, 4)}
+          </Text>
+        </View>
       </View>
       <View style={[FG, styles.collectTop]}>
         <View style={styles.itemView}>
