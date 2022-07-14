@@ -15,12 +15,10 @@ import {
 } from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {store} from '../../store/configureStore';
-import {checkPubExist, checkSum, getCurrentAccount} from '../../utils';
+import {getCurrentAccount} from '../../utils';
 import PasswordDialog from '../tabs/profiles/wallet/modal/PasswordDialog';
-import {getAccount} from '../../remote/wallet/WalletAPI';
-import {exportPrivateKeyFromKeystore} from 'react-native-web3-wallet';
+import {exportAccountPrivateKey} from '../../remote/wallet/WalletAPI';
 import {bindIDAndWallet} from '../../remote/pubOP';
-import {presetPubs} from '../tabs/profiles/Pubs';
 
 export function startPhoton({
   dialog,
@@ -29,41 +27,34 @@ export function startPhoton({
   directToNetworkPage = true,
 }) {
   const currentAccount = getCurrentAccount(wallet);
-  console.log('currentAccount::', currentAccount);
+  const toastOption = {
+    position: Toast.position.TOP,
+  };
   if (currentAccount?.type !== 'spectrum') {
-    Toast.show('photon is only used in spectrum chain');
+    Toast.show('photon is only used in spectrum chain', toastOption);
     return;
   }
 
   dialog.show(
     <PasswordDialog
       onConfirm={pw => {
-        console.log('pw::', pw);
         if (!currentAccount?.address) {
-          Toast.show('Wallet does not exist!');
-          dialog.dismiss();
+          Toast.show('Wallet does not exist!', toastOption);
           return;
         }
-        dialog.dismiss();
 
-        getAccount(currentAccount?.address, (isExit, keystore) => {
+        exportAccountPrivateKey(currentAccount.address, pw, (isExit, res) => {
           if (isExit) {
-            console.log('keystore::', keystore);
-            exportPrivateKeyFromKeystore(JSON.stringify(keystore), pw)
-              .then(res => {
-                console.log('private Key res::::', res);
-                dialog.dismiss();
-                initPhoton({
-                  privateKey: res,
-                  address: currentAccount?.address,
-                  directToNetworkPage: directToNetworkPage,
-                  navigate: navigate,
-                });
-              })
-              .catch(error => {
-                console.warn(error);
-                // cb && cb(false);
-              });
+            dialog.dismiss();
+            initPhoton({
+              privateKey: res,
+              address: currentAccount?.address,
+              directToNetworkPage: directToNetworkPage,
+              navigate: navigate,
+            });
+          } else {
+            console.log('password wrong');
+            Toast.show('Wrong password!', toastOption);
           }
         });
       }}
