@@ -118,7 +118,12 @@ export const aboutHandler = ({
     content: {about},
   },
 }) =>
-  getProfile(about, msg => dispatch({type: 'addInfo', payload: [about, msg]}));
+  getProfile(about, msg => {
+    about === feedId &&
+      msg.avatar &&
+      dispatch({type: 'setAvatar', payload: msg.avatar});
+    dispatch({type: 'addInfo', payload: [about, msg]});
+  });
 
 export const voteHandler = ({value: {author, content}}) =>
   dispatch({type: 'setVote', payload: {author, content}});
