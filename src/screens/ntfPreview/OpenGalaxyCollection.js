@@ -20,6 +20,14 @@ const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
       setInfo(value);
       getNFTInfos(undefined, nftCInfo => {
         console.log('collection got: ', nftCInfo);
+        if (
+          nftCInfo.id == 14 ||
+          nftCInfo.id == 19 ||
+          nftCInfo.id == 21 ||
+          nftCInfo.id == 22
+        ) {
+          return;
+        }
         getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
           console.log('nft got: ', nftJInfo);
           nftJInfo.headers['content-type'] === 'application/json' &&
