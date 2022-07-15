@@ -6,7 +6,7 @@
  * @desc:
  */
 
-import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -14,36 +14,86 @@ import {
   RefreshControl,
   SafeAreaView,
   StyleSheet,
-  // Text,
   View,
 } from 'react-native';
 import Text from '../../../shared/comps/ComText';
-import {useStyle} from '../../../metalife-base';
+import {useDialog, useStyle} from '../../../metalife-base';
 import PhotonAccountInfoCard from './comps/PhotonAccountInfoCard';
 import {useNavigation} from '@react-navigation/native';
-import PhotonMoreActionsView from './comps/PhotonMoreActionsView';
 import PhotonListItemView from './comps/PhotonListItemView';
 import {getBalanceFromPhoton, loadChannelList} from 'react-native-photon';
 import {connect} from 'react-redux';
-import {getCurrentAccount} from '../../../utils';
+import {fixWalletAddress, getCurrentAccount} from '../../../utils';
 import PhotonUrl from '../PhotonUrl';
-import {getWBalance} from '../../../remote/wallet/WalletAPI';
+import {uploadPhotonLogDialog} from './hooks';
 
-const PhotonNetwork = ({channelRemark, wallet}) => {
+const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
   const styles = useStyle(createSty);
-  const [moreActionsVisible, setMoreActionsVisible] = useState(false),
-    [balances, setBalances] = useState([]),
+  const [balances, setBalances] = useState([]),
     [channelList, setChannelList] = useState([]),
     [refreshing, setRefreshing] = useState(false);
-
+  const dialog = useDialog();
   const navigation = useNavigation();
+  function goScreen(name, params) {
+    navigation.navigate(name, params);
+  }
+  function menuHandler(e) {
+    e.target.measure((x, y, width, height, pageX, pageY) =>
+      showPullMenu({
+        position: {
+          x: pageX - width - 76,
+          y: pageY + height,
+        },
+        buttons: [
+          {
+            title: 'QR code',
+            handler: () => {
+              const currentAccount = getCurrentAccount(wallet);
+              goScreen('ReceivingCode', {
+                token: fixWalletAddress(currentAccount?.address),
+              });
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+          {
+            title: 'Create channel',
+            handler: () => {
+              goScreen('CreateChannel');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+          {
+            title: 'Transaction record',
+            handler: () => {
+              goScreen('PhotonTransactionRecord');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+          {
+            title: 'Pay',
+            handler: () => {
+              goScreen('Payment');
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+          {
+            title: 'Upload log',
+            handler: () => {
+              uploadPhotonLogDialog({dialog});
+              showPullMenu({position: {}, buttons: []});
+            },
+          },
+        ],
+      }),
+    );
+  }
 
   //set tabBar right more icon
   useLayoutEffect(() => {
     // navigationOptions;
     navigation.setOptions({
       headerRight: () => (
-        <Pressable onPress={() => setMoreActionsVisible(true)}>
+        <Pressable onPress={menuHandler}>
           <Image
             source={require('../../../assets/image/photon/photon_more.png')}
             style={styles.moreImg}
@@ -140,16 +190,6 @@ const PhotonNetwork = ({channelRemark, wallet}) => {
         )}
         keyExtractor={(item, index) => `list_${index}`}
       />
-      <PhotonMoreActionsView
-        visible={moreActionsVisible}
-        onSelect={() => {
-          setMoreActionsVisible(false);
-        }}
-        onClose={() => {
-          setMoreActionsVisible(false);
-        }}
-        wallet={wallet}
-      />
     </SafeAreaView>
   );
 };
@@ -186,4 +226,9 @@ const msp = s => {
     wallet: s.wallet,
   };
 };
-export default connect(msp)(PhotonNetwork);
+const mdp = d => {
+  return {
+    showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
+  };
+};
+export default connect(msp, mdp)(PhotonNetwork);
