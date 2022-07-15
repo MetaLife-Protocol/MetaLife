@@ -86,7 +86,11 @@ import {pubHostByIp} from './remote/pubOP';
 import DaoDetailView from './screens/daoPreview/DaoDetailView';
 import OpenGalaxyCollection from './screens/ntfPreview/OpenGalaxyCollection';
 import RNFS from 'react-native-fs';
+
 import WalletTransfer from './screens/tabs/profiles/wallet/WalletTransfer';
+
+import WalletNftTransfer from './screens/tabs/profiles/wallet/WalletNftTransfer';
+import WalletTransactionDetail from './screens/tabs/profiles/wallet/WalletTransactionDetail';
 
 const App = ({
   feedId,
@@ -481,6 +485,12 @@ const App = ({
           name="OpenGalaxyCollection"
           component={OpenGalaxyCollection}
           options={{headerTitle: 'Open Galaxy'}}
+        />
+        <Screen name="WalletNftTransfer" component={WalletNftTransfer} />
+        <Screen
+          name="WalletTransactionDetail"
+          component={WalletTransactionDetail}
+          options={{headerTitle: 'Transaction Details'}}
         />
       </Navigator>
       <MaskView darkMode={darkMode} enabled={masked} eventEnabled={false} />
