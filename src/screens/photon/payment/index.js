@@ -18,7 +18,7 @@ import {
 import Text from '../../../shared/comps/ComText';
 import {
   amountMulEth,
-  PhotonSeparator,
+  numberToString,
   PureTextInput,
   RoundBtn,
   useStyle,
@@ -27,7 +27,6 @@ import Constants from '../../../shared/Constants';
 import {useNavigation} from '@react-navigation/native';
 import {photonTransfer} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
-import PhotonUrl from '../PhotonUrl';
 import {connect} from 'react-redux';
 import {getTokenAddress} from '../PhotonUtils';
 
@@ -45,7 +44,7 @@ const Payment = ({showPullMenu}) => {
   const transferFun = useCallback(() => {
     photonTransfer({
       tokenAddress: getTokenAddress(type),
-      amount: amountMulEth(amount),
+      amount: numberToString(amountMulEth(amount)),
       walletAddress: address,
       isDirect: true,
       payData: '',
@@ -59,12 +58,13 @@ const Payment = ({showPullMenu}) => {
           Toast.show('payment success');
           navigate('PhotonTransactionRecord');
         } else {
-          Toast.show(resJson.error_message);
+          Toast.show(resJson.error_message, {
+            position: Toast.position.CENTER,
+          });
         }
       })
       .catch(e => {
-        // console.log('res::', res);
-        Toast.show(e.toString());
+        console.log('res::', e);
       });
   }, [address, amount, navigate, type]);
 

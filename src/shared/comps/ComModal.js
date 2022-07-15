@@ -1,7 +1,7 @@
 /**
  * Created on 09 Mar 2022 by lonmee
  */
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   Image,
   Modal,

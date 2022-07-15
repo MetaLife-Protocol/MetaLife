@@ -86,6 +86,7 @@ import {pubHostByIp} from './remote/pubOP';
 import DaoDetailView from './screens/daoPreview/DaoDetailView';
 import OpenGalaxyCollection from './screens/ntfPreview/OpenGalaxyCollection';
 import RNFS from 'react-native-fs';
+import WalletTransfer from './screens/tabs/profiles/wallet/WalletTransfer';
 
 const App = ({
   feedId,
@@ -269,6 +270,11 @@ const App = ({
           name="WalletManager"
           component={WalletManager}
           options={{title: 'Wallet management'}}
+        />
+        <Screen
+          name="WalletTransfer"
+          component={WalletTransfer}
+          options={{title: 'Transfer'}}
         />
         <Screen
           name="WalletAccountDetails"

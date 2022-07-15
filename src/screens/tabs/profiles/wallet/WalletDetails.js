@@ -115,7 +115,11 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
           {
             title: 'QR code',
             handler: () => {
-              goScreen('');
+              goScreen('Scan', {
+                onCallbackData: res => {
+                  Toast.show('TODO res:' + res);
+                },
+              });
               showPullMenu({position: {}, buttons: []});
             },
           },

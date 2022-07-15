@@ -33,6 +33,7 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
     [channelList, setChannelList] = useState([]),
     [refreshing, setRefreshing] = useState(false);
   const dialog = useDialog();
+  const [walletBalance, setWalletBalance] = useState({});
   const navigation = useNavigation();
   function goScreen(name, params) {
     navigation.navigate(name, params);
@@ -107,31 +108,29 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
     const balanceSMT = getBalanceFromPhoton(PhotonUrl.PHOTON_SMT_TOKEN_ADDRESS);
     const balanceMLT = getBalanceFromPhoton(PhotonUrl.PHOTON_MLT_TOKEN_ADDRESS);
     Promise.all([balanceSMT, balanceMLT]).then(values => {
-      // console.log('values::', values);
       const jsonSMTRes = JSON.parse(values[0]);
       const jsonMLTRes = JSON.parse(values[1]);
       console.log('jsonSMTRes balance:::', jsonSMTRes);
       console.log('jsonMLTRes balance:::', jsonMLTRes);
       let getBalances = [];
+      let balanceData = {};
       if (jsonSMTRes.error_code === 0) {
         const array = jsonSMTRes.data;
         if (array && array.length) {
-          // setBalances([array[0]]);
           getBalances.push(array[0]);
+          balanceData.SMT = array[0];
         }
       }
       if (jsonMLTRes.error_code === 0) {
         const array = jsonMLTRes.data;
         if (array && array.length) {
-          // setBalances([array[0]]);
           getBalances.push(array[0]);
+          balanceData.MLT = array[0];
         }
       }
-      // if (balances.length === 0) {
-      //   balances.push({});
-      // }
       setRefreshing(false);
       setBalances(getBalances);
+      setWalletBalance(balanceData);
     });
   };
 
@@ -176,17 +175,17 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
               setRefreshing(true);
               getBalance();
               getChannelList();
-              // getWBalance(type, address, res => {
-              //   setRefreshing(false);
-              //   setBalance(res);
-              // });
             }}
           />
         }
         contentContainerStyle={styles.listContainer}
         data={channelList}
         renderItem={({item, index}) => (
-          <PhotonListItemView data={item} channelRemarks={channelRemark} />
+          <PhotonListItemView
+            data={item}
+            channelRemarks={channelRemark}
+            walletBalance={walletBalance}
+          />
         )}
         keyExtractor={(item, index) => `list_${index}`}
       />

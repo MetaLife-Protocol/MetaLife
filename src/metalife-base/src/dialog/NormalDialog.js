@@ -31,23 +31,25 @@ export const NormalDialog = ({
         content
       )}
       <View style={styles.row}>
-        <RoundBtn
-          style={styles.btnContainer}
-          title={'cancel'}
-          press={() => {
-            dialog.dismiss();
-          }}
-        />
-        <RoundBtn
-          style={styles.btnContainer}
-          title={confirmStr}
-          press={() => {
-            if (confirmDismiss) {
+        <View style={{flex: 1}}>
+          <RoundBtn
+            title={'cancel'}
+            press={() => {
               dialog.dismiss();
-            }
-            onConfirm && onConfirm();
-          }}
-        />
+            }}
+          />
+        </View>
+        <View style={{flex: 1}}>
+          <RoundBtn
+            title={confirmStr}
+            press={() => {
+              if (confirmDismiss) {
+                dialog.dismiss();
+              }
+              onConfirm && onConfirm();
+            }}
+          />
+        </View>
       </View>
     </View>
   );
@@ -58,17 +60,16 @@ const createSty = theme =>
       backgroundColor: theme.c_FFFFFF_111717,
       margin: 20,
       borderRadius: 20,
-      padding: 35,
+      padding: 20,
       alignItems: 'center',
     },
     row: {
+      display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
+      justifyContent: 'center',
       marginTop: 20,
-    },
-    btnContainer: {
-      width: 80,
-      height: 30,
+      height: 44,
     },
     content: {
       fontSize: 15,

@@ -16,17 +16,18 @@ import {
   useStyle,
   safeDecimal,
   ETHER,
+  numberToString,
 } from '../../../metalife-base';
 import Constants from '../../../shared/Constants';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {depositChannelMethod} from 'react-native-photon';
 import {getPhotonTokenSymbol} from '../PhotonUtils';
+import Toast from 'react-native-tiny-toast';
 
 const SupplementaryBalance = () => {
   const styles = useStyle(createSty);
   const route = useRoute();
-  const {channelData} = route.params ?? {};
-  // console.log('channelData::', channelData);
+  const {channelData, walletBalance} = route.params ?? {};
   const navigation = useNavigation();
 
   const [amount, setAmount] = useState(''),
@@ -62,16 +63,31 @@ const SupplementaryBalance = () => {
           disabled={btnDisabled}
           title={'Create'}
           press={() => {
+            const type = getPhotonTokenSymbol(channelData?.token_address);
+            let chainBalance = safeDecimal(
+              walletBalance[type].balance_on_chain,
+            );
+            const depositAmount = safeDecimal(amount).mul(ETHER);
+            if (depositAmount.comparedTo(chainBalance) === 1) {
+              Toast.show('Insufficient Balance', {
+                position: Toast.position.CENTER,
+              });
+              return;
+            }
             depositChannelMethod({
               photonTokenAddress: channelData?.token_address,
               partnerAddress: channelData?.partner_address,
-              depositBalance: safeDecimal(amount).mul(ETHER).toString(),
+              depositBalance: numberToString(depositAmount),
             })
               .then(res => {
                 const jsonRes = JSON.parse(res);
                 if (jsonRes.error_code === 0) {
                   //   TODO 成功
                   navigation.goBack();
+                } else {
+                  Toast.show(jsonRes.error_message, {
+                    position: Toast.position.CENTER,
+                  });
                 }
                 console.log('depositChannelMethod res::', res);
               })

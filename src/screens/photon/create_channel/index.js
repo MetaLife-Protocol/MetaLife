@@ -18,18 +18,17 @@ import {
 import Text from '../../../shared/comps/ComText';
 import Constants from '../../../shared/Constants';
 import {
-  PhotonSeparator,
   PureTextInput,
   RoundBtn,
   useStyle,
   ETHER,
   safeDecimal,
+  numberToString,
 } from '../../../metalife-base';
 import {useNavigation} from '@react-navigation/native';
 import {createChannel} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {connect} from 'react-redux';
-import PhotonUrl from '../PhotonUrl';
 import {getTokenAddress} from '../PhotonUtils';
 
 const CreateChannel = ({setChannelRemark, showPullMenu}) => {
@@ -49,7 +48,7 @@ const CreateChannel = ({setChannelRemark, showPullMenu}) => {
     createChannel(
       getTokenAddress(type),
       address,
-      safeDecimal(amount).mul(ETHER).toString(),
+      numberToString(safeDecimal(amount).mul(ETHER)),
     )
       .then(res => {
         const resJson = JSON.parse(res);
@@ -58,13 +57,17 @@ const CreateChannel = ({setChannelRemark, showPullMenu}) => {
           if (remark) {
             setChannelRemark({address, remark});
           }
-          Toast.show('create channel success');
+          Toast.show('create channel success', {
+            position: Toast.position.CENTER,
+          });
         } else {
-          Toast.show(resJson.error_message);
+          Toast.show(resJson.error_message, {
+            position: Toast.position.CENTER,
+          });
         }
       })
       .catch(e => {
-        Toast.show(e.error_message);
+        console.log('createChannel error', e);
       });
   }, [setChannelRemark, address, remark, type, amount]);
 

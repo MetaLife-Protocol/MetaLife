@@ -16,9 +16,13 @@ import {
   exportPrivateKeyFromKeystore,
   getBalance,
   getContractBalance,
+  getGasLimit,
+  getGasPrice,
+  getNonce,
   importKeystore,
   importMnemonic,
   importPrivateKey,
+  signTransaction,
 } from 'react-native-web3-wallet';
 import {Buffer} from 'buffer';
 import {financeConfig} from './financeConfig';
@@ -301,4 +305,99 @@ export function exportAccountMnemonic(address, pw, cb) {
       cb && cb(false);
     }
   });
+}
+
+export async function getGas(params) {
+  const {type, fromAddress, toAddress, amount, remark} = params;
+  // getGasPrice('https://jsonapi1.smartmesh.io/')
+  //   .then(gasPrice => {
+  //     console.log('gasPrice', gasPrice.toString());
+  //     getGasLimit(
+  //       'https://jsonapi1.smartmesh.io/',
+  //       '0xc978beb3b6be2e96c527a025a3f023045cca1fa9',
+  //       '0x6025B091C6AB619F8e2F75170EB69dc57040dc6e',
+  //       '0.02',
+  //       '',
+  //     )
+  //       .then(gasLimit => {
+  //         console.log('gasLimit', gasLimit.toString());
+  //         console.log('gas', bigNumberFormatUnits(gasPrice.mul(gasLimit)));
+
+  //         getNonce(
+  //           'https://jsonapi1.smartmesh.io/',
+  //           '0xc978beb3b6be2e96c527a025a3f023045cca1fa9',
+  //         )
+  //           .then(nonce => {
+  //             console.log('nonce', nonce);
+  //             signTransaction(
+  //               JSON.stringify(keystore),
+  //               'qwerty',
+  //               nonce,
+  //               gasLimit,
+  //               gasPrice,
+  //               '0x8b4b70cbfa3ed36a4fc0f245531530462686e69f',
+  //               SMT_chainId,
+  //               '0.1',
+  //               '',
+  //             )
+  //               .then(signedTx => {
+  //                 console.log('signedTx', signedTx);
+  //                 sendTransaction('https://jsonapi1.smartmesh.io/', signedTx)
+  //                   .then(resTx => {
+  //                     console.log(resTx);
+  //                     //{"chainId": 20180430, "confirmations": 0, "data": "0x", "from": "0xC978bEb3B6be2E96c527A025a3f023045CCA1Fa9", "gasLimit": {"hex": "0x5208", "type": "BigNumber"}, "gasPrice": {"hex": "0x0430e23400", "type": "BigNumber"}, "hash": "0x58b1f8e1860979dc4335c6fd7e293de9dd69909de13694d5e4454f799d9c33d9", "nonce": 11, "r": "0xb3d04f71d2486ee7e33502e71d0a28126849dec2904355ca62bc9f6adbfbfc0a", "s": "0x4f027af1ce5292d87d1ba12f4f4df4ea733fba10e0bf43b369cd69d8a35a1d58", "to": "0x8B4B70CBfA3eD36A4Fc0f245531530462686e69f", "type": null, "v": 40360895, "value": {"hex": "0x016345785d8a0000", "type": "BigNumber"}, "wait": [Function anonymous]}
+  //                     waitForTransaction(
+  //                       'https://jsonapi1.smartmesh.io/',
+  //                       resTx.hash,
+  //                     )
+  //                       .then(res => {
+  //                         //{"blockHash": "0x85550a41901ad653e4725e00888a3f20948d5223224cf09ddd5bc5e0558dcb12", "blockNumber": 9297953, "byzantium": true, "confirmations": 1, "contractAddress": null, "cumulativeGasUsed": {"hex": "0x5208", "type": "BigNumber"}, "from": "0xC978bEb3B6be2E96c527A025a3f023045CCA1Fa9", "gasUsed": {"hex": "0x5208", "type": "BigNumber"}, "logs": [], "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", "status": 1, "to": "0x8B4B70CBfA3eD36A4Fc0f245531530462686e69f", "transactionHash": "0x58b1f8e1860979dc4335c6fd7e293de9dd69909de13694d5e4454f799d9c33d9", "transactionIndex": 1, "type": 0}
+  //                         console.log(res);
+  //                       })
+  //                       .catch(err => {
+  //                         console.log(err);
+  //                       });
+  //                   })
+  //                   .catch(err => {
+  //                     console.log(err);
+  //                   });
+  //               })
+  //               .catch(err => {
+  //                 console.log(err);
+  //               });
+  //           })
+  //           .catch(err => {
+  //             console.log(err);
+  //           });
+  //       })
+  //       .catch(err => {
+  //         console.log(err);
+  //       });
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   });
+
+  try {
+    const gasPrice = await getGasPrice(financeConfig.chains[type].rpcURL);
+    // TODO: remark参数只能传空字符串，其他都报错
+    const gasLimit = await getGasLimit(
+      financeConfig.chains[type].rpcURL,
+      fromAddress,
+      toAddress,
+      amount,
+      remark,
+    );
+    console.log('gasLimit', gasLimit.toString());
+    console.log('gas', bigNumberFormatUnits(gasPrice.mul(gasLimit)));
+
+    const nonce = await getNonce(
+      financeConfig.chains[type].rpcURL,
+      fromAddress,
+    );
+    console.log('nonce', nonce.toString());
+    signTransaction();
+  } catch (e) {
+    console.error('wallet transaction', e);
+  }
 }

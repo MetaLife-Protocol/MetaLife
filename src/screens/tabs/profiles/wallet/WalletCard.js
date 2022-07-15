@@ -142,7 +142,7 @@ const WalletCard = ({
             </Pressable>
             <Pressable
               style={[alignItemsCenter, icons]}
-              onPress={() => goScreen('xx', {})}>
+              onPress={() => goScreen('WalletTransfer')}>
               <Image source={iconDic.transfer} />
               <Text style={[tag]}>Send</Text>
             </Pressable>

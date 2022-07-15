@@ -49,49 +49,52 @@ import {useNavigation} from '@react-navigation/native';
 import {photonCloseChannel, photonWithDraw} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 
-const PhotonListItemView = ({data, channelRemarks}) => {
+const PhotonListItemView = ({data, channelRemarks, walletBalance}) => {
   const styles = useStyle(createSty);
   const {navigate} = useNavigation();
   const dialog = useDialog();
-
   const replenishAction = useCallback(() => {
-    navigate('SupplementaryBalance', {channelData: data});
-  }, [data, navigate]);
+    navigate('SupplementaryBalance', {
+      channelData: data,
+      walletBalance: walletBalance,
+    });
+  }, [data, navigate, walletBalance]);
 
-  const closeFun = useCallback(() => {
-    photonCloseChannel({
-      channelIdentifierHashStr: data.channel_identifier + '',
-      isForced: true,
-    })
-      .then(res => {
-        const resJson = JSON.parse(res);
-        if (resJson.error_code === 0) {
-          //  TODO updateChannelList 刷新列表 跳转到
-          navigate('PhotonTransactionRecord');
-        } else if (resJson.error_code === 2000) {
-          Toast.show('Insufficient balance to pay for gas');
-        } else {
-          //needForced
-          // dialog.show(
-          //   <NormalDialog
-          //     title={'Settle the channel?'}
-          //     content={
-          //       'Cannot withdraw cash normally, whether to close the channel for cash withdrawal?'
-          //     }
-          //     confirm={closeChannel}
-          //   />,
-          // );
-          //  非强制直接弹toast即可
-          Toast.show(resJson.error_message);
-        }
+  const closeFun = useCallback(
+    isForced => {
+      photonCloseChannel({
+        channelIdentifierHashStr: data.channel_identifier + '',
+        isForced,
       })
-      .catch(e => {
-        console.log('closeChannel e::', e);
-      });
-  }, [data.channel_identifier, navigate]);
+        .then(res => {
+          const resJson = JSON.parse(res);
+          if (resJson.error_code === 0) {
+            //  TODO updateChannelList 刷新列表 跳转到
+            navigate('PhotonTransactionRecord');
+          } else if (resJson.error_code === 2000) {
+            Toast.show('Insufficient balance to pay for gas');
+          } else if (resJson.error_code === 1016) {
+            // partner is offline
+            dialog.show(
+              <NormalDialog
+                title={'close the channel?'}
+                content={
+                  'partner is offline, whether to forced close the channel?'
+                }
+                onConfirm={closeChannel}
+              />,
+            );
+          }
+        })
+        .catch(e => {
+          console.log('closeChannel e::', e);
+        });
+    },
+    [data.channel_identifier, navigate],
+  );
 
   const closeChannel = useCallback(
-    ({failReason = ''}) => {
+    (failReason = '') => {
       dialog.show(
         <NormalDialog
           title={'Forced close the channel?'}
@@ -108,7 +111,7 @@ const PhotonListItemView = ({data, channelRemarks}) => {
               )}
             </>
           }
-          onConfirm={closeFun}
+          onConfirm={() => closeFun(true)}
         />,
       );
     },
@@ -133,7 +136,7 @@ const PhotonListItemView = ({data, channelRemarks}) => {
         Toast.show('Insufficient balance to pay for gas');
       } else {
         console.log('error::::init::::');
-        closeChannel({failReason: resJson.error_message});
+        closeChannel(resJson.error_message);
       }
       console.log('photonWithDraw res:', res);
     });
@@ -245,10 +248,30 @@ const PhotonListItemView = ({data, channelRemarks}) => {
           <Text style={styles.buttonText} onPress={replenishAction}>
             deposit
           </Text>
-          <Text style={styles.buttonText} onPress={withdrawAction}>
+          <Text
+            style={styles.buttonText}
+            onPress={() => {
+              dialog.show(
+                <NormalDialog
+                  title={'Notice'}
+                  content={'Withdraw now?'}
+                  onConfirm={withdrawAction}
+                />,
+              );
+            }}>
             withdraw
           </Text>
-          <Text style={styles.buttonText} onPress={closeChannel}>
+          <Text
+            style={styles.buttonText}
+            onPress={() => {
+              dialog.show(
+                <NormalDialog
+                  title={'Notice'}
+                  content={'Close now?'}
+                  onConfirm={() => closeFun(false)}
+                />,
+              );
+            }}>
             closure
           </Text>
         </View>
