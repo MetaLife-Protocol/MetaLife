@@ -97,7 +97,6 @@ export function initPhoton({
     address = '0x' + address;
   }
 
-  console.log('privateKey:', privateKey);
   console.log('address:', address);
 
   /**
