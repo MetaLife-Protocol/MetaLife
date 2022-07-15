@@ -41,7 +41,7 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
     e.target.measure((x, y, width, height, pageX, pageY) =>
       showPullMenu({
         position: {
-          x: pageX - width - 76,
+          x: pageX - width - 110,
           y: pageY + height,
         },
         buttons: [
