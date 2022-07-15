@@ -78,13 +78,6 @@ const WalletCard = ({
             },
           },
           {
-            title: 'QR code',
-            handler: () => {
-              goScreen('');
-              showPullMenu({position: {}, buttons: []});
-            },
-          },
-          {
             title: 'Address contact',
             handler: () => {
               goScreen('');
