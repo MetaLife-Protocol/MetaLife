@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React from 'react';
 
-import {Platform, StyleSheet, Text, TextProps, ViewProps} from 'react-native';
+import {Platform, StyleSheet, Text, TextProps} from 'react-native';
 
 interface BaseTextProps extends TextProps {
   children?: React.ReactNode;
