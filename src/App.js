@@ -91,6 +91,9 @@ import WalletTransfer from './screens/tabs/profiles/wallet/WalletTransfer';
 
 import WalletNftTransfer from './screens/tabs/profiles/wallet/WalletNftTransfer';
 import WalletTransactionDetail from './screens/tabs/profiles/wallet/WalletTransactionDetail';
+import AddressContact from './screens/tabs/profiles/wallet/AddressContact';
+import AddAddressScreen from './screens/tabs/profiles/wallet/AddAddressScreen';
+import WalletRecord from './screens/tabs/profiles/wallet/WalletRecord';
 
 const App = ({
   feedId,
@@ -479,7 +482,7 @@ const App = ({
         <Screen
           name="DaoDetailView"
           component={DaoDetailView}
-          options={{headerTitle: 'metaverse.tokenship'}}
+          options={{headerTitle: 'metaverse.MetaLife'}}
         />
         <Screen
           name="OpenGalaxyCollection"
@@ -491,6 +494,17 @@ const App = ({
           name="WalletTransactionDetail"
           component={WalletTransactionDetail}
           options={{headerTitle: 'Transaction Details'}}
+        />
+        <Screen
+          name="AddressContact"
+          component={AddressContact}
+          options={{headerTitle: 'Address Contact'}}
+        />
+        <Screen name="AddAddressScreen" component={AddAddressScreen} />
+        <Screen
+          name="WalletRecord"
+          component={WalletRecord}
+          options={{headerTitle: 'Token Transaction Record'}}
         />
       </Navigator>
       <MaskView darkMode={darkMode} enabled={masked} eventEnabled={false} />
