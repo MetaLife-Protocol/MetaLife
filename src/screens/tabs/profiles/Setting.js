@@ -105,21 +105,18 @@ const Setting = ({
             </ControllerItem>
           </Pressable>
         </Section>
-        <Section style={[marginTop10]}>
+        <Section style={[marginTop10]} separator={NormalSeparator}>
           <Pressable onPress={() => navigate('Pubs')} hitSlop={10}>
             <ControllerItem title={'Connect to Pub'}>
               <Image source={ArrowImage} />
             </ControllerItem>
           </Pressable>
           {__DEV__ && (
-            <>
-              <NormalSeparator {...BG} />
-              <Pressable onPress={() => navigate('Mnemonic')} hitSlop={10}>
-                <ControllerItem title={'Mnemonic'}>
-                  <Image source={ArrowImage} />
-                </ControllerItem>
-              </Pressable>
-            </>
+            <Pressable onPress={() => navigate('Mnemonic')} hitSlop={10}>
+              <ControllerItem title={'Mnemonic'}>
+                <Image source={ArrowImage} />
+              </ControllerItem>
+            </Pressable>
           )}
         </Section>
         <Section

@@ -1,4 +1,4 @@
-import {Button, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Text from '../../shared/comps/ComText';
 import React from 'react';
 import useSchemaStyles from '../UseSchemaStyles';
@@ -26,7 +26,7 @@ const Section = ({children, title, separator, style, rightBtn}) => {
               index === 0 && {marginTop: 14},
               index === arr.length - 1 && {marginBottom: 14},
             ]}>
-            {separator && index > 0 && separator(BG)}
+            {child && separator && index > 0 && separator(BG)}
             {child}
           </View>
         ))}
