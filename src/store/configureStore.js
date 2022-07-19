@@ -29,6 +29,7 @@ export const store = configureStore({
         ignoredActionPaths: [],
         // Ignore these paths in the state
         ignoredPaths: [],
+        warnAfter: 128,
       },
       thunk: false,
       immutableCheck: false,
