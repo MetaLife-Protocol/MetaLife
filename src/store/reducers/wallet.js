@@ -12,7 +12,7 @@ const initState = {
   },
   balance: {},
   accounts: {},
-  address: {},
+  address: [],
 };
 
 export const walletReducer = (state = initState, {type, payload}) => {
@@ -66,6 +66,38 @@ export const walletReducer = (state = initState, {type, payload}) => {
           [payload.type]: state.address[payload.type]
             ? [...state.address[payload.type], payload]
             : [payload],
+        },
+        // [payload.type]: {
+        //   ...state[payload.type],
+        //   address: state[payload.type].address
+        //     ? [...state[payload.type].address, payload]
+        //     : [payload],
+        // },
+      };
+    case 'deleteAddressContact':
+      return {
+        ...state,
+        address: {
+          ...state.address,
+          [payload.type]: state.address[payload.type].filter(
+            item => item.key !== payload.key,
+          ),
+        },
+        // [payload.type]: state.address[payload.type].splice(
+        //   state.address[payload.type].findIndex(
+        //     item => item.key === payload.key,
+        //   ),
+        //   1,
+        // ),
+      };
+    case 'updateAddressContact':
+      return {
+        ...state,
+        address: {
+          ...state.address,
+          [payload.type]: state.address[payload.type].map(item => {
+            return item.key === payload.key ? {...item, ...payload} : item;
+          }),
         },
       };
     default:
