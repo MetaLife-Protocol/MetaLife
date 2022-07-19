@@ -342,7 +342,7 @@ export const bluetoothBridge = function (options) {
     deviceID_Name[device.deviceID] = device.name;
     deviceName_ID[device.name] = device.deviceID;
     var deviceProperty;
-    if (deviceInfos[device.name] === undefined) {
+    if (deviceInfos[device.name] === undefined && device.name !== undefined) {
       console.log('device', device);
 
       deviceInfos[device.name] = device;
