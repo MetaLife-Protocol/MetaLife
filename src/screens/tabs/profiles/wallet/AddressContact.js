@@ -7,9 +7,11 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 import HeadIcon from '../../../../shared/comps/HeadIcon';
 import {HeaderIcons} from '../../../../shared/Icons';
 
-const AddressContact = ({navigation, wallet}) => {
-  console.log('wwwwwwwwwww', wallet);
+const AddressContact = ({navigation, wallet, deleteAddressContact}) => {
+  // console.log('ffffff====', wallet);
+  // console.log('wwwwwwwwwww', wallet.address.address);
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
+  const {address} = wallet.address;
   const headerRight = () => (
     <Pressable
       onPress={() => {
@@ -28,18 +30,19 @@ const AddressContact = ({navigation, wallet}) => {
       [navigation],
     );
   }, [navigation]);
+  // console.log('ddddddsss', Object.keys(wallet));
+  // const [listData, setListData] = useState(wallet.address.address);
+  const listData = wallet?.address?.address || [];
 
-  const [listData, setListData] = useState(
-    Array(20)
-      .fill('')
-      .map((_, i) => ({key: `${i}`, text: `item #${i}`})),
-  );
-
-  const renderItem = () => {
+  const renderItem = data => {
+    // console.log('dddddd', data);
     return (
       <View style={[BG, styles.listItem]}>
-        <Text style={[text, styles.name]}>Aries</Text>
-        <Text style={styles.content}>0xA761A79a2D0B…84aFB</Text>
+        <Text style={[text, styles.name]}>{data.item.name}</Text>
+        <Text style={styles.content}>{data.item.addressCon}</Text>
+        {data.item.remark ? (
+          <Text style={styles.content}>{data.item.remark}</Text>
+        ) : null}
       </View>
     );
   };
@@ -52,21 +55,26 @@ const AddressContact = ({navigation, wallet}) => {
 
   const deletePress = (rowMap, rowKey) => {
     closeRow(rowMap, rowKey);
-    const newData = [...listData];
-    const prevIndex = listData.findIndex(item => item.key === rowKey);
-    newData.splice(prevIndex, 1);
-    setListData(newData);
+    // const newData = [...listData];
+    // const prevIndex = listData.findIndex(item => item.key === rowKey);
+    // newData.splice(prevIndex, 1);
+    deleteAddressContact({type: rowMap.item.type, key: rowMap.item.key});
+    // setListData(newData);
   };
 
   const renderHiddenItem = (data, rowMap) => {
     return (
       <View style={styles.listRow}>
-        <Pressable style={[styles.editView, styles.backLeft]}>
+        <Pressable
+          style={[styles.editView, styles.backLeft]}
+          onPress={() => {
+            navigation.navigate('AddAddressScreen', {data: data.item});
+          }}>
           <Text style={styles.editText}>Edit</Text>
         </Pressable>
         <Pressable
           style={[styles.editView, styles.backRight]}
-          onPress={deletePress}>
+          onPress={() => deletePress(data, data.item.key)}>
           <Text style={styles.editText}>Delete</Text>
         </Pressable>
       </View>
@@ -149,7 +157,9 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {};
+  return {
+    deleteAddressContact: payload => d({type: 'deleteAddressContact', payload}),
+  };
 };
 
 export default connect(msp, mdp)(AddressContact);

@@ -93,9 +93,14 @@ const WalletTransfer = props => {
                 }}>
                 <Image source={darkMode ? icons.scanBlack : icons.scanWhite} />
               </Pressable>
-              <Image
-                source={darkMode ? icons.contactBlack : icons.contactWhite}
-              />
+              <Pressable
+                onPress={() => {
+                  navigate('AddressContact');
+                }}>
+                <Image
+                  source={darkMode ? icons.contactBlack : icons.contactWhite}
+                />
+              </Pressable>
             </View>
           </View>
           <ComText style={[text, styles.title, marginTop10]}>

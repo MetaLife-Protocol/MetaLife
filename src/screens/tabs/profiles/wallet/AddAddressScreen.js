@@ -3,13 +3,21 @@ import {View, StyleSheet, Pressable, Image, TextInput} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import Text from '../../../../shared/comps/ComText';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
+import Toast from 'react-native-tiny-toast';
 const scanW = require('../../../../assets/image/wallet/icon_scan_default_white.png');
 const scanB = require('../../../../assets/image/wallet/icon_scan_default_black.png');
 
-const AddAddressScreen = ({navigation, cfg: {darkMode}, addAddressContact}) => {
-  const [name, setName] = useState('');
-  const [addressCon, setAddress] = useState('');
-  const [remark, setRemark] = useState('');
+const AddAddressScreen = ({
+  navigation,
+  cfg: {darkMode},
+  addAddressContact,
+  route: {params},
+  updateAddressContact,
+}) => {
+  // const {data} = params;
+  const [name, setName] = useState(params?.data?.name);
+  const [addressCon, setAddress] = useState(params?.data?.addressCon);
+  const [remark, setRemark] = useState(params?.data?.remark);
   const {text, primary, marginTop10, flex1, BG, FG} = useSchemaStyles();
 
   const headerRight = () => {
@@ -21,17 +29,31 @@ const AddAddressScreen = ({navigation, cfg: {darkMode}, addAddressContact}) => {
   };
   const rightPress = e => {
     // alert(addressCon);
-    // if (addressCon === '' || name === '') {
-    //   return;
-    // }
+    if (addressCon === '' || name === '') {
+      Toast.show('Please set name or wallet address');
+      return;
+    }
     const address = {
       type: 'address',
       name: name,
       addressCon,
       remark: remark,
+      key: Math.random(),
     };
-    console.log('dddd=======', e);
-    addAddressContact(address);
+    console.log('dddd=======', address);
+    if (params == undefined) {
+      addAddressContact(address);
+    } else {
+      updateAddressContact({
+        type: 'address',
+        name: name,
+        addressCon,
+        remark,
+        key: params.data.key,
+      });
+    }
+
+    navigation.goBack();
   };
   useLayoutEffect(() => {
     navigation.setOptions(
@@ -41,8 +63,8 @@ const AddAddressScreen = ({navigation, cfg: {darkMode}, addAddressContact}) => {
       },
       [navigation],
     );
-  }, [navigation]);
-  alert(name);
+  }, [navigation, name, addressCon, remark]);
+  // alert(name);
   return (
     <View style={[flex1, BG]}>
       <View style={[FG, styles.nameView, marginTop10]}>
@@ -65,7 +87,12 @@ const AddAddressScreen = ({navigation, cfg: {darkMode}, addAddressContact}) => {
           }}
           placeholderTextColor={'#8E8E92'}
         />
-        <Image source={!darkMode ? scanW : scanB} />
+        <Pressable
+          onPress={() => {
+            navigation.navigate('Scan', {onCallbackData: setAddress});
+          }}>
+          <Image source={!darkMode ? scanW : scanB} />
+        </Pressable>
       </View>
       <View style={styles.line} />
       <View style={[FG, styles.nameView]}>
@@ -97,7 +124,7 @@ const styles = StyleSheet.create({
   },
   comText: {
     fontSize: 16,
-    color: '#8E8E92',
+    // color: '#8E8E92',
   },
   line: {
     height: 1,
@@ -120,6 +147,7 @@ const msp = s => {
 const mdp = d => {
   return {
     addAddressContact: payload => d({type: 'addAddressContact', payload}),
+    updateAddressContact: payload => d({type: 'updateAddressContact', payload}),
   };
 };
 
