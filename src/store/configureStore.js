@@ -22,14 +22,15 @@ export const store = configureStore({
   reducer: persistReducer(persistConfig, reducer),
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
-      serializableCheck: {
-        // Ignore these action types
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        // Ignore these field paths in all actions
-        ignoredActionPaths: [],
-        // Ignore these paths in the state
-        ignoredPaths: [],
-      },
+      serializableCheck: false,
+      // serializableCheck: {
+      //   // Ignore these action types
+      //   ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      //   // Ignore these field paths in all actions
+      //   ignoredActionPaths: [],
+      //   // Ignore these paths in the state
+      //   ignoredPaths: [],
+      // },
       thunk: false,
       immutableCheck: false,
     }),
