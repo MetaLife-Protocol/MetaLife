@@ -92,6 +92,7 @@ const Restore = ({setResync}) => {
             channel.post(
               'identity',
               `RESTORE: ${mnemonic
+                .replace(/[\r\n]/g, ' ')
                 .split(' ')
                 .slice(0, 24)
                 .map(s => s.trim().toLowerCase())
