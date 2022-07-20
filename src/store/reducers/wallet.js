@@ -63,9 +63,10 @@ export const walletReducer = (state = initState, {type, payload}) => {
         ...state,
         address: {
           ...state.address,
-          [payload.type]: state.address[payload.type]
-            ? [...state.address[payload.type], payload]
-            : [payload],
+          [payload.type]:
+            state.address && state.address[payload.type]
+              ? [...state.address[payload.type], payload]
+              : [payload],
         },
         // [payload.type]: {
         //   ...state[payload.type],
