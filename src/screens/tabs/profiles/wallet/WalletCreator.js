@@ -8,7 +8,6 @@ import {
   Pressable,
   SafeAreaView,
   StyleSheet,
-  // Text,
   TextInput,
   TouchableWithoutFeedback,
   View,
@@ -27,10 +26,8 @@ import {
   importAccountByMnemonic,
 } from '../../../../remote/wallet/WalletAPI';
 import Toast from 'react-native-tiny-toast';
-import {getMnemonic, inviteAccept} from '../../../../remote/ssb/ssbOP';
+import {getMnemonic} from '../../../../remote/ssb/ssbOP';
 import {shuffle} from '../../../../utils';
-import {presetPubs, reconnect2pub} from '../Pubs';
-import {pubHostByIp} from '../../../../remote/pubOP';
 
 const icons = {
   deleteW: require('../../../../assets/image/wallet/Login_icon_delete_white.png'),

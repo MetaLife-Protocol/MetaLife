@@ -20,7 +20,6 @@ import {connect} from 'react-redux/lib/exports';
 import {initializeHandlers} from '../../remote/ssb/SsbListeners';
 import {checkAddon} from '../../remote/ssb/SsbHandlers';
 import {useStore} from 'react-redux';
-import {reset} from 'react-native-svg/lib/typescript/lib/Matrix2D';
 
 const Resync = ({
   feedId,
