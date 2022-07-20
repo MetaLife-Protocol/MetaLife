@@ -11,7 +11,7 @@ const AddressContact = ({navigation, wallet, deleteAddressContact}) => {
   // console.log('ffffff====', wallet);
   // console.log('wwwwwwwwwww', wallet.address.address);
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
-  const {address} = wallet.address;
+  // const {address} = wallet.address;
   const headerRight = () => (
     <Pressable
       onPress={() => {
