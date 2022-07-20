@@ -174,15 +174,20 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
                 </Pressable>
               </View>
             </View>
-            <Text style={[volume]}>
-              {/*{coinType === 'rmb' ? '¥' : '$'}{' '}*/}
-              {wallet.current.type === 'spectrum'
-                ? 'MLT'
-                : wallet.current.type === 'ethereum'
-                ? 'ETH'
-                : ''}{' '}
-              {volumeVisible ? getCurrentBalance(wallet) : '******'}
-            </Text>
+            <Pressable
+              onPress={() => {
+                navigate('WalletRecord');
+              }}>
+              <Text style={[volume]}>
+                {/*{coinType === 'rmb' ? '¥' : '$'}{' '}*/}
+                {wallet.current.type === 'spectrum'
+                  ? 'MLT'
+                  : wallet.current.type === 'ethereum'
+                  ? 'ETH'
+                  : ''}{' '}
+                {volumeVisible ? getCurrentBalance(wallet) : '******'}
+              </Text>
+            </Pressable>
           </View>
           <View style={[row]}>
             <Text style={[address]}>0x{getCurrentAccount(wallet).address}</Text>

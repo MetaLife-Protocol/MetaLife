@@ -26,6 +26,8 @@ import {
 } from 'react-native-web3-wallet';
 import {Buffer} from 'buffer';
 import {financeConfig} from './financeConfig';
+import axios from 'axios';
+import qs from 'qs';
 
 /**
  * 0 BTC 60  ETH
@@ -400,4 +402,70 @@ export async function getGas(params) {
   } catch (e) {
     console.error('wallet transaction', e);
   }
+}
+
+export async function getWalletRecord(params, cb) {
+  const config = {
+    timeout: 3000,
+    headers: {
+      // 'Access-Control-Allow-Origin': '*', //解决cors头问题
+      // 'Access-Control-Allow-Credentials': 'true',
+      'content-type': 'x-www-form-urlencoded',
+    },
+    // body: encodeURI('body=' + JSON.stringify(params)),
+  };
+  // const response = await fetch('https://spectrum.pub/api/index.php', {
+  //   method: 'POST',
+  //   headers: {'Content-Type': 'x-www-form-urlencoded;charset=UTF-8'},
+  //   body: Buffer.from(JSON.stringify(params)).toString('utf-8'),
+  // });
+  //
+  // // 对获取到的结果进行操作
+  // fetch('https://spectrum.pub/api/index.php', {
+  //   method: 'POST',
+  //   headers: {'Content-Type': 'x-www-form-urlencoded;charset=UTF-8'},
+  //   body: {body: JSON.stringify(params).replace(/\'/gi, '[ЖαβγЖ]')},
+  // })
+  //   .then(r => cb(r))
+  //   .catch(error => {
+  //     console.log('errrrr', error);
+  //   });
+
+  fetch('https://spectrum.pub/api/index.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    },
+    body: encodeURI('body=' + JSON.stringify(params)),
+  })
+    .then(value => value.json().then(e => cb(e)))
+    .catch(console.warn);
+
+  // return axios.post(
+  //   'https://spectrum.pub/api/index.php',
+  //   {
+  //     body: params,
+  //   },
+  //   config,
+  // );
+}
+
+function toUtf8(str) {
+  var out, i, len, c;
+  out = '';
+  len = str.length;
+  for (i = 0; i < len; i++) {
+    c = str.charCodeAt(i);
+    if (c >= 0x0001 && c <= 0x007f) {
+      out += str.charAt(i);
+    } else if (c > 0x07ff) {
+      out += String.fromCharCode(0xe0 | ((c >> 12) & 0x0f));
+      out += String.fromCharCode(0x80 | ((c >> 6) & 0x3f));
+      out += String.fromCharCode(0x80 | ((c >> 0) & 0x3f));
+    } else {
+      out += String.fromCharCode(0xc0 | ((c >> 6) & 0x1f));
+      out += String.fromCharCode(0x80 | ((c >> 0) & 0x3f));
+    }
+  }
+  return out;
 }
