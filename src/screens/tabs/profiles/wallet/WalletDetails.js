@@ -232,7 +232,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
             initialParams={''}
             component={WalletCoinTabScreen}
           />
-          <Tab.Screen
+          {/* <Tab.Screen
             name={'DAO'}
             initialParams={''}
             component={WalletDaoTabScreen}
@@ -241,7 +241,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
             name={'NFT'}
             initialParams={''}
             component={WalletNFTTabScreen}
-          />
+          /> */}
         </Tab.Navigator>
       </View>
       <WalletAccountSwitchModal

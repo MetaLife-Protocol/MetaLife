@@ -13,6 +13,7 @@ import {runtimeReducer} from './runtime';
 import {walletReducer} from './wallet';
 import {photonReducer} from './photon';
 import {nftReducer} from './nft';
+import {transferReducer} from './transfer';
 
 const reducer = combineReducers({
   // app
@@ -32,6 +33,7 @@ const reducer = combineReducers({
   // wallet
   wallet: walletReducer,
   photon: photonReducer,
+  transfer: transferReducer,
   // nft
   nft: nftReducer,
 });

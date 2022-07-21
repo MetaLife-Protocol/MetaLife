@@ -10,24 +10,29 @@ import {
 } from 'react-native-metalife-storage';
 import {
   bigNumberFormatUnits,
+  bigNumberParseUnits,
   createWallet,
   exportKeystore,
   exportMnemonicFromKeystore,
   exportPrivateKeyFromKeystore,
   getBalance,
+  getContract,
   getContractBalance,
   getGasLimit,
   getGasPrice,
   getNonce,
+  getProvider,
+  getSignerContract,
   importKeystore,
   importMnemonic,
   importPrivateKey,
+  sendTransaction,
   signTransaction,
+  waitForContractTransaction,
+  waitForTransaction,
 } from 'react-native-web3-wallet';
 import {Buffer} from 'buffer';
 import {financeConfig} from './financeConfig';
-import axios from 'axios';
-import qs from 'qs';
 
 /**
  * 0 BTC 60  ETH
@@ -311,126 +316,215 @@ export function exportAccountMnemonic(address, pw, cb) {
 
 export async function getGas(params) {
   const {type, fromAddress, toAddress, amount, remark} = params;
-  // getGasPrice('https://jsonapi1.smartmesh.io/')
-  //   .then(gasPrice => {
-  //     console.log('gasPrice', gasPrice.toString());
-  //     getGasLimit(
-  //       'https://jsonapi1.smartmesh.io/',
-  //       '0xc978beb3b6be2e96c527a025a3f023045cca1fa9',
-  //       '0x6025B091C6AB619F8e2F75170EB69dc57040dc6e',
-  //       '0.02',
-  //       '',
-  //     )
-  //       .then(gasLimit => {
-  //         console.log('gasLimit', gasLimit.toString());
-  //         console.log('gas', bigNumberFormatUnits(gasPrice.mul(gasLimit)));
-
-  //         getNonce(
-  //           'https://jsonapi1.smartmesh.io/',
-  //           '0xc978beb3b6be2e96c527a025a3f023045cca1fa9',
-  //         )
-  //           .then(nonce => {
-  //             console.log('nonce', nonce);
-  //             signTransaction(
-  //               JSON.stringify(keystore),
-  //               'qwerty',
-  //               nonce,
-  //               gasLimit,
-  //               gasPrice,
-  //               '0x8b4b70cbfa3ed36a4fc0f245531530462686e69f',
-  //               SMT_chainId,
-  //               '0.1',
-  //               '',
-  //             )
-  //               .then(signedTx => {
-  //                 console.log('signedTx', signedTx);
-  //                 sendTransaction('https://jsonapi1.smartmesh.io/', signedTx)
-  //                   .then(resTx => {
-  //                     console.log(resTx);
-  //                     //{"chainId": 20180430, "confirmations": 0, "data": "0x", "from": "0xC978bEb3B6be2E96c527A025a3f023045CCA1Fa9", "gasLimit": {"hex": "0x5208", "type": "BigNumber"}, "gasPrice": {"hex": "0x0430e23400", "type": "BigNumber"}, "hash": "0x58b1f8e1860979dc4335c6fd7e293de9dd69909de13694d5e4454f799d9c33d9", "nonce": 11, "r": "0xb3d04f71d2486ee7e33502e71d0a28126849dec2904355ca62bc9f6adbfbfc0a", "s": "0x4f027af1ce5292d87d1ba12f4f4df4ea733fba10e0bf43b369cd69d8a35a1d58", "to": "0x8B4B70CBfA3eD36A4Fc0f245531530462686e69f", "type": null, "v": 40360895, "value": {"hex": "0x016345785d8a0000", "type": "BigNumber"}, "wait": [Function anonymous]}
-  //                     waitForTransaction(
-  //                       'https://jsonapi1.smartmesh.io/',
-  //                       resTx.hash,
-  //                     )
-  //                       .then(res => {
-  //                         //{"blockHash": "0x85550a41901ad653e4725e00888a3f20948d5223224cf09ddd5bc5e0558dcb12", "blockNumber": 9297953, "byzantium": true, "confirmations": 1, "contractAddress": null, "cumulativeGasUsed": {"hex": "0x5208", "type": "BigNumber"}, "from": "0xC978bEb3B6be2E96c527A025a3f023045CCA1Fa9", "gasUsed": {"hex": "0x5208", "type": "BigNumber"}, "logs": [], "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", "status": 1, "to": "0x8B4B70CBfA3eD36A4Fc0f245531530462686e69f", "transactionHash": "0x58b1f8e1860979dc4335c6fd7e293de9dd69909de13694d5e4454f799d9c33d9", "transactionIndex": 1, "type": 0}
-  //                         console.log(res);
-  //                       })
-  //                       .catch(err => {
-  //                         console.log(err);
-  //                       });
-  //                   })
-  //                   .catch(err => {
-  //                     console.log(err);
-  //                   });
-  //               })
-  //               .catch(err => {
-  //                 console.log(err);
-  //               });
-  //           })
-  //           .catch(err => {
-  //             console.log(err);
-  //           });
-  //       })
-  //       .catch(err => {
-  //         console.log(err);
-  //       });
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //   });
-
   try {
     const gasPrice = await getGasPrice(financeConfig.chains[type].rpcURL);
-    // TODO: remark参数只能传空字符串，其他都报错
+    // remark format text
+    const data = '0x' + Buffer.from(remark).toString('hex');
     const gasLimit = await getGasLimit(
       financeConfig.chains[type].rpcURL,
       fromAddress,
       toAddress,
       amount,
-      remark,
+      data,
     );
-    console.log('gasLimit', gasLimit.toString());
-    console.log('gas', bigNumberFormatUnits(gasPrice.mul(gasLimit)));
-
-    const nonce = await getNonce(
-      financeConfig.chains[type].rpcURL,
-      fromAddress,
-    );
-    console.log('nonce', nonce.toString());
-    signTransaction();
+    return {
+      gasPrice,
+      // gasLimit + 100 ensure transaction can success
+      gasLimit: gasLimit.add(100),
+      gasPriceNumber: Number(bigNumberFormatUnits(gasPrice.toString(), 9)),
+      gasLimitString: gasLimit.add(100).toString(),
+      gas: bigNumberFormatUnits(gasPrice.mul(gasLimit.add(100)).toString()),
+    };
   } catch (e) {
     console.error('wallet transaction', e);
   }
 }
 
+export const cionTransact = params => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const {
+        type,
+        fromAddress,
+        toAddress,
+        amount,
+        remark,
+        password,
+        gasLimit,
+        gasPrice,
+      } = params;
+      const data = remark ? '0x' + Buffer.from(remark).toString('hex') : '';
+      const nonce = await getNonce(
+        financeConfig.chains[type].rpcURL,
+        fromAddress,
+      );
+      // get keystore from user address
+      getAccount(fromAddress, async (isSuccess, keystore) => {
+        if (isSuccess) {
+          try {
+            const signedTx = await signTransaction(
+              JSON.stringify(keystore),
+              // password is user input
+              password,
+              nonce,
+              gasLimit,
+              gasPrice,
+              toAddress,
+              financeConfig.chains[type].chainID,
+              amount,
+              data,
+            );
+            const resTx = await sendTransaction(
+              financeConfig.chains[type].rpcURL,
+              signedTx,
+            );
+            // get resTx , this transaction is success send
+            console.log('resTx', resTx);
+            resolve({
+              code: 'success',
+              data: resTx,
+            });
+          } catch (e) {
+            console.log('transaction error', e);
+            if (e.message === 'invalid password') {
+              resolve({
+                code: 'fail',
+                message: 'Wrong password',
+              });
+            } else {
+              if (
+                e.message.indexOf('(error=') !== -1 &&
+                e.message.indexOf(', method=') !== -1
+              ) {
+                const errorMessage = e.message
+                  .split('(error=')[1]
+                  .split(', method=')[0];
+                const body = JSON.parse(errorMessage).body;
+                const errorMsg = JSON.parse(body);
+                resolve({
+                  code: 'fail',
+                  message: errorMsg.error.message,
+                });
+              } else {
+                resolve({
+                  code: 'fail',
+                  message: 'transaction error',
+                });
+              }
+            }
+          }
+        } else {
+          resolve({
+            code: 'fail',
+            message: 'address not exist',
+          });
+        }
+      });
+    } catch (e) {
+      reject(e.message);
+    }
+  });
+};
+
+export const coinWaitTransaction = async (type, hash) => {
+  console.log('ssssss', type, hash);
+  try {
+    const waitTransactionRes = await waitForTransaction(
+      financeConfig.chains[type].rpcURL,
+      hash,
+    );
+    console.log('waitTransactionRes', waitTransactionRes);
+    return waitTransactionRes;
+  } catch (e) {
+    console.warn(e);
+  }
+};
+
+export const getTransactionListenProvider = type => {
+  return getProvider(financeConfig.chains[type].rpcURL);
+};
+export const coinContractTransfer = async params => {
+  return new Promise(async (resolve, reject) => {
+    const {
+      type,
+      cType,
+      fromAddress,
+      password,
+      toAddress,
+      amount,
+      gasLimit,
+      gasPrice,
+    } = params;
+    getAccount(fromAddress, async (isSuccess, keystore) => {
+      if (isSuccess) {
+        try {
+          const contract = await getSignerContract(
+            financeConfig.chains[type].rpcURL,
+            financeConfig.chains[type].contracts.coin[cType].address,
+            financeConfig.contractABIs[
+              financeConfig.chains[type].contracts.coin[cType].abi
+            ],
+            JSON.stringify(keystore),
+            password,
+          );
+          const nonce = await getNonce(
+            financeConfig.chains[type].rpcURL,
+            fromAddress,
+          );
+          const realAmount = bigNumberParseUnits(amount);
+          const addRes = gasLimit.add(20000);
+          let tx = {
+            nonce: nonce,
+            gasLimit: addRes,
+            gasPrice: gasPrice,
+          };
+          const res = await contract.transfer(toAddress, realAmount, tx);
+          resolve({
+            code: 'success',
+            data: res,
+          });
+        } catch (e) {
+          console.warn(e);
+          if (e.message === 'invalid password') {
+            resolve({
+              code: 'fail',
+              message: 'Wrong password',
+            });
+          } else {
+            resolve({
+              code: 'fail',
+              message: 'something is wrong',
+            });
+          }
+        }
+      } else {
+        resolve({
+          code: 'fail',
+          message: 'account not exist',
+        });
+      }
+    });
+  });
+};
+
+export const getContractTransactionListenProvider = (type, cType) => {
+  let contract = getContract(
+    financeConfig.chains[type].rpcURL,
+    financeConfig.chains[type].contracts.coin[cType].address,
+    financeConfig.contractABIs[
+      financeConfig.chains[type].contracts.coin[cType].abi
+    ],
+  );
+  return contract.provider;
+};
+
 export async function getWalletRecord(params, cb) {
   const config = {
     timeout: 3000,
     headers: {
-      // 'Access-Control-Allow-Origin': '*', //解决cors头问题
-      // 'Access-Control-Allow-Credentials': 'true',
       'content-type': 'x-www-form-urlencoded',
     },
-    // body: encodeURI('body=' + JSON.stringify(params)),
   };
-  // const response = await fetch('https://spectrum.pub/api/index.php', {
-  //   method: 'POST',
-  //   headers: {'Content-Type': 'x-www-form-urlencoded;charset=UTF-8'},
-  //   body: Buffer.from(JSON.stringify(params)).toString('utf-8'),
-  // });
-  //
-  // // 对获取到的结果进行操作
-  // fetch('https://spectrum.pub/api/index.php', {
-  //   method: 'POST',
-  //   headers: {'Content-Type': 'x-www-form-urlencoded;charset=UTF-8'},
-  //   body: {body: JSON.stringify(params).replace(/\'/gi, '[ЖαβγЖ]')},
-  // })
-  //   .then(r => cb(r))
-  //   .catch(error => {
-  //     console.log('errrrr', error);
-  //   });
-
   fetch('https://spectrum.pub/api/index.php', {
     method: 'POST',
     headers: {
@@ -440,14 +534,6 @@ export async function getWalletRecord(params, cb) {
   })
     .then(value => value.json().then(e => cb(e)))
     .catch(console.warn);
-
-  // return axios.post(
-  //   'https://spectrum.pub/api/index.php',
-  //   {
-  //     body: params,
-  //   },
-  //   config,
-  // );
 }
 
 function toUtf8(str) {

@@ -266,7 +266,6 @@ const msp = s => {
 
 const mdp = d => {
   return {
-    setBalance: payload => d({type: 'setBalance', payload}),
     walletCreateAccount: payload => d({type: 'walletCreateAccount', payload}),
     setCurrent: payload => d({type: 'setCurrent', payload}),
   };

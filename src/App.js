@@ -95,6 +95,7 @@ import AddressContact from './screens/tabs/profiles/wallet/AddressContact';
 import AddAddressScreen from './screens/tabs/profiles/wallet/AddAddressScreen';
 import WalletRecord from './screens/tabs/profiles/wallet/WalletRecord';
 import CreateItemCollection from './screens/ntfPreview/CreateCollection';
+import TokenOption from './screens/tabs/profiles/wallet/TokenOption';
 
 const App = ({
   feedId,
@@ -283,6 +284,11 @@ const App = ({
           name="WalletTransfer"
           component={WalletTransfer}
           options={{title: 'Transfer'}}
+        />
+        <Screen
+          name="TokenOption"
+          component={TokenOption}
+          options={{title: 'Token Option'}}
         />
         <Screen
           name="WalletAccountDetails"

@@ -1,61 +1,162 @@
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  Slider,
-  StyleSheet,
-  View,
-} from 'react-native';
-import React, {useCallback, useLayoutEffect} from 'react';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
+import React, {useEffect} from 'react';
 import Text from '../../../../shared/comps/ComText';
-import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
-const img = require('../../../../assets/image/profiles/earnings_bg.png');
+import {bigNumberFormatUnits} from 'react-native-web3-wallet';
+import {Buffer} from 'buffer';
+import {formatDate} from '../../../../metalife-base';
+import {
+  coinWaitTransaction,
+  getTransactionListenProvider,
+} from '../../../../remote/wallet/WalletAPI';
+import QRCode from 'react-native-qrcode-svg';
+import {financeConfig} from '../../../../remote/wallet/financeConfig';
+import NativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
+import Toast from 'react-native-tiny-toast';
 
-const WalletTransactionDetail = ({cfg: {darkMode}}) => {
-  const {flex1, FG, BG, row, text, marginTop10} = useSchemaStyles();
+const WalletTransactionDetail = ({
+  cfg: {darkMode},
+  transfer,
+  setTransactionDetail,
+}) => {
+  const {flex1, FG, BG, text} = useSchemaStyles();
   const colors = !darkMode ? '#F0F0F0' : '#000';
   const normal = darkMode ? '#4E586E' : '#A5ABB7';
+
+  const transactData = transfer.detail;
+
+  const qrcodeUrl =
+    financeConfig.chains[transactData.type].explorerURL +
+    'tx.html?hash=' +
+    transactData.detail.hash;
+
+  useEffect(() => {
+    console.log('sssss', transactData);
+    const getWaitTransaction = async () => {
+      try {
+        const res = await coinWaitTransaction(
+          transactData.type,
+          transactData.detail.hash,
+        );
+        setTransactionDetail({
+          ...transactData,
+          gasUsed: res.gasUsed,
+          status: 'Synchronizing(1/20)...',
+          statusImg: icons.sync,
+          blockNumber: res.blockNumber,
+          textColor: '#29DAD7',
+        });
+        let provider = getTransactionListenProvider(transactData.type);
+        provider.on(transactData.detail.hash, resListen => {
+          setTransactionDetail({
+            ...transactData,
+            blockNumber: resListen.blockNumber,
+            gasUsed: resListen.gasUsed,
+            statusImg: icons.sync,
+            status: 'Synchronizing(' + resListen.confirmations + '/20)...',
+            textColor: '#29DAD7',
+          });
+          if (resListen.confirmations > 19) {
+            provider.removeAllListeners(transactData.detail.hash);
+            setTransactionDetail({
+              ...transactData,
+              blockNumber: resListen.blockNumber,
+              gasUsed: resListen.gasUsed,
+              status: 'Transaction complete',
+              statusImg: icons.complete,
+              textColor: '#46C288',
+            });
+          }
+        });
+      } catch (e) {
+        console.log('error', e);
+      }
+    };
+    getWaitTransaction();
+  }, []);
+
   return (
     <View style={[flex1, BG]}>
       <View style={[FG, styles.con]}>
-        <FastImage source={img} style={styles.img} />
-        <Text style={styles.synText}>Synchronizing(1/20)…</Text>
-        <Text style={[text, styles.smtText]}>2222.333 SMT</Text>
+        <Image source={transactData.statusImg} style={styles.img} />
+        <Text style={[styles.synText, {color: transactData.textColor}]}>
+          {transactData.status}
+        </Text>
+        <Text style={[text, styles.smtText]}>
+          {transactData.amount}{' '}
+          {transactData.contract
+            ? transactData.cType
+            : transactData.type === 'spectrum'
+            ? 'SMT'
+            : transactData.type === 'ethereum'
+            ? 'ETH'
+            : ''}
+        </Text>
         <Text style={[{color: normal}, styles.sender]}>Sender</Text>
-        <Text style={[text, styles.comText]}>0xcC5D3A537EE0cE970d</Text>
+        <Text style={[text, styles.comText]}>{transactData.detail.from}</Text>
         <Text style={[styles.benText, {color: normal}]}>Beneficiary</Text>
-        <Text style={[text, styles.comText]}>0x325D34dA32EE43E973</Text>
+        <Text style={[text, styles.comText]}>{transactData.detail.to}</Text>
         <Text style={[styles.benText, {color: normal}]}>Remark</Text>
-        <Text style={[text, styles.comText]}>Friend mark</Text>
+        <Text style={[text, styles.comText]}>
+          {transactData.remark}
+          {/* {Buffer.from(transactData?.data.replace('0x', ''), 'hex').toString()} */}
+        </Text>
         <Text style={[styles.benText, {color: normal}]}>Gas</Text>
-        <Text style={[text, styles.comText]}>0.00162 smt</Text>
+        <Text style={[text, styles.comText]}>
+          {transactData?.gasUsed
+            ? bigNumberFormatUnits(transactData?.gasUsed) +
+              ' ' +
+              (transactData.type === 'spectrum'
+                ? 'smt'
+                : transactData.type === 'ethereum'
+                ? 'eth'
+                : '')
+            : ''}
+        </Text>
         <View style={[styles.line, {backgroundColor: colors}]} />
         <Text style={[styles.benText, {color: normal}]}>
           Transaction number
         </Text>
-        <Text style={[text, styles.comText]}>0xcC5D3A537EE…970da3</Text>
+        <Text style={[text, styles.comText]}>{transactData.detail.hash}</Text>
         <Text style={[styles.benText, {color: normal}]}>Block</Text>
-        <Text style={[text, styles.comText]}>235687</Text>
+        <Text style={[text, styles.comText]}>
+          {[transactData?.blockNumber]}
+        </Text>
         <Text style={[styles.benText, {color: normal}]}>Transaction hour</Text>
         <Text style={[text, styles.comText, {marginBottom: 20}]}>
-          05/20／2019 21:10:45
+          {formatDate({time: transactData.date, format: 'DD/MM/YY hh:mm:ss'})}
         </Text>
         <View style={styles.copyView}>
           <View style={styles.qrView}>
-            <FastImage style={styles.qrcode} source={img} />
+            <QRCode
+              size={55}
+              value={qrcodeUrl}
+              logoBackgroundColor="transparent"
+            />
           </View>
-          <Text style={styles.copy}>复制URL</Text>
+          <Pressable
+            onPress={() => {
+              NativeClipboard.setString(qrcodeUrl);
+              Toast.show('Copy Success');
+            }}>
+            <Text style={styles.copy}>复制URL</Text>
+          </Pressable>
         </View>
       </View>
     </View>
   );
 };
 
+const icons = {
+  complete: require('../../../../assets/image/wallet/Transactioncomplete.png'),
+  fail: require('../../../../assets/image/wallet/Transactionfailed.png'),
+  sync: require('../../../../assets/image/wallet/Synchronizing.png'),
+};
+
 const styles = StyleSheet.create({
   con: {
-    margin: 15,
+    margin: 8,
     borderRadius: 12,
     padding: 15,
   },
@@ -75,6 +176,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     alignSelf: 'center',
+    marginTop: 8,
   },
   sender: {
     marginTop: 26,
@@ -102,10 +204,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  qrcode: {
-    width: 55,
-    height: 55,
-  },
   copy: {
     fontSize: 11,
     color: '#29DAD7',
@@ -122,11 +220,14 @@ const styles = StyleSheet.create({
 const msp = s => {
   return {
     cfg: s.cfg,
+    transfer: s.transfer,
   };
 };
 
 const mdp = d => {
-  return {};
+  return {
+    setTransactionDetail: payload => d({type: 'setTransactionDetail', payload}),
+  };
 };
 
 export default connect(msp, mdp)(WalletTransactionDetail);

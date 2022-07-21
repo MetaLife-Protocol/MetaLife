@@ -30,9 +30,27 @@ export const walletReducer = (state = initState, {type, payload}) => {
       };
     case 'setBalance':
       const account = getCurrentAccount(state);
-      account.balance = payload;
       return {
         ...state,
+        accounts: {
+          ...state.accounts,
+          [account.type]: state.accounts[account.type].map(item => {
+            return item.address === account.address
+              ? {
+                  ...item,
+                  balance:
+                    item.balance instanceof Object
+                      ? {
+                          ...item.balance,
+                          [payload.cType]: payload.balance,
+                        }
+                      : {
+                          [payload.cType]: payload.balance,
+                        },
+                }
+              : item;
+          }),
+        },
       };
     case 'walletUpdateAccount':
       return {
@@ -65,15 +83,9 @@ export const walletReducer = (state = initState, {type, payload}) => {
           ...state.address,
           [payload.type]:
             state.address && state.address[payload.type]
-              ? [...state.address[payload.type], payload]
+              ? [...state?.address[payload.type], payload]
               : [payload],
         },
-        // [payload.type]: {
-        //   ...state[payload.type],
-        //   address: state[payload.type].address
-        //     ? [...state[payload.type].address, payload]
-        //     : [payload],
-        // },
       };
     case 'deleteAddressContact':
       return {
@@ -84,12 +96,6 @@ export const walletReducer = (state = initState, {type, payload}) => {
             item => item.key !== payload.key,
           ),
         },
-        // [payload.type]: state.address[payload.type].splice(
-        //   state.address[payload.type].findIndex(
-        //     item => item.key === payload.key,
-        //   ),
-        //   1,
-        // ),
       };
     case 'updateAddressContact':
       return {

@@ -129,9 +129,7 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {
-    setBalance: payload => d({type: 'setBalance', payload}),
-  };
+  return {};
 };
 
 export default connect(msp, mdp)(NftCollectionDetail);
