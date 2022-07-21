@@ -13,38 +13,62 @@ export const financeConfig = {
       decmis: 18,
       symbol: 'SMT',
       contracts: {
-        coin: [
-          {
+        coin: {
+          Mesh: {
             address: '0xa4c9af589c07b7539e5fcc45975b995a45e3f379',
             decmis: 18,
             symbol: 'Mesh',
+            abi: 'erc20',
           },
-          {
+          MLT: {
             address: '0xa27f8f580c01db0682ce185209ffb84121a2f711',
             decmis: 18,
             symbol: 'MLT',
+            abi: 'erc20',
           },
-        ],
-        dao: [
-          {
-            address: '0xa4c9af589c07b7539e5fcc45975b995a45e3f379',
-            decmis: 18,
-            symbol: 'Mesh',
-          },
-          {
-            address: '0xa27f8f580c01db0682ce185209ffb84121a2f711',
-            decmis: 18,
-            symbol: 'MLT',
-          },
-        ],
-        nft: [
-          {
+        },
+        nft: {
+          GGT: {
             address: '0x221b9814d507bC912534A96C37a15356cc995C0E',
             decmis: 0,
             symbol: 'GGT',
+            abi: 'NFTCollectionAbi',
           },
-        ],
+        },
       },
+      // contracts: {
+      //   coin: [
+      //     {
+      //       address: '0xa4c9af589c07b7539e5fcc45975b995a45e3f379',
+      //       decmis: 18,
+      //       symbol: 'Mesh',
+      //     },
+      //     {
+      //       address: '0xa27f8f580c01db0682ce185209ffb84121a2f711',
+      //       decmis: 18,
+      //       symbol: 'MLT',
+      //     },
+      //   ],
+      //   dao: [
+      //     {
+      //       address: '0xa4c9af589c07b7539e5fcc45975b995a45e3f379',
+      //       decmis: 18,
+      //       symbol: 'Mesh',
+      //     },
+      //     {
+      //       address: '0xa27f8f580c01db0682ce185209ffb84121a2f711',
+      //       decmis: 18,
+      //       symbol: 'MLT',
+      //     },
+      //   ],
+      //   nft: [
+      //     {
+      //       address: '0x221b9814d507bC912534A96C37a15356cc995C0E',
+      //       decmis: 0,
+      //       symbol: 'GGT',
+      //     },
+      //   ],
+      // },
     },
     ethereum: {
       // Corporate networks are restricted，empty string internal retrieval suitable eth node

@@ -119,11 +119,26 @@ export function fixWalletAddress(address) {
   return address;
 }
 
-export function getCurrentBalance(wallet) {
+export function getCurrentBalance(wallet, cTypeParam) {
+  const cType = cTypeParam
+    ? cTypeParam
+    : wallet.current.type === 'spectrum'
+    ? 'MLT'
+    : wallet.current.type === 'ethereum'
+    ? 'ETH'
+    : '';
+  if (!cType) {
+    return 0;
+  }
   return (
     (wallet.accounts[wallet.current.type] &&
       wallet.accounts[wallet.current.type][wallet.current.index] &&
-      wallet.accounts[wallet.current.type][wallet.current.index].balance) ||
+      wallet.accounts[wallet.current.type][wallet.current.index].balance &&
+      wallet.accounts[wallet.current.type][wallet.current.index]
+        .balance instanceof Object &&
+      wallet.accounts[wallet.current.type][wallet.current.index].balance[
+        cType
+      ]) ||
     0
   );
 }

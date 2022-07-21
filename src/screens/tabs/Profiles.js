@@ -7,13 +7,12 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
-  // Text,
   View,
 } from 'react-native';
 import Text from '../../shared/comps/ComText';
 import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
-import {getPubsRewardTotal, pubHostByIp} from '../../remote/pubOP';
+import {getPubsRewardTotal} from '../../remote/pubOP';
 import {
   getWBalance,
   getWBalanceByContract,
@@ -21,8 +20,6 @@ import {
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {getCurrentAccount, screenWidth} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
-import {callAuto, callOnce} from '../../remote/contractOP';
-import {RoundBtn} from '../../metalife-base';
 
 const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
   const {
@@ -51,12 +48,18 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
   const getInfo = () => {
     if (type === 'spectrum') {
       getWBalanceByContract(type, 'MLT', address, res => {
-        setBalance(res);
+        setBalance({
+          cType: 'MLT',
+          balance: res,
+        });
         setRefreshing(false);
       });
     } else if (type === 'ethereum') {
       getWBalance(type, address, res => {
-        setBalance(res);
+        setBalance({
+          cType: 'ETH',
+          balance: res,
+        });
         setRefreshing(false);
       });
     }

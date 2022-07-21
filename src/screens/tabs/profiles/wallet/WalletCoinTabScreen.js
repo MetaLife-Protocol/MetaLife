@@ -2,27 +2,65 @@ import React from 'react';
 import {View} from 'react-native';
 import {connect} from 'react-redux';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
-import {getCurrentAccount} from '../../../../utils';
+import {getCurrentAccount, getCurrentBalance} from '../../../../utils';
 import CoinItem from './items/CoinItem';
 import Empty from './items/Empty';
 
 const WalletCoinTabScreen = props => {
-  const {navigation, wallet, darkMode} = props;
-  const {FG, row, justifySpaceBetween, flex1, alignItemsCenter, text} =
-    useSchemaStyles();
+  const {navigation, wallet, darkMode, route, setTokenOption, setBalance} =
+    props;
+  const params = route.params;
+  const {FG, flex1} = useSchemaStyles();
   const {type, address} = getCurrentAccount(wallet);
+
+  const pressItem = (cType, total) => {
+    setTokenOption({
+      type: type,
+      option: 'coin',
+      cType: cType,
+      amount: total,
+    });
+    navigation.goBack();
+  };
 
   return (
     <View style={[FG, flex1]}>
       {type === 'spectrum' ? (
         <>
-          <CoinItem type={type} address={address} cType={'SMT'} total={0} />
-          <CoinItem type={type} address={address} cType={'Mesh'} total={0} />
-          <CoinItem type={type} address={address} cType={'MLT'} total={0} />
+          <CoinItem
+            pressItem={params.select ? pressItem : null}
+            type={type}
+            address={address}
+            cType={'SMT'}
+            total={getCurrentBalance(wallet, 'SMT')}
+            setBalance={setBalance}
+          />
+          <CoinItem
+            pressItem={params.select ? pressItem : null}
+            type={type}
+            address={address}
+            cType={'Mesh'}
+            total={getCurrentBalance(wallet, 'Mesh')}
+            setBalance={setBalance}
+          />
+          <CoinItem
+            pressItem={params.select ? pressItem : null}
+            type={type}
+            address={address}
+            cType={'MLT'}
+            total={getCurrentBalance(wallet, 'MLT')}
+            setBalance={setBalance}
+          />
         </>
       ) : type === 'ethereum' ? (
         <>
-          <CoinItem type={type} address={address} cType={'ETH'} total={0} />
+          <CoinItem
+            type={type}
+            address={address}
+            cType={'ETH'}
+            total={getCurrentBalance(wallet, 'ETH')}
+            setBalance={setBalance}
+          />
         </>
       ) : (
         <Empty darkMode={darkMode} />
@@ -42,7 +80,10 @@ const msp = s => {
 };
 
 const mdp = d => {
-  return {};
+  return {
+    setTokenOption: payload => d({type: 'setTokenOption', payload}),
+    setBalance: payload => d({type: 'setBalance', payload}),
+  };
 };
 
 export default connect(msp, mdp)(WalletCoinTabScreen);

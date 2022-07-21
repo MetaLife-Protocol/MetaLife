@@ -107,7 +107,6 @@ const WalletCard = ({
               <Image source={iconDic.dots} />
             </Pressable>
           </View>
-          {/*<Text style={[balanceS]}>$ {getCurrentBalance(wallet)}</Text>*/}
           <Text style={[balanceS]}>
             {wallet.current.type === 'spectrum'
               ? 'MLT'

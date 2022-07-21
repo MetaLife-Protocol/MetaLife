@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import Text from '../../../../../shared/comps/ComText';
 import {
   getWBalance,
@@ -9,7 +9,7 @@ import useSchemaStyles, {
   colorsBasics,
 } from '../../../../../shared/UseSchemaStyles';
 
-const CoinItem = ({type, address, cType}) => {
+const CoinItem = ({type, address, cType, pressItem, setBalance}) => {
   const {BG, row, justifySpaceBetween, alignItemsCenter, text} =
     useSchemaStyles();
   const [total, setTotal] = useState('');
@@ -19,26 +19,42 @@ const CoinItem = ({type, address, cType}) => {
       if (cType === 'SMT') {
         getWBalance(type, address, res => {
           setTotal(res);
+          setBalance({
+            type,
+            cType: 'SMT',
+            balance: res,
+          });
         });
       } else {
         getWBalanceByContract(type, cType, address, res => {
           setTotal(res);
+          setBalance({
+            type,
+            cType,
+            balance: res,
+          });
         });
       }
     } else if (type === 'ethereum') {
       getWBalance(type, address, res => {
         setTotal(res);
+        setBalance({
+          type,
+          cType: 'ETH',
+          balance: res,
+        });
       });
     }
   }, [type, address, cType]);
 
   return (
     <>
-      <View
+      <Pressable
+        onPress={() => pressItem && pressItem(cType, total)}
         style={[row, justifySpaceBetween, alignItemsCenter, styles.container]}>
         <Text style={[text, styles.type]}>{cType}</Text>
         <Text style={[text, styles.total]}>{total}</Text>
-      </View>
+      </Pressable>
       <View style={[styles.line, BG]} />
     </>
   );
