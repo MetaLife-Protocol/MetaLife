@@ -64,7 +64,7 @@ export async function uploadNftAssetsJson({
   const response = await axios.post(uploadIpfsBaseURL + routes[1], data, {
     maxBodyLength: 'Infinity',
     headers: {
-      'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+      'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${bearer}`,
     },
   });
