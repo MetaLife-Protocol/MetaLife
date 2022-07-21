@@ -1,5 +1,6 @@
 import axios from 'axios';
 import FormData from 'form-data';
+import RNFS from 'react-native-fs';
 
 /**
  * Created on 06 Jul 2022 by lonmee
@@ -14,21 +15,62 @@ import FormData from 'form-data';
  * https://medium.com/pinata/host-your-opensea-nft-collection-on-squarespace-with-pinata-3cb16413aebf
  * https://docs.pinata.cloud/gateways/ipfs-gateway-tools
  */
-
 const gateways = 'metalife.mypinata.cloud';
-export const ipfsBaseURL = `https://${gateways}/ipfs/`;
+const uploadGateways = 'api.pinata.cloud';
+export const ipfsBaseURL = `https://${gateways}/`;
+export const uploadIpfsBaseURL = `https://${uploadGateways}/`;
+const routes = ['ipfs/', 'pinning/pinFileToIPFS/'];
+const bearer =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4M' +
+  'zVjNGJmNS1hY2UzLTQ1ODgtODEyYS1mMTc1NTc0MzIwODMiLCJlbWFpbCI6ImhlbnJ5QHNtYXJ0' +
+  'bWVzaC5pbyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7I' +
+  'mlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc' +
+  '2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc' +
+  '2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY' +
+  '29wZWRLZXlLZXkiOiJjNjc5Yjg0M2E2NTBkOTdlZTc0YyIsInNjb3BlZEtleVNlY3JldCI6ImVmY' +
+  'jYyYTIzMjYwNjAxOTE2YmFjMjQyYjc5NDAzMWE4NTJkZmU0ZjAzMjRlMjc4MDkzM2M3NTRmYjdjY' +
+  'jk3ZTciLCJpYXQiOjE2NTY1NjU0MzF9.5fm8vAbpsLF4-eNpCZW_gRV42eANUykBACF-p9PkYUU';
 
 export function getNftAssetsJson(uri) {
   const cid = uri.split('/').pop();
-  return axios.get(ipfsBaseURL + cid, {
+  return axios.get(`${ipfsBaseURL}${routes[0]}${cid}`, {
     maxBodyLength: 'Infinity', //this is needed to prevent axios from error out with large files
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiI4MzVjNGJmNS1hY2UzLTQ1ODgtODEyYS1mMTc1NTc0MzIwODMiLCJlbWFpbCI6ImhlbnJ5QHNtYXJ0bWVzaC5pbyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfSx7ImlkIjoiTllDMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJjNjc5Yjg0M2E2NTBkOTdlZTc0YyIsInNjb3BlZEtleVNlY3JldCI6ImVmYjYyYTIzMjYwNjAxOTE2YmFjMjQyYjc5NDAzMWE4NTJkZmU0ZjAzMjRlMjc4MDkzM2M3NTRmYjdjYjk3ZTciLCJpYXQiOjE2NTY1NjU0MzF9.5fm8vAbpsLF4-eNpCZW_gRV42eANUykBACF-p9PkYUU',
+      Authorization: `Bearer ${bearer}`,
     },
   });
+}
+
+/**
+ * upload file to pinata cloud
+ * @param file
+ * @returns {{result: Error}}
+ */
+export async function uploadNftAssetsJson({
+  filepath = '',
+  fileType = 'audio/x-m4a',
+  fileName = '',
+}) {
+  let data = new FormData();
+  data.append(
+    'file',
+    {uri: filepath, name: fileName, type: fileType},
+    {
+      filepath: encodeURIComponent(filepath),
+    },
+  );
+  const response = await axios.post(uploadIpfsBaseURL + routes[1], data, {
+    maxBodyLength: 'Infinity',
+    headers: {
+      'Content-Type': `multipart/form-data; boundary=${data._boundary}`,
+      Authorization: `Bearer ${bearer}`,
+    },
+  });
+  if (response.status === 200) {
+    return response.data;
+  }
 }
 
 /**

@@ -10,7 +10,8 @@ import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {useStyle} from '../../../metalife-base';
 import {launchImageLibrary} from 'react-native-image-picker';
 import Toast from 'react-native-tiny-toast';
-import {uploadImageToIFPS} from '../../../remote/ipfsOP';
+import {uploadImageToIFPS, uploadNftAssetsJson} from '../../../remote/ipfsOP';
+import {uploadFileToIFPS} from '../../nft/nftUtils';
 
 const ImagePickerView = ({style, onImagePicker}) => {
   const styles = useStyle(createSty);
@@ -25,7 +26,7 @@ const ImagePickerView = ({style, onImagePicker}) => {
       }
       const [file] = assets;
       // console.log('file::', file);
-      const res = await uploadImageToIFPS({
+      const res = await uploadNftAssetsJson({
         fileName: file.fileName,
         filepath: file.uri,
         fileType: file.type,
