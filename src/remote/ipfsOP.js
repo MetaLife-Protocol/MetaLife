@@ -35,7 +35,7 @@ const bearer =
 export function getNftAssetsJson(uri) {
   const cid = uri.split('/').pop();
   return axios.get(`${ipfsBaseURL}${routes[0]}${cid}`, {
-    maxBodyLength: 'Infinity', //this is needed to prevent axios from error out with large files
+    maxBodyLength: 'Infinity',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -58,9 +58,7 @@ export async function uploadNftAssetsJson({
   data.append(
     'file',
     {uri: filepath, name: fileName, type: fileType},
-    {
-      filepath: encodeURIComponent(filepath),
-    },
+    {filepath: encodeURIComponent(filepath)},
   );
   const response = await axios.post(uploadIpfsBaseURL + routes[1], data, {
     maxBodyLength: 'Infinity',
