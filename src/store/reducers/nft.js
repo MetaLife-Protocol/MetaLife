@@ -18,6 +18,16 @@ export const nftReducer = (state = initState, {type, payload}) => {
             : [payload],
         },
       };
+    case 'addCollection':
+      return {
+        ...state,
+        [payload.type]: {
+          ...state[payload.type],
+          collection: state[payload.type].collection
+            ? [...state[payload.type].collection, payload]
+            : [payload],
+        },
+      };
     default:
       return state;
   }

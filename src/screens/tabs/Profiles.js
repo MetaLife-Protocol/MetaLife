@@ -2,6 +2,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   Image,
+  Modal,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -18,12 +19,12 @@ import {
   getWBalanceByContract,
 } from '../../remote/wallet/WalletAPI';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
-import {getCurrentAccount} from '../../utils';
+import {getCurrentAccount, screenWidth} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
 import {callAuto, callOnce} from '../../remote/contractOP';
 import {RoundBtn} from '../../metalife-base';
 
-const Profiles = ({feedId, wallet, setBalance}) => {
+const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
   const {
     text,
     flex1,
@@ -40,6 +41,7 @@ const Profiles = ({feedId, wallet, setBalance}) => {
   const [refreshing, setRefreshing] = useState(false);
   const {navigate} = useNavigation();
   const [amount, setAmount] = useState(0);
+  const [visible, setVisible] = useState(false);
 
   useFocusEffect(() => {
     // callAuto();
@@ -125,7 +127,18 @@ const Profiles = ({feedId, wallet, setBalance}) => {
       <View style={[styles.earnContainer, flex1]}>
         <View style={[row, flex1, justifySpaceBetween, alignItemsCenter]}>
           <Text style={[text, styles.earnText]}>NFT</Text>
-          <Image source={require('../../assets/image/shared/back.png')} />
+          <Pressable
+            onPress={() => {
+              setVisible(true);
+            }}>
+            <Image
+              source={
+                darkMode
+                  ? require('../../assets/image/icons/create_black.png')
+                  : require('../../assets/image/icons/create_white.png')
+              }
+            />
+          </Pressable>
         </View>
         <View style={[row]}>
           <Pressable
@@ -166,6 +179,42 @@ const Profiles = ({feedId, wallet, setBalance}) => {
           </Pressable>
         </View>
       </View>
+      <Modal
+        animationType={'slide'}
+        transparent={true}
+        visible={visible}
+        onRequestClose={() => setVisible(false)}>
+        <Pressable
+          style={styles.closeModal}
+          onPress={() => setVisible(false)}
+        />
+        <View style={[styles.modalView, flex1]}>
+          <View
+            style={[
+              {backgroundColor: darkMode ? '#232929' : '#fff'},
+              styles.modalItem,
+            ]}>
+            <Pressable
+              style={[flex1, styles.colItem]}
+              onPress={() => {
+                setVisible(false);
+                navigate('CreateItemCollection');
+              }}>
+              <Text style={[text]}>Collection</Text>
+            </Pressable>
+            <View style={[flex1, styles.colItem]}>
+              <Text style={[text]}>NFT</Text>
+            </View>
+          </View>
+          <View
+            style={[
+              {backgroundColor: darkMode ? '#232929' : '#fff'},
+              styles.modalCancel,
+            ]}>
+            <Text style={[text]}>Cancel</Text>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -197,6 +246,36 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 10,
+  },
+  modalView: {
+    position: 'absolute',
+    bottom: 0,
+    width: screenWidth,
+  },
+  modalItem: {
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    height: 105,
+  },
+  colItem: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalCancel: {
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    height: 54,
+  },
+  closeModal: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: 'rgba(000, 000, 000, 0.4)',
   },
 });
 

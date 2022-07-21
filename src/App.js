@@ -94,6 +94,7 @@ import WalletTransactionDetail from './screens/tabs/profiles/wallet/WalletTransa
 import AddressContact from './screens/tabs/profiles/wallet/AddressContact';
 import AddAddressScreen from './screens/tabs/profiles/wallet/AddAddressScreen';
 import WalletRecord from './screens/tabs/profiles/wallet/WalletRecord';
+import CreateItemCollection from './screens/ntfPreview/CreateCollection';
 
 const App = ({
   feedId,
@@ -505,6 +506,11 @@ const App = ({
           name="WalletRecord"
           component={WalletRecord}
           options={{headerTitle: 'Token Transaction Record'}}
+        />
+        <Screen
+          name="CreateItemCollection"
+          component={CreateItemCollection}
+          options={{headerTitle: 'Create a Collection'}}
         />
       </Navigator>
       <MaskView darkMode={darkMode} enabled={masked} eventEnabled={false} />
