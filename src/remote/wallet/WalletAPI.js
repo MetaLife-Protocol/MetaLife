@@ -313,32 +313,21 @@ export function exportAccountMnemonic(address, pw, cb) {
     }
   });
 }
-
-export async function getGas(params) {
+export const getTransferGasPrice = params => {
+  const {type} = params;
+  return getGasPrice(financeConfig.chains[type].rpcURL);
+};
+export const getTransferGasLimit = params => {
   const {type, fromAddress, toAddress, amount, remark} = params;
-  try {
-    const gasPrice = await getGasPrice(financeConfig.chains[type].rpcURL);
-    // remark format text
-    const data = '0x' + Buffer.from(remark).toString('hex');
-    const gasLimit = await getGasLimit(
-      financeConfig.chains[type].rpcURL,
-      fromAddress,
-      toAddress,
-      amount,
-      data,
-    );
-    return {
-      gasPrice,
-      // gasLimit + 100 ensure transaction can success
-      gasLimit: gasLimit.add(100),
-      gasPriceNumber: Number(bigNumberFormatUnits(gasPrice.toString(), 9)),
-      gasLimitString: gasLimit.add(100).toString(),
-      gas: bigNumberFormatUnits(gasPrice.mul(gasLimit.add(100)).toString()),
-    };
-  } catch (e) {
-    console.error('wallet transaction', e);
-  }
-}
+  const data = '0x' + Buffer.from(remark).toString('hex');
+  return getGasLimit(
+    financeConfig.chains[type].rpcURL,
+    fromAddress,
+    toAddress,
+    amount,
+    data,
+  );
+};
 
 export const cionTransact = params => {
   return new Promise(async (resolve, reject) => {

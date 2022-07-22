@@ -105,7 +105,7 @@ const WalletTransactionDetail = ({
         <Text style={[styles.benText, {color: normal}]}>Gas</Text>
         <Text style={[text, styles.comText]}>
           {transactData?.gasUsed
-            ? bigNumberFormatUnits(transactData?.gasUsed) +
+            ? bigNumberFormatUnits(transactData?.gasUsed, 9) +
               ' ' +
               (transactData.type === 'spectrum'
                 ? 'smt'

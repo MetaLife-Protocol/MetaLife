@@ -1,9 +1,8 @@
 import Slider from '@react-native-community/slider';
 import {useNavigation} from '@react-navigation/native';
-import React, {useCallback, useEffect, useMemo} from 'react';
+import React, {useEffect} from 'react';
 import {useState} from 'react';
 import {
-  ActivityIndicator,
   Image,
   Keyboard,
   Platform,
@@ -18,12 +17,13 @@ import {
   bigNumberParseUnits,
 } from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
-import {RoundBtn, useDialog} from '../../../../metalife-base';
+import {RoundBtn} from '../../../../metalife-base';
 import {
-  getGas,
   getWBalance,
   cionTransact,
   coinContractTransfer,
+  getTransferGasPrice,
+  getTransferGasLimit,
 } from '../../../../remote/wallet/WalletAPI';
 import ComText from '../../../../shared/comps/ComText';
 import PasswordModel from '../../../../shared/comps/PasswordModal';
@@ -31,16 +31,11 @@ import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {getCurrentAccount} from '../../../../utils';
 
 /**
- * Created on 17 Jun 2022 by lonmee
+ * Created on 17 Jun 2022 by amy
  *
  */
 
-const Loading = () => {
-  return <ActivityIndicator />;
-};
-
 const WalletTransfer = props => {
-  const dialog = useDialog();
   const {darkMode, wallet, transfer, setTokenOption, setTransactionDetail} =
     props;
   const {tokenOption} = transfer;
@@ -52,45 +47,12 @@ const WalletTransfer = props => {
   const [address, setAddress] = useState('');
   const [inputAmount, setInputAmount] = useState('');
   const [remark, setRemark] = useState('');
-  // TODO: fixed gas fee
-  const initGas = bigNumberFormatUnits(
-    bigNumberParseUnits('18', 9).mul(21100).toString(),
-  );
-  const [gas, setGas] = useState({
-    gasPriceNumber: 18,
-    gas: initGas,
-    gasLimit: 21100,
-  });
   const [gasPrice, setGasPrice] = useState(18);
+  const [gasLimit, setGasLimit] = useState(21100);
+  const [gasPriceNumber, setGasPriceNumber] = useState(18);
   const [pwdVisible, setPwdVisible] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastContent, setToastContent] = useState('');
-
-  const getGasCallback = (inputAmount, remark) => {
-    let amount = inputAmount;
-    if (tokenOption.type === 'spectrum') {
-      if (tokenOption.cType !== 'SMT') {
-        amount = '';
-      }
-    } else if (tokenOption.type === 'ethereum') {
-    }
-    dialog.show(<Loading />);
-    getGas({
-      type: currentAccount.type,
-      fromAddress: currentAccount.address,
-      toAddress: address,
-      amount: amount ? amount : '0',
-      remark: remark ? remark : '',
-    })
-      .then(gasRes => {
-        setGas({...gasRes});
-        setGasPrice(gasRes.gasPriceNumber);
-        dialog.dismiss();
-      })
-      .catch(e => {
-        dialog.dismiss();
-      });
-  };
 
   useEffect(() => {
     // 先获取当前转账余额
@@ -107,22 +69,23 @@ const WalletTransfer = props => {
         amount: res,
       });
     });
-    getGasCallback();
-    // }
   }, []);
 
-  // useEffect(() => {
-  //   console.log('input', inputAmount, remark);
-  //   Keyboard.addListener('keyboardDidHide', _keyboardDidHide);
-  //   return () => {
-  //     Keyboard.removeAllListeners('keyboardDidHide', _keyboardDidHide);
-  //   };
-  // }, [inputAmount, remark]);
-
-  // const _keyboardDidHide = e => {
-  //   console.log('ssss', e);
-  //   console.log(inputAmount, remark);
-  // };
+  useEffect(() => {
+    getTransferGasPrice({type: currentAccount.type}).then(res => {
+      setGasPrice(bigNumberFormatUnits(res.toString(), 9));
+      setGasPriceNumber(Number(bigNumberFormatUnits(res.toString(), 9)));
+    });
+    getTransferGasLimit({
+      type: currentAccount.type,
+      fromAddress: currentAccount.address,
+      toAddress: address,
+      amount: inputAmount ? inputAmount : '0',
+      remark: remark ? remark : '',
+    }).then(res => {
+      setGasLimit(res.toString());
+    });
+  }, [inputAmount, remark]);
 
   const onConfirmTransaction = pwd => {
     if (tokenOption.type === 'spectrum') {
@@ -149,8 +112,8 @@ const WalletTransfer = props => {
         amount: inputAmount,
         remark: remark,
         password: pwd,
-        gasLimit: gas?.gasLimit,
-        gasPrice: gas?.gasPrice,
+        gasLimit: bigNumberParseUnits(gasLimit, 0),
+        gasPrice: bigNumberParseUnits(gasPriceNumber + '', 9),
       });
       if (res.code === 'success') {
         const params = {
@@ -192,8 +155,8 @@ const WalletTransfer = props => {
         amount: inputAmount,
         remark: remark,
         password: pwd,
-        gasLimit: gas?.gasLimit,
-        gasPrice: gas?.gasPrice,
+        gasLimit: bigNumberParseUnits(gasLimit, 0),
+        gasPrice: bigNumberParseUnits(gasPriceNumber + '', 9),
       });
       if (res.code === 'success') {
         console.log('contract coin', res.data);
@@ -283,9 +246,6 @@ const WalletTransfer = props => {
               keyboardType={'numeric'}
               value={inputAmount}
               onChangeText={setInputAmount}
-              onEndEditing={() => {
-                Number(inputAmount) > 0 && getGasCallback(inputAmount, remark);
-              }}
             />
           </View>
           <View style={[marginTop10, justifySpaceBetween, row]}>
@@ -303,17 +263,21 @@ const WalletTransfer = props => {
             placeholderTextColor={'#A5ABB7'}
             value={remark}
             onChangeText={setRemark}
-            onEndEditing={() =>
-              Number(inputAmount) > 0 && getGasCallback(inputAmount, remark)
-            }
           />
         </View>
 
         <View style={[marginTop10, styles.marginH15, FG]}>
           <View style={[marginTop10, justifySpaceBetween, row]}>
-            <ComText style={[text, styles.title]}>Gas</ComText>
+            <View>
+              <ComText style={[text, styles.title]}>Gas</ComText>
+            </View>
+
             <ComText style={[text, styles.gas]}>
-              {gas.gas}{' '}
+              {bigNumberFormatUnits(
+                bigNumberParseUnits(gasPriceNumber + '', 9)
+                  .mul(gasLimit)
+                  .toString(),
+              )}{' '}
               {tokenOption.type === 'spectrum'
                 ? 'SMT'
                 : tokenOption.type === 'ethereum'
@@ -323,25 +287,16 @@ const WalletTransfer = props => {
           </View>
           <Slider
             style={[styles.slider, marginTop10]}
-            minimumValue={gasPrice - 2}
-            maximumValue={gasPrice + 10}
-            value={gas.gasPriceNumber}
+            minimumValue={Number(gasPrice) - 2}
+            maximumValue={Number(gasPrice) + 10}
+            value={gasPriceNumber}
             thumbTintColor="#29DAD7"
             minimumTrackTintColor="#29DAD7"
             maximumTrackTintColor="#DADADA"
             step={1}
             onValueChange={value => {
-              const newGas = {
-                ...gas,
-                gasPriceNumber: value,
-                gasPrice: bigNumberParseUnits(value + '', 9),
-                gas: bigNumberFormatUnits(
-                  bigNumberParseUnits(value.toString(), 9)
-                    .mul(gas?.gasLimit)
-                    .toString(),
-                ),
-              };
-              setGas(newGas);
+              console.log(value);
+              setGasPriceNumber(value);
             }}
           />
         </View>
