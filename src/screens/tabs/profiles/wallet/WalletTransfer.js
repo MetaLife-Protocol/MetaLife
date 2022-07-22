@@ -48,7 +48,7 @@ const WalletTransfer = props => {
   const [inputAmount, setInputAmount] = useState('');
   const [remark, setRemark] = useState('');
   const [gasPrice, setGasPrice] = useState(18);
-  const [gasLimit, setGasLimit] = useState(21100);
+  const [gasLimit, setGasLimit] = useState(0);
   const [gasPriceNumber, setGasPriceNumber] = useState(18);
   const [pwdVisible, setPwdVisible] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
@@ -74,7 +74,8 @@ const WalletTransfer = props => {
 
   useEffect(() => {
     getTransferGasPrice({type: currentAccount.type}).then(res => {
-      setGasPrice(bigNumberFormatUnits(res.toString(), 9));
+      const price = bigNumberFormatUnits(res.toString(), 9).toString();
+      setGasPrice(price.indexOf('.') !== -1 ? price.split('.')[0] : price);
       setGasPriceNumber(Number(bigNumberFormatUnits(res.toString(), 9)));
     });
     getTransferGasLimit({
@@ -326,7 +327,9 @@ const WalletTransfer = props => {
         </View> */}
         <RoundBtn
           style={[styles.btnContainer, marginTop10]}
-          disabled={address && Number(inputAmount) > 0 ? false : true}
+          disabled={
+            address && Number(inputAmount) > 0 && gasLimit > 0 ? false : true
+          }
           title={'Confirm'}
           press={() => {
             setPwdVisible(true);
