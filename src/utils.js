@@ -112,6 +112,13 @@ export function getCurrentAccount(wallet) {
   );
 }
 
+export const getCurrentTransactionDetail = (transfer, address, hash) => {
+  const list = transfer.records[address];
+  const index = list.findIndex(it => it.detail.hash === hash);
+  const transactData = transfer.records[address][index];
+  return transactData;
+};
+
 export function fixWalletAddress(address) {
   if (!address.startsWith('0x')) {
     address = '0x' + address;

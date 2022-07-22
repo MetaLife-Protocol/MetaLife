@@ -71,11 +71,19 @@ export const ComModal = ({
           <View style={[justifySpaceBetween, row, styles.buttonView]}>
             {cancel ? (
               <View style={[flex1]}>
-                <RoundBtn title={cancel.text} press={() => setVisible(false)} />
+                <RoundBtn
+                  disabled={toastVisible}
+                  title={cancel.text}
+                  press={() => setVisible(false)}
+                />
               </View>
             ) : null}
             <View style={[flex1]}>
-              <RoundBtn title={submit.text} press={submit.press} />
+              <RoundBtn
+                disabled={toastVisible}
+                title={submit.text}
+                press={submit.press}
+              />
             </View>
           </View>
         </View>

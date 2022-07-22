@@ -416,13 +416,11 @@ export const cionTransact = params => {
 };
 
 export const coinWaitTransaction = async (type, hash) => {
-  console.log('ssssss', type, hash);
   try {
     const waitTransactionRes = await waitForTransaction(
       financeConfig.chains[type].rpcURL,
       hash,
     );
-    console.log('waitTransactionRes', waitTransactionRes);
     return waitTransactionRes;
   } catch (e) {
     console.warn(e);

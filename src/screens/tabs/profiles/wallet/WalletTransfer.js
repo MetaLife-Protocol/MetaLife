@@ -36,7 +36,7 @@ import {getCurrentAccount} from '../../../../utils';
  */
 
 const WalletTransfer = props => {
-  const {darkMode, wallet, transfer, setTokenOption, setTransactionDetail} =
+  const {darkMode, wallet, transfer, setTokenOption, addTransactionRecord} =
     props;
   const {tokenOption} = transfer;
   const {navigate} = useNavigation();
@@ -118,6 +118,7 @@ const WalletTransfer = props => {
       if (res.code === 'success') {
         const params = {
           detail: res.data,
+          address: currentAccount.address,
           amount: bigNumberFormatUnits(res.data.value),
           remark: remark,
           type: currentAccount.type,
@@ -129,10 +130,13 @@ const WalletTransfer = props => {
           statusImg: icons.complete,
           textColor: '#46C288',
         };
-        setTransactionDetail(params);
+        addTransactionRecord(params);
         setToastVisible(false);
         setPwdVisible(false);
-        navigate('WalletTransactionDetail');
+        navigate('WalletTransactionDetail', {
+          address: currentAccount.address,
+          hash: res.data.hash,
+        });
       }
       if (res.code === 'fail') {
         setToastVisible(true);
@@ -159,9 +163,9 @@ const WalletTransfer = props => {
         gasPrice: bigNumberParseUnits(gasPriceNumber + '', 9),
       });
       if (res.code === 'success') {
-        console.log('contract coin', res.data);
         const params = {
           detail: res.data,
+          address: currentAccount.address,
           amount: inputAmount,
           remark: remark,
           type: currentAccount.type,
@@ -174,10 +178,13 @@ const WalletTransfer = props => {
           statusImg: icons.complete,
           textColor: '#46C288',
         };
-        setTransactionDetail(params);
+        addTransactionRecord(params);
         setToastVisible(false);
         setPwdVisible(false);
-        navigate('WalletTransactionDetail');
+        navigate('WalletTransactionDetail', {
+          address: currentAccount.address,
+          hash: res.data.hash,
+        });
       }
       if (res.code === 'fail') {
         setToastVisible(true);
@@ -397,7 +404,7 @@ const msp = s => {
 const mdp = d => {
   return {
     setTokenOption: payload => d({type: 'setTokenOption', payload}),
-    setTransactionDetail: payload => d({type: 'setTransactionDetail', payload}),
+    addTransactionRecord: payload => d({type: 'addTransactionRecord', payload}),
   };
 };
 

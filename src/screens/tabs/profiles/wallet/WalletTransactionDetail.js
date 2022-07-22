@@ -14,32 +14,33 @@ import QRCode from 'react-native-qrcode-svg';
 import {financeConfig} from '../../../../remote/wallet/financeConfig';
 import NativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import Toast from 'react-native-tiny-toast';
+import {getCurrentTransactionDetail} from '../../../../utils';
 
 const WalletTransactionDetail = ({
   cfg: {darkMode},
   transfer,
-  setTransactionDetail,
+  updateTransactionRecord,
+  route: {params},
 }) => {
+  const {address, hash} = params;
   const {flex1, FG, BG, text} = useSchemaStyles();
   const colors = !darkMode ? '#F0F0F0' : '#000';
   const normal = darkMode ? '#4E586E' : '#A5ABB7';
-
-  const transactData = transfer.detail;
+  const transactData = getCurrentTransactionDetail(transfer, address, hash);
 
   const qrcodeUrl =
     financeConfig.chains[transactData.type].explorerURL +
     'tx.html?hash=' +
-    transactData.detail.hash;
+    hash;
 
   useEffect(() => {
-    console.log('sssss', transactData);
     const getWaitTransaction = async () => {
       try {
         const res = await coinWaitTransaction(
           transactData.type,
           transactData.detail.hash,
         );
-        setTransactionDetail({
+        updateTransactionRecord({
           ...transactData,
           gasUsed: res.gasUsed,
           status: 'Synchronizing(1/20)...',
@@ -49,7 +50,7 @@ const WalletTransactionDetail = ({
         });
         let provider = getTransactionListenProvider(transactData.type);
         provider.on(transactData.detail.hash, resListen => {
-          setTransactionDetail({
+          updateTransactionRecord({
             ...transactData,
             blockNumber: resListen.blockNumber,
             gasUsed: resListen.gasUsed,
@@ -59,7 +60,7 @@ const WalletTransactionDetail = ({
           });
           if (resListen.confirmations > 19) {
             provider.removeAllListeners(transactData.detail.hash);
-            setTransactionDetail({
+            updateTransactionRecord({
               ...transactData,
               blockNumber: resListen.blockNumber,
               gasUsed: resListen.gasUsed,
@@ -71,6 +72,12 @@ const WalletTransactionDetail = ({
         });
       } catch (e) {
         console.log('error', e);
+        updateTransactionRecord({
+          ...transactData,
+          status: 'Transaction failed',
+          statusImg: icons.fail,
+          textColor: '#E73553',
+        });
       }
     };
     getWaitTransaction();
@@ -226,7 +233,8 @@ const msp = s => {
 
 const mdp = d => {
   return {
-    setTransactionDetail: payload => d({type: 'setTransactionDetail', payload}),
+    updateTransactionRecord: payload =>
+      d({type: 'updateTransactionRecord', payload}),
   };
 };
 

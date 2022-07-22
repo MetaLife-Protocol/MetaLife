@@ -9,7 +9,7 @@ export const initValue = {
     cType: '', // SMT/Mesh/MLT ETH
     amount: 0,
   },
-  detail: {},
+  records: {},
 };
 export const transferReducer = (state = initValue, {type, payload}) => {
   switch (type) {
@@ -21,12 +21,27 @@ export const transferReducer = (state = initValue, {type, payload}) => {
           ...payload,
         },
       };
-    case 'setTransactionDetail':
+    case 'addTransactionRecord':
+      console.log('payload', payload);
       return {
         ...state,
-        detail: {
-          ...state.detail,
-          ...payload,
+        records:
+          state.records && state.records[payload.address]
+            ? {
+                [payload.address]: [...state.records[payload.address], payload],
+              }
+            : {[payload.address]: [payload]},
+      };
+    case 'updateTransactionRecord':
+      return {
+        ...state,
+        records: {
+          [payload.address]: state.records[payload.address].map(it => {
+            if (it.hash === payload.hash) {
+              return payload;
+            }
+            return it;
+          }),
         },
       };
     default:
