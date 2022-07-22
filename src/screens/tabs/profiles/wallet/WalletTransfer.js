@@ -39,7 +39,7 @@ const WalletTransfer = props => {
   const {darkMode, wallet, transfer, setTokenOption, addTransactionRecord} =
     props;
   const {tokenOption} = transfer;
-  const {navigate} = useNavigation();
+  const {navigate, replace} = useNavigation();
   const {flex1, FG, BG, row, justifySpaceBetween, text, marginTop10} =
     useSchemaStyles();
 
@@ -53,6 +53,7 @@ const WalletTransfer = props => {
   const [pwdVisible, setPwdVisible] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastContent, setToastContent] = useState('');
+  const [toastDur, setToastDur] = useState(3000);
 
   useEffect(() => {
     // 先获取当前转账余额
@@ -104,6 +105,7 @@ const WalletTransfer = props => {
   const onTransaction = async pwd => {
     setToastVisible(true);
     setToastContent('loading...');
+    setToastDur(null);
     try {
       const res = await cionTransact({
         type: currentAccount.type,
@@ -122,6 +124,12 @@ const WalletTransfer = props => {
           amount: bigNumberFormatUnits(res.data.value),
           remark: remark,
           type: currentAccount.type,
+          cType:
+            tokenOption.type === 'spectrum'
+              ? 'SMT'
+              : tokenOption.type === 'ethereum'
+              ? 'ETH'
+              : '',
           contract: false,
           date: Date.now(),
           gasUsed: '',
@@ -133,7 +141,7 @@ const WalletTransfer = props => {
         addTransactionRecord(params);
         setToastVisible(false);
         setPwdVisible(false);
-        navigate('WalletTransactionDetail', {
+        replace('WalletTransactionDetail', {
           address: currentAccount.address,
           hash: res.data.hash,
         });
@@ -141,6 +149,7 @@ const WalletTransfer = props => {
       if (res.code === 'fail') {
         setToastVisible(true);
         setToastContent(res.message);
+        setToastDur(3000);
       }
     } catch (e) {
       console.warn('confrirm', e);
@@ -150,6 +159,7 @@ const WalletTransfer = props => {
   const onContractTransaction = async (pwd, cType) => {
     setToastVisible(true);
     setToastContent('loading...');
+    setToastDur(null);
     try {
       const res = await coinContractTransfer({
         type: currentAccount.type,
@@ -181,7 +191,7 @@ const WalletTransfer = props => {
         addTransactionRecord(params);
         setToastVisible(false);
         setPwdVisible(false);
-        navigate('WalletTransactionDetail', {
+        replace('WalletTransactionDetail', {
           address: currentAccount.address,
           hash: res.data.hash,
         });
@@ -189,6 +199,7 @@ const WalletTransfer = props => {
       if (res.code === 'fail') {
         setToastVisible(true);
         setToastContent(res.message);
+        setToastDur(3000);
       }
     } catch (e) {
       console.warn('confrirm', e);
@@ -329,6 +340,7 @@ const WalletTransfer = props => {
           toastVisible={toastVisible}
           setToastVisible={setToastVisible}
           toastContent={toastContent}
+          toastDuriation={toastDur}
           onConfirm={pwd => {
             onConfirmTransaction(pwd);
           }}

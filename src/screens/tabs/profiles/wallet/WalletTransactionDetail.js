@@ -1,5 +1,5 @@
 import {Image, Pressable, StyleSheet, View} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import Text from '../../../../shared/comps/ComText';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
@@ -26,12 +26,13 @@ const WalletTransactionDetail = ({
   const {flex1, FG, BG, text} = useSchemaStyles();
   const colors = !darkMode ? '#F0F0F0' : '#000';
   const normal = darkMode ? '#4E586E' : '#A5ABB7';
-  const transactData = getCurrentTransactionDetail(transfer, address, hash);
-
+  const [transactData, settransactData] = useState(
+    getCurrentTransactionDetail(transfer, address, hash),
+  );
   const qrcodeUrl =
     financeConfig.chains[transactData.type].explorerURL +
     'tx.html?hash=' +
-    hash;
+    transactData.hash;
 
   useEffect(() => {
     const getWaitTransaction = async () => {

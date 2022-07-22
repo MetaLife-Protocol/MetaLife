@@ -38,7 +38,7 @@ export const ComModal = ({
   const {flex1, modalBG, row, text, justifySpaceBetween} = useSchemaStyles();
 
   useEffect(() => {
-    if (toastVisible) {
+    if (toastVisible && toastDuriation) {
       const timer = setTimeout(
         () => setToastVisible && setToastVisible(false),
         toastDuriation,

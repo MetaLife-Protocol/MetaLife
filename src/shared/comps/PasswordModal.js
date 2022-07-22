@@ -12,6 +12,7 @@ const PasswordModel = ({
   toastContent,
   pwdVisible,
   setPwdVisible,
+  toastDuriation,
 }) => {
   const {row, text, alignItemsCenter, placeholderTextColor} = useSchemaStyles();
   const [pwd, setPwd] = useState('');
@@ -22,6 +23,7 @@ const PasswordModel = ({
       setVisible={setPwdVisible}
       title={'Enter Password'}
       darkMode={darkMode}
+      toastDuriation={toastDuriation}
       content={
         <View style={[alignItemsCenter, styles.inputContiner, row]}>
           <TextInput
