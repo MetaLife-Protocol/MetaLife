@@ -7,7 +7,7 @@ import {ComModal} from './ComModal';
 const PasswordModel = ({
   darkMode,
   onConfirm,
-  toastVisible,
+  toastVisible = false,
   setToastVisible,
   toastContent,
   pwdVisible,
