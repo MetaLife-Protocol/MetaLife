@@ -1,6 +1,5 @@
 import axios from 'axios';
 import FormData from 'form-data';
-import RNFS from 'react-native-fs';
 
 /**
  * Created on 06 Jul 2022 by lonmee
@@ -77,7 +76,7 @@ export async function uploadNftAssetsJson({
  * @param cid
  * @returns {Promise<Response>}
  */
-export const getNftAssets = cid => fetch(ipfsBaseURL + cid);
+export const getNftAssets = cid => ipfsBaseURL + cid;
 export const getNftAssetsUri = uri => fetch(ipfsBaseURL + uri);
 
 export async function getList(uri, cb) {

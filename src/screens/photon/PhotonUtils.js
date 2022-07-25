@@ -37,7 +37,6 @@ export function startPhoton({
   }
 
   yjggfjgjghfg(currentAccount.address, (success, res) => {
-    console.log(success, res);
     if (success && res) {
       initPhoton({
         privateKey: res,
