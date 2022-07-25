@@ -15,7 +15,7 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   blacklist: ['runtime'],
-  timeout: null,
+  // timeout: 10e3,
 };
 
 export const store = configureStore({
@@ -36,10 +36,11 @@ export const store = configureStore({
     }),
 });
 
-export const persistor = persistStore(store, [
-  {manualPersist: false},
+export const persistor = persistStore(
+  store,
+  {manualPersist: false /*true*/},
   a => console.log('rehydration finished with: ', a),
-]);
+);
 
 store.subscribe(() => {
   const {

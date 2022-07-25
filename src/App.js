@@ -27,7 +27,6 @@ import {
   Platform,
   Pressable,
   StatusBar,
-  // Text,
   View,
 } from 'react-native';
 import Text from './shared/comps/ComText';
@@ -143,7 +142,7 @@ const App = ({
     window.ssb ||
       startSSB().then(ssb => {
         window.ssb = ssb;
-        if (!feedId) {
+        if (feedId === '') {
           setFeedId(ssb.id);
           // join suggest pub for first entry
           pubHostByIp()
@@ -172,7 +171,7 @@ const App = ({
       <StatusBar barStyle={barStyle} />
       <Navigator
         initialRouteName={
-          feedId
+          feedId !== ''
             ? resync
               ? wallet.current.type
                 ? 'Resync'
