@@ -52,6 +52,7 @@ const Resync = ({
 
   function checkProgress() {
     let localP = 0;
+    // todo: clear interval
     interval = setInterval(
       () =>
         resyncProgress().then(p => {
