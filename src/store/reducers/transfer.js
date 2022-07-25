@@ -22,26 +22,29 @@ export const transferReducer = (state = initValue, {type, payload}) => {
         },
       };
     case 'addTransactionRecord':
-      console.log('payload', payload);
       return {
         ...state,
-        records:
-          state.records && state.records[payload.address]
+        records: {
+          ...state.records,
+          [payload.address]: state.records[payload.address]
             ? {
-                [payload.address]: [...state.records[payload.address], payload],
+                ...state.records[payload.address],
+                [payload.detail.hash]: payload,
               }
-            : {[payload.address]: [payload]},
+            : {
+                [payload.detail.hash]: payload,
+              },
+        },
       };
     case 'updateTransactionRecord':
       return {
         ...state,
         records: {
-          [payload.address]: state.records[payload.address].map(it => {
-            if (it.hash === payload.hash) {
-              return payload;
-            }
-            return it;
-          }),
+          ...state.records,
+          [payload.address]: {
+            ...state.records[payload.address],
+            [payload.detail.hash]: payload,
+          },
         },
       };
     default:

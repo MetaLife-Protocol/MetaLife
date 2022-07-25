@@ -14,7 +14,6 @@ import QRCode from 'react-native-qrcode-svg';
 import {financeConfig} from '../../../../remote/wallet/financeConfig';
 import NativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import Toast from 'react-native-tiny-toast';
-import {getCurrentTransactionDetail} from '../../../../utils';
 
 const WalletTransactionDetail = ({
   cfg: {darkMode},
@@ -26,13 +25,17 @@ const WalletTransactionDetail = ({
   const {flex1, FG, BG, text} = useSchemaStyles();
   const colors = !darkMode ? '#F0F0F0' : '#000';
   const normal = darkMode ? '#4E586E' : '#A5ABB7';
-  const [transactData, settransactData] = useState(
-    getCurrentTransactionDetail(transfer, address, hash),
+  const [transactData, setTransactData] = useState(
+    transfer.records[address][hash],
   );
   const qrcodeUrl =
     financeConfig.chains[transactData.type].explorerURL +
     'tx.html?hash=' +
-    transactData.hash;
+    transactData.detail.hash;
+
+  useEffect(() => {
+    setTransactData(transfer.records[address][hash]);
+  }, [transfer.records[address][hash]]);
 
   useEffect(() => {
     const getWaitTransaction = async () => {
