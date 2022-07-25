@@ -50,7 +50,9 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
   return (
     <ScrollView style={[flex1, BG]} showsVerticalScrollIndicator={false}>
       <FastImage
-        source={{uri: ipfsBaseURL + item?.image?.split('ipfs://')[1]}}
+        source={{
+          uri: ipfsBaseURL + 'ipfs/' + item?.image?.split('ipfs://')[1],
+        }}
         style={[styles.topImg]}
         resizeMode="contain"
       />
