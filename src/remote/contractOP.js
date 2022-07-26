@@ -8,8 +8,16 @@ import {financeConfig} from './wallet/financeConfig';
 import {
   bigNumberFormatUnits,
   getContract,
+  getProvider,
   getSignerContract,
+  waitForTransaction,
 } from 'react-native-web3-wallet';
+import {
+  coinWaitTransaction,
+  getTransactionListenProvider,
+} from './wallet/WalletAPI';
+import {re} from '@babel/core/lib/vendor/import-meta-resolve';
+import {fixWalletAddress} from '../utils';
 
 const network = financeConfig.chains.spectrum.rpcURL,
   // metaMaster contract
@@ -18,9 +26,9 @@ const network = financeConfig.chains.spectrum.rpcURL,
   devCollectionAddress = '0x221b9814d507bC912534A96C37a15356cc995C0E',
   // collection address
   collectionAddress = '0xf0fa86596F770E66d013f19E90C97A5d09122106',
-  metaMasterAddress = '0x0dcc00b3f7c664aaa884c87a66f7a0ce80d9367c',
-  salePlainAddress = '0x78adeae9003c69c583994513f987b64ab89e9897',
-  saleAuction = '0xc03b0b4eb78fef619cd791d71ff8e612958d821f';
+  metaMasterAddress = '0x91c025098a9364662c116a058ac816feaad8e19e',
+  salePlainAddress = '0x45ed21984f7b067361b888e1b60f936467b3a6a2',
+  saleAuction = '0xbab389d9f0898cd2f137d48742813110ecbbbfbc';
 
 export async function callAuto() {
   getNFTInfos(undefined, console.log);
@@ -117,10 +125,16 @@ export async function getNFTTotal() {
  * @param wAddr option user wallet address for self or undefined for all
  * @returns {{result: Error}}
  */
-export async function getNFTInfos(wAddr = undefined, cb, page = 0, limit = 0) {
+export async function getNFTInfos(
+  wAddr = undefined,
+  cb,
+  page = 0,
+  limit = 0,
+  collectAddress = collectionAddress,
+) {
   const contract = getContract(
     network,
-    collectionAddress,
+    collectAddress,
     // ERC721EnumerableAbi,
     NFTCollectionAbi,
   );
@@ -163,10 +177,9 @@ export async function getNFTInfos(wAddr = undefined, cb, page = 0, limit = 0) {
       nftInfo.ownerOf = ownerOf;
     }
     cb && cb(nftInfo);
-    // nftInfos.push(nftInfo);
+    nftInfos.push(nftInfo);
   }
-  // return nftInfos;
-  // cb && cb(nftInfos);
+  return nftInfos;
 }
 
 export async function getMyNFTCollectionInfos(wAddr, cb, page = 0, limit = 0) {
@@ -214,10 +227,149 @@ export async function getMyNFTCollectionInfos(wAddr, cb, page = 0, limit = 0) {
       name: name,
       symbol: symbol,
       uri: metaInfo,
+      address: collection_address,
+      type: 'Collection',
     };
     cb && cb(collectionInfo);
     collectionInfos.push(collectionInfo);
   }
   return collectionInfos;
   // cb && cb(nftInfos);
+}
+
+export async function texthash() {
+  getProvider(network)
+    .getTransaction(
+      '0x12f8745b8c3e9b392197571c425536ccee705c6c4db1c553c02232cd76a195a9',
+    )
+    .then(data => {
+      console.log('ddddddsssfssfs', data);
+    })
+    .catch(err => {
+      console.log('ereeee', err);
+    });
+  getProvider(network)
+    .getTransactionReceipt(
+      '0x12f8745b8c3e9b392197571c425536ccee705c6c4db1c553c02232cd76a195a9',
+    )
+    .then(data => {
+      console.log('dddddd', data);
+    })
+    .catch(err => {
+      console.log('ereeee', err);
+    });
+}
+
+export async function getCreateCollection(
+  type,
+  keystore,
+  password,
+  name,
+  symbol,
+  baseURI, //ipfsId
+  maxNum,
+  logo,
+  address,
+  ratio = 250,
+  cb,
+  er,
+) {
+  const contract = await getSignerContract(
+    financeConfig.chains[type].rpcURL,
+    // network,
+    metaMasterAddress,
+    metaMasterAbi,
+    JSON.stringify(keystore),
+    password,
+  );
+  // console.log('cccccccc', contract);
+
+  const result = contract
+    .createCollection(name, symbol, baseURI, maxNum, logo, address, ratio)
+    .then(async res => {
+      // console.log('aaaaaa', res);
+      let filterTo = contract.filters.NewCollection('0x' + address);
+      contract.once(filterTo, (sender, address, event) => {
+        // console.log('contract', address);
+        cb && cb(address);
+      });
+
+      let data = await coinWaitTransaction(type, res.hash);
+      // console.log('ddddd', data, address);
+
+      // let provider = getTransactionListenProvider(type);
+      // provider.on(res.hash, resListen => {
+      //   if (resListen.confirmations > 19) {
+      //     provider.removeAllListeners(res.hash);
+      //   }
+      // });
+      //
+    })
+    .catch(error => {
+      // console.log('erererererereer', error);
+      const errorMessage = error.message
+        .split('(error=')[1]
+        .split(', method=')[0];
+      const body = JSON.parse(errorMessage).body;
+      const errorMsg = JSON.parse(body);
+      er && er(errorMsg || error);
+    });
+}
+
+export async function getCreatNftItem(
+  type,
+  keystore,
+  password,
+  collecAddress,
+  wAddress,
+  baseURI, //ipfsId
+  cb,
+  er,
+) {
+  const contract = await getSignerContract(
+    financeConfig.chains[type].rpcURL,
+    // network,
+    metaMasterAddress,
+    metaMasterAbi,
+    JSON.stringify(keystore),
+    password,
+  );
+  // console.log('ccccccccc', contract);
+
+  const result = contract
+    .mint(collecAddress, wAddress, baseURI)
+    .then(async res => {
+      // console.log('aaaaaa', res);
+      const subcontract = getContract(network, collecAddress, NFTCollectionAbi);
+
+      let filterTo = subcontract.filters.Mint(null, fixWalletAddress(wAddress));
+      // console.log('adadad', fixWalletAddress(wAddress), subcontract);
+      subcontract.once(filterTo, (sender, address, event) => {
+        // console.log('contracttttt', sender.toNumber());
+        cb && cb(sender.toNumber());
+      });
+
+      let data = await coinWaitTransaction(type, res.hash);
+    })
+    .catch(error => {
+      // console.log('erererererereer', error);
+      // const errorMessage = error.message
+      const errorMessage = error.message
+        .split('(error=')[1]
+        .split(', method=')[0];
+      const body = JSON.parse(errorMessage).body;
+      const errorMsg = JSON.parse(body);
+      er && er(errorMsg || error);
+    });
+}
+
+export async function getNftItemInfo(colAddress, tokenId) {
+  const contract = getContract(
+    network,
+    colAddress,
+    // ERC721EnumerableAbi,
+    NFTCollectionAbi,
+  );
+  let token_uri = await contract.tokenURI(tokenId);
+  return token_uri;
 }

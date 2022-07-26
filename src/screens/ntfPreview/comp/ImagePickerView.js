@@ -20,7 +20,7 @@ const ImagePickerView = ({style, onImagePicker}) => {
 
   const cameraHandler = useCallback(
     async ({didCancel, errorCode, errorMessage, assets}) => {
-      console.log('ddddddddddd', errorCode, errorMessage, assets);
+      // console.log('ddddddddddd', errorCode, errorMessage, assets);
       if (errorCode || didCancel) {
         return errorCode && Toast.show(errorMessage);
       }
@@ -31,8 +31,8 @@ const ImagePickerView = ({style, onImagePicker}) => {
         filepath: file.uri,
         fileType: file.type,
       });
-      console.log('res::', res);
-      onImagePicker && onImagePicker(file);
+      // console.log('res::', res);
+      onImagePicker && onImagePicker(res.IpfsHash);
       setImage(file);
     },
     [onImagePicker],

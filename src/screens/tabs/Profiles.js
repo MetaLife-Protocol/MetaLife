@@ -89,6 +89,10 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
   }, []);
   // todo: refactor end
 
+  const closeModal = () => {
+    setVisible(false);
+  };
+
   return (
     <ScrollView
       stickyHeaderIndices={[0]}
@@ -187,10 +191,7 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
         transparent={true}
         visible={visible}
         onRequestClose={() => setVisible(false)}>
-        <Pressable
-          style={styles.closeModal}
-          onPress={() => setVisible(false)}
-        />
+        <Pressable style={styles.closeModal} onPress={closeModal} />
         <View style={[styles.modalView, flex1]}>
           <View
             style={[
@@ -205,17 +206,23 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
               }}>
               <Text style={[text]}>Collection</Text>
             </Pressable>
-            <View style={[flex1, styles.colItem]}>
+            <Pressable
+              style={[flex1, styles.colItem]}
+              onPress={() => {
+                setVisible(false);
+                navigate('CreateItemNft');
+              }}>
               <Text style={[text]}>NFT</Text>
-            </View>
+            </Pressable>
           </View>
-          <View
+          <Pressable
+            onPress={closeModal}
             style={[
               {backgroundColor: darkMode ? '#232929' : '#fff'},
               styles.modalCancel,
             ]}>
             <Text style={[text]}>Cancel</Text>
-          </View>
+          </Pressable>
         </View>
       </Modal>
     </ScrollView>
