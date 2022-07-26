@@ -70,7 +70,8 @@ export function importAccountByMnemonic(mnemonic, pw, type, cb) {
 export function importAccountByKeystore(keystore, pw, cb) {
   importKeystore(keystore, pw, true)
     .then(res => {
-      saveAccounts(res.keystore.address, res.keystore, (success, err) => {
+      const keystoreObj = JSON.parse(res.keystore);
+      saveAccounts(keystoreObj.address, keystoreObj, (success, err) => {
         console.log('save', success, err);
       });
       cb && cb(true, res);
