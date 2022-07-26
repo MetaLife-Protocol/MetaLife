@@ -53,8 +53,8 @@ export function pubHostByIp() {
  * }
  * @param cb
  */
-export function bindIDAndWallet(params, cb, pubNum) {
-  fetch((pubNum === 1 ? url : url2) + api[1], {
+export function bindIDAndWallet(ipAndPort, params, cb) {
+  fetch('http://' + ipAndPort + '/ssb/api/' + api[1], {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -62,7 +62,7 @@ export function bindIDAndWallet(params, cb, pubNum) {
     },
     body: JSON.stringify(params),
   })
-    .then(r => cb(r))
+    .then(r => r.json().then(cb))
     .catch(console.warn);
 }
 

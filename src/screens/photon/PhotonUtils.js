@@ -18,8 +18,10 @@ import {store} from '../../store/configureStore';
 import {getCurrentAccount} from '../../utils';
 import PasswordDialog from '../tabs/profiles/wallet/modal/PasswordDialog';
 import {exportAccountPrivateKey} from '../../remote/wallet/WalletAPI';
-import {bindIDAndWallet} from '../../remote/pubOP';
+import {bindIDAndWallet, pubHostByIp} from '../../remote/pubOP';
 import {sddsafsadf, yjggfjgjghfg} from '../../store/Foo';
+import {inviteAccept} from '../../remote/ssb/ssbOP';
+import {reconnect2pub} from '../tabs/profiles/Pubs';
 
 export function startPhoton({
   dialog,
@@ -110,28 +112,27 @@ export function initPhoton({
     .then(res => {
       Toast.hide();
       if (res?.logFile) {
-        const {photon, pubs, user} = store.getState();
+        const {photon, user} = store.getState();
         console.log('res:::', res);
         if (!photon?.photonLogined) {
           //photon is local first login
-          const feedId = user?.feedId;
-          console.log('feedId:::', feedId);
-          bindIDAndWallet(
-            {
-              client_id: feedId,
-              client_eth_address: address,
-            },
-            r => console.log('pub1 register:', r),
-            1,
-          );
-          bindIDAndWallet(
-            {
-              client_id: feedId,
-              client_eth_address: address,
-            },
-            r => console.log('pub2 register:', r),
-            2,
-          );
+          pubHostByIp()
+            .then(value =>
+              value.json().then(({data}) =>
+                bindIDAndWallet(
+                  data.first_choice_pub_host,
+                  {
+                    client_id: user.feedId,
+                    client_eth_address: address,
+                  },
+                  resp =>
+                    Toast.show('bind pub ' + resp.data, {
+                      position: Toast.position.BOTTOM,
+                    }),
+                ),
+              ),
+            )
+            .catch(console.warn);
         }
         store.dispatch({type: 'setPhotonLogin', payload: res.logFile});
         if (directToNetworkPage && navigate) {
