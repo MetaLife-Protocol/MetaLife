@@ -5,7 +5,11 @@ import Text from '../../../../shared/comps/ComText';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import ListEmpty from '../../../ntfPreview/comp/ListEmpty';
 import {getWalletRecord} from '../../../../remote/wallet/WalletAPI';
-import {getCurrentAccount, nftreviationAccount} from '../../../../utils';
+import {
+  fixWalletAddress,
+  getCurrentAccount,
+  nftreviationAccount,
+} from '../../../../utils';
 import {fromDate} from '../../../../utils';
 const toggle = require('../../../../assets/image/icons/icon_toggle_default.png');
 const send = require('../../../../assets/image/icons/send.png');
@@ -28,7 +32,7 @@ const WalletRecord = ({wallet}) => {
       method: 'transaction_list',
       sn: 'metalife_' + Math.random(),
       params: {
-        address: getCurrentAccount(wallet).address,
+        address: fixWalletAddress(getCurrentAccount(wallet).address),
         pageLimit: '50',
         page: page,
       },

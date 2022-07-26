@@ -6,24 +6,31 @@
  */
 
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
 import Text from '../../../shared/comps/ComText';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 
-const CategoryView = () => {
+const CategoryView = ({onClickItem, name, headImg}) => {
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   return (
     <View style={[styles.container, FG]}>
       <Text style={[text, styles.addTitleText]}>Add category</Text>
-      <Text style={styles.categoryType}>Artwork</Text>
-      <Image
-        style={styles.categoryTypeIcon}
-        source={require('../../../assets/image/nft/nft_add_category_type.png')}
-      />
-      <Image
-        style={styles.arrow}
-        source={require('../../../assets/image/nft/arrow_down.png')}
-      />
+      <Text style={styles.categoryType}>{name || 'Artwork'}</Text>
+      <Pressable
+        onPress={onClickItem}
+        style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Image
+          style={styles.categoryTypeIcon}
+          source={
+            headImg ||
+            require('../../../assets/image/nft/nft_add_category_type.png')
+          }
+        />
+        <Image
+          style={styles.arrow}
+          source={require('../../../assets/image/nft/arrow_down.png')}
+        />
+      </Pressable>
     </View>
   );
 };

@@ -95,7 +95,12 @@ import AddAddressScreen from './screens/tabs/profiles/wallet/AddAddressScreen';
 import WalletRecord from './screens/tabs/profiles/wallet/WalletRecord';
 import CreateItemCollection from './screens/ntfPreview/CreateCollection';
 import TokenOption from './screens/tabs/profiles/wallet/TokenOption';
+
 import {persistor} from './store/configureStore';
+
+import MyCollectionDetail from './screens/ntfPreview/MyCollectionDetail';
+import CreateItemNft from './screens/ntfPreview/CreateItemNft';
+import MyItemDetailView from './screens/ntfPreview/MyItemDetailView';
 
 const App = ({
   feedId,
@@ -518,6 +523,21 @@ const App = ({
           name="CreateItemCollection"
           component={CreateItemCollection}
           options={{headerTitle: 'Create a Collection'}}
+        />
+        <Screen
+          name="MyCollectionDetail"
+          component={MyCollectionDetail}
+          options={{headerTitle: ''}}
+        />
+        <Screen
+          name="CreateItemNft"
+          component={CreateItemNft}
+          options={{headerTitle: 'Create New Item'}}
+        />
+        <Screen
+          name="MyItemDetailView"
+          component={MyItemDetailView}
+          options={{headerTitle: ''}}
         />
       </Navigator>
       <MaskView darkMode={darkMode} enabled={masked} eventEnabled={false} />

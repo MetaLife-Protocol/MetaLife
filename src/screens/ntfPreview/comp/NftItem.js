@@ -12,7 +12,7 @@ import {ipfsBaseURL} from '../../../remote/ipfsOP';
 // const gateways = 'metalife.mypinata.cloud';
 // const ipfsBaseURL = `https://${gateways}/ipfs/`;
 
-const NftItem = ({item, index, symbol}) => {
+const NftItem = ({item, index, symbol, isImage}) => {
   const windowWidth = useWindowDimensions().width;
   const {text, FG} = useSchemaStyles();
 
@@ -22,12 +22,14 @@ const NftItem = ({item, index, symbol}) => {
     index % 2 === 0
       ? {marginLeft: 10, marginRight: 5}
       : {marginLeft: 5, marginRight: 10};
-  console.log('ddddd', ipfsBaseURL + item.image.split('ipfs://')[1]);
+  // console.log('ddddd', ipfsBaseURL + item.image.split('ipfs://')[1]);
   return (
     <View style={[styles.container, FG, {width: itemWidth}, itemMargin]}>
       <FastImage
         source={{
-          uri: ipfsBaseURL + 'ipfs/' + item?.image?.split('ipfs://')[1],
+          uri: isImage
+            ? ipfsBaseURL + 'ipfs/' + item?.image
+            : ipfsBaseURL + 'ipfs/' + item?.image?.split('ipfs://')[1],
         }}
         style={[
           styles.img,

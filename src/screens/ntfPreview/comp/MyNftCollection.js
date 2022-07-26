@@ -6,23 +6,39 @@ import {View, FlatList, StyleSheet, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import ComCollectItem from './ComCollectItem';
 import ListEmpty from './ListEmpty';
-import {getCollectionInfo, getNFTInfos} from '../../../remote/contractOP';
+import {
+  getCollectionInfo,
+  getMyNFTCollectionInfos,
+  getNFTInfos,
+} from '../../../remote/contractOP';
+import {getNftAssetsJson} from '../../../remote/ipfsOP';
+import {getCurrentAccount} from '../../../utils';
+import CollectListItem from './CollectListItem';
 
-const MyNftCollection = ({navigation}) => {
-  const [info, setInfo] = useState({});
+const MyNftCollection = ({navigation, wallet, addCollectionList, nft}) => {
+  // console.log('nfttttttttcccccccccc', nft);
   useEffect(() => {
-    getCollectionInfo(value => {
-      setInfo(value);
-      // addCollections(value);
-      // getNFTInfos(undefined, nftCInfo => {
-      //   getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
-      //     nftJInfo.headers['content-type'] === 'application/json' &&
-      //       addNft({
-      //         ...nftCInfo,
-      //         ...nftJInfo.data,
-      //       });
-      //   });
-      // });
+    const address = getCurrentAccount(wallet).address;
+    getMyNFTCollectionInfos(address, res => {
+      // alert(JSON.stringify(res));
+      const list = nft?.collection?.Collection;
+      if (nft) {
+        if (list && list.length > 0) {
+          for (let i = 0; i < list.length; i++) {
+            if (list[i].uri === res.uri) {
+              // console.log('ccccc', list[i].uri, res.uri);
+              return;
+            }
+          }
+        }
+      }
+      getNftAssetsJson(res.uri).then(collInfo => {
+        collInfo.headers['content-type'] === 'application/json' &&
+          addCollectionList({
+            ...res,
+            ...collInfo.data,
+          });
+      });
     });
   }, []);
 
@@ -30,9 +46,9 @@ const MyNftCollection = ({navigation}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('NftCollectionDetail', {item: item});
+          navigation.navigate('MyCollectionDetail', {address: item.address});
         }}>
-        <ComCollectItem item={item} />
+        <CollectListItem item={item} />
       </TouchableOpacity>
     );
   };
@@ -42,7 +58,7 @@ const MyNftCollection = ({navigation}) => {
   return (
     <View style={{flex: 1}}>
       <FlatList
-        data={[info]}
+        data={nft?.collection?.Collection}
         numColumns={2}
         renderItem={renderItem}
         style={styles.flatList}
@@ -64,12 +80,13 @@ const msp = s => {
     cfg: s.cfg,
     feedId: s.user.feedId,
     wallet: s.wallet,
+    nft: s.nft,
   };
 };
 
 const mdp = d => {
   return {
-    // addCollections: payload => d({type: 'addCollections', payload}),
+    addCollectionList: payload => d({type: 'addCollectionList', payload}),
     // addNft: payload => d({type: 'addNft', payload}),
   };
 };

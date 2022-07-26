@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -17,6 +17,7 @@ import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {screenWidth} from '../../utils';
 import SearchBar from '../../shared/comps/SearchBar';
 import {useNavigation} from '@react-navigation/native';
+import {texthash} from '../../remote/contractOP';
 const headImg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const star = require('../../assets/image/icons/star.png');
 
@@ -27,6 +28,9 @@ const DaoContentView = () => {
   const gotoDetail = () => {
     navigation.navigate('DaoDetailView');
   };
+  useEffect(() => {
+    // texthash();
+  }, []);
   const renderItem = () => {
     return (
       <Pressable style={[FG, styles.listItem]} onPress={gotoDetail}>
