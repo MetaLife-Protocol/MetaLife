@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   NavigationContainer,
   useNavigationContainerRef,
@@ -81,7 +81,7 @@ import EarningsShare from './screens/tabs/profiles/earnings/EarningsShare';
 import NftCollectionDetail from './screens/ntfPreview/NftCollectionDetail';
 import MyNftDetailView from './screens/ntfPreview/MyNftDetailView';
 import DaoContentView from './screens/daoPreview/DaoContentView';
-import {bindIDAndWallet, pubHostByIp} from './remote/pubOP';
+import {pubHostByIp} from './remote/pubOP';
 import DaoDetailView from './screens/daoPreview/DaoDetailView';
 import OpenGalaxyCollection from './screens/ntfPreview/OpenGalaxyCollection';
 import RNFS from 'react-native-fs';
@@ -95,8 +95,6 @@ import AddAddressScreen from './screens/tabs/profiles/wallet/AddAddressScreen';
 import WalletRecord from './screens/tabs/profiles/wallet/WalletRecord';
 import CreateItemCollection from './screens/ntfPreview/CreateCollection';
 import TokenOption from './screens/tabs/profiles/wallet/TokenOption';
-
-import {persistor} from './store/configureStore';
 
 import MyCollectionDetail from './screens/ntfPreview/MyCollectionDetail';
 import CreateItemNft from './screens/ntfPreview/CreateItemNft';
@@ -148,7 +146,7 @@ const App = ({
     window.ssb ||
       startSSB().then(ssb => {
         window.ssb = ssb;
-        if (feedId === '') {
+        if (feedId === 'foo') {
           setFeedId(ssb.id);
           // join suggest pub for first entry
           pubHostByIp()
@@ -177,15 +175,15 @@ const App = ({
       <StatusBar barStyle={barStyle} />
       <Navigator
         initialRouteName={
-          feedId !== ''
-            ? resync
-              ? wallet.current.type
-                ? 'Resync'
-                : 'WalletCreator'
-              : wallet.current.type
-              ? 'Tabs'
+          feedId === 'foo'
+            ? 'Guid'
+            : resync
+            ? wallet.current.type
+              ? 'Resync'
               : 'WalletCreator'
-            : 'Guid'
+            : wallet.current.type
+            ? 'Tabs'
+            : 'WalletCreator'
         }>
         <Screen name="Guid" component={Guid} options={{headerShown: false}} />
         <Screen name="Restore" component={Restore} />

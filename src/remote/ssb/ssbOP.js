@@ -116,14 +116,14 @@ export const getMnemonic = cb =>
 export const inviteAccept = (code, cb = null) => ssb.invite.accept(code, cb);
 
 /************************** initialize **************************/
-export const reqStartSSB = setInstance => {
+export const reqStartSSB = cb => {
   const {channel} = nodejs;
   channel.addListener(
     'identity',
     msg =>
       msg === 'IDENTITY_READY' &&
       makeClient()
-        .then(value => setInstance((ssb = value)))
+        .then(value => cb((ssb = value)))
         .catch(error => console.error('ssb start error: ' + error)),
   );
 };
