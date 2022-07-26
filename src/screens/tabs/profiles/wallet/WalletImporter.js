@@ -237,8 +237,8 @@ const WalletImporter = ({
           <RoundBtn
             style={[{marginBottom: 50}]}
             title={'Start Importing'}
-            disabled={!(copyInfo && pw && cPw && pw === cPw)}
-            press={() => exportAccount(address, true)}
+            disabled={!address}
+            press={() => exportAccount(address.replace('0x', ''), true)}
           />
         </KeyboardAvoidingView>
       </>
