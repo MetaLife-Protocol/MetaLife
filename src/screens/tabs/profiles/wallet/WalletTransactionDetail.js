@@ -54,23 +54,33 @@ const WalletTransactionDetail = ({
         });
         let provider = getTransactionListenProvider(transactData.type);
         provider.on(transactData.detail.hash, resListen => {
-          updateTransactionRecord({
-            ...transactData,
-            blockNumber: resListen.blockNumber,
-            gasUsed: resListen.gasUsed,
-            statusImg: icons.sync,
-            status: 'Synchronizing(' + resListen.confirmations + '/20)...',
-            textColor: '#29DAD7',
-          });
-          if (resListen.confirmations > 19) {
-            provider.removeAllListeners(transactData.detail.hash);
+          if (resListen.status === 1) {
             updateTransactionRecord({
               ...transactData,
               blockNumber: resListen.blockNumber,
               gasUsed: resListen.gasUsed,
-              status: 'Transaction complete',
-              statusImg: icons.complete,
-              textColor: '#46C288',
+              statusImg: icons.sync,
+              status: 'Synchronizing(' + resListen.confirmations + '/20)...',
+              textColor: '#29DAD7',
+            });
+            if (resListen.confirmations > 19) {
+              provider.removeAllListeners(transactData.detail.hash);
+              updateTransactionRecord({
+                ...transactData,
+                blockNumber: resListen.blockNumber,
+                gasUsed: resListen.gasUsed,
+                status: 'Transaction complete',
+                statusImg: icons.complete,
+                textColor: '#46C288',
+              });
+            }
+          } else {
+            // transaction fail
+            updateTransactionRecord({
+              ...transactData,
+              status: 'Transaction failed',
+              statusImg: icons.fail,
+              textColor: '#E73553',
             });
           }
         });

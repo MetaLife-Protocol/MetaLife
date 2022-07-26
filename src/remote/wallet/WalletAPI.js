@@ -460,10 +460,9 @@ export const coinContractTransfer = async params => {
             fromAddress,
           );
           const realAmount = bigNumberParseUnits(amount);
-          const addRes = gasLimit.add(20000);
           let tx = {
             nonce: nonce,
-            gasLimit: addRes,
+            gasLimit: gasLimit,
             gasPrice: gasPrice,
           };
           const res = await contract.transfer(toAddress, realAmount, tx);

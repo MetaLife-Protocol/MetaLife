@@ -51,7 +51,7 @@ const WalletTransfer = props => {
   const [inputAmount, setInputAmount] = useState('');
   const [remark, setRemark] = useState('');
   const [gasPrice, setGasPrice] = useState(18);
-  const [gasLimit, setGasLimit] = useState(0);
+  const [gasLimit, setGasLimit] = useState(bigNumberParseUnits('0', 0));
   const [gasPriceNumber, setGasPriceNumber] = useState(18);
   const [pwdVisible, setPwdVisible] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
@@ -88,9 +88,13 @@ const WalletTransfer = props => {
       amount: inputAmount ? inputAmount : '0',
       remark: remark ? remark : '',
     }).then(res => {
-      setGasLimit(res.toString());
+      if (tokenOption.cType === 'MLT' || tokenOption.cType === 'Mesh') {
+        setGasLimit(res.add(40000));
+      } else {
+        setGasLimit(res);
+      }
     });
-  }, [inputAmount, remark]);
+  }, [address, inputAmount, remark, tokenOption.cType]);
 
   const onConfirm = () => {
     // inputAmount + gas fee > tokenOption.amount  not success
@@ -163,7 +167,7 @@ const WalletTransfer = props => {
         amount: inputAmount,
         remark: remark,
         password: pwd,
-        gasLimit: bigNumberParseUnits(gasLimit, 0),
+        gasLimit: gasLimit,
         gasPrice: bigNumberParseUnits(gasPriceNumber + '', 9),
       });
       if (res.code === 'success') {
@@ -218,7 +222,7 @@ const WalletTransfer = props => {
         amount: inputAmount,
         remark: remark,
         password: pwd,
-        gasLimit: bigNumberParseUnits(gasLimit, 0),
+        gasLimit: gasLimit,
         gasPrice: bigNumberParseUnits(gasPriceNumber + '', 9),
       });
       if (res.code === 'success') {
