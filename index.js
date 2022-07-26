@@ -30,4 +30,3 @@ const WrappedApp = () => {
 };
 
 AppRegistry.registerComponent(appName, () => WrappedApp);
-// persistor.persist();

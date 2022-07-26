@@ -81,7 +81,7 @@ import EarningsShare from './screens/tabs/profiles/earnings/EarningsShare';
 import NftCollectionDetail from './screens/ntfPreview/NftCollectionDetail';
 import MyNftDetailView from './screens/ntfPreview/MyNftDetailView';
 import DaoContentView from './screens/daoPreview/DaoContentView';
-import {pubHostByIp} from './remote/pubOP';
+import {bindIDAndWallet, pubHostByIp} from './remote/pubOP';
 import DaoDetailView from './screens/daoPreview/DaoDetailView';
 import OpenGalaxyCollection from './screens/ntfPreview/OpenGalaxyCollection';
 import RNFS from 'react-native-fs';
@@ -95,6 +95,7 @@ import AddAddressScreen from './screens/tabs/profiles/wallet/AddAddressScreen';
 import WalletRecord from './screens/tabs/profiles/wallet/WalletRecord';
 import CreateItemCollection from './screens/ntfPreview/CreateCollection';
 import TokenOption from './screens/tabs/profiles/wallet/TokenOption';
+import {persistor} from './store/configureStore';
 
 const App = ({
   feedId,
@@ -140,7 +141,8 @@ const App = ({
   useEffect(() => {
     SplashScreen.hide();
     window.ssb ||
-      startSSB().then(ssb => {
+      Promise.all([startSSB(), persistor.purge()]).then(([ssb, state]) => {
+        console.log('ssb: ', ssb + ' purge: ' + state + 'feed id: ' + feedId);
         window.ssb = ssb;
         if (feedId === '') {
           setFeedId(ssb.id);

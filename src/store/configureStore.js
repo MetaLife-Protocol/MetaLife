@@ -6,6 +6,7 @@ import I18n from 'react-native-i18n';
 import {populateStyles} from '../shared/UseSchemaStyles';
 import {configureStore} from '@reduxjs/toolkit';
 import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
+import {useStore} from 'react-redux';
 
 /**
  * use default reconciler - autoMergeLevel1
@@ -15,7 +16,6 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   blacklist: ['runtime'],
-  // timeout: 10e3,
 };
 
 export const store = configureStore({
