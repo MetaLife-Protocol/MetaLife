@@ -146,8 +146,7 @@ const App = ({
   useEffect(() => {
     SplashScreen.hide();
     window.ssb ||
-      Promise.all([startSSB(), persistor.purge()]).then(([ssb, state]) => {
-        console.log('ssb: ', ssb + ' purge: ' + state + 'feed id: ' + feedId);
+      startSSB().then(ssb => {
         window.ssb = ssb;
         if (feedId === '') {
           setFeedId(ssb.id);
