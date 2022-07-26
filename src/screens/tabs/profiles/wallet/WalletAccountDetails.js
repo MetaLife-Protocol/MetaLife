@@ -57,6 +57,7 @@ const WalletAccountDetails = ({
   const [clickIndex, setClickIndex] = useState('');
   const [claimerVisible, setClaimerVisible] = useState(false);
   const [putPwdVisible, setPutPwdVisible] = useState(false);
+  const [deleteVisible, setDeleteVisible] = useState(false);
   const [pwd, setPwd] = useState('');
   const [exportVisible, setExportVisible] = useState(false);
   const [tipList, setTipList] = useState([]);
@@ -64,7 +65,7 @@ const WalletAccountDetails = ({
   const [toastVisible, setToastVisible] = useState(false);
   const [toastContent, setToastContent] = useState('');
 
-  const {type, name, address} = params;
+  const {type, name, address, observer} = params;
 
   const [editName, setEditName] = useState(name);
   const [edit, setEdit] = useState(false);
@@ -118,6 +119,22 @@ const WalletAccountDetails = ({
     }
   };
 
+  const deleteAccount = () => {
+    const addressIndex = wallet.accounts[type]
+      .map(it => it.address)
+      .indexOf(address);
+    if (addressIndex < wallet.current.index) {
+      setCurrent({type, index: wallet.current.index - 1});
+    }
+    if (addressIndex === wallet.current.index) {
+      setCurrent({type, index: 0});
+      stopAboutWalletAccount();
+    }
+    walletDeleteAccount({type, address});
+    Toast.show('Deleted');
+    goBack();
+  };
+
   return (
     <SafeAreaView style={[flex1]}>
       <View style={[FG, justifyCenter, marginTop10, styles.container]}>
@@ -144,6 +161,7 @@ const WalletAccountDetails = ({
         <RoundBtn
           style={[styles.button]}
           title={'Export keystore'}
+          disabled={observer}
           press={() => {
             setClickIndex('keystore');
             setClaimerVisible(true);
@@ -152,6 +170,7 @@ const WalletAccountDetails = ({
         <RoundBtn
           style={[styles.button]}
           title={'Export private key'}
+          disabled={observer}
           press={() => {
             setClickIndex('privatekey');
             setClaimerVisible(true);
@@ -165,8 +184,12 @@ const WalletAccountDetails = ({
             if (count <= 1) {
               Toast.show('Cannot delete last one');
             } else {
-              setClickIndex('delete');
-              setPutPwdVisible(true);
+              if (observer) {
+                setDeleteVisible(true);
+              } else {
+                setClickIndex('delete');
+                setPutPwdVisible(true);
+              }
             }
           }}
         />
@@ -243,20 +266,7 @@ const WalletAccountDetails = ({
               deleteWalletAccount(address, pwd, isCorrect => {
                 setToastVisible(false);
                 if (isCorrect) {
-                  setPutPwdVisible(false);
-                  const addressIndex = wallet.accounts[type]
-                    .map(it => it.address)
-                    .indexOf(address);
-                  if (addressIndex < wallet.current.index) {
-                    setCurrent({type, index: wallet.current.index - 1});
-                  }
-                  if (addressIndex === wallet.current.index) {
-                    setCurrent({type, index: 0});
-                    stopAboutWalletAccount();
-                  }
-                  walletDeleteAccount({type, address});
-                  Toast.show('Deleted');
-                  goBack();
+                  deleteAccount();
                 } else {
                   setToastContent('Wrong password');
                   setToastVisible(true);
@@ -309,6 +319,22 @@ const WalletAccountDetails = ({
             );
             setToastVisible(true);
           },
+        }}
+      />
+      <ComModal
+        visible={deleteVisible}
+        setVisible={setDeleteVisible}
+        title={'Tips'}
+        darkMode={darkMode}
+        content={
+          <Text style={styles.claimerText}>Are you sure to delete?</Text>
+        }
+        submit={{
+          text: 'Confirm',
+          press: deleteAccount,
+        }}
+        cancel={{
+          text: 'Cancel',
         }}
       />
     </SafeAreaView>

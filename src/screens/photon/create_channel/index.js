@@ -87,7 +87,7 @@ const CreateChannel = ({setChannelRemark, showPullMenu}) => {
             },
           },
           {
-            title: 'MTL',
+            title: 'MLT',
             handler: () => {
               setType('MLT');
               showPullMenu({position: {}, buttons: []});

@@ -12,6 +12,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import Toast from 'react-native-tiny-toast';
 import {
   bigNumberFormatUnits,
   bigNumberParseUnits,
@@ -44,6 +45,8 @@ const WalletTransfer = props => {
     useSchemaStyles();
 
   const currentAccount = getCurrentAccount(wallet);
+  const currentBalance =
+    wallet.accounts[wallet.current.type][wallet.current.index].balance;
   const [address, setAddress] = useState('');
   const [inputAmount, setInputAmount] = useState('');
   const [remark, setRemark] = useState('');
@@ -88,6 +91,51 @@ const WalletTransfer = props => {
       setGasLimit(res.toString());
     });
   }, [inputAmount, remark]);
+
+  const onConfirm = () => {
+    // inputAmount + gas fee > tokenOption.amount  not success
+    const gasFee = bigNumberParseUnits(gasPriceNumber + '', 9).mul(gasLimit);
+    if (tokenOption.type === 'spectrum') {
+      if (tokenOption.cType === 'SMT') {
+        if (
+          bigNumberParseUnits(inputAmount.toString())
+            .add(gasFee)
+            .gt(bigNumberParseUnits(tokenOption.amount))
+        ) {
+          Toast.show('Insufficient funds', {
+            position: Toast.position.CENTER,
+          });
+          return;
+        }
+      } else {
+        if (
+          bigNumberParseUnits(inputAmount.toString()).gt(
+            bigNumberParseUnits(tokenOption.amount),
+          ) ||
+          gasFee.gt(bigNumberParseUnits(currentBalance.SMT))
+        ) {
+          Toast.show('Insufficient funds', {
+            position: Toast.position.CENTER,
+          });
+          return;
+        }
+      }
+    } else if (tokenOption.type === 'ethereum') {
+      if (tokenOption.cType === 'ETH') {
+        if (
+          bigNumberParseUnits(inputAmount.toString())
+            .add(gasFee)
+            .gt(bigNumberParseUnits(tokenOption.amount))
+        ) {
+          Toast.show('Insufficient funds', {
+            position: Toast.position.CENTER,
+          });
+          return;
+        }
+      }
+    }
+    setPwdVisible(true);
+  };
 
   const onConfirmTransaction = pwd => {
     if (tokenOption.type === 'spectrum') {
@@ -203,7 +251,7 @@ const WalletTransfer = props => {
         setToastDur(3000);
       }
     } catch (e) {
-      console.warn('confrirm', e);
+      console.log('confrirm', e);
       setToastVisible(false);
     }
   };
@@ -331,9 +379,7 @@ const WalletTransfer = props => {
             address && Number(inputAmount) > 0 && gasLimit > 0 ? false : true
           }
           title={'Confirm'}
-          press={() => {
-            setPwdVisible(true);
-          }}
+          press={onConfirm}
         />
 
         <PasswordModel
@@ -344,9 +390,7 @@ const WalletTransfer = props => {
           setToastVisible={setToastVisible}
           toastContent={toastContent}
           toastDuriation={toastDur}
-          onConfirm={pwd => {
-            onConfirmTransaction(pwd);
-          }}
+          onConfirm={onConfirmTransaction}
         />
       </Pressable>
     </SafeAreaView>

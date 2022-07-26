@@ -16,7 +16,7 @@ export default class PhotonUrl {
     : '0xF6e8A227cbD5257d2f8a764F5788ce56E3554cB5';
 
   /**
-   * MTL
+   * MLT
    * @type {string}
    */
   static PHOTON_MLT_TOKEN_ADDRESS =

@@ -54,6 +54,7 @@ const Payment = ({showPullMenu}) => {
         // Toast.show(e.toString())
         console.log('res::', res);
         const resJson = JSON.parse(res);
+        // 1002 3002 need findPath
         if (resJson.error_code === 0) {
           Toast.show('payment success');
           navigate('PhotonTransactionRecord');
@@ -84,7 +85,7 @@ const Payment = ({showPullMenu}) => {
             },
           },
           {
-            title: 'MTL',
+            title: 'MLT',
             handler: () => {
               setType('MLT');
               showPullMenu({position: {}, buttons: []});
