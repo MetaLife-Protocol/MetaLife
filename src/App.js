@@ -167,7 +167,7 @@ const App = ({
           checkAddon('launch'),
           getConnectedPeers(setConnectedPeers));
       });
-    feedId && channel.post('identity', 'USE');
+    feedId === 'foo' || channel.post('identity', 'USE');
   }, []);
 
   return (
