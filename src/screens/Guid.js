@@ -22,12 +22,12 @@ const Guid = () => {
 
   function createHandler() {
     channel.post('identity', 'CREATE');
-    replace('WalletCreator', {
-      type: 'spectrum',
-      name: 'SPE-1',
-      from: 'guid', // special implements
-      target: 'Tabs',
-    });
+    // replace('WalletCreator', {
+    //   type: 'spectrum',
+    //   name: 'SPE-1',
+    //   from: 'guid', // special implements
+    //   target: 'Tabs',
+    // });
   }
 
   return (
