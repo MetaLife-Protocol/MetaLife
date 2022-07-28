@@ -5,7 +5,7 @@ import {friendsGraphParse} from '../filters/ContactsFilters';
  */
 
 const msgInitState = {
-  feedId: 'foo',
+  feedId: '',
   resync: false,
   avatar: '',
   relations: [[], [], [], [], [], []],

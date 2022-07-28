@@ -147,7 +147,7 @@ const App = ({
     window.ssb ||
       startSSB().then(ssb => {
         window.ssb = ssb;
-        if (feedId === 'foo') {
+        if (!feedId) {
           setFeedId(ssb.id);
           // join suggest pub for first entry
           pubHostByIp()
@@ -168,7 +168,7 @@ const App = ({
           checkAddon('launch'),
           getConnectedPeers(setConnectedPeers));
       });
-    feedId === 'foo' || channel.post('identity', 'USE');
+    feedId && channel.post('identity', 'USE');
   }, []);
 
   return (
@@ -176,15 +176,15 @@ const App = ({
       <StatusBar barStyle={barStyle} />
       <Navigator
         initialRouteName={
-          feedId === 'foo'
-            ? 'Guid'
-            : resync
-            ? wallet.current.type
-              ? 'Resync'
+          feedId
+            ? resync
+              ? wallet.current.type
+                ? 'Resync'
+                : 'WalletCreator'
+              : wallet.current.type
+              ? 'Tabs'
               : 'WalletCreator'
-            : wallet.current.type
-            ? 'Tabs'
-            : 'WalletCreator'
+            : 'Guid'
         }>
         <Screen name="Guid" component={Guid} options={{headerShown: false}} />
         <Screen name="Restore" component={Restore} />
