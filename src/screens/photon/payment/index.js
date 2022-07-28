@@ -25,7 +25,7 @@ import {
 } from '../../../metalife-base';
 import Constants from '../../../shared/Constants';
 import {useNavigation} from '@react-navigation/native';
-import {photonTransfer} from 'react-native-photon';
+import {findPath, photonTransfer} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {connect} from 'react-redux';
 import {getTokenAddress} from '../PhotonUtils';
@@ -41,33 +41,53 @@ const Payment = ({showPullMenu}) => {
 
   const btnDisabled = useMemo(() => !(address && amount), [address, amount]);
 
-  const transferFun = useCallback(() => {
-    photonTransfer({
-      tokenAddress: getTokenAddress(type),
-      amount: numberToString(amountMulEth(amount)),
-      walletAddress: address,
-      isDirect: true,
-      payData: '',
-      filePath: '',
-    })
-      .then(res => {
-        // Toast.show(e.toString())
-        console.log('res::', res);
-        const resJson = JSON.parse(res);
-        // 1002 3002 need findPath
-        if (resJson.error_code === 0) {
-          Toast.show('payment success');
-          navigate('PhotonTransactionRecord');
-        } else {
-          Toast.show(resJson.error_message, {
-            position: Toast.position.CENTER,
-          });
-        }
+  const transferFun = useCallback(
+    (isDirect, filePath) => {
+      photonTransfer({
+        tokenAddress: getTokenAddress(type),
+        amount: numberToString(amountMulEth(amount)),
+        walletAddress: address,
+        isDirect: isDirect,
+        payData: '',
+        filePath: filePath ? filePath : '',
       })
-      .catch(e => {
-        console.log('res::', e);
-      });
-  }, [address, amount, navigate, type]);
+        .then(res => {
+          // console.log('photonTransfer-res::', res);
+          const resJson = JSON.parse(res);
+          if (resJson.error_code === 0) {
+            Toast.show('payment success');
+            navigate('PhotonTransactionRecord');
+          }
+          // 1002 3002 need findPath
+          else if (resJson.error_code === 1002 || resJson.error_code === 3002) {
+            findPath({
+              walletAddress: address,
+              tokenAddress: getTokenAddress(type),
+              balance: numberToString(amountMulEth(amount)),
+            }).then(pathRes => {
+              // console.log('findPathRes', pathRes);
+              const pathResJson = JSON.parse(pathRes);
+              // transfer isDirect=false
+              if (pathResJson.error_code === 0) {
+                transferFun(false, JSON.stringify(pathResJson.data));
+              } else {
+                Toast.show(pathResJson.error_message, {
+                  position: Toast.position.CENTER,
+                });
+              }
+            });
+          } else {
+            Toast.show(resJson.error_message, {
+              position: Toast.position.CENTER,
+            });
+          }
+        })
+        .catch(e => {
+          console.log('photonTransfer-error', e);
+        });
+    },
+    [address, amount, navigate, type],
+  );
 
   function menuHandler(e) {
     e.target.measure((x, y, width, height, pageX, pageY) =>
@@ -139,7 +159,7 @@ const Payment = ({showPullMenu}) => {
         </View>
         <PureTextInput
           onChangeText={setAmount}
-          placeholder={'Enter transfer amoun'}
+          placeholder={'Enter transfer amount'}
           style={styles.marginTop10}
         />
         {/* <PhotonSeparator />
@@ -165,7 +185,7 @@ const Payment = ({showPullMenu}) => {
         style={styles.button}
         disabled={btnDisabled}
         title={'Pay'}
-        press={transferFun}
+        press={() => transferFun(true)}
       />
     </SafeAreaView>
   );

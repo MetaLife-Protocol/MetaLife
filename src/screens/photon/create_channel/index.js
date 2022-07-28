@@ -25,13 +25,17 @@ import {
   safeDecimal,
   numberToString,
 } from '../../../metalife-base';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {createChannel} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {connect} from 'react-redux';
 import {getTokenAddress} from '../PhotonUtils';
+import {bigNumberParseUnits} from 'react-native-web3-wallet';
 
 const CreateChannel = ({setChannelRemark, showPullMenu}) => {
+  const route = useRoute();
+  const {walletBalance} = route.params ?? {};
+  console.log('walletBalance', walletBalance);
   const styles = useStyle(createSty);
   const {navigate} = useNavigation();
   const navigation = useNavigation();
@@ -44,6 +48,14 @@ const CreateChannel = ({setChannelRemark, showPullMenu}) => {
   const btnDisabled = useMemo(() => !(address && amount), [address, amount]);
 
   const onCreateChannel = useCallback(() => {
+    const chainBalance = bigNumberParseUnits(
+      walletBalance[type].balance_on_chain + '',
+    );
+    const inputAmount = bigNumberParseUnits(amount);
+    if (inputAmount > chainBalance) {
+      Toast.show('Insufficient Funds');
+      return;
+    }
     setChannelRemark({address, remark});
     createChannel(
       getTokenAddress(type),
@@ -141,7 +153,7 @@ const CreateChannel = ({setChannelRemark, showPullMenu}) => {
         </View>
         <PureTextInput
           onChangeText={setAmount}
-          placeholder={'Enter transfer amoun'}
+          placeholder={'Enter transfer amount'}
           style={styles.marginTop10}
         />
         {/*   <PhotonSeparator />

@@ -50,7 +50,7 @@ const RecordPhoton = () => {
           amount={item.type === 'send' ? item.amount * -1 : item.amount}
           time={item.time}
           stateDisplay={stateDisplay(item)}
-          StateColor={undefined}
+          stateColor={theme.c_000000_FFFFFF}
           token_address={item.token_address}
         />
       )}
