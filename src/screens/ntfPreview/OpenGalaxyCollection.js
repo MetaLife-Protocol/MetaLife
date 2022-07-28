@@ -8,18 +8,25 @@ import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import ComCollectItem from './comp/ComCollectItem';
 import ListEmpty from './comp/ListEmpty';
-import {getCollectionInfo, getNFTInfos} from '../../remote/contractOP';
+import {
+  getCollectionInfo,
+  getNFTInfos,
+  getOpenGalaxyNFTCollectionInfos,
+} from '../../remote/contractOP';
 import {getNftAssetsJson} from '../../remote/ipfsOP';
 
 const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
   const [info, setInfo] = useState({});
   useEffect(() => {
+    // getOpenGalaxyNFTCollectionInfos().then(result => {
+    //   console.log('rrrrrrr', result);
+    // });
     getCollectionInfo(value => {
-      console.log('ddddd', value);
+      // console.log('ddddd', value);
       addCollections(value);
       setInfo(value);
       getNFTInfos(undefined, nftCInfo => {
-        console.log('collection got: ', nftCInfo);
+        // console.log('collection got: ', nftCInfo);
         if (
           nftCInfo.id == 14 ||
           nftCInfo.id == 19 ||
@@ -29,7 +36,7 @@ const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
           return;
         }
         getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
-          console.log('nft got: ', nftJInfo);
+          // console.log('nft got: ', nftJInfo);
           nftJInfo.headers['content-type'] === 'application/json' &&
             addNft({
               ...nftCInfo,

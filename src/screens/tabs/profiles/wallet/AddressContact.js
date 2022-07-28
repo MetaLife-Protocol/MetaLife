@@ -12,6 +12,7 @@ const AddressContact = ({
   wallet,
   deleteAddressContact,
   route: {params},
+  cfg: {darkMode},
 }) => {
   const {text, flex1, BG, FG} = useSchemaStyles();
   const headerRight = () => (
@@ -19,7 +20,11 @@ const AddressContact = ({
       onPress={() => {
         navigation.navigate('AddAddressScreen');
       }}>
-      <HeadIcon height={30} width={30} image={HeaderIcons.addressWhite} />
+      <HeadIcon
+        height={30}
+        width={30}
+        image={!darkMode ? HeaderIcons.addressBlack : HeaderIcons.addressWhite}
+      />
     </Pressable>
   );
 

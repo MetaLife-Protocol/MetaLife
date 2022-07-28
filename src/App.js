@@ -99,6 +99,7 @@ import TokenOption from './screens/tabs/profiles/wallet/TokenOption';
 import MyCollectionDetail from './screens/ntfPreview/MyCollectionDetail';
 import CreateItemNft from './screens/ntfPreview/CreateItemNft';
 import MyItemDetailView from './screens/ntfPreview/MyItemDetailView';
+import TransferView from './screens/ntfPreview/TransferView';
 
 const App = ({
   feedId,
@@ -551,6 +552,11 @@ const App = ({
           name="MyItemDetailView"
           component={MyItemDetailView}
           options={{headerTitle: ''}}
+        />
+        <Screen
+          name="TransferView"
+          component={TransferView}
+          options={{headerTitle: 'Transfer'}}
         />
       </Navigator>
       <MaskView darkMode={darkMode} enabled={masked} eventEnabled={false} />

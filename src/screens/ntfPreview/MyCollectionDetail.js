@@ -18,11 +18,18 @@ import {getCollectionInfo, getNFTInfos} from '../../remote/contractOP';
 import HeaderRightBtn from '../tabs/HeaderRightBtn';
 import {getNftAssetsJson, ipfsBaseURL} from '../../remote/ipfsOP';
 import ListEmpty from './comp/ListEmpty';
-import {screenWidth} from '../../utils';
+import {fixWalletAddress, getCurrentAccount, screenWidth} from '../../utils';
 const nftHead = require('../../assets/image/nft/nft_head.png');
 const more = require('../../assets/image/nft/nft_create.png');
+const blackmore = require('../../assets/image/icons/create_black.png');
 
-const MyCollectionDetail = ({route: {params}, darkMode, nft, navigation}) => {
+const MyCollectionDetail = ({
+  route: {params},
+  darkMode,
+  nft,
+  navigation,
+  wallet,
+}) => {
   // const {item} = params;
   const {address} = params;
   const nftKey = Object.keys(nft).length > 0 ? Object.keys(nft)[0] : '',
@@ -43,7 +50,7 @@ const MyCollectionDetail = ({route: {params}, darkMode, nft, navigation}) => {
     navigation.setOptions({
       headerRight: props => (
         <HeaderRightBtn
-          btnIcon={more}
+          btnIcon={darkMode ? more : blackmore}
           btnHandler={() => {
             // !searching && setTipVisible(true);
             navigation.navigate('CreateItemNft', {address: address});
@@ -63,14 +70,23 @@ const MyCollectionDetail = ({route: {params}, darkMode, nft, navigation}) => {
         }
       });
     }, address);
-    getNFTInfos(undefined, null, 0, 0, address).then(result => {
+    getNFTInfos(
+      fixWalletAddress(getCurrentAccount(wallet).address),
+      null,
+      0,
+      0,
+      address,
+    ).then(async result => {
+      console.log('sdsdsd', result);
       if (result.length > 0) {
         let newList = [];
         for (let i = 0; i < result.length; i++) {
-          getNftAssetsJson(result[i].uri).then(list => {
-            // console.log('adadadadad', list);
-            newList.push({...list.data, tokenId: result[i].id});
-          });
+          const list = await getNftAssetsJson(result[i].uri);
+          newList.push({...list.data, tokenId: result[i].id});
+          // getNftAssetsJson(result[i].uri).then(list => {
+          //   console.log('adadadadad', list);
+          //   newList.push({...list.data, tokenId: result[i].id});
+          // });
         }
         setDate(newList);
       }
@@ -119,6 +135,7 @@ const MyCollectionDetail = ({route: {params}, darkMode, nft, navigation}) => {
           navigate('MyItemDetailView', {
             tokenId: item.tokenId,
             address: address,
+            transfer: true,
           })
         }>
         <NftItem

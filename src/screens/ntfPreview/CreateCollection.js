@@ -118,7 +118,7 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
                 e => {
                   setPwdVisible(false);
                   setToastVisible(false);
-                  Toast.show(e.error.message);
+                  Toast.show(e?.error?.message || e);
                   // alert(JSON.stringify(e));
                 },
               );

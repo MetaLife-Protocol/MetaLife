@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {
-  Text,
   View,
   StyleSheet,
   Platform,
@@ -10,6 +9,7 @@ import {
   Image,
   Pressable,
 } from 'react-native';
+import Text from '../../shared/comps/ComText';
 import TitleAndTips from './comp/TitleAndTips';
 import ImagePickerView from './comp/ImagePickerView';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
@@ -32,6 +32,7 @@ import {
   getMyNFTCollectionInfos,
 } from '../../remote/contractOP';
 import Toast from 'react-native-tiny-toast';
+import {ComModal} from '../../shared/comps/ComModal';
 const select = require('../../assets/image/nft/nft_select.png');
 const unselect = require('../../assets/image/nft/nft_unselect.png');
 const arrow = require('../../assets/image/nft/arrow_down.png');
@@ -55,6 +56,9 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
   const [toastContent, setToastContent] = useState('');
   const [date, setDate] = useState([]);
   const [address, setAddress] = useState('');
+  const [showEdit, setShowEdit] = useState(false);
+  const [showSubmit, setShowSubmit] = useState(false);
+  const [deleteVisible, setDeleteVisible] = useState(false);
 
   const showCollect = useCallback(() => {
     setCollect(!collect);
@@ -97,11 +101,15 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
   useEffect(() => {
     getMyNFTCollectionInfos(getCurrentAccount(wallet).address).then(res => {
       // alert(JSON.stringify(res));
+      if (res.length === 0) {
+        Toast.show('Please create your collection first', {
+          position: Toast.position.CENTER,
+        });
+        return;
+      }
       if (res) {
         setDate(res);
         setAddress(res[0].address);
-      } else {
-        Toast.show('Please create your collection first');
       }
     });
   }, []);
@@ -137,12 +145,13 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
               navigation.navigate('MyItemDetailView', {
                 tokenId: cb,
                 address: address,
+                transfer: true,
               });
             },
             er => {
               setPwdVisible(false);
               setToastVisible(false);
-              Toast.show(er.error.message);
+              Toast.show(er?.error?.message || er);
             },
           );
         }
@@ -155,6 +164,29 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
       Toast.show('Please create your collection first');
       return;
     }
+    // if (name == null) {
+    //   Toast.show('Please write Name');
+    //   return;
+    // }
+    // if (itemFile == null) {
+    //   Toast.show('Please select image');
+    //   return;
+    // }
+    setShowEdit(true);
+    setShowSubmit(false);
+    // setPwdVisible(true);
+  };
+
+  const editPress = () => {
+    setShowEdit(false);
+    setShowSubmit(true);
+  };
+
+  const MintPress = () => {
+    setPwdVisible(true);
+  };
+
+  const SubmitPress = () => {
     if (name == null) {
       Toast.show('Please write Name');
       return;
@@ -163,7 +195,21 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
       Toast.show('Please select image');
       return;
     }
-    setPwdVisible(true);
+    setShowEdit(true);
+    setShowSubmit(false);
+  };
+
+  const DeletePress = () => {
+    setDeleteVisible(true);
+  };
+
+  const deleteItem = () => {
+    setDeleteVisible(false);
+    setItemFile();
+    setName();
+    setDescription('');
+    setShowEdit(false);
+    setShowSubmit(false);
   };
 
   return (
@@ -183,16 +229,34 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
             }
           />
           {/*TODO 需要各种类型*/}
-          <ImagePickerView
-            style={styles.itemViewContainer}
-            onImagePicker={setItemFile}
-          />
+          <View>
+            <ImagePickerView
+              style={styles.itemViewContainer}
+              onImagePicker={setItemFile}
+              clickable={showEdit == true && showSubmit == false ? false : true}
+            />
+            {showEdit == true && showSubmit == false ? (
+              <View
+                style={[
+                  {
+                    position: 'absolute',
+                    width: 365,
+                    height: 260,
+                  },
+                ]}
+              />
+            ) : null}
+          </View>
 
           <TitleAndTips title={'Name  *'} />
           <PureTextInput
             placeholder={'Item name'}
             style={[FG, styles.nameContainer]}
             onChangeText={setName}
+            inputProps={{
+              editable:
+                showEdit === true && showSubmit === false ? false : true,
+            }}
           />
           <TitleAndTips
             title={'Description'}
@@ -204,7 +268,11 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
             placeholder={'Provide a detalied description of you item'}
             style={[FG, styles.nameContainer, {height: 75}]}
             onChangeText={setDescription}
-            inputProps={{multiline: true}}
+            inputProps={{
+              multiline: true,
+              editable:
+                showEdit === true && showSubmit === false ? false : true,
+            }}
           />
 
           <TitleAndTips
@@ -324,11 +392,37 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
               To freeze your metadata, you must create your item first.{' '}
             </Text>
           </View>
-          <RoundBtn
-            press={NextClick}
-            style={styles.buttonContainer}
-            title={'Next'}
-          />
+
+          {showEdit ? (
+            <View style={styles.bottomView}>
+              <RoundBtn
+                style={styles.editView}
+                title={'Edit'}
+                press={editPress}
+              />
+              <RoundBtn
+                style={styles.editView}
+                title={'Mint'}
+                press={MintPress}
+              />
+            </View>
+          ) : showSubmit ? (
+            <View style={styles.bottomView}>
+              <Pressable style={styles.editView} onPress={SubmitPress}>
+                <Text style={styles.subText}>Submit changes</Text>
+              </Pressable>
+              <Pressable style={styles.deleteView} onPress={DeletePress}>
+                <Text style={styles.deleteText}>Delete item</Text>
+              </Pressable>
+            </View>
+          ) : (
+            <RoundBtn
+              press={NextClick}
+              style={styles.buttonContainer}
+              title={'Next'}
+            />
+          )}
+
           {/*<Image*/}
           {/*  style={{}}*/}
           {/*  source={{uri: `https://gateway.pinata.cloud/ipfs/${''}`}}*/}
@@ -346,6 +440,25 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
             onConfirmTransaction(pwd);
           }}
         />
+        <ComModal
+          visible={deleteVisible}
+          setVisible={setDeleteVisible}
+          title={'Delete Item'}
+          darkMode={darkMode}
+          content={
+            <Text style={styles.claimerText}>
+              Are you sure want to delete this item?This only be done if you owm
+              all copies in circulation
+            </Text>
+          }
+          submit={{
+            text: 'Delete item',
+            press: deleteItem,
+          }}
+          cancel={{
+            text: 'Never mind',
+          }}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -354,7 +467,6 @@ const createSty = theme =>
   StyleSheet.create({
     container: {
       flex: 1,
-      // backgroundColor: theme.c_F8F9FD_000000,
     },
     itemViewContainer: {
       // width: 345,
@@ -362,7 +474,6 @@ const createSty = theme =>
       borderRadius: 12,
     },
     nameContainer: {
-      // backgroundColor: theme.c_FFFFFF_111717,
       borderRadius: 12,
       // width: 345,
       height: 44,
@@ -409,7 +520,6 @@ const createSty = theme =>
     },
     collection: {
       flexDirection: 'row',
-      // marginTop: 10,
       alignItems: 'center',
       paddingVertical: 5,
     },
@@ -429,6 +539,40 @@ const createSty = theme =>
       justifyContent: 'center',
       alignItems: 'center',
       marginLeft: 40,
+    },
+    bottomView: {
+      flexDirection: 'row',
+      height: 64,
+      justifyContent: 'space-around',
+      alignItems: 'center',
+      marginBottom: 20,
+    },
+    editView: {
+      width: 165,
+      height: 44,
+      borderRadius: 22,
+      borderWidth: 1,
+      borderColor: '#29DAD7',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    deleteView: {
+      width: 165,
+      height: 44,
+      borderRadius: 22,
+      borderWidth: 1,
+      borderColor: '#ED5B57',
+      justifyContent: 'center',
+      alignItems: 'center',
+      // marginRight: 20,
+    },
+    deleteText: {
+      fontSize: 15,
+      color: '#ED5B57',
+    },
+    subText: {
+      fontSize: 15,
+      color: '#29DAD7',
     },
   });
 

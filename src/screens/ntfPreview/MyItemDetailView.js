@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, useLayoutEffect} from 'react';
 import {
   // Text,
   View,
@@ -21,12 +21,15 @@ import {
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 import {getNftAssetsJson, ipfsBaseURL} from '../../remote/ipfsOP';
 import {getNftItemInfo} from '../../remote/contractOP';
+import HeaderRightBtn from '../tabs/HeaderRightBtn';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
 const down = require('../../assets/image/nft/arrow_down.png');
 const uparr = require('../../assets/image/nft/up_arrow.png');
+const shareB = require('../../assets/image/nft/transfer_white.png');
+const shareW = require('../../assets/image/nft/transfer_black.png');
 
-const MyItemDetailView = ({route: {params}, wallet, nft}) => {
+const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
   const {tokenId, address} = params;
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   const [isShow, setIsShow] = useState([false]);
@@ -38,6 +41,25 @@ const MyItemDetailView = ({route: {params}, wallet, nft}) => {
   const upPress = useCallback(() => {
     setIsDetail(!isDetail);
   }, [isDetail]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: props => (
+        <HeaderRightBtn
+          btnIcon={darkMode ? shareB : shareW}
+          btnHandler={() => {
+            // !searching && setTipVisible(true);
+            navigation.navigate('TransferView', {
+              tokenId: tokenId,
+              collectAddress: address,
+              image: ipfsBaseURL + 'ipfs/' + list?.image,
+              name: list?.name,
+            });
+          }}
+        />
+      ),
+    });
+  }, [navigation, address, list]);
 
   useEffect(() => {
     getNftItemInfo(address, tokenId).then(res => {
@@ -259,7 +281,7 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
-    cfg: s.cfg,
+    darkMode: s.cfg.darkMode,
     feedId: s.user.feedId,
     wallet: s.wallet,
     nft: s.nft,
