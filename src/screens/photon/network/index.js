@@ -59,7 +59,7 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
           {
             title: 'Create channel',
             handler: () => {
-              goScreen('CreateChannel');
+              goScreen('CreateChannel', {walletBalance});
               showPullMenu({position: {}, buttons: []});
             },
           },
@@ -102,7 +102,7 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
         </Pressable>
       ),
     });
-  }, [navigation, styles.moreImg]);
+  }, [navigation, styles.moreImg, walletBalance]);
 
   const getBalance = () => {
     const balanceSMT = getBalanceFromPhoton(PhotonUrl.PHOTON_SMT_TOKEN_ADDRESS);
