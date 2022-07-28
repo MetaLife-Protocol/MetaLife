@@ -75,6 +75,7 @@ const Pubs = ({darkMode, infoDic, pubs}) => {
           <ControllerItem>
             <View style={[row, alignItemsCenter]}>
               <TextInput
+                allowFontScaling={false}
                 style={[invite, text, flex1]}
                 value={code}
                 placeholder={'Redeem an Invitation'}

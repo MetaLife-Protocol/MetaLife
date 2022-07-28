@@ -94,6 +94,7 @@ const WalletCreator = ({
             }>
             <ControllerItem>
               <TextInput
+                allowFontScaling={false}
                 style={[inputs, text, flex1]}
                 value={aName}
                 placeholder={'Wallet name'}
@@ -106,6 +107,7 @@ const WalletCreator = ({
             </ControllerItem>
             <ControllerItem>
               <TextInput
+                allowFontScaling={false}
                 style={[inputs, text, flex1]}
                 value={pw}
                 secureTextEntry={pwdSecure}
@@ -129,6 +131,7 @@ const WalletCreator = ({
             </ControllerItem>
             <ControllerItem>
               <TextInput
+                allowFontScaling={false}
                 style={[inputs, text, flex1]}
                 value={cPw}
                 secureTextEntry={pwdConfirmSecure}
@@ -152,6 +155,7 @@ const WalletCreator = ({
             </ControllerItem>
             <ControllerItem>
               <TextInput
+                allowFontScaling={false}
                 style={[inputs, text, flex1]}
                 value={prompt}
                 placeholder={'Password hint'}

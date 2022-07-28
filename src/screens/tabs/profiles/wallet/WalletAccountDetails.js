@@ -141,6 +141,7 @@ const WalletAccountDetails = ({
         <Image style={styles.avater} source={getIcon()} />
         <View style={[row, justifyCenter, alignItemsCenter, styles.titleView]}>
           <TextInput
+            allowFontScaling={false}
             value={editName}
             onChangeText={setEditName}
             style={[text, styles.title]}
@@ -222,6 +223,7 @@ const WalletAccountDetails = ({
         content={
           <View style={[alignItemsCenter, styles.inputContiner, row]}>
             <TextInput
+              allowFontScaling={false}
               keyboardType={'ascii-capable'}
               autoCapitalize={'none'}
               textAlign={'left'}

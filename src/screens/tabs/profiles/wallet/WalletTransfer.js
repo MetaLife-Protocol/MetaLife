@@ -289,6 +289,7 @@ const WalletTransfer = props => {
           </View>
           <View style={[text, marginTop10]}>
             <TextInput
+              allowFontScaling={false}
               style={[text, styles.inputText, styles.title]}
               placeholder="Type or paste address"
               placeholderTextColor={'#A5ABB7'}
@@ -311,6 +312,7 @@ const WalletTransfer = props => {
           </View>
           <View style={[marginTop10]}>
             <TextInput
+              allowFontScaling={false}
               style={[text, styles.inputText]}
               placeholder="Enter transfer amount"
               placeholderTextColor={'#A5ABB7'}
@@ -329,6 +331,7 @@ const WalletTransfer = props => {
         <View style={[styles.marginH15, FG]}>
           <ComText style={[text, styles.title]}>Remark</ComText>
           <TextInput
+            allowFontScaling={false}
             style={[text, styles.inputText, marginTop10]}
             placeholder="Enter comments"
             placeholderTextColor={'#A5ABB7'}

@@ -112,6 +112,7 @@ const WalletImporter = ({
           <View style={[flex1]}>
             {tip ? <Text style={styles.tip}>{tip}</Text> : null}
             <TextInput
+              allowFontScaling={false}
               style={[text, styles.copyBorder]}
               multiline={true}
               textAlignVertical={'top'}
@@ -130,6 +131,7 @@ const WalletImporter = ({
               }>
               <ControllerItem>
                 <TextInput
+                  allowFontScaling={false}
                   style={[text, flex1]}
                   value={pw}
                   textAlignVertical={'top'}
@@ -154,6 +156,7 @@ const WalletImporter = ({
               </ControllerItem>
               <ControllerItem>
                 <TextInput
+                  allowFontScaling={false}
                   style={[text, flex1]}
                   value={cPw}
                   textAlignVertical={'top'}
@@ -179,6 +182,7 @@ const WalletImporter = ({
               </ControllerItem>
               <ControllerItem>
                 <TextInput
+                  allowFontScaling={false}
                   style={[text, flex1]}
                   value={prompt}
                   textAlignVertical={'top'}
@@ -213,6 +217,7 @@ const WalletImporter = ({
             </Text>
             <ControllerItem>
               <TextInput
+                allowFontScaling={false}
                 style={[text, flex1, {height: 50, fontSize: 15}]}
                 value={address}
                 placeholder={'Enter The Address'}

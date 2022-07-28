@@ -27,6 +27,7 @@ const PasswordModel = ({
       content={
         <View style={[alignItemsCenter, styles.inputContiner, row]}>
           <TextInput
+            allowFontScaling={false}
             keyboardType={'ascii-capable'}
             autoCapitalize={'none'}
             textAlign={'left'}

@@ -72,6 +72,7 @@ const Restore = ({setResync}) => {
             },
           ]}>
           <TextInput
+            allowFontScaling={false}
             keyboardType={'ascii-capable'}
             autoCapitalize={'none'}
             multiline={true}

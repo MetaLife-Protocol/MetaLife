@@ -30,6 +30,7 @@ const KeyboardAvoidingComponent = ({sendHandler}) => {
         <View style={[FG, row, alignItemsCenter, inner]}>
           <View style={[input, flex1, round]}>
             <TextInput
+              allowFontScaling={false}
               placeholder="Write a comment …"
               style={[flex1, textInput, text]}
               value={content}

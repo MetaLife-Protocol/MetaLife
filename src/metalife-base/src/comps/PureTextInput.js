@@ -46,6 +46,7 @@ const PureTextInput = ({
       {/*   behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>*/}
       <View style={[round, style, row, alignItemsCenter]}>
         <TextInput
+          allowFontScaling={false}
           placeholder={placeholder}
           style={[flex1, textInput, text, inputStyle]}
           value={content}

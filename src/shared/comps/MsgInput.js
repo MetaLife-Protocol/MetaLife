@@ -29,6 +29,7 @@ const MsgInput = ({sendHandler}) => {
       <View style={[FG, row, alignItemsCenter, inner]}>
         <View style={[input, flex1, round]}>
           <TextInput
+            allowFontScaling={false}
             style={[flex1, textInput, text]}
             placeholder="Write a comment …"
             autoFocus={true}

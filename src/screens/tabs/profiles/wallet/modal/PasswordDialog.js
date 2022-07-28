@@ -30,6 +30,7 @@ const PasswordDialog = ({onConfirm}) => {
       content={
         <View style={[alignItemsCenter, styles.inputContainer, row]}>
           <TextInput
+            allowFontScaling={false}
             keyboardType={'ascii-capable'}
             autoCapitalize={'none'}
             textAlign={'left'}

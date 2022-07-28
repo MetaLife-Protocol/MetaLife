@@ -14,6 +14,7 @@ export const ProfileView = ({value, holderText, submitHandler}) => {
   return (
     <View style={styles.modalView}>
       <TextInput
+        allowFontScaling={false}
         style={styles.modalText}
         autoFocus={true}
         value={valueLocal}

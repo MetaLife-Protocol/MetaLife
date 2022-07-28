@@ -21,6 +21,7 @@ const SearchBar = ({style, changeTextHandler, placeholder}) => {
       <View style={[style, row, alignItemsCenter, input, container]}>
         <Image style={[img]} source={iconDic.iconSearch} />
         <TextInput
+          allowFontScaling={false}
           style={[flex1, input, inputS, text]}
           placeholder={placeholder}
           value={KW}

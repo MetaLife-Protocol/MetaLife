@@ -63,6 +63,7 @@ const CreateNFTStep2 = () => {
           <Text style={styles.title}>Initial Price:</Text>
           <View style={[styles.row, {marginTop: 10}]}>
             <TextInput
+              allowFontScaling={false}
               style={[styles.borderView, styles.inputText, {flex: 1}]}
               placeholderTextColor={theme.c_000000_FFFFFF}
             />

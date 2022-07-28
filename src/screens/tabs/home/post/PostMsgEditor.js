@@ -119,6 +119,7 @@ const PostMsgEditor = ({
     <SafeAreaView style={[flex1, FG]}>
       <ScrollView style={[flex1]} overScrollMode={'auto'}>
         <TextInput
+          allowFontScaling={false}
           style={[text, {paddingHorizontal: 15}]}
           autoFocus={true}
           onBlur={() => setOffset(isIPhoneX_deprecated ? 94 : 64)}

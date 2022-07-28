@@ -69,6 +69,7 @@ const AddAddressScreen = ({
     <View style={[flex1, BG]}>
       <View style={[FG, styles.nameView, marginTop10]}>
         <TextInput
+          allowFontScaling={false}
           style={[text, styles.comText]}
           placeholder="Name "
           value={name}
@@ -79,6 +80,7 @@ const AddAddressScreen = ({
       <View style={styles.line} />
       <View style={[FG, styles.nameView]}>
         <TextInput
+          allowFontScaling={false}
           style={[text, styles.comText]}
           placeholder="Payee wallet address"
           value={addressCon}
@@ -97,6 +99,7 @@ const AddAddressScreen = ({
       <View style={styles.line} />
       <View style={[FG, styles.nameView]}>
         <TextInput
+          allowFontScaling={false}
           style={[text, styles.comText]}
           placeholder="Remark"
           value={remark}

@@ -31,6 +31,7 @@ export const ProfileModal = ({
         <View style={[BG, styles.modalView]}>
           <View style={[styles.inputContinar]}>
             <TextInput
+              allowFontScaling={false}
               style={[flex1, styles.modalText, text]}
               value={valueLocal}
               placeholder={holderText}
