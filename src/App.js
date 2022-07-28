@@ -147,7 +147,7 @@ const App = ({
     window.ssb ||
       startSSB().then(ssb => {
         window.ssb = ssb;
-        if (!feedId) {
+        if (feedId === 'foo') {
           setFeedId(ssb.id);
           // join suggest pub for first entry
           pubHostByIp()
@@ -168,40 +168,24 @@ const App = ({
           checkAddon('launch'),
           getConnectedPeers(setConnectedPeers));
       });
-    feedId && channel.post('identity', 'USE');
+    feedId === 'foo' || channel.post('identity', 'USE');
   }, []);
-
-  useEffect(() => {
-    const screen = feedId
-      ? resync
-        ? wallet.current.type
-          ? 'Resync'
-          : 'WalletCreator'
-        : wallet.current.type
-        ? 'Tabs'
-        : 'WalletCreator'
-      : 'Guid';
-    console.log(feedId, wallet);
-    navigationRef.reset({
-      index: 0,
-      routes: [
-        {
-          name: screen,
-          params: {
-            type: 'spectrum',
-            name: 'SPE-1',
-            from: 'guid',
-            target: resync ? 'Resync' : 'Tabs',
-          },
-        },
-      ],
-    });
-  }, [feedId, wallet]);
 
   return (
     <NavigationContainer ref={navigationRef} theme={theme}>
       <StatusBar barStyle={barStyle} />
-      <Navigator initialRouteName={'Tabs'}>
+      <Navigator
+        initialRouteName={
+          feedId === 'foo'
+            ? 'Guid'
+            : resync
+            ? wallet.current.type
+              ? 'Resync'
+              : 'WalletCreator'
+            : wallet.current.type
+            ? 'Tabs'
+            : 'WalletCreator'
+        }>
         <Screen name="Guid" component={Guid} options={{headerShown: false}} />
         <Screen name="Restore" component={Restore} />
         <Screen name="Resync" component={Resync} />
