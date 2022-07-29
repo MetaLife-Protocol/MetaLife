@@ -41,9 +41,9 @@ const NftItem = ({item, index, symbol, isImage}) => {
         resizeMode="contain"
       />
       <Text style={styles.text1}>{`${item.name}`}</Text>
-      <Text style={[text, styles.text2]}>{`${symbol || 'GGT'} #${
-        item.id
-      }`}</Text>
+      <Text style={[text, styles.text2]}>
+        {isImage ? `#${item.id}` : `${symbol || 'GGT'} #${item.id}`}
+      </Text>
     </View>
   );
 };

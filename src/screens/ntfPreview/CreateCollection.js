@@ -51,7 +51,7 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
     [bannerImage, setBannerImage] = useState(),
     [name, setName] = useState(''),
     [description, setDescription] = useState(''),
-    [category, setCategory] = useState('Artwork'),
+    [category, setCategory] = useState({text: 'Artwork'}),
     [creatorEarnings, setCreatorEarning] = useState(0);
   const {tokenOption} = transfer;
   const [visible, setVisible] = useState(false);
@@ -91,6 +91,7 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
         description: description,
         category: category,
         name: name,
+        earning: creatorEarnings,
       };
       uploadJSONToIFPS(params)
         .then(resf => {

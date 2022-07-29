@@ -2,8 +2,8 @@
  * Created on 06 Jul 2022 by lonmee
  *
  */
-import {abi as metaMasterAbi} from './wallet/metaMaster.json';
-import {abi as NFTCollectionAbi} from './wallet/NFTCollection.json';
+import {abi as metaMasterAbi} from './contractAbi/metaMaster.json';
+import {abi as NFTCollectionAbi} from './contractAbi/NFTCollection.json';
 import {financeConfig} from './wallet/financeConfig';
 import {
   bigNumberFormatUnits,
@@ -170,7 +170,7 @@ export async function getNFTInfos(
 
     let nftInfo = {
       id: token_id,
-      collectionAddress: collectionAddress,
+      collectionAddress: collectAddress,
       uri: token_uri,
     };
 
