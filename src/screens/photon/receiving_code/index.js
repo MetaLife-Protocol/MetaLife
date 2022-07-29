@@ -97,6 +97,7 @@ const styleFun = theme =>
       borderRadius: 12,
     },
     qrCodeContainer: {
+      backgroundColor: '#fff',
       padding: 15,
       borderRadius: 12,
       borderWidth: StyleSheet.hairlineWidth,
