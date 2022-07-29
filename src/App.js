@@ -248,16 +248,6 @@ const App = ({
           name="WalletCreator"
           component={WalletCreator}
           options={{title: 'Create Account'}}
-          initialParams={
-            wallet.current.type
-              ? {}
-              : {
-                  type: 'spectrum',
-                  name: 'SPE-1',
-                  from: 'guid',
-                  target: resync ? 'Resync' : 'Tabs',
-                }
-          }
         />
         <Screen
           name="WalletBackup"
