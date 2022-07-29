@@ -36,12 +36,12 @@ const NftCollection = ({route: {params}, wallet}) => {
   }, []);
 
   const LIST_CONFIG = [
-    // {
-    //   text: 'Item',
-    //   params: 0,
-    //   name: 'Item',
-    //   component: MyNftItem,
-    // },
+    {
+      text: 'Item',
+      params: 0,
+      name: 'Item',
+      component: MyNftItem,
+    },
     {
       text: 'Collection',
       params: 1,

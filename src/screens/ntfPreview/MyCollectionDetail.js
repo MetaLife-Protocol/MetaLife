@@ -19,6 +19,7 @@ import HeaderRightBtn from '../tabs/HeaderRightBtn';
 import {getNftAssetsJson, ipfsBaseURL} from '../../remote/ipfsOP';
 import ListEmpty from './comp/ListEmpty';
 import {fixWalletAddress, getCurrentAccount, screenWidth} from '../../utils';
+import LoadingView from '../../shared/comps/LoadingView';
 const nftHead = require('../../assets/image/nft/nft_head.png');
 const more = require('../../assets/image/nft/nft_create.png');
 const blackmore = require('../../assets/image/icons/create_black.png');
@@ -45,6 +46,7 @@ const MyCollectionDetail = ({
   const {goBack, navigate} = useNavigation();
   const [date, setDate] = useState([]);
   const [headInfo, setHeadInfo] = useState({});
+  const [showLoading, setShowLoading] = useState(true);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -67,6 +69,7 @@ const MyCollectionDetail = ({
         // alert(JSON.stringify(nftJInfo.data.logoImage));
         if (nftJInfo.data) {
           setHeadInfo(nftJInfo.data);
+          setShowLoading(false);
         }
       });
     }, address);
@@ -89,6 +92,7 @@ const MyCollectionDetail = ({
           // });
         }
         setDate(newList);
+        setShowLoading(false);
       }
     });
     return () => {
@@ -144,7 +148,7 @@ const MyCollectionDetail = ({
           item={{
             symbol: item.name,
             image: item.image,
-            name: '',
+            name: item.name,
             id: item.tokenId,
           }}
           symbol={symbol}
@@ -167,6 +171,7 @@ const MyCollectionDetail = ({
         keyExtractor={(_, i) => i}
         style={[flex1]}
       />
+      {showLoading && <LoadingView />}
     </View>
   );
 };

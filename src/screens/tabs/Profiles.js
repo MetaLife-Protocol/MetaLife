@@ -20,6 +20,8 @@ import {
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {getCurrentAccount, screenWidth} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
+import {getMyNFTCollectionInfos} from '../../remote/contractOP';
+import Toast from 'react-native-tiny-toast';
 
 const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
   const {
@@ -39,6 +41,7 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
   const {navigate} = useNavigation();
   const [amount, setAmount] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [isList, setIsList] = useState([]);
 
   useFocusEffect(() => {
     // callAuto();
@@ -86,6 +89,9 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
 
   useEffect(() => {
     getInfo();
+    getMyNFTCollectionInfos(getCurrentAccount(wallet).address).then(res => {
+      setIsList(res);
+    });
   }, []);
   // todo: refactor end
 
@@ -210,6 +216,12 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
               style={[flex1, styles.colItem]}
               onPress={() => {
                 setVisible(false);
+                if (isList.length === 0) {
+                  Toast.show('Please create your collection first', {
+                    position: Toast.position.CENTER,
+                  });
+                  return;
+                }
                 navigate('CreateItemNft');
               }}>
               <Text style={[text]}>NFT</Text>

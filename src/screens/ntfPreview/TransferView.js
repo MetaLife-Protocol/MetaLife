@@ -47,7 +47,7 @@ const TransferView = ({
   const [toastVisible, setToastVisible] = useState(false);
   const [toastContent, setToastContent] = useState('');
   const [gasPrice, setGasPrice] = useState(18);
-  const [gasLimit, setGasLimit] = useState(10);
+  const [gasLimit, setGasLimit] = useState(20);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -132,19 +132,19 @@ const TransferView = ({
       <View style={[marginTop10, styles.marginH15, FG]}>
         <Slider
           style={[styles.slider, marginTop10]}
-          minimumValue={6}
-          maximumValue={20}
+          minimumValue={20}
+          maximumValue={300}
           value={gasLimit}
           thumbTintColor="#29DAD7"
           minimumTrackTintColor="#29DAD7"
           maximumTrackTintColor="#DADADA"
-          step={1}
+          step={10}
           onValueChange={value => {
             console.log(value);
             setGasLimit(value);
           }}
         />
-        <Text>
+        <Text style={text}>
           {`${
             bigNumberFormatUnits(
               bigNumberParseUnits(gasLimit + '', 4)
@@ -184,6 +184,7 @@ const styles = StyleSheet.create({
     height: 44,
     paddingHorizontal: 10,
     marginTop: 10,
+    paddingRight: 40,
   },
   contactView: {
     position: 'absolute',
@@ -216,10 +217,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     flexDirection: 'row',
     borderRadius: 12,
+    alignItems: 'center',
   },
   slider: {
     height: 40,
-    width: 200,
+    width: 240,
     // paddingLeft: 10,
   },
   nextView: {

@@ -63,10 +63,10 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
 
   useEffect(() => {
     getNftItemInfo(address, tokenId).then(res => {
-      // console.log('rrrrr', res);
+      console.log('rrrrrttt', res, address, tokenId);
       if (res) {
         getNftAssetsJson(res).then(da => {
-          // console.log('dddddddd', da);
+          console.log('dddddddd', da);
           setList(da.data);
         });
       }
@@ -95,11 +95,7 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
           <FastImage source={btn} style={styles.headImg} />
           <Text style={styles.create}>{'Created by'}</Text>
           <Text style={[styles.textWork]}>
-            {nftreviationAccount(
-              fixWalletAddress(getCurrentAccount(wallet).address),
-              6,
-              4,
-            )}
+            {nftreviationAccount(list?.create, 6, 4)}
           </Text>
         </View>
         {/*<View style={styles.rowView}>*/}
@@ -114,7 +110,7 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
         <View style={styles.itemView}>
           <Text style={[text, styles.bend]}>About Collection</Text>
           <TouchableOpacity style={styles.downView} onPress={downPress}>
-            <Image source={!isShow ? uparr : down} style={styles.arrImg} />
+            <Image source={isShow ? uparr : down} style={styles.arrImg} />
           </TouchableOpacity>
         </View>
         <View style={styles.line} />
@@ -131,7 +127,7 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
         <View style={[styles.itemView]}>
           <Text style={[text, styles.bend]}>Details</Text>
           <TouchableOpacity style={styles.downView} onPress={upPress}>
-            <Image source={!isDetail ? uparr : down} style={styles.arrImg} />
+            <Image source={isDetail ? uparr : down} style={styles.arrImg} />
           </TouchableOpacity>
         </View>
         <View style={styles.line} />
@@ -157,7 +153,7 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Creator Fees</Text>
-              <Text style={styles.tokenText}>{'2.5%'}</Text>
+              <Text style={styles.tokenText}>{list?.earning + '%'}</Text>
             </View>
           </>
         ) : null}
