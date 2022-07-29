@@ -320,7 +320,7 @@ export const getTransferGasPrice = params => {
 };
 export const getTransferGasLimit = params => {
   const {type, fromAddress, toAddress, amount, remark} = params;
-  const data = '0x' + Buffer.from(remark).toString('hex');
+  const data = remark ? '0x' + Buffer.from(remark).toString('hex') : '';
   return getGasLimit(
     financeConfig.chains[type].rpcURL,
     fromAddress,
