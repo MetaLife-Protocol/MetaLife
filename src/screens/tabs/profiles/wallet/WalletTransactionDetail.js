@@ -4,7 +4,6 @@ import Text from '../../../../shared/comps/ComText';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {bigNumberFormatUnits} from 'react-native-web3-wallet';
-import {Buffer} from 'buffer';
 import {formatDate} from '../../../../metalife-base';
 import {
   coinWaitTransaction,
@@ -123,10 +122,12 @@ const WalletTransactionDetail = ({
           {transactData.remark}
           {/* {Buffer.from(transactData?.data.replace('0x', ''), 'hex').toString()} */}
         </Text>
-        <Text style={[styles.benText, {color: normal}]}>Gas</Text>
+        <Text style={[styles.benText, {color: normal}]}>Gas Fee</Text>
         <Text style={[text, styles.comText]}>
           {transactData?.gasUsed
-            ? bigNumberFormatUnits(transactData?.gasUsed, 9) +
+            ? bigNumberFormatUnits(
+                transactData?.gasUsed.mul(transactData.detail.gasPrice),
+              ) +
               ' ' +
               (transactData.type === 'spectrum'
                 ? 'smt'
