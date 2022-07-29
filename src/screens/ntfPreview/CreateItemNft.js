@@ -313,10 +313,8 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
                               }
                             />
                           </Pressable>
-                          <Text style={[text]}>
-                            {' '}
-                            Unititled Collection #{item.name}
-                          </Text>
+                          <Text
+                            style={[text]}>{`  Collection #${item.name}`}</Text>
                         </View>
                       );
                     })}
