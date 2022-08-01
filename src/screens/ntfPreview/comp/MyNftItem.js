@@ -50,39 +50,58 @@ const MyNftItem = ({wallet, addNftItemList, nft}) => {
       if (result.length > 0) {
         let newList = [];
         for (let i = 0; i < result.length; i++) {
-          const infos = await getNFTInfos(
+          getNFTInfos(
             fixWalletAddress(getCurrentAccount(wallet).address),
-            null,
+            res => {
+              console.log('rrrrr', res);
+              const list = nft?.nftItem?.nftItem;
+              if (list && list.length > 0) {
+                for (var j = 0; j < list.length; j++) {
+                  if (list[j].uri === res.uri) {
+                    return;
+                  }
+                }
+              }
+
+              getNftAssetsJson(res.uri).then(collInfo => {
+                collInfo.headers['content-type'] === 'application/json' &&
+                  addNftItemList({
+                    ...res,
+                    ...collInfo.data,
+                    type: 'nftItem',
+                  });
+              });
+            },
             0,
             0,
             result[i].address,
           );
-          newList.push(infos);
-          console.log('rrrrr', infos);
+          // newList.push(infos);
         }
-        const date = newList.flat();
-        console.log('dddd', date);
-        for (let j = 0; j < date.length; j++) {
-          const list = nft?.nftItem?.nftItem;
-          if (list && list.length > 0) {
-            let da = date[j].uri;
-            for (let li = 0; li < list.length; li++) {
-              if (list[li].uri === da) {
-                return;
-              }
-            }
-          }
-
-          getNftAssetsJson(date[j].uri).then(collInfo => {
-            collInfo.headers['content-type'] === 'application/json' &&
-              addNftItemList({
-                ...date[j],
-                ...collInfo.data,
-                type: 'nftItem',
-              });
-          });
-          // newData.push(list);
-        }
+        // const date = newList.flat();
+        // console.log('dddd', date);
+        // for (let j = 0; j < date.length; j++) {
+        //   const list = nft?.nftItem?.nftItem;
+        //   if (list && list.length > 0) {
+        //     let da = date[j].uri;
+        //     for (let li = 0; li < list.length; li++) {
+        //       if (list[li].uri === da) {
+        //         return;
+        //       } else {
+        //         getNftAssetsJson(date[j].uri).then(collInfo => {
+        //           collInfo.headers['content-type'] === 'application/json' &&
+        //             addNftItemList({
+        //               ...date[j],
+        //               ...collInfo.data,
+        //               type: 'nftItem',
+        //             });
+        //         });
+        //       }
+        //     }
+        //   }
+        //
+        //   // newData.push(list);
+        // }
         // setList(newData);
         // console.log('rrrrrrreeeedd', newData);
       }
