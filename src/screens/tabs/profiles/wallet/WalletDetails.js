@@ -176,7 +176,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
             </View>
             <Pressable
               onPress={() => {
-                navigate('WalletRecord');
+                wallet.current.type === 'spectrum' && navigate('WalletRecord');
               }}>
               <Text style={[volume]}>
                 {/*{coinType === 'rmb' ? '¥' : '$'}{' '}*/}
