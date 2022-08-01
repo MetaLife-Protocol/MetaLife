@@ -3,6 +3,7 @@
  */
 import React, {useEffect} from 'react';
 import {
+  ActivityIndicator,
   Image,
   Modal,
   Pressable,
@@ -88,9 +89,15 @@ export const ComModal = ({
           </View>
         </View>
         {toastVisible ? (
-          <View style={styles.toast}>
-            <Text style={styles.toastText}>{toastContent}</Text>
-          </View>
+          toastContent.indexOf('loading') !== -1 ? (
+            <View style={styles.toast}>
+              <ActivityIndicator style={styles.loading} />
+            </View>
+          ) : (
+            <View style={styles.toast}>
+              <Text style={styles.toastText}>{toastContent}</Text>
+            </View>
+          )
         ) : null}
       </Pressable>
     </Modal>
@@ -139,5 +146,9 @@ const styles = StyleSheet.create({
   toastText: {
     color: '#fff',
     fontSize: 16,
+  },
+  loading: {
+    height: 30,
+    width: 30,
   },
 });
