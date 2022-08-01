@@ -92,10 +92,14 @@ const TransferView = ({
           collectAddress,
           tokenId,
           gasLimit * 10000,
-          () => {
+          hash => {
             setToastVisible(false);
             setPwdVisible(false);
             Toast.show('success');
+            navigation.navigate('TransactionDetail', {
+              gasPrice: bigNumberFormatUnits(gasPrice, 9),
+              hash,
+            });
           },
           er => {
             setPwdVisible(false);
