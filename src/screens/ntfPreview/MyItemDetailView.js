@@ -153,7 +153,7 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Creator Fees</Text>
-              <Text style={styles.tokenText}>{list?.earning + '%'}</Text>
+              <Text style={styles.tokenText}>{list?.earning || 0 + '%'}</Text>
             </View>
           </>
         ) : null}

@@ -21,7 +21,7 @@ export const voteReducer = (state = initState, {type, payload}) => {
               ? state[link]
               : [...state[link], author]
             : [author]
-          : state[link].filter(item => item !== author),
+          : state[link]?.filter(item => item !== author),
       };
     default:
       return state;
