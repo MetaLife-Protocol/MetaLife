@@ -20,7 +20,7 @@ import {
 } from '../../utils';
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 import {getNftAssetsJson, ipfsBaseURL} from '../../remote/ipfsOP';
-import {getNftItemInfo} from '../../remote/contractOP';
+import {getCollectionInfo, getNftItemInfo} from '../../remote/contractOP';
 import HeaderRightBtn from '../tabs/HeaderRightBtn';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
@@ -30,10 +30,12 @@ const shareB = require('../../assets/image/nft/transfer_white.png');
 const shareW = require('../../assets/image/nft/transfer_black.png');
 
 const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
+  // alert(JSON.stringify(params));
   const {tokenId, address} = params;
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   const [isShow, setIsShow] = useState([false]);
   const [list, setList] = useState({});
+  const [earn, setEarn] = useState(0);
   const downPress = useCallback(() => {
     setIsShow(!isShow);
   }, [isShow]);
@@ -62,8 +64,11 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
   }, [navigation, address, list]);
 
   useEffect(() => {
+    getCollectionInfo(info => {
+      // console.log('rrrrrttt', info, address);
+      setEarn(info.royaltiesPercentageInBips);
+    }, address);
     getNftItemInfo(address, tokenId).then(res => {
-      console.log('rrrrrttt', res, address, tokenId);
       if (res) {
         getNftAssetsJson(res).then(da => {
           console.log('dddddddd', da);
@@ -153,7 +158,7 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Creator Fees</Text>
-              <Text style={styles.tokenText}>{list?.earning || 0 + '%'}</Text>
+              <Text style={styles.tokenText}>{earn + '%'}</Text>
             </View>
           </>
         ) : null}

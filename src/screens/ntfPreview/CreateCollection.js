@@ -83,7 +83,7 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
       setToastVisible(true);
       setToastContent('loading...');
       const currentAccount = getCurrentAccount(wallet);
-      console.log('currentAccount::', currentAccount);
+      // console.log('currentAccount::', currentAccount);
       const params = {
         logoImage: logoImage,
         bannerImage: bannerImage || logoImage,
@@ -95,10 +95,10 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
       };
       uploadJSONToIFPS(params)
         .then(resf => {
-          console.log('rrrrrr', resf);
+          // console.log('rrrrrr', resf);
           getAccount(currentAccount?.address, (isExit, keystore) => {
             if (isExit) {
-              console.log('keystore::', keystore);
+              // console.log('keystore::', keystore);
               getCreateCollection(
                 currentAccount.type,
                 keystore,
