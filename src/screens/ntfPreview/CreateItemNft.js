@@ -25,7 +25,7 @@ import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {uploadJSONToIFPS} from '../../remote/ipfsOP';
 import PasswordModel from '../../shared/comps/PasswordModal';
-import {getCurrentAccount} from '../../utils';
+import {fixWalletAddress, getCurrentAccount} from '../../utils';
 import {getAccount} from '../../remote/wallet/WalletAPI';
 import {
   getCreatNftItem,
@@ -128,6 +128,7 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
       description: description,
       tokenStandard: 'ERC-721',
       blockchain: 'Spectrum',
+      create: fixWalletAddress(currentAccount?.address),
     };
     uploadJSONToIFPS(param).then(res => {
       getAccount(currentAccount?.address, (isExit, keystore) => {
@@ -164,17 +165,17 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
       Toast.show('Please create your collection first');
       return;
     }
-    // if (name == null) {
-    //   Toast.show('Please write Name');
-    //   return;
-    // }
-    // if (itemFile == null) {
-    //   Toast.show('Please select image');
-    //   return;
-    // }
-    setShowEdit(true);
-    setShowSubmit(false);
-    // setPwdVisible(true);
+    if (name == null) {
+      Toast.show('Please write Name');
+      return;
+    }
+    if (itemFile == null) {
+      Toast.show('Please select image');
+      return;
+    }
+    // setShowEdit(true);
+    // setShowSubmit(false);
+    setPwdVisible(true);
   };
 
   const editPress = () => {
@@ -235,17 +236,17 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
               onImagePicker={setItemFile}
               clickable={showEdit == true && showSubmit == false ? false : true}
             />
-            {showEdit == true && showSubmit == false ? (
-              <View
-                style={[
-                  {
-                    position: 'absolute',
-                    width: 365,
-                    height: 260,
-                  },
-                ]}
-              />
-            ) : null}
+            {/*{showEdit == true && showSubmit == false ? (*/}
+            {/*  <View*/}
+            {/*    style={[*/}
+            {/*      {*/}
+            {/*        position: 'absolute',*/}
+            {/*        width: 365,*/}
+            {/*        height: 260,*/}
+            {/*      },*/}
+            {/*    ]}*/}
+            {/*  />*/}
+            {/*) : null}*/}
           </View>
 
           <TitleAndTips title={'Name  *'} />
@@ -253,10 +254,10 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
             placeholder={'Item name'}
             style={[FG, styles.nameContainer]}
             onChangeText={setName}
-            inputProps={{
-              editable:
-                showEdit === true && showSubmit === false ? false : true,
-            }}
+            // inputProps={{
+            //   editable:
+            //     showEdit === true && showSubmit === false ? false : true,
+            // }}
           />
           <TitleAndTips
             title={'Description'}
@@ -268,11 +269,11 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
             placeholder={'Provide a detalied description of you item'}
             style={[FG, styles.nameContainer, {height: 75}]}
             onChangeText={setDescription}
-            inputProps={{
-              multiline: true,
-              editable:
-                showEdit === true && showSubmit === false ? false : true,
-            }}
+            // inputProps={{
+            //   multiline: true,
+            //   editable:
+            //     showEdit === true && showSubmit === false ? false : true,
+            // }}
           />
 
           <TitleAndTips
@@ -295,9 +296,7 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
                       />
                     </Pressable>
                     <Text
-                      style={[
-                        text,
-                      ]}>{` Unititled Collection #${date[0].name}`}</Text>
+                      style={[text]}>{`  Collection #${date[0].name}`}</Text>
                     <Pressable style={styles.touchImg} onPress={showCollect}>
                       <Image source={arrow} style={styles.arrImg} />
                     </Pressable>
@@ -314,10 +313,8 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
                               }
                             />
                           </Pressable>
-                          <Text style={[text]}>
-                            {' '}
-                            Unititled Collection #{item.name}
-                          </Text>
+                          <Text
+                            style={[text]}>{`  Collection #${item.name}`}</Text>
                         </View>
                       );
                     })}
@@ -393,36 +390,40 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
             </Text>
           </View>
 
-          {showEdit ? (
-            <View style={styles.bottomView}>
-              <RoundBtn
-                style={styles.editView}
-                title={'Edit'}
-                press={editPress}
-              />
-              <RoundBtn
-                style={styles.editView}
-                title={'Mint'}
-                press={MintPress}
-              />
-            </View>
-          ) : showSubmit ? (
-            <View style={styles.bottomView}>
-              <Pressable style={styles.editView} onPress={SubmitPress}>
-                <Text style={styles.subText}>Submit changes</Text>
-              </Pressable>
-              <Pressable style={styles.deleteView} onPress={DeletePress}>
-                <Text style={styles.deleteText}>Delete item</Text>
-              </Pressable>
-            </View>
-          ) : (
-            <RoundBtn
-              press={NextClick}
-              style={styles.buttonContainer}
-              title={'Next'}
-            />
-          )}
-
+          {/*{showEdit ? (*/}
+          {/*  <View style={styles.bottomView}>*/}
+          {/*    <RoundBtn*/}
+          {/*      style={styles.editView}*/}
+          {/*      title={'Edit'}*/}
+          {/*      press={editPress}*/}
+          {/*    />*/}
+          {/*    <RoundBtn*/}
+          {/*      style={styles.editView}*/}
+          {/*      title={'Mint'}*/}
+          {/*      press={MintPress}*/}
+          {/*    />*/}
+          {/*  </View>*/}
+          {/*) : showSubmit ? (*/}
+          {/*  <View style={styles.bottomView}>*/}
+          {/*    <Pressable style={styles.editView} onPress={SubmitPress}>*/}
+          {/*      <Text style={styles.subText}>Submit changes</Text>*/}
+          {/*    </Pressable>*/}
+          {/*    <Pressable style={styles.deleteView} onPress={DeletePress}>*/}
+          {/*      <Text style={styles.deleteText}>Delete item</Text>*/}
+          {/*    </Pressable>*/}
+          {/*  </View>*/}
+          {/*) : (*/}
+          {/*  <RoundBtn*/}
+          {/*    press={NextClick}*/}
+          {/*    style={styles.buttonContainer}*/}
+          {/*    title={'Next'}*/}
+          {/*  />*/}
+          {/*)}*/}
+          <RoundBtn
+            press={NextClick}
+            style={styles.buttonContainer}
+            title={'Create'}
+          />
           {/*<Image*/}
           {/*  style={{}}*/}
           {/*  source={{uri: `https://gateway.pinata.cloud/ipfs/${''}`}}*/}

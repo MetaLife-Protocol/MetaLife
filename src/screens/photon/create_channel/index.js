@@ -50,10 +50,13 @@ const CreateChannel = ({setChannelRemark, showPullMenu}) => {
   const onCreateChannel = useCallback(() => {
     const chainBalance = bigNumberParseUnits(
       walletBalance[type].balance_on_chain + '',
+      0,
     );
-    const inputAmount = bigNumberParseUnits(amount);
-    if (inputAmount > chainBalance) {
-      Toast.show('Insufficient Funds');
+    const inputAmount = bigNumberParseUnits(amount.toString(), 18);
+    if (inputAmount.gt(chainBalance)) {
+      Toast.show('Insufficient Funds', {
+        position: Toast.position.CENTER,
+      });
       return;
     }
     setChannelRemark({address, remark});

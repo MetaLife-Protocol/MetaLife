@@ -170,7 +170,7 @@ export async function getNFTInfos(
 
     let nftInfo = {
       id: token_id,
-      collectionAddress: collectionAddress,
+      collectionAddress: collectAddress,
       uri: token_uri,
     };
 

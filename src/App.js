@@ -100,6 +100,7 @@ import MyCollectionDetail from './screens/ntfPreview/MyCollectionDetail';
 import CreateItemNft from './screens/ntfPreview/CreateItemNft';
 import MyItemDetailView from './screens/ntfPreview/MyItemDetailView';
 import TransferView from './screens/ntfPreview/TransferView';
+import TransactionDetail from './screens/tabs/profiles/wallet/transfer/TransactionDetail';
 
 const App = ({
   feedId,
@@ -248,16 +249,6 @@ const App = ({
           name="WalletCreator"
           component={WalletCreator}
           options={{title: 'Create Account'}}
-          initialParams={
-            wallet.current.type
-              ? {}
-              : {
-                  type: 'spectrum',
-                  name: 'SPE-1',
-                  from: 'guid',
-                  target: resync ? 'Resync' : 'Tabs',
-                }
-          }
         />
         <Screen
           name="WalletBackup"
@@ -504,6 +495,11 @@ const App = ({
         <Screen
           name="WalletTransactionDetail"
           component={WalletTransactionDetail}
+          options={{headerTitle: 'Transaction Details'}}
+        />
+        <Screen
+          name="TransactionDetail"
+          component={TransactionDetail}
           options={{headerTitle: 'Transaction Details'}}
         />
         <Screen

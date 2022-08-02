@@ -20,8 +20,10 @@ import {
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {getCurrentAccount, screenWidth} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
+import {getMyNFTCollectionInfos} from '../../remote/contractOP';
+import Toast from 'react-native-tiny-toast';
 
-const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
+const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}, nft}) => {
   const {
     text,
     flex1,
@@ -39,6 +41,7 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
   const {navigate} = useNavigation();
   const [amount, setAmount] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [isList, setIsList] = useState([]);
 
   useFocusEffect(() => {
     // callAuto();
@@ -83,9 +86,14 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
       })
       .catch(e => console.warn(e));
   };
-
+  const getNftInfo = () => {
+    getMyNFTCollectionInfos(getCurrentAccount(wallet).address).then(res => {
+      setIsList(res);
+    });
+  };
   useEffect(() => {
     getInfo();
+    getNftInfo();
   }, []);
   // todo: refactor end
 
@@ -105,6 +113,7 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
           onRefresh={() => {
             setRefreshing(true);
             getInfo();
+            getNftInfo();
           }}
         />
       }>
@@ -164,7 +173,9 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
               styles.nftContent,
             ]}>
             <Text style={[text, styles.mltText]}>Item</Text>
-            <Text style={[text, styles.mlt]}>0</Text>
+            <Text style={[text, styles.mlt]}>
+              {nft?.nftItem?.nftItem?.length || 0}
+            </Text>
           </Pressable>
           <Pressable
             onPress={() => {
@@ -182,7 +193,9 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
               styles.nftContent,
             ]}>
             <Text style={[text, styles.mltText]}>Collection</Text>
-            <Text style={[text, styles.mlt]}>0</Text>
+            <Text style={[text, styles.mlt]}>{`${
+              nft?.collection?.Collection?.length || 0
+            }`}</Text>
           </Pressable>
         </View>
       </View>
@@ -210,6 +223,12 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}}) => {
               style={[flex1, styles.colItem]}
               onPress={() => {
                 setVisible(false);
+                if (isList.length === 0) {
+                  Toast.show('Please create your collection first', {
+                    position: Toast.position.CENTER,
+                  });
+                  return;
+                }
                 navigate('CreateItemNft');
               }}>
               <Text style={[text]}>NFT</Text>
@@ -294,6 +313,7 @@ const msp = s => {
     cfg: s.cfg,
     feedId: s.user.feedId,
     wallet: s.wallet,
+    nft: s.nft,
   };
 };
 

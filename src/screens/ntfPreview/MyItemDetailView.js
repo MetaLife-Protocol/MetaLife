@@ -20,7 +20,7 @@ import {
 } from '../../utils';
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 import {getNftAssetsJson, ipfsBaseURL} from '../../remote/ipfsOP';
-import {getNftItemInfo} from '../../remote/contractOP';
+import {getCollectionInfo, getNftItemInfo} from '../../remote/contractOP';
 import HeaderRightBtn from '../tabs/HeaderRightBtn';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
@@ -30,10 +30,12 @@ const shareB = require('../../assets/image/nft/transfer_white.png');
 const shareW = require('../../assets/image/nft/transfer_black.png');
 
 const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
+  // alert(JSON.stringify(params));
   const {tokenId, address} = params;
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   const [isShow, setIsShow] = useState([false]);
   const [list, setList] = useState({});
+  const [earn, setEarn] = useState(0);
   const downPress = useCallback(() => {
     setIsShow(!isShow);
   }, [isShow]);
@@ -62,11 +64,14 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
   }, [navigation, address, list]);
 
   useEffect(() => {
+    getCollectionInfo(info => {
+      // console.log('rrrrrttt', info, address);
+      setEarn(info.royaltiesPercentageInBips);
+    }, address);
     getNftItemInfo(address, tokenId).then(res => {
-      // console.log('rrrrr', res);
       if (res) {
         getNftAssetsJson(res).then(da => {
-          // console.log('dddddddd', da);
+          console.log('dddddddd', da);
           setList(da.data);
         });
       }
@@ -95,11 +100,7 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
           <FastImage source={btn} style={styles.headImg} />
           <Text style={styles.create}>{'Created by'}</Text>
           <Text style={[styles.textWork]}>
-            {nftreviationAccount(
-              fixWalletAddress(getCurrentAccount(wallet).address),
-              6,
-              4,
-            )}
+            {nftreviationAccount(list?.create, 6, 4)}
           </Text>
         </View>
         {/*<View style={styles.rowView}>*/}
@@ -114,7 +115,7 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
         <View style={styles.itemView}>
           <Text style={[text, styles.bend]}>About Collection</Text>
           <TouchableOpacity style={styles.downView} onPress={downPress}>
-            <Image source={!isShow ? uparr : down} style={styles.arrImg} />
+            <Image source={isShow ? uparr : down} style={styles.arrImg} />
           </TouchableOpacity>
         </View>
         <View style={styles.line} />
@@ -131,7 +132,7 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
         <View style={[styles.itemView]}>
           <Text style={[text, styles.bend]}>Details</Text>
           <TouchableOpacity style={styles.downView} onPress={upPress}>
-            <Image source={!isDetail ? uparr : down} style={styles.arrImg} />
+            <Image source={isDetail ? uparr : down} style={styles.arrImg} />
           </TouchableOpacity>
         </View>
         <View style={styles.line} />
@@ -157,7 +158,7 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Creator Fees</Text>
-              <Text style={styles.tokenText}>{'2.5%'}</Text>
+              <Text style={styles.tokenText}>{earn + '%'}</Text>
             </View>
           </>
         ) : null}

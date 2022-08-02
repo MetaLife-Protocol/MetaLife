@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Pressable, FlatList, Image} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import Text from '../../../../shared/comps/ComText';
@@ -11,22 +11,23 @@ import {
   nftreviationAccount,
 } from '../../../../utils';
 import {fromDate} from '../../../../utils';
+import {useNavigation} from '@react-navigation/native';
+import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 const toggle = require('../../../../assets/image/icons/icon_toggle_default.png');
 const send = require('../../../../assets/image/icons/send.png');
 
 const WalletRecord = ({wallet}) => {
-  const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
-  const pages = 1;
+  const {text, flex1, BG, FG} = useSchemaStyles();
   const [list, setList] = useState([]);
   const [refreshing, setRefreshing] = useState(true);
   const [page, setPage] = useState(1);
+  const {navigate} = useNavigation();
 
   useEffect(() => {
     getRecordList(false);
   }, []);
 
   const getRecordList = isMore => {
-    // setRefreshing(true);
     const body = {
       service: 'transaction',
       method: 'transaction_list',
@@ -37,20 +38,7 @@ const WalletRecord = ({wallet}) => {
         page: page,
       },
     };
-    // "service":"transaction",
-    //   "method":"transaction_list",
-    //   "sn":"1ac34_1658296487000",
-    //   "params":{"address":"0x0d0efccda4f079c0dd1b728297a43ee54d7170cd"
-    // getWalletRecord(body)
-    //   .then(res => {
-    //     alert(JSON.stringify(res));
-    //   })
-    //   .catch(err => {
-    //     alert(err);
-    //   });
-    console.log('dddddddbbb', body);
     getWalletRecord(body, res => {
-      // alert(JSON.stringify(res));
       setRefreshing(false);
       if (page !== 1 && isMore) {
         let data = list;
@@ -64,9 +52,15 @@ const WalletRecord = ({wallet}) => {
 
   const renderItem = ({item, index}) => {
     const mineWall = '0x' + getCurrentAccount(wallet).address;
-    console.log('dddddddd', item.to, getCurrentAccount(wallet).address);
     return (
-      <View style={[styles.item]}>
+      <Pressable
+        style={[styles.item]}
+        onPress={() => {
+          navigate('TransactionDetail', {
+            gasPrice: bigNumberFormatUnits(item.gasPrice, 9),
+            hash: item.transactionHash,
+          });
+        }}>
         <View style={styles.left}>
           <Image
             source={mineWall === item.to ? toggle : send}
@@ -84,7 +78,7 @@ const WalletRecord = ({wallet}) => {
             styles.addText,
             {color: mineWall === item.to ? '#29DAD7' : '#6989EA'},
           ]}>{`${mineWall === item.to ? '+' : '-'} ${item.value} SMT`}</Text>
-      </View>
+      </Pressable>
     );
   };
 
