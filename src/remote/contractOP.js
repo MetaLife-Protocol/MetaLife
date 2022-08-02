@@ -347,9 +347,7 @@ export async function getCreatNftItem(
   // });
 
   const result = contract
-    .mint(collecAddress, fixWalletAddress(wAddress), baseURI, {
-      gasLimit: 10000000,
-    })
+    .mint(collecAddress, fixWalletAddress(wAddress), baseURI)
     .then(async res => {
       console.log('aaaaaa', res);
       const subcontract = getContract(network, collecAddress, NFTCollectionAbi);
