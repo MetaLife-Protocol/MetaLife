@@ -296,7 +296,10 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
                       />
                     </Pressable>
                     <Text
-                      style={[text]}>{`  Collection #${date[0].name}`}</Text>
+                      style={[
+                        text,
+                        flex1,
+                      ]}>{`  Collection #${date[0].name}`}</Text>
                     <Pressable style={styles.touchImg} onPress={showCollect}>
                       <Image source={arrow} style={styles.arrImg} />
                     </Pressable>

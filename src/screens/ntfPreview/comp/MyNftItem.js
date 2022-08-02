@@ -55,22 +55,32 @@ const MyNftItem = ({wallet, addNftItemList, nft}) => {
             res => {
               console.log('rrrrr', res);
               const list = nft?.nftItem?.nftItem;
-              if (list && list.length > 0) {
-                for (var j = 0; j < list.length; j++) {
-                  if (list[j].uri === res.uri) {
-                    return;
-                  }
-                }
-              }
 
-              getNftAssetsJson(res.uri).then(collInfo => {
-                collInfo.headers['content-type'] === 'application/json' &&
-                  addNftItemList({
-                    ...res,
-                    ...collInfo.data,
-                    type: 'nftItem',
-                  });
-              });
+              let index =
+                list && list.length > 0
+                  ? list.findIndex(item => {
+                      if (item.uri === res.uri) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    })
+                  : -1;
+              if (index == -1) {
+                getNftAssetsJson(res.uri).then(collInfo => {
+                  collInfo.headers['content-type'] === 'application/json' &&
+                    addNftItemList({
+                      ...res,
+                      ...collInfo.data,
+                      type: 'nftItem',
+                    });
+                });
+              }
+              // for (var j = 0; j < list.length; j++) {
+              //   if (list[j].uri === res.uri) {
+              //     return;
+              //   }
+              // }
             },
             0,
             0,
@@ -113,6 +123,7 @@ const MyNftItem = ({wallet, addNftItemList, nft}) => {
   const emptyComponent = () => {
     return <ListEmpty />;
   };
+
   return (
     <View style={{flex: 1}}>
       <FlatList

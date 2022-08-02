@@ -37,6 +37,7 @@ const TransferView = ({
   cfg: {darkMode},
   wallet,
   route: {params},
+  deleteNftItemList,
 }) => {
   const {tokenId, collectAddress, image, name} = params;
   const {goBack, navigate} = useNavigation();
@@ -105,6 +106,14 @@ const TransferView = ({
             setPwdVisible(false);
             setToastVisible(false);
             Toast.show(er?.error?.message || er);
+          },
+          (cbAdd, id) => {
+            console.log('delecttttttt', cbAdd, id);
+            deleteNftItemList({
+              type: 'nftItem',
+              collectionAddress: cbAdd,
+              id: id,
+            });
           },
         );
       }
@@ -250,11 +259,14 @@ const msp = s => {
     cfg: s.cfg,
     feedId: s.user.feedId,
     wallet: s.wallet,
+    nft: s.nft,
   };
 };
 
 const mdp = d => {
-  return {};
+  return {
+    deleteNftItemList: payload => d({type: 'deleteNftItemList', payload}),
+  };
 };
 
 export default connect(msp, mdp)(TransferView);

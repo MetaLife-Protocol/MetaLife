@@ -347,7 +347,9 @@ export async function getCreatNftItem(
   // });
 
   const result = contract
-    .mint(collecAddress, fixWalletAddress(wAddress), baseURI)
+    .mint(collecAddress, fixWalletAddress(wAddress), baseURI, {
+      gasLimit: 10000000,
+    })
     .then(async res => {
       console.log('aaaaaa', res);
       const subcontract = getContract(network, collecAddress, NFTCollectionAbi);
@@ -470,6 +472,7 @@ export async function transformNftItem(
   gasLimit,
   cb,
   er,
+  cbAdd,
 ) {
   const contract = await getSignerContract(
     financeConfig.chains[type].rpcURL,
@@ -513,6 +516,8 @@ export async function transformNftItem(
         if (resListen.status !== 1 && resListen.confirmations > 1) {
           er('request failed');
           provider.removeAllListeners(res.hash);
+        } else {
+          cbAdd(collecAddress, tokenId);
         }
         if (resListen.confirmations > 19) {
           provider.removeAllListeners(res.hash);

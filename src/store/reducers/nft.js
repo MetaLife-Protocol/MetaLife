@@ -40,6 +40,18 @@ export const nftReducer = (state = initState, {type, payload}) => {
               : [payload],
         },
       };
+    case 'deleteNftItemList':
+      return {
+        ...state,
+        nftItem: {
+          ...state.nftItem,
+          [payload.type]: state.nftItem[payload.type].filter(
+            item =>
+              item.collectionAddress != payload.collectionAddress &&
+              item.id != payload.id,
+          ),
+        },
+      };
     default:
       return state;
   }
