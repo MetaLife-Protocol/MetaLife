@@ -49,7 +49,12 @@ import {useNavigation} from '@react-navigation/native';
 import {photonCloseChannel, photonWithDraw} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 
-const PhotonListItemView = ({data, channelRemarks, walletBalance}) => {
+const PhotonListItemView = ({
+  data,
+  channelRemarks,
+  walletBalance,
+  setRefreshing,
+}) => {
   const styles = useStyle(createSty);
   const {navigate} = useNavigation();
   const dialog = useDialog();
@@ -69,8 +74,8 @@ const PhotonListItemView = ({data, channelRemarks, walletBalance}) => {
         .then(res => {
           const resJson = JSON.parse(res);
           if (resJson.error_code === 0) {
-            //  TODO updateChannelList 刷新列表 跳转到
-            navigate('PhotonTransactionRecord');
+            // updateChannelList 刷新列表
+            setRefreshing(true);
           } else if (resJson.error_code === 2000) {
             Toast.show('Insufficient balance to pay for gas');
           } else if (resJson.error_code === 1016) {
@@ -131,6 +136,7 @@ const PhotonListItemView = ({data, channelRemarks, walletBalance}) => {
       const resJson = JSON.parse(res);
       if (resJson.error_code === 0) {
         //  TODO
+        setRefreshing(true);
       } else if (resJson.error_code === 2000) {
         //没有足够的余额支付gas
         Toast.show('Insufficient balance to pay for gas');

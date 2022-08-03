@@ -8,6 +8,7 @@
 
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
+  DeviceEventEmitter,
   FlatList,
   Image,
   Pressable,
@@ -26,18 +27,23 @@ import {connect} from 'react-redux';
 import {fixWalletAddress, getCurrentAccount} from '../../../utils';
 import PhotonUrl from '../PhotonUrl';
 import {uploadPhotonLogDialog} from './hooks';
+import {PhotonEvent, TxStatus, TxType} from '../PhotonNotifyContants';
+import Toast from 'react-native-tiny-toast';
 
 const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
   const styles = useStyle(createSty);
   const [balances, setBalances] = useState([]),
     [channelList, setChannelList] = useState([]),
-    [refreshing, setRefreshing] = useState(false);
+    [refreshing, setRefreshing] = useState(true);
   const dialog = useDialog();
   const [walletBalance, setWalletBalance] = useState({});
   const navigation = useNavigation();
   function goScreen(name, params) {
     navigation.navigate(name, params);
   }
+  const showToast = message => {
+    Toast.show(message, {position: Toast.position.CENTER});
+  };
   function menuHandler(e) {
     e.target.measure((x, y, width, height, pageX, pageY) =>
       showPullMenu({
@@ -110,8 +116,8 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
     Promise.all([balanceSMT, balanceMLT]).then(values => {
       const jsonSMTRes = JSON.parse(values[0]);
       const jsonMLTRes = JSON.parse(values[1]);
-      console.log('jsonSMTRes balance:::', jsonSMTRes);
-      console.log('jsonMLTRes balance:::', jsonMLTRes);
+      // console.log('jsonSMTRes balance:::', jsonSMTRes);
+      // console.log('jsonMLTRes balance:::', jsonMLTRes);
       let getBalances = [];
       let balanceData = {};
       if (jsonSMTRes.error_code === 0) {
@@ -137,19 +143,73 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
   const getChannelList = () => {
     loadChannelList().then(res => {
       const jsonRes = JSON.parse(res);
-      console.log('loadChannelList:::', jsonRes);
+      // console.log('loadChannelList:::', jsonRes);
       if (jsonRes.error_code === 0) {
         const array = jsonRes.data;
         if (array && array.length) {
           setChannelList(array);
         }
+        setRefreshing(false);
       }
     });
   };
 
   useEffect(() => {
-    getBalance();
-    getChannelList();
+    if (refreshing) {
+      getBalance();
+      getChannelList();
+    }
+  }, [refreshing]);
+
+  useEffect(() => {
+    //photonChange
+    const channelListener = DeviceEventEmitter.addListener(
+      PhotonEvent.channelChange,
+      params => {
+        if (params) {
+          const {txType, txStatus, settleTimeOut} = params;
+          if (txType === TxType.ChannelDeposit) {
+            if (settleTimeOut > 0) {
+              if (txStatus === TxStatus.failed) {
+                showToast('Create Failed');
+              } else {
+                showToast('Create Success');
+              }
+            } else {
+              if (txStatus === TxStatus.failed) {
+                showToast('Deposit Failed');
+              } else {
+                showToast('Deposit Success');
+              }
+            }
+          }
+          if (txType === TxType.Withdraw) {
+            if (txStatus === TxStatus.failed) {
+              showToast('Withdraw Failed');
+            } else {
+              showToast('Withdraw Success');
+            }
+          }
+          if (
+            txType === TxType.ChannelSettle ||
+            txType === TxType.CooperateSettle
+          ) {
+            showToast('Close Success');
+          }
+        }
+        getChannelList();
+      },
+    );
+    const balanceListener = DeviceEventEmitter.addListener(
+      PhotonEvent.balanceChange,
+      () => {
+        getBalance();
+      },
+    );
+    return () => {
+      channelListener.remove();
+      balanceListener.remove();
+    };
   }, []);
 
   return (
@@ -173,8 +233,6 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
             tintColor={'#29DAD7'}
             onRefresh={() => {
               setRefreshing(true);
-              getBalance();
-              getChannelList();
             }}
           />
         }
@@ -182,6 +240,7 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
         data={channelList}
         renderItem={({item, index}) => (
           <PhotonListItemView
+            setRefreshing={setRefreshing}
             data={item}
             channelRemarks={channelRemark}
             walletBalance={walletBalance}

@@ -21,6 +21,7 @@ import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
 import Pubs, {reconnect2pub} from './screens/tabs/profiles/Pubs';
 import {
+  DeviceEventEmitter,
   Image,
   ImageBackground,
   Modal,
@@ -101,6 +102,10 @@ import CreateItemNft from './screens/ntfPreview/CreateItemNft';
 import MyItemDetailView from './screens/ntfPreview/MyItemDetailView';
 import TransferView from './screens/ntfPreview/TransferView';
 import TransactionDetail from './screens/tabs/profiles/wallet/transfer/TransactionDetail';
+import {createPhotonEventEmitter} from 'react-native-photon';
+import {useDialog} from './metalife-base';
+import {NormalTipDialog} from './metalife-base/src/dialog/NormalTipDialog';
+import {PhotonEvent, PhotonNotify} from './screens/photon/PhotonNotifyContants';
 
 const App = ({
   feedId,
@@ -115,6 +120,7 @@ const App = ({
   masked,
   suggestPubs,
 }) => {
+  const dialog = useDialog();
   const {barStyle, row, theme, justifySpaceBetween, alignItemsCenter} =
     useSchemaStyles();
   const store = useStore();
@@ -170,6 +176,87 @@ const App = ({
           getConnectedPeers(setConnectedPeers));
       });
     feedId && channel.post('identity', 'USE');
+  }, []);
+
+  useEffect(() => {
+    const eventEmitter = createPhotonEventEmitter();
+    console.log('photon listener start');
+    const errorListener = eventEmitter.addListener(
+      PhotonNotify.onError,
+      ([code, info]) => {
+        // console.log('Photon onError', code, info);
+      },
+    );
+    const notifyListener = eventEmitter.addListener(
+      PhotonNotify.onNotify,
+      ([level, info]) => {
+        // console.log('onNotify', level, info);
+        if (level === 0) {
+          const messageObj = JSON.parse(info);
+          const {type, message} = messageObj;
+          if (type === 1) {
+            if (message) {
+              const {status} = message;
+              if (status === 5) {
+                DeviceEventEmitter.emit(PhotonEvent.photonTransactionChange);
+              }
+            }
+          }
+          if (type === 3) {
+            DeviceEventEmitter.emit(PhotonEvent.channelChange);
+            DeviceEventEmitter.emit(PhotonEvent.balanceChange);
+          }
+          if (type === 4) {
+            const txType = message?.type;
+            let settleTimeOut = 0;
+            if (txType) {
+              const txParams = JSON.parse(message.tx_params);
+              settleTimeOut = txParams.settle_timeout
+                ? txParams.settle_timeout
+                : 0;
+            }
+            DeviceEventEmitter.emit(PhotonEvent.channelChange, {
+              txType: message.type,
+              txStatus: message.tx_status,
+              settleTimeOut,
+            });
+            DeviceEventEmitter.emit(PhotonEvent.balanceChange);
+          }
+        } else {
+          /**
+           * level 1 光子发出的警告信息
+           * level 2 光子发出的错误信息
+           */
+          dialog.show(
+            <NormalTipDialog
+              title={level === 1 ? 'Photon Warning' : 'Photon Error'}
+              content={info}
+            />,
+          );
+        }
+      },
+    );
+    const transferListener = eventEmitter.addListener(
+      PhotonNotify.onReceivedTransfer,
+      info => {
+        // console.log('onReceivedTransfer', info);
+        DeviceEventEmitter.emit(PhotonEvent.balanceChange);
+        DeviceEventEmitter.emit(PhotonEvent.channelChange);
+      },
+    );
+    const statusListener = eventEmitter.addListener(
+      PhotonNotify.onStatusChange,
+      info => {
+        console.log('onStatusChange', info);
+      },
+    );
+
+    return () => {
+      errorListener.remove();
+      notifyListener.remove();
+      transferListener.remove();
+      statusListener.remove();
+    };
   }, []);
 
   return (

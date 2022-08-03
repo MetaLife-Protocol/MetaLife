@@ -35,10 +35,8 @@ import {bigNumberParseUnits} from 'react-native-web3-wallet';
 const CreateChannel = ({setChannelRemark, showPullMenu}) => {
   const route = useRoute();
   const {walletBalance} = route.params ?? {};
-  console.log('walletBalance', walletBalance);
   const styles = useStyle(createSty);
-  const {navigate} = useNavigation();
-  const navigation = useNavigation();
+  const {navigate, goBack} = useNavigation();
 
   const [address, setAddress] = useState(''),
     [amount, setAmount] = useState(''),
@@ -75,6 +73,7 @@ const CreateChannel = ({setChannelRemark, showPullMenu}) => {
           Toast.show('create channel success', {
             position: Toast.position.CENTER,
           });
+          goBack();
         } else {
           Toast.show(resJson.error_message, {
             position: Toast.position.CENTER,

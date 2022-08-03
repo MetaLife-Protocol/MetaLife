@@ -1,10 +1,12 @@
 import {useEffect, useState} from 'react';
+import {DeviceEventEmitter} from 'react-native';
 import {
   getContractCallTxQuery,
   getReceivedTransfers,
   getSentTransfers,
 } from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
+import {PhotonEvent} from '../PhotonNotifyContants';
 
 export function useContractCallTxQuery() {
   const [listData, setListData] = useState([]);
@@ -30,7 +32,23 @@ export function useContractCallTxQuery() {
 
 export function useRecordPhotonData() {
   const [listData, setListData] = useState([]);
+  const [refresh, setRefresh] = useState(true);
   useEffect(() => {
+    const transactionListener = DeviceEventEmitter.addListener(
+      PhotonEvent.photonTransactionChange,
+      () => {
+        setRefresh(true);
+      },
+    );
+    return () => {
+      transactionListener.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!refresh) {
+      return;
+    }
     const promiseSend = getSentTransfers();
     const promiseReceived = getReceivedTransfers();
 
@@ -62,14 +80,16 @@ export function useRecordPhotonData() {
           item.status = 3;
         });
         returnList = [...sendListOrigin, ...receivedListOrigin];
-        returnList = returnList.sort((a, b) => a.time - b.time);
-        console.log('returnList::', returnList);
+        returnList = returnList.sort((a, b) => b.time - a.time);
+        // console.log('returnList::', returnList);
         setListData(returnList);
+        setRefresh(false);
       })
       .catch(e => {
         Toast.show(e.toString());
+        setRefresh(false);
       });
-  }, []);
+  }, [refresh]);
   return listData;
 }
 

@@ -30,10 +30,8 @@ const SupplementaryBalance = () => {
   const {channelData, walletBalance} = route.params ?? {};
   const navigation = useNavigation();
 
-  const [amount, setAmount] = useState(''),
-    [remark, setRemark] = useState('');
-
-  const btnDisabled = useMemo(() => !(amount && remark), [amount, remark]);
+  const [amount, setAmount] = useState('');
+  const btnDisabled = useMemo(() => !amount, [amount]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -51,11 +49,6 @@ const SupplementaryBalance = () => {
           hasSeparator={true}
           onChangeText={setAmount}
           placeholder={'Amount'}
-        />
-        <PureTextInput
-          hasSeparator={true}
-          onChangeText={setRemark}
-          placeholder={'Remark'}
         />
 
         <RoundBtn

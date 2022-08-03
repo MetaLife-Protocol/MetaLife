@@ -12,6 +12,8 @@ import {
   photonSettleChannel,
   photonStop,
   startPhotonServer,
+  subscribePhoton,
+  unsubscribePhoton,
 } from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {store} from '../../store/configureStore';
@@ -20,8 +22,6 @@ import PasswordDialog from '../tabs/profiles/wallet/modal/PasswordDialog';
 import {exportAccountPrivateKey} from '../../remote/wallet/WalletAPI';
 import {bindIDAndWallet, pubHostByIp} from '../../remote/pubOP';
 import {sddsafsadf, yjggfjgjghfg} from '../../store/Foo';
-import {inviteAccept} from '../../remote/ssb/ssbOP';
-import {reconnect2pub} from '../tabs/profiles/Pubs';
 
 export function startPhoton({
   dialog,
@@ -112,6 +112,7 @@ export function initPhoton({
     .then(res => {
       Toast.hide();
       if (res?.logFile) {
+        subscribePhoton();
         const {photon, user} = store.getState();
         console.log('res:::', res);
         if (!photon?.photonLogined) {
@@ -209,6 +210,7 @@ export function settleChannelDialog(dialog, channelIdentifier) {
 }
 
 export function stopCurrentPhoton() {
+  unsubscribePhoton(); // 取消光子订阅通知
   photonStop();
   store.dispatch({type: 'resetPhoton'});
 }
