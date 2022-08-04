@@ -101,6 +101,11 @@ const TransferView = ({
               gasPrice: bigNumberFormatUnits(gasPrice, 9),
               hash,
             });
+            deleteNftItemList({
+              type: currentAccount?.address,
+              collectionAddress: collectAddress,
+              id: tokenId,
+            });
           },
           er => {
             setPwdVisible(false);
@@ -109,11 +114,6 @@ const TransferView = ({
           },
           (cbAdd, id) => {
             console.log('delecttttttt', cbAdd, id);
-            deleteNftItemList({
-              type: currentAccount?.address,
-              collectionAddress: cbAdd,
-              id: id,
-            });
           },
         );
       }
