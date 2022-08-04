@@ -54,12 +54,12 @@ export function startPhoton({
               Toast.show('Wallet does not exist!', toastOption);
               return;
             }
-            dialog.showToast('loading...', 0);
+            dialog.showLoading();
             exportAccountPrivateKey(
               currentAccount.address,
               pw,
               (isExit, res) => {
-                dialog.hideToast();
+                dialog.hideLoading();
                 if (isExit) {
                   dialog.dismiss();
                   sddsafsadf(currentAccount.address, res);

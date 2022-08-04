@@ -7,7 +7,14 @@
 
 import React, {createContext, useContext, useState} from 'react';
 import {useEffect} from 'react';
-import {Alert, Modal, StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 export const DialogContext = createContext();
 export const useDialog = () => {
@@ -20,6 +27,7 @@ export const Dialog = ({children}) => {
   const [toastVisible, setToastVisible] = useState(false);
   const [toastContent, setToastContent] = useState('');
   const [toastDuration, setToastDuration] = useState(3000);
+  const [toastLoading, setToastLoading] = useState(false);
 
   // const customModal = useRef < Modal > null;
   useEffect(() => {
@@ -44,6 +52,12 @@ export const Dialog = ({children}) => {
         show: dialogContent => {
           setVisible(true);
           setContent(dialogContent);
+        },
+        showLoading: () => {
+          setToastLoading(true);
+        },
+        hideLoading: () => {
+          setToastLoading(false);
         },
         showToast: (toastContent, toastDuration) => {
           setToastVisible(true);
@@ -75,6 +89,11 @@ export const Dialog = ({children}) => {
               <Text style={styles.toastText}>{toastContent}</Text>
             </View>
           ) : null}
+          {toastLoading ? (
+            <View style={styles.toast}>
+              <ActivityIndicator style={styles.loading} />
+            </View>
+          ) : null}
         </View>
       </Modal>
     </DialogContext.Provider>
@@ -93,5 +112,9 @@ const styles = StyleSheet.create({
   toastText: {
     color: '#fff',
     fontSize: 16,
+  },
+  loading: {
+    height: 30,
+    width: 30,
   },
 });
