@@ -18,40 +18,40 @@ export const nftReducer = (state = initState, {type, payload}) => {
             : [payload],
         },
       };
-    case 'addCollectionList':
-      return {
-        ...state,
-        collection: {
-          ...state.collection,
-          [payload.type]:
-            state.collection && state.collection[payload.type]
-              ? [...state.collection[payload.type], payload]
-              : [payload],
-        },
-      };
-    case 'addNftItemList':
-      return {
-        ...state,
-        nftItem: {
-          ...state.nftItem,
-          [payload.type]:
-            state.nftItem && state.nftItem[payload.type]
-              ? [...state.nftItem[payload.type], payload]
-              : [payload],
-        },
-      };
-    case 'deleteNftItemList':
-      return {
-        ...state,
-        nftItem: {
-          ...state.nftItem,
-          [payload.type]: state.nftItem[payload.type].filter(
-            item =>
-              item.collectionAddress != payload.collectionAddress &&
-              item.id != payload.id,
-          ),
-        },
-      };
+    // case 'addCollectionList':
+    //   return {
+    //     ...state,
+    //     collection: {
+    //       ...state.collection,
+    //       [payload.type]:
+    //         state.collection && state.collection[payload.type]
+    //           ? [...state.collection[payload.type], payload]
+    //           : [payload],
+    //     },
+    //   };
+    // case 'addNftItemList':
+    //   return {
+    //     ...state,
+    //     nftItem: {
+    //       ...state.nftItem,
+    //       [payload.type]:
+    //         state.nftItem && state.nftItem[payload.type]
+    //           ? [...state.nftItem[payload.type], payload]
+    //           : [payload],
+    //     },
+    //   };
+    // case 'deleteNftItemList':
+    //   return {
+    //     ...state,
+    //     nftItem: {
+    //       ...state.nftItem,
+    //       [payload.type]: state.nftItem[payload.type].filter(
+    //         item =>
+    //           item.collectionAddress != payload.collectionAddress &&
+    //           item.id != payload.id,
+    //       ),
+    //     },
+    //   };
     default:
       return state;
   }

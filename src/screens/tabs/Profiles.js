@@ -23,7 +23,13 @@ import HeaderProfiles from './profiles/HeaderProfiles';
 import {getMyNFTCollectionInfos} from '../../remote/contractOP';
 import Toast from 'react-native-tiny-toast';
 
-const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}, nft}) => {
+const Profiles = ({
+  feedId,
+  wallet,
+  setBalance,
+  cfg: {darkMode},
+  collection,
+}) => {
   const {
     text,
     flex1,
@@ -174,7 +180,12 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}, nft}) => {
             ]}>
             <Text style={[text, styles.mltText]}>Item</Text>
             <Text style={[text, styles.mlt]}>
-              {nft?.nftItem?.nftItem?.length || 0}
+              {Object.keys(collection).length > 0
+                ? (collection &&
+                    collection?.nftItem &&
+                    collection?.nftItem[address]?.length) ||
+                  0
+                : 0}
             </Text>
           </Pressable>
           <Pressable
@@ -194,7 +205,7 @@ const Profiles = ({feedId, wallet, setBalance, cfg: {darkMode}, nft}) => {
             ]}>
             <Text style={[text, styles.mltText]}>Collection</Text>
             <Text style={[text, styles.mlt]}>{`${
-              nft?.collection?.Collection?.length || 0
+              collection[address]?.length || 0
             }`}</Text>
           </Pressable>
         </View>
@@ -313,7 +324,7 @@ const msp = s => {
     cfg: s.cfg,
     feedId: s.user.feedId,
     wallet: s.wallet,
-    nft: s.nft,
+    collection: s.collection,
   };
 };
 

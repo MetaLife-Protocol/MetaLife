@@ -74,6 +74,10 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
       Toast.show('Please write name');
       return;
     }
+    if (creatorEarnings * 1 > 10) {
+      Toast.show('Creator earnings cannot be greater than 10%\n');
+      return;
+    }
     setPwdVisible(true);
   };
 
@@ -137,10 +141,6 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
   };
 
   const clickItem = () => {
-    if (creatorEarnings * 1 > 10) {
-      Toast.show('Creator earnings cannot be greater than 10%\n');
-      return;
-    }
     setVisible(true);
   };
 

@@ -230,7 +230,7 @@ export async function getMyNFTCollectionInfos(wAddr, cb, page = 0, limit = 0) {
       symbol: symbol,
       uri: metaInfo,
       address: collection_address,
-      type: 'Collection',
+      // type: 'Collection',
     };
     cb && cb(collectionInfo);
     collectionInfos.push(collectionInfo);

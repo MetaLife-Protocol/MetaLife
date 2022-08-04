@@ -110,7 +110,7 @@ const TransferView = ({
           (cbAdd, id) => {
             console.log('delecttttttt', cbAdd, id);
             deleteNftItemList({
-              type: 'nftItem',
+              type: currentAccount?.address,
               collectionAddress: cbAdd,
               id: id,
             });

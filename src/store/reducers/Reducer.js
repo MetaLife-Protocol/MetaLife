@@ -15,6 +15,7 @@ import {photonReducer} from './photon';
 import {nftReducer} from './nft';
 import {transferReducer} from './transfer';
 import {transactionReducer} from './trascation';
+import {collectionReducer} from './collection';
 
 const reducer = combineReducers({
   // app
@@ -39,6 +40,7 @@ const reducer = combineReducers({
   nft: nftReducer,
   // transaction
   transaction: transactionReducer,
+  collection: collectionReducer,
 });
 
 export default reducer;

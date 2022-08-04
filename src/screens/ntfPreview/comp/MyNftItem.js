@@ -14,10 +14,20 @@ import {
 import {fixWalletAddress, getCurrentAccount} from '../../../utils';
 import {getNftAssetsJson} from '../../../remote/ipfsOP';
 
-const MyNftItem = ({wallet, addNftItemList, nft}) => {
-  console.log('nnnnnnnnffff', nft);
+const MyNftItem = ({wallet, addNftItemList, nft, collection}) => {
+  console.log('nnnnnnnnffff', collection);
   const {navigate} = useNavigation();
-  // const [list, setList] = useState([]);
+  const myaddress = getCurrentAccount(wallet).address;
+  const collectKey =
+      Object.keys(collection).length > 0 ? Object.keys(collection)[0] : '',
+    collectionItem = collectKey
+      ? collection &&
+        collection?.nftItem &&
+        collection?.nftItem[myaddress] &&
+        collection?.nftItem[myaddress].length > 0
+        ? collection?.nftItem[myaddress]
+        : []
+      : [];
   const renderItem = ({item, index}) => {
     return (
       <Pressable
@@ -46,19 +56,17 @@ const MyNftItem = ({wallet, addNftItemList, nft}) => {
     fetchData();
     async function fetchData() {
       const result = await getOpenGalaxyNFTCollectionInfos();
-      console.log('resulttt', result);
+      // console.log('resulttt', result);
       if (result.length > 0) {
         let newList = [];
         for (let i = 0; i < result.length; i++) {
           getNFTInfos(
             fixWalletAddress(getCurrentAccount(wallet).address),
             res => {
-              console.log('rrrrr', res);
-              const list = nft?.nftItem?.nftItem;
-
+              // console.log('rrrrr', res);
               let index =
-                list && list.length > 0
-                  ? list.findIndex(item => {
+                collectionItem && collectionItem.length > 0
+                  ? collectionItem.findIndex(item => {
                       if (item.uri === res.uri) {
                         return true;
                       } else {
@@ -72,7 +80,7 @@ const MyNftItem = ({wallet, addNftItemList, nft}) => {
                     addNftItemList({
                       ...res,
                       ...collInfo.data,
-                      type: 'nftItem',
+                      type: getCurrentAccount(wallet).address,
                     });
                 });
               }
@@ -127,7 +135,7 @@ const MyNftItem = ({wallet, addNftItemList, nft}) => {
   return (
     <View style={{flex: 1}}>
       <FlatList
-        data={nft?.nftItem?.nftItem}
+        data={collectionItem}
         numColumns={2}
         renderItem={renderItem}
         style={styles.flatList}
@@ -150,6 +158,7 @@ const msp = s => {
     feedId: s.user.feedId,
     wallet: s.wallet,
     nft: s.nft,
+    collection: s.collection,
   };
 };
 
