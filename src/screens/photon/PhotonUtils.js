@@ -210,7 +210,14 @@ export function settleChannelDialog(dialog, channelIdentifier) {
 }
 
 export function stopCurrentPhoton() {
-  unsubscribePhoton(); // 取消光子订阅通知
-  photonStop();
-  store.dispatch({type: 'resetPhoton'});
+  // 取消光子订阅通知
+  unsubscribePhoton()
+    .then(() => {
+      photonStop();
+      store.dispatch({type: 'resetPhoton'});
+    })
+    .catch(e => {
+      photonStop();
+      store.dispatch({type: 'resetPhoton'});
+    });
 }
