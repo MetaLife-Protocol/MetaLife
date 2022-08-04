@@ -1,6 +1,7 @@
 import nodejs from 'nodejs-mobile-react-native';
+import {BleManager} from 'react-native-ble-wormhole/src/BLETransferManager';
 import {makeClient} from './Client';
-
+import {Platform} from 'react-native';
 let ssb = window.ssb;
 
 export const status = cb =>
@@ -20,13 +21,27 @@ export const stage = cb =>
 export const connStart = cb =>
   ssb.conn.start((e, v) => (e ? console.error(e) : cb(v)));
 
-export const bluetoothSearch = (interval, cb) =>
-  ssb.bluetooth.makeDeviceDiscoverable(interval, (e, v) => {
-    console.log('bluetoothSearch error', e);
-    console.log('bluetoothSearch result', v);
+export const bluetoothSearch = (interval, cb) => {
+  if (Platform.OS === 'android') {
+    BleManager.enableBluetooth()
+      .then(() => {
+        ssb.bluetooth.makeDeviceDiscoverable(interval, (e, v) => {
+          console.log('bluetoothSearch error', e);
+          console.log('bluetoothSearch result', v);
 
-    e ? console.error(e) : cb(v);
-  });
+          e ? console.error(e) : cb(v);
+        });
+      })
+      .catch(console.error);
+  } else {
+    ssb.bluetooth.makeDeviceDiscoverable(interval, (e, v) => {
+      console.log('bluetoothSearch error', e);
+      console.log('bluetoothSearch result', v);
+
+      e ? console.error(e) : cb(v);
+    });
+  }
+};
 
 export const connectPeer = (address, data = {}, cb = null) =>
   ssb.conn.connect(address, data, (e, v) =>
