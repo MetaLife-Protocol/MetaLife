@@ -45,5 +45,21 @@ export const contractsConstant = {
       abiName: 'saleAuction',
       abi: saleAuctionAbi,
     },
+    '0x6601F810eaF2fa749EEa10533Fd4CC23B8C791dc': {
+      // Photon SMT
+      chain: 'spectrum',
+      symbol: 'SMT',
+      decmis: 18,
+      abiName: 'erc20-photon',
+      abi: erc20Abi,
+    },
+    '0x242e0de2b118279d1479545a131a90a8f67a2512': {
+      // Photon layer 2
+      chain: 'spectrum',
+      symbol: 'Photon',
+      decmis: 18,
+      abiName: 'PhotonLayer2',
+      // abi: saleAuctionAbi,
+    },
   },
 };

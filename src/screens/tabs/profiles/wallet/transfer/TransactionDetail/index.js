@@ -9,6 +9,7 @@ import QRCode from 'react-native-qrcode-svg';
 import NativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import Toast from 'react-native-tiny-toast';
 import {useTransferDataHooks} from './useTransferDataHooks';
+import {getCurrentAccount} from '../../../../../../utils';
 
 const TransactionDetail = ({cfg: {darkMode}, wallet, route: {params}}) => {
   const {hash, gasPrice} = params;
@@ -16,7 +17,13 @@ const TransactionDetail = ({cfg: {darkMode}, wallet, route: {params}}) => {
   const colors = !darkMode ? '#F0F0F0' : '#000';
   const normal = darkMode ? '#4E586E' : '#A5ABB7';
   const chainType = wallet.current.type;
-  const transactData = useTransferDataHooks(gasPrice, hash, chainType);
+  const currentAccount = getCurrentAccount(wallet);
+  const transactData = useTransferDataHooks(
+    gasPrice,
+    hash,
+    chainType,
+    currentAccount.address,
+  );
 
   const getImg = () => {
     if (transactData.status === 0 || transactData.status === 1) {
@@ -63,7 +70,10 @@ const TransactionDetail = ({cfg: {darkMode}, wallet, route: {params}}) => {
         <Text style={[styles.synText, {color: getStatusTextColor()}]}>
           {getStatusText()}
         </Text>
-        <Text style={[text, styles.smtText]}>{getAmountText()}</Text>
+        <Text style={[text, styles.smtText]}>
+          {transactData.amountPrefix} {getAmountText()}
+        </Text>
+        <Text style={[text, styles.synText]}>{transactData.tip}</Text>
         <Text style={[{color: normal}, styles.sender]}>Sender</Text>
         <Text style={[text, styles.comText]}>{transactData.from}</Text>
         <Text style={[styles.benText, {color: normal}]}>Beneficiary</Text>
