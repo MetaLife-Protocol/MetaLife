@@ -1,0 +1,129 @@
+'use strict';
+
+import React, {useState} from 'react';
+import {StyleSheet, View, Modal, Image, Pressable} from 'react-native';
+import Text from '../../../shared/comps/ComText';
+import useSchemaStyles from '../../../shared/UseSchemaStyles';
+import {PureTextInput} from '../../../metalife-base';
+import Slider from '@react-native-community/slider';
+const darkclose = require('../../../assets/image/icons/icon_close_default_black.png');
+const whitecolse = require('../../../assets/image/wallet/icon_close_default_white.png');
+
+const TransactionModal = ({
+  showTrans,
+  setShowTrans,
+  darkMode,
+  list,
+  confirmPress,
+}) => {
+  const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
+  const back = darkMode ? '#232929' : '#fff';
+  const [gasLimit, setGasLimit] = useState(20);
+  return (
+    <Modal
+      animationType={'slide'}
+      transparent={true}
+      visible={showTrans}
+      onRequestClose={setShowTrans}>
+      <View style={[flex1, styles.contain]}>
+        <View style={[styles.con, {backgroundColor: back}]}>
+          <View style={styles.topView}>
+            <Text style={[text, styles.trans]}>Transaction Details</Text>
+            <Pressable onPress={() => setShowTrans(false)}>
+              <Image source={darkMode ? darkclose : whitecolse} />
+            </Pressable>
+          </View>
+          <Text style={[text, styles.mlt]}>{list?.price}</Text>
+          <Text style={[styles.comText]}>Info</Text>
+          <Text style={[text, styles.content]}>Listing NFT</Text>
+          <Text style={[styles.comText]}>To</Text>
+          <Text style={[text, styles.content]}>{list?.to}</Text>
+          <Text style={[styles.comText]}>From</Text>
+          <Text style={[text, styles.content]}>{list?.from}</Text>
+          <View style={styles.gasView}>
+            <Text style={styles.comText}>Gas</Text>
+            <Text style={[text, styles.gasText]}>{`${list?.gasPrice}`}</Text>
+          </View>
+          <Slider
+            style={[styles.slider]}
+            minimumValue={20}
+            maximumValue={300}
+            value={gasLimit}
+            thumbTintColor="#29DAD7"
+            minimumTrackTintColor="#29DAD7"
+            maximumTrackTintColor="#DADADA"
+            step={10}
+            onValueChange={value => {
+              setGasLimit(value);
+            }}
+          />
+          <Pressable
+            style={styles.confirmView}
+            onPress={() => confirmPress(gasLimit)}>
+            <Text style={styles.conText}>Confirm</Text>
+          </Pressable>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+const styles = StyleSheet.create({
+  contain: {alignItems: 'center', justifyContent: 'center'},
+  con: {
+    height: 472,
+    width: 345,
+    borderRadius: 12,
+    padding: 15,
+  },
+  topView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  trans: {
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  mlt: {
+    fontWeight: 'bold',
+    fontSize: 23,
+    alignSelf: 'center',
+    marginTop: 20,
+    marginBottom: 5,
+  },
+  comText: {
+    fontSize: 14,
+    color: '#4E586E',
+    marginTop: 15,
+  },
+  content: {
+    fontSize: 13,
+    marginTop: 8,
+  },
+  gasText: {fontSize: 13, marginTop: 15},
+  gasView: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  slider: {
+    height: 40,
+    width: 345,
+    alignSelf: 'center',
+  },
+  confirmView: {
+    width: 315,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#29DAD7',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 35,
+  },
+  conText: {
+    fontSize: 15,
+    color: '#000000',
+  },
+});
+export default TransactionModal;
