@@ -109,7 +109,16 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
       }
       if (res) {
         setDate(res);
-        setAddress(res[0].address);
+
+        if (params?.address) {
+          res.map(item => {
+            if (item.address === params?.address) {
+              setAddress(params?.address);
+            }
+          });
+        } else {
+          setAddress(res[0].address);
+        }
       }
     });
   }, []);

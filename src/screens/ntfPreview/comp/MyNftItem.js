@@ -35,6 +35,7 @@ const MyNftItem = ({wallet, addNftItemList, nft, collection}) => {
           navigate('MyItemDetailView', {
             tokenId: item.id,
             address: item.collectionAddress,
+            ownerOf: item.ownerOf,
             transfer: true,
           })
         }>

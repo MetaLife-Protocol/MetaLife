@@ -139,6 +139,7 @@ const MyCollectionDetail = ({
           navigate('MyItemDetailView', {
             tokenId: item.tokenId,
             address: address,
+            ownerOf: item.ownerOf,
             transfer: true,
           })
         }>
