@@ -41,7 +41,7 @@ export const dbConfig = {
 };
 
 export function generateEncrptionKey() {
-  Aes.sha256(window.ssb.id).then(aesKey => {
+  Aes.sha512(window.ssb.id).then(aesKey => {
     const aesBuffer = Buffer.from(aesKey, 'hex');
     dbConfig.encryptionKey = aesBuffer;
   });
@@ -157,7 +157,7 @@ export function createUpdateDBEmitter() {
         tx.blockHash = command.blockHash;
       }
       if (command.blockNumber) {
-        tx.blockHash = Realm.BSON.Decimal128.fromString(
+        tx.blockNumber = Realm.BSON.Decimal128.fromString(
           command.blockNumber.toString(),
         );
       }
@@ -165,6 +165,8 @@ export function createUpdateDBEmitter() {
         let date = new Date(command.timestamp * 1000);
 
         tx.timestamp = date;
+      } else {
+        tx.timestamp = new Date();
       }
       if (command.data) {
         tx.data = command.data;
