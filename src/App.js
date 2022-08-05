@@ -163,7 +163,7 @@ const App = ({
                 suggestPubs(data);
                 inviteAccept(data.first_choice_pub_invite_code, (e, v) => {
                   console.log(e ? e.message : 'invite accepted');
-                  e || reconnect2pub();
+                  // e || reconnect2pub();
                 });
               }),
             )

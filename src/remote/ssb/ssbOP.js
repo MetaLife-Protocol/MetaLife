@@ -2,6 +2,8 @@ import nodejs from 'nodejs-mobile-react-native';
 import {BleManager} from 'react-native-ble-wormhole/src/BLETransferManager';
 import {makeClient} from './Client';
 import {Platform} from 'react-native';
+const roomUtils = require('ssb-room-client/utils');
+
 let ssb = window.ssb;
 
 export const status = cb =>
@@ -128,7 +130,16 @@ export const getMnemonic = cb =>
   ssb.keysUtils.getMnemonic((e, v) => (e ? console.warn(e) : cb(v)));
 
 /************************** invite **************************/
-export const inviteAccept = (code, cb = null) => ssb.invite.accept(code, cb);
+export const inviteAccept = (code, cb = null) => {
+  const isRoom = roomUtils.isInvite(code);
+  isRoom
+    ? ssb.conn.remember(roomUtils.inviteToAddress(code), {type: 'room'}, cb)
+    : ssb.invite.accept(code, cb);
+};
+/********************* room invite **************************/
+// net:39.107.236.158:8008~shs:PyHvBeXQYlzJZKQcigBTpADF7zl48bSdZOBc9DvKAFE=:SSB+Room+PSK3TLYC2T86EHQCUHBUHASCASE18JBV24=
+export const inviteRoomAccept = (code, cb = null) =>
+  cb(roomUtils.inviteToAddress(code));
 
 /************************** initialize **************************/
 export const reqStartSSB = cb => {
