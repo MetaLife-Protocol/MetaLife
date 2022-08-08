@@ -157,7 +157,7 @@ export const useTransferDataHooks = (
         to: transRes.to.toLowerCase(),
         blockNumber: transRes.blockNumber,
         amount: bigNumberFormatUnits(transRes.value),
-        amountPrefix: getAmountPrefix(transRes.to),
+        amountPrefix: getAmountPrefix(transRes.to, currentAddress),
       };
       if (transRes.data) {
         resData = {
