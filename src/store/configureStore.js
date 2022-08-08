@@ -14,7 +14,7 @@ import {useStore} from 'react-redux';
  */
 const persistConfig = {
   key: 'root',
-  // keyPrefix: '', // the redux-persist default is `persist:` which doesn't work with some file systems
+  keyPrefix: '', // the redux-persist default is `persist:` which doesn't work with some file systems
   storage: AsyncStorage,
   blacklist: ['runtime'],
 };
