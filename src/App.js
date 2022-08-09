@@ -87,7 +87,7 @@ import DaoDetailView from './screens/daoPreview/DaoDetailView';
 import OpenGalaxyCollection from './screens/ntfPreview/OpenGalaxyCollection';
 import RNFS from 'react-native-fs';
 
-import WalletTransfer from './screens/tabs/profiles/wallet/WalletTransfer';
+import WalletTransfer from './screens/tabs/profiles/wallet/transfer/WalletTransfer';
 
 import WalletNftTransfer from './screens/tabs/profiles/wallet/WalletNftTransfer';
 import WalletTransactionDetail from './screens/tabs/profiles/wallet/WalletTransactionDetail';
@@ -178,6 +178,7 @@ const App = ({
     feedId && channel.post('identity', 'USE');
   }, []);
 
+  // Photon subscribe event
   useEffect(() => {
     const eventEmitter = createPhotonEventEmitter();
     console.log('photon listener start');

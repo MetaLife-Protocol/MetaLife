@@ -319,15 +319,44 @@ export const getTransferGasPrice = params => {
   return getGasPrice(financeConfig.chains[type].rpcURL);
 };
 export const getTransferGasLimit = params => {
-  const {type, fromAddress, toAddress, amount, remark} = params;
-  const data = remark ? '0x' + Buffer.from(remark).toString('hex') : '';
-  return getGasLimit(
-    financeConfig.chains[type].rpcURL,
-    fromAddress,
-    toAddress,
-    amount,
-    data,
-  );
+  const {type, fromAddress, toAddress, amount, remark, cType, pwd} = params;
+  if (cType === 'SMT') {
+    const data = remark ? '0x' + Buffer.from(remark).toString('hex') : '';
+    return getGasLimit(
+      financeConfig.chains[type].rpcURL,
+      fromAddress,
+      toAddress,
+      amount,
+      data,
+    );
+  }
+  return new Promise((resolve, reject) => {
+    getAccount(fromAddress, (isSuccess, keystore) => {
+      if (isSuccess) {
+        getSignerContract(
+          financeConfig.chains[type].rpcURL,
+          financeConfig.chains[type].contracts.coin[cType].address,
+          financeConfig.contractABIs[
+            financeConfig.chains[type].contracts.coin[cType].abi
+          ],
+          JSON.stringify(keystore),
+          pwd,
+        )
+          .then(contract => {
+            let realAmount = bigNumberParseUnits(amount);
+
+            contract.estimateGas
+              .transfer(toAddress, realAmount)
+              .then(gasLimit => {
+                resolve(gasLimit);
+              });
+          })
+          .catch(err => {
+            reject(err);
+          });
+      }
+    });
+  });
 };
 
 export const cionTransact = params => {

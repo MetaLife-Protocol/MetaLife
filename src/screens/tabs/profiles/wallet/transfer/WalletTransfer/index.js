@@ -1,4 +1,3 @@
-import Slider from '@react-native-community/slider';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {useState} from 'react';
@@ -18,18 +17,19 @@ import {
   bigNumberParseUnits,
 } from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
-import {RoundBtn} from '../../../../metalife-base';
+import {RoundBtn} from '../../../../../../metalife-base';
 import {
   getWBalance,
   cionTransact,
   coinContractTransfer,
   getTransferGasPrice,
   getTransferGasLimit,
-} from '../../../../remote/wallet/WalletAPI';
-import ComText from '../../../../shared/comps/ComText';
-import PasswordModel from '../../../../shared/comps/PasswordModal';
-import useSchemaStyles from '../../../../shared/UseSchemaStyles';
-import {getCurrentAccount} from '../../../../utils';
+} from '../../../../../../remote/wallet/WalletAPI';
+import ComText from '../../../../../../shared/comps/ComText';
+import PasswordModel from '../../../../../../shared/comps/PasswordModal';
+import useSchemaStyles from '../../../../../../shared/UseSchemaStyles';
+import {getCurrentAccount} from '../../../../../../utils';
+import TransactionInfoModal from './comp/TransactionInfoModal';
 
 /**
  * Created on 17 Jun 2022 by amy
@@ -50,13 +50,15 @@ const WalletTransfer = props => {
   const [address, setAddress] = useState('');
   const [inputAmount, setInputAmount] = useState('');
   const [remark, setRemark] = useState('');
-  const [gasPrice, setGasPrice] = useState(18);
+  const [gasPrice, setGasPrice] = useState(bigNumberParseUnits('18', 9));
   const [gasLimit, setGasLimit] = useState(bigNumberParseUnits('0', 0));
-  const [gasPriceNumber, setGasPriceNumber] = useState(18);
   const [pwdVisible, setPwdVisible] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastContent, setToastContent] = useState('');
   const [toastDur, setToastDur] = useState(3000);
+
+  const [confirmVisible, setConfirmVisible] = useState(false);
+  const [confirmData, setConfirmData] = useState({});
 
   useEffect(() => {
     // 先获取当前转账余额
@@ -75,30 +77,9 @@ const WalletTransfer = props => {
     });
   }, []);
 
-  useEffect(() => {
-    getTransferGasPrice({type: currentAccount.type}).then(res => {
-      const price = bigNumberFormatUnits(res.toString(), 9).toString();
-      setGasPrice(price.indexOf('.') !== -1 ? price.split('.')[0] : price);
-      setGasPriceNumber(Number(bigNumberFormatUnits(res.toString(), 9)));
-    });
-    getTransferGasLimit({
-      type: currentAccount.type,
-      fromAddress: currentAccount.address,
-      toAddress: address,
-      amount: inputAmount ? inputAmount : '0',
-      remark: remark ? remark : '',
-    }).then(res => {
-      if (tokenOption.cType === 'MLT' || tokenOption.cType === 'Mesh') {
-        setGasLimit(res.add(40000));
-      } else {
-        setGasLimit(res);
-      }
-    });
-  }, [address, inputAmount, remark, tokenOption.cType]);
-
   const onConfirm = () => {
     // inputAmount + gas fee > tokenOption.amount  not success
-    const gasFee = bigNumberParseUnits(gasPriceNumber + '', 9).mul(gasLimit);
+    const gasFee = gasPrice.mul(gasLimit);
     if (tokenOption.type === 'spectrum') {
       if (tokenOption.cType === 'SMT') {
         if (
@@ -141,7 +122,60 @@ const WalletTransfer = props => {
     setPwdVisible(true);
   };
 
-  const onConfirmTransaction = pwd => {
+  const onPwdModalConfirm = pwd => {
+    setToastVisible(true);
+    setToastContent('loading...');
+    setToastDur(null);
+    try {
+      getTransferGasPrice({type: currentAccount.type}).then(gasPriceRes => {
+        setGasPrice(gasPriceRes);
+        getTransferGasLimit({
+          type: currentAccount.type,
+          fromAddress: currentAccount.address,
+          toAddress: address,
+          amount: inputAmount ? inputAmount : '0',
+          remark: remark ? remark : '',
+          cType: tokenOption.cType,
+          pwd,
+        })
+          .then(gasLimitRes => {
+            setGasLimit(gasLimitRes);
+
+            const price = bigNumberFormatUnits(
+              gasPriceRes.toString(),
+              9,
+            ).toString();
+            const data = {
+              info: 'Transfer ' + tokenOption.cType,
+              from:
+                currentAccount.address.indexOf('0x') !== -1
+                  ? currentAccount.address
+                  : '0x' + currentAccount.address,
+              to: address,
+              gasPrice: gasPriceRes,
+              gasPriceNumber:
+                price.indexOf('.') !== -1 ? price.split('.')[0] : price,
+              gasLimit: gasLimitRes,
+              price: inputAmount + ' ' + tokenOption.cType,
+              pwd,
+            };
+            setPwdVisible(false);
+            setToastVisible(false);
+            setConfirmData(data);
+            setConfirmVisible(true);
+          })
+          .catch(e => {
+            setToastVisible(true);
+            setToastContent(e.message);
+          });
+      });
+    } catch (e) {
+      setToastVisible(false);
+      setToastVisible(false);
+    }
+  };
+
+  const onInfoModalConfirm = pwd => {
     if (tokenOption.type === 'spectrum') {
       if (tokenOption.cType === 'SMT') {
         onTransaction(pwd);
@@ -168,7 +202,7 @@ const WalletTransfer = props => {
         remark: remark,
         password: pwd,
         gasLimit: gasLimit,
-        gasPrice: bigNumberParseUnits(gasPriceNumber + '', 9),
+        gasPrice: gasPrice,
       });
       if (res.code === 'success') {
         const params = {
@@ -193,7 +227,7 @@ const WalletTransfer = props => {
         };
         addTransactionRecord(params);
         setToastVisible(false);
-        setPwdVisible(false);
+        setConfirmVisible(false);
         replace('WalletTransactionDetail', {
           address: currentAccount.address,
           hash: res.data.hash,
@@ -205,7 +239,7 @@ const WalletTransfer = props => {
         setToastDur(3000);
       }
     } catch (e) {
-      console.warn('confrirm', e);
+      console.log('confrirm', e);
       setToastVisible(false);
     }
   };
@@ -223,7 +257,7 @@ const WalletTransfer = props => {
         remark: remark,
         password: pwd,
         gasLimit: gasLimit,
-        gasPrice: bigNumberParseUnits(gasPriceNumber + '', 9),
+        gasPrice: gasPrice,
       });
       if (res.code === 'success') {
         const params = {
@@ -243,7 +277,7 @@ const WalletTransfer = props => {
         };
         addTransactionRecord(params);
         setToastVisible(false);
-        setPwdVisible(false);
+        setConfirmVisible(false);
         replace('WalletTransactionDetail', {
           address: currentAccount.address,
           hash: res.data.hash,
@@ -255,7 +289,7 @@ const WalletTransfer = props => {
         setToastDur(3000);
       }
     } catch (e) {
-      console.log('confrirm', e);
+      console.log('confirm', e);
       setToastVisible(false);
     }
   };
@@ -339,52 +373,9 @@ const WalletTransfer = props => {
             onChangeText={setRemark}
           />
         </View>
-
-        <View style={[marginTop10, styles.marginH15, FG]}>
-          <View style={[marginTop10, justifySpaceBetween, row]}>
-            <View>
-              <ComText style={[text, styles.title]}>Gas</ComText>
-            </View>
-
-            <ComText style={[text, styles.gas]}>
-              {bigNumberFormatUnits(
-                bigNumberParseUnits(gasPriceNumber + '', 9)
-                  .mul(gasLimit)
-                  .toString(),
-              )}{' '}
-              {tokenOption.type === 'spectrum'
-                ? 'SMT'
-                : tokenOption.type === 'ethereum'
-                ? 'ETH'
-                : ''}
-            </ComText>
-          </View>
-          <Slider
-            style={[styles.slider, marginTop10]}
-            minimumValue={Number(gasPrice) - 2}
-            maximumValue={Number(gasPrice) + 10}
-            value={gasPriceNumber}
-            thumbTintColor="#29DAD7"
-            minimumTrackTintColor="#29DAD7"
-            maximumTrackTintColor="#DADADA"
-            step={1}
-            onValueChange={value => {
-              console.log(value);
-              setGasPriceNumber(value);
-            }}
-          />
-        </View>
-        {/* <View style={[row, styles.marginH15, styles.setting]}>
-          <ComText style={[text, styles.settingText]}>
-            Advanced settings
-          </ComText>
-          <Image source={icons.right} />
-        </View> */}
         <RoundBtn
           style={[styles.btnContainer, marginTop10]}
-          disabled={
-            address && Number(inputAmount) > 0 && gasLimit > 0 ? false : true
-          }
+          disabled={address && Number(inputAmount) > 0 ? false : true}
           title={'Confirm'}
           press={onConfirm}
         />
@@ -397,7 +388,19 @@ const WalletTransfer = props => {
           setToastVisible={setToastVisible}
           toastContent={toastContent}
           toastDuriation={toastDur}
-          onConfirm={onConfirmTransaction}
+          onConfirm={onPwdModalConfirm}
+        />
+
+        <TransactionInfoModal
+          darkMode={darkMode}
+          visible={confirmVisible}
+          setVisible={setConfirmVisible}
+          data={confirmData}
+          onConfirm={onInfoModalConfirm}
+          toastVisible={toastVisible}
+          setToastVisible={setToastVisible}
+          toastContent={toastContent}
+          toastDuriation={toastDur}
         />
       </Pressable>
     </SafeAreaView>
@@ -405,12 +408,12 @@ const WalletTransfer = props => {
 };
 
 const icons = {
-  scanBlack: require('../../../../assets/image/icons/icon_scan_default_black.png'),
-  scanWhite: require('../../../../assets/image/icons/icon_scan_default_white.png'),
-  contactBlack: require('../../../../assets/image/icons/icon_contact_default_black.png'),
-  contactWhite: require('../../../../assets/image/icons/icon_contact_default_white.png'),
-  right: require('../../../../assets/image/shared/back.png'),
-  complete: require('../../../../assets/image/wallet/Transactioncomplete.png'),
+  scanBlack: require('../../../../../../assets/image/icons/icon_scan_default_black.png'),
+  scanWhite: require('../../../../../../assets/image/icons/icon_scan_default_white.png'),
+  contactBlack: require('../../../../../../assets/image/icons/icon_contact_default_black.png'),
+  contactWhite: require('../../../../../../assets/image/icons/icon_contact_default_white.png'),
+  right: require('../../../../../../assets/image/shared/back.png'),
+  complete: require('../../../../../../assets/image/wallet/Transactioncomplete.png'),
 };
 
 const styles = StyleSheet.create({
