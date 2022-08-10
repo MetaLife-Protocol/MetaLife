@@ -265,3 +265,36 @@ export function fromDate(timestamp) {
   const s = date.getSeconds();
   return Y + M + D;
 }
+
+export function fromDateTime(timestamp) {
+  const date = timestamp;
+  const Y = date.getFullYear() + '-';
+  const M =
+    (date.getMonth() + 1 < 10
+      ? '0' + (date.getMonth() + 1)
+      : date.getMonth() + 1) + '-';
+  const D = date.getDate() + ' ';
+  const h = date.getHours() + ':';
+  const m = date.getMinutes() + ':';
+  const s = date.getSeconds();
+  return Y + M + D + h + m + s;
+}
+
+export function formTimeUtil(time) {
+  switch (time) {
+    case '1 day':
+      return 86400;
+    case '3 days':
+      return 259200;
+    case '7 days':
+      return 604800;
+    case '1 month':
+      return 2592000;
+    case '3 months':
+      return 7776000;
+    case '6 months':
+      return 15552000;
+    default:
+      return 60 * 60 * 1000;
+  }
+}
