@@ -618,7 +618,7 @@ export async function getLimitSell(
       time,
     );
     console.log('rrrrrrrs', result);
-    cb && cb(result);
+    cb && cb(result, contract);
   } catch (e) {
     // er(e);
   }
@@ -626,8 +626,7 @@ export async function getLimitSell(
 
 export async function pushSell(
   type,
-  keystore,
-  password,
+  contract,
   colAddress,
   nftCode,
   sellType,
@@ -639,15 +638,15 @@ export async function pushSell(
   er,
 ) {
   try {
-    const contract = await getSignerContract(
-      financeConfig.chains[type].rpcURL,
-      // network,
-      metaMasterAddress,
-      // ERC721EnumerableAbi,
-      metaMasterAbi,
-      JSON.stringify(keystore),
-      password,
-    );
+    // const contract = await getSignerContract(
+    //   financeConfig.chains[type].rpcURL,
+    //   // network,
+    //   metaMasterAddress,
+    //   // ERC721EnumerableAbi,
+    //   metaMasterAbi,
+    //   JSON.stringify(keystore),
+    //   password,
+    // );
     const result = await contract.sell(
       colAddress,
       nftCode,
@@ -824,15 +823,29 @@ export async function getBuyGasLimitByErc20(
     JSON.stringify(keystore),
     password,
   );
-
+  console.log('pppp', price);
+  const newcontract = await getSignerContract(
+    financeConfig.chains[type].rpcURL,
+    token,
+    contractsConstant[type][token.toLowerCase()].abi,
+    JSON.stringify(keystore),
+    password,
+  );
+  const appro = await newcontract.approve(salePlainAddress, price);
   const saleId = await contract.getSaleId(colAddress, id);
   console.log('sssddddttt', saleId, price);
-  const result = await contract.estimateGas.bidWithToken(
-    createBigNumber(saleId),
-    price,
-  );
-  console.log('dddd', result);
-  cb && cb(result);
+  try {
+    const result = await contract.estimateGas.bidWithToken(
+      createBigNumber(saleId),
+      price,
+    );
+    console.log('dddd', result);
+    cb && cb(result);
+  } catch (e) {
+    if (typeof e === 'function') {
+      er('request failed');
+    }
+  }
 }
 
 export async function getBuyNft(
@@ -896,50 +909,50 @@ export async function getBuyNftByERC20(
   cb,
   er,
 ) {
-  try {
-    const contract = await getSignerContract(
-      financeConfig.chains[type].rpcURL,
-      salePlainAddress,
-      salePlainAbi,
-      JSON.stringify(keystore),
-      password,
-    );
+  // try {
+  const contract = await getSignerContract(
+    financeConfig.chains[type].rpcURL,
+    salePlainAddress,
+    salePlainAbi,
+    JSON.stringify(keystore),
+    password,
+  );
 
-    const newcontract = await getSignerContract(
-      financeConfig.chains[type].rpcURL,
-      token,
-      contractsConstant[type][token.toLowerCase()].abi,
-      JSON.stringify(keystore),
-      password,
-    );
-    const appro = await newcontract.approve(salePlainAddress, goodPrice);
-    const saleId = await contract.getSaleId(colAddress, id);
-    // console.log('ssssssff', createBigNumber(saleId));
-    const result = await contract.bidWithToken(
-      createBigNumber(saleId),
-      goodPrice,
-    );
-    console.log('fffffrrrrr', result);
-    const subcontract = getContract(network, colAddress, NFTCollectionAbi);
+  const newcontract = await getSignerContract(
+    financeConfig.chains[type].rpcURL,
+    token,
+    contractsConstant[type][token.toLowerCase()].abi,
+    JSON.stringify(keystore),
+    password,
+  );
+  const appro = await newcontract.approve(salePlainAddress, goodPrice);
+  const saleId = await contract.getSaleId(colAddress, id);
+  // console.log('ssssssff', createBigNumber(saleId));
+  const result = await contract.bidWithToken(
+    createBigNumber(saleId),
+    goodPrice,
+  );
+  console.log('fffffrrrrr', result);
+  const subcontract = getContract(network, colAddress, NFTCollectionAbi);
 
-    let data = await coinWaitTransaction(type, result.hash);
-    // if (data.status !== 1) {
-    //   er('request failed');
-    // }
-    console.log('uuuu', data);
-    cb && cb(result.hash);
-    let provider = getTransactionListenProvider(type);
-    provider.on(result.hash, resListen => {
-      console.log('hhhh', resListen);
-      if (resListen.status !== 1 && resListen.confirmations > 1) {
-        er('request failed');
-        provider.removeAllListeners(result.hash);
-      }
-      if (resListen.confirmations > 19) {
-        provider.removeAllListeners(result.hash);
-      }
-    });
-  } catch (e) {
-    er(e);
-  }
+  let data = await coinWaitTransaction(type, result.hash);
+  // if (data.status !== 1) {
+  //   er('request failed');
+  // }
+  console.log('uuuu', data);
+  cb && cb(result.hash);
+  let provider = getTransactionListenProvider(type);
+  provider.on(result.hash, resListen => {
+    console.log('hhhh', resListen);
+    if (resListen.status !== 1 && resListen.confirmations > 1) {
+      er('request failed');
+      provider.removeAllListeners(result.hash);
+    }
+    if (resListen.confirmations > 19) {
+      provider.removeAllListeners(result.hash);
+    }
+  });
+  // } catch (e) {
+  //   er(e);
+  // }
 }

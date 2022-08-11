@@ -4,7 +4,7 @@
  */
 
 import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {Text, View} from 'react-native';
+import {Image, Pressable, Text, View} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import TabBar from './comp/TabBar';
@@ -51,7 +51,20 @@ const NftCollection = ({route: {params}, wallet}) => {
   ];
   return (
     <View style={[flex1]}>
+      {/*<View style={{flexDirection: 'row'}}>*/}
+      <Pressable
+        onPress={() => navigation.goBack()}
+        style={{
+          padding: 8,
+          position: 'absolute',
+          top: 10,
+          left: 15,
+          zIndex: 100,
+        }}>
+        <Image source={require('../../assets/image/profiles/ArrowLeft.png')} />
+      </Pressable>
       <TabBar config={LIST_CONFIG} indexName={tab} bg={primary} fg={text} />
+      {/*</View>*/}
     </View>
   );
 };

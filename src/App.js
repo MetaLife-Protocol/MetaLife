@@ -106,6 +106,7 @@ import {createPhotonEventEmitter} from 'react-native-photon';
 import {useDialog} from './metalife-base';
 import {NormalTipDialog} from './metalife-base/src/dialog/NormalTipDialog';
 import {PhotonEvent, PhotonNotify} from './screens/photon/PhotonNotifyContants';
+import CompleteCheckout from './screens/ntfPreview/CompleteCheckout';
 
 const App = ({
   feedId,
@@ -558,7 +559,13 @@ const App = ({
           options={{headerTitle: 'NFT'}}
           component={MyNFTList}
         />
-        <Screen name="NftCollection" component={NftCollection} />
+        <Screen
+          name="NftCollection"
+          component={NftCollection}
+          options={{
+            header: () => null,
+          }}
+        />
         <Screen
           name="MyNftDetailView"
           component={MyNftDetailView}
@@ -625,6 +632,11 @@ const App = ({
           name="TransferView"
           component={TransferView}
           options={{headerTitle: 'Transfer'}}
+        />
+        <Screen
+          name="CompleteCheckout"
+          component={CompleteCheckout}
+          options={{headerTitle: 'Complete checkout'}}
         />
       </Navigator>
       <MaskView darkMode={darkMode} enabled={masked} eventEnabled={false} />

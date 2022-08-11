@@ -1,11 +1,19 @@
 'use strict';
 
-import React, {useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {StyleSheet, View, Modal, Image, Pressable} from 'react-native';
 import Text from '../../../shared/comps/ComText';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import {PureTextInput} from '../../../metalife-base';
 import Slider from '@react-native-community/slider';
+import {
+  bigNumberFormatUnits,
+  bigNumberParseUnits,
+  createBigNumber,
+} from 'react-native-web3-wallet';
+import LoadingView from '../../../shared/comps/LoadingView';
+import {getTransferGasPrice} from '../../../remote/wallet/WalletAPI';
+import {getCurrentAccount} from '../../../utils';
 const darkclose = require('../../../assets/image/icons/icon_close_default_black.png');
 const whitecolse = require('../../../assets/image/wallet/icon_close_default_white.png');
 
@@ -15,10 +23,32 @@ const TransactionModal = ({
   darkMode,
   list,
   confirmPress,
+  showLoading,
+  wallet,
 }) => {
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   const back = darkMode ? '#232929' : '#fff';
-  const [gasLimit, setGasLimit] = useState(20);
+  console.log('gggg', list.gasLimit);
+  const gasLim = list?.gasLimit.div(createBigNumber(10000)).toNumber();
+  const [gasLimit, setGasLimit] = useState(
+    list?.gasLimit.div(createBigNumber(10000)).toNumber(),
+  );
+  const [gasPrice, setGasPrice] = useState(createBigNumber(0));
+  // useMemo(() => {
+  //   setGasLimit(list?.gasLimit.div(createBigNumber(10000)).toNumber());
+  // }, [list?.gasLimit]);
+  // useEffect(() => {
+  //   setGasLimit(list?.gasLimit.div(createBigNumber(10000)).toNumber());
+  // }, [list?.gasLimit]);
+  useEffect(() => {
+    const currentAccount = getCurrentAccount(wallet);
+    getTransferGasPrice({type: currentAccount.type}).then(res => {
+      const price = res.toString();
+      setGasPrice(res);
+      // setGasPriceNumber(Number(bigNumberFormatUnits(res.toString(), 9)));
+    });
+  }, []);
+  console.log('rrrrr', (300 - gasLimit) * 0.3 + gasLimit, gasLimit);
   return (
     <Modal
       animationType={'slide'}
@@ -42,13 +72,21 @@ const TransactionModal = ({
           <Text style={[text, styles.content]}>{list?.from}</Text>
           <View style={styles.gasView}>
             <Text style={styles.comText}>Gas</Text>
-            <Text style={[text, styles.gasText]}>{`${list?.gasPrice}`}</Text>
+            <Text style={[text, styles.gasText]}>
+              {`${
+                bigNumberFormatUnits(
+                  bigNumberParseUnits(gasLimit + '', 4)
+                    .mul(bigNumberParseUnits(gasPrice + '', 0))
+                    .toString(),
+                ) + ''
+              } SMT`}
+            </Text>
           </View>
           <Slider
             style={[styles.slider]}
-            minimumValue={20}
-            maximumValue={300}
-            value={gasLimit}
+            minimumValue={Math.floor(0.7 * gasLim)}
+            maximumValue={Math.ceil(gasLim * 2)}
+            value={gasLim * 1.2}
             thumbTintColor="#29DAD7"
             minimumTrackTintColor="#29DAD7"
             maximumTrackTintColor="#DADADA"
@@ -59,10 +97,11 @@ const TransactionModal = ({
           />
           <Pressable
             style={styles.confirmView}
-            onPress={() => confirmPress(gasLimit)}>
+            onPress={() => confirmPress(gasLimit, gasPrice)}>
             <Text style={styles.conText}>Confirm</Text>
           </Pressable>
         </View>
+        {showLoading && <LoadingView />}
       </View>
     </Modal>
   );

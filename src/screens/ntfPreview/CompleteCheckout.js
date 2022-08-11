@@ -99,6 +99,7 @@ const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
           tokenId,
           address,
           surePrice,
+          token,
           // channel,
           // surePrice,
           // formTimeUtil(selectMap.month),
@@ -114,32 +115,6 @@ const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
             setToastVisible(false);
           },
         );
-        // getBuyNftByERC20(
-        //   currentAccount.type,
-        //   keystore,
-        //   pwd,
-        //   tokenId,
-        //   address,
-        //   surePrice,
-        //   token,
-        //   hash => {
-        //     // console.log('ccccc', cb.toNumber());
-        //     // setGasLimit(cb);
-        //     setPwdVisible(false);
-        //     setToastVisible(false);
-        //     getTransferGasPrice({type: currentAccount.type}).then(res => {
-        //       navigation.navigate('TransactionDetail', {
-        //         gasPrice: bigNumberFormatUnits(res.toString(), 9),
-        //         hash,
-        //       });
-        //     });
-        //     // setShowTrans(true);
-        //   },
-        //   er => {
-        //     setPwdVisible(false);
-        //     setToastVisible(false);
-        //   },
-        // );
       }
     });
   };
@@ -180,14 +155,14 @@ const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
           },
         );
       } else {
-        getBuyGasLimitByErc20(
+        getBuyNftByERC20(
           currentAccount.type,
           keystore,
           pwd,
           tokenId,
           address,
-          gasLimits * 10000,
           surePrice,
+          token,
           hash => {
             setShowLoading(false);
             navigation.navigate('TransactionDetail', {

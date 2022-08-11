@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   // Text,
   View,
@@ -11,21 +11,35 @@ import Text from '../../../shared/comps/ComText';
 import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
+import {getNFTInfos, getNftItemInfo} from '../../../remote/contractOP';
+import {getNftAssetsJson, ipfsBaseURL} from '../../../remote/ipfsOP';
 const width = Dimensions.get('window').width;
 const bg = require('../../../assets/image/nft/collection_bg.png');
 const btn = require('../../../assets/image/nft/tiny_head.png');
 const ComCollectItem = ({item}) => {
   const {text, alignItemsCenter, justifyCenter, flex1, BG, FG} =
     useSchemaStyles();
+  const [info, setInfo] = useState({});
+  useEffect(() => {
+    getNftItemInfo(item.collection, item.token_id).then(res => {
+      getNftAssetsJson(res).then(collInfo => {
+        console.log('ccccsss', collInfo);
+        collInfo.headers['content-type'] === 'application/json' &&
+          setInfo(collInfo.data);
+      });
+    });
+  }, []);
   return (
     <View style={[styles.con, FG]}>
-      <ImageBackground source={bg} style={[styles.image]}>
+      <ImageBackground
+        source={info?.image ? {uri: ipfsBaseURL + 'ipfs/' + info?.image} : bg}
+        style={[styles.image]}>
         <View style={styles.btnBg}>
           <FastImage source={btn} style={styles.imageBtn} />
         </View>
       </ImageBackground>
-      <Text style={[text, styles.top]}>{item.symbol || 'GGT'}</Text>
-      <Text style={styles.bottom}>{item.name || 'Genesis GWEITEST'}</Text>
+      <Text style={[text, styles.top]}>{info.name || 'GGT'}</Text>
+      {/*<Text style={styles.bottom}>{item.name || 'Genesis GWEITEST'}</Text>*/}
     </View>
   );
 };

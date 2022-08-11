@@ -13,23 +13,55 @@ import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
 import {
   fixWalletAddress,
+  formTimeUtil,
+  fromDateTime,
   getCurrentAccount,
   nftreviationAccount,
   pxToDp,
+  savePicture,
   screenWidth,
 } from '../../utils';
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
 import {getNftAssetsJson, ipfsBaseURL} from '../../remote/ipfsOP';
-import {getCollectionInfo, getNftItemInfo} from '../../remote/contractOP';
+import {
+  cancelListingNFT,
+  getCollectionInfo,
+  getLimitSell,
+  getNftItemInfo,
+  getSaleInfo,
+  pushSell,
+} from '../../remote/contractOP';
 import HeaderRightBtn from '../tabs/HeaderRightBtn';
+import {RoundBtn} from '../../metalife-base';
+import PasswordModel from '../../shared/comps/PasswordModal';
+import {getAccount} from '../../remote/wallet/WalletAPI';
+import SellModal from './comp/SellModal';
+import TransactionModal from './comp/TransactionModal';
+import {
+  bigNumberFormatUnits,
+  bigNumberParseUnits,
+  createBigNumber,
+} from 'react-native-web3-wallet';
+import {financeConfig} from '../../remote/wallet/financeConfig';
+import CountDown from '../../shared/comps/CountDown';
+import {contractsConstant} from '../../remote/contractsConstant';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
 const down = require('../../assets/image/nft/arrow_down.png');
 const uparr = require('../../assets/image/nft/up_arrow.png');
 const shareB = require('../../assets/image/nft/transfer_white.png');
 const shareW = require('../../assets/image/nft/transfer_black.png');
+const smt = require('../../assets/image/nft/SMT.png');
+const mesh = require('../../assets/image/nft/MESH.png');
+const mlt = require('../../assets/image/icons/lingtuan.png');
 
-const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
+const MyItemDetailView = ({
+  route: {params},
+  wallet,
+  navigation,
+  darkMode,
+  deleteNftItemList,
+}) => {
   // alert(JSON.stringify(params));
   const {tokenId, address} = params;
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
@@ -43,7 +75,38 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
   const upPress = useCallback(() => {
     setIsDetail(!isDetail);
   }, [isDetail]);
-
+  const [pwdVisible, setPwdVisible] = useState(false);
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastContent, setToastContent] = useState('');
+  const [visible, setVisible] = useState(false);
+  const [price, setPrice] = useState(0);
+  const [pwd, setPwd] = useState(null);
+  const [showTrans, setShowTrans] = useState(false);
+  const [selectMap, setSelectMap] = useState({type: 'MLT', month: '1 day'});
+  // const [gasPrice, setGasPrice] = useState(createBigNumber(0));
+  const [gasLimit, setGasLimit] = useState(createBigNumber(0));
+  const [contract, setContract] = useState(null);
+  const [showLoading, setShowLoading] = useState(false);
+  const [delet, setDelet] = useState(false);
+  const [result, setResult] = useState({
+    price: createBigNumber(0).toString(),
+    token: '0x0000000000000000000000000000000000000000',
+  });
+  const [showPrice, setShowPrice] = useState(0);
+  async function getSaleIn() {
+    const results = await getSaleInfo(tokenId.toString(), address);
+    try {
+      const p = bigNumberFormatUnits(
+        results?.price,
+        results?.token === '0x0000000000000000000000000000000000000000'
+          ? financeConfig.chains.spectrum.decmis
+          : contractsConstant.spectrum[results?.token?.toLowerCase()].decmis,
+      );
+      setShowPrice(p);
+    } catch (e) {}
+    setResult(results);
+    console.log('rrrrrr', results);
+  }
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: props => (
@@ -64,6 +127,9 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
   }, [navigation, address, list]);
 
   useEffect(() => {
+    if (params?.onSale) {
+      getSaleIn();
+    }
     getCollectionInfo(info => {
       // console.log('rrrrrttt', info, address);
       setEarn(info.royaltiesPercentageInBips);
@@ -78,8 +144,162 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
     });
   }, []);
 
+  const clickCreate = () => {
+    // setPwdVisible(true);
+    setVisible(true);
+  };
+
+  const clickcancelBtn = () => {
+    setPwdVisible(true);
+  };
+
+  const clickcancelListing = pwd => {
+    setToastVisible(true);
+    setToastContent('loading...');
+    const currentAccount = getCurrentAccount(wallet);
+    getAccount(currentAccount?.address, (isExit, keystore) => {
+      cancelListingNFT(
+        currentAccount.type,
+        keystore,
+        pwd,
+        tokenId,
+        address,
+        cb => {
+          params.callback();
+          navigation.goBack();
+          setPwdVisible(false);
+          setToastVisible(false);
+        },
+        er => {
+          setPwdVisible(false);
+          setToastVisible(false);
+        },
+      );
+    });
+  };
+
+  const onConfirmTransaction = pwd => {
+    // onCreateCollection(pwd);
+    if (params?.onSale) {
+      clickcancelListing(pwd);
+      return;
+    }
+    // setPwd(pwd);
+    setToastVisible(true);
+    setToastContent('loading...');
+    const currentAccount = getCurrentAccount(wallet);
+    const channel =
+      selectMap.type === 'SMT'
+        ? '0x0000000000000000000000000000000000000000'
+        : financeConfig.contracts[currentAccount?.type][selectMap?.type]
+            .address;
+    const surePrice =
+      selectMap.type === 'SMT'
+        ? bigNumberParseUnits(
+            price,
+            financeConfig.chains[currentAccount.type].decmis,
+          )
+        : bigNumberParseUnits(
+            price,
+            financeConfig.contracts[currentAccount.type][selectMap.type].decmis,
+          );
+    getAccount(currentAccount?.address, (isExit, keystore) => {
+      getLimitSell(
+        currentAccount.type,
+        keystore,
+        pwd,
+        address,
+        tokenId,
+        '0',
+        channel,
+        surePrice,
+        formTimeUtil(selectMap.month),
+        (cb, contract) => {
+          // console.log('ccccc', cb.toNumber());
+          setGasLimit(cb);
+          setContract(contract);
+          setPwdVisible(false);
+          setToastVisible(false);
+          setShowTrans(true);
+        },
+        er => {
+          setPwdVisible(false);
+          setToastVisible(false);
+        },
+      );
+    });
+  };
+
+  const onListPress = (type, month) => {
+    if (price === 0) {
+      return;
+    }
+    setPwdVisible(true);
+    setSelectMap({type: type, month: month});
+  };
+
+  const confirmPress = (gasLimits, gasPrices) => {
+    setShowLoading(true);
+    const currentAccount = getCurrentAccount(wallet);
+    const channel =
+      selectMap.type === 'SMT'
+        ? '0x0000000000000000000000000000000000000000'
+        : financeConfig.contracts[currentAccount?.type][selectMap.type].address;
+    const surePrice =
+      selectMap.type === 'SMT'
+        ? bigNumberParseUnits(
+            price + '',
+            financeConfig.chains[currentAccount.type].decmis,
+          )
+        : bigNumberParseUnits(
+            price + '',
+            financeConfig.contracts[currentAccount.type][selectMap.type].decmis,
+          );
+    // getAccount(currentAccount?.address, (isExit, keystore) => {
+    pushSell(
+      currentAccount.type,
+      contract,
+      // keystore,
+      // pwd,
+      address,
+      tokenId,
+      '0',
+      channel,
+      surePrice,
+      formTimeUtil(selectMap.month),
+      gasLimits * 10000,
+      hash => {
+        setPwdVisible(false);
+        setToastVisible(false);
+        setShowLoading(false);
+        navigation.navigate('TransactionDetail', {
+          gasPrice: bigNumberFormatUnits(gasPrices, 9),
+          hash,
+        });
+        if (!delet) {
+          deleteNftItemList({
+            type: currentAccount?.address,
+            collectionAddress: address,
+            id: tokenId,
+          });
+          setDelet(true);
+        }
+      },
+      er => {
+        setPwdVisible(false);
+        setToastVisible(false);
+        setShowLoading(false);
+      },
+    );
+    // });
+  };
+  const time = new Date(result?.duetime?.toNumber() * 1000);
   return (
-    <ScrollView style={[flex1, BG]} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={[flex1, BG]}
+      showsVerticalScrollIndicator={false}
+      keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="always">
       <FastImage
         source={{
           uri: ipfsBaseURL + 'ipfs/' + list?.image,
@@ -96,6 +316,39 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
         {/*<Text style={[text, styles.under]}>*/}
         {/*  {'The underbelly of Web3.A shadow wague,formless, but eternal'}*/}
         {/*</Text>*/}
+        {params?.onSale ? (
+          <View style={styles.saleView}>
+            <Text style={[styles.priceText]}>{`Sale ends ${fromDateTime(
+              time,
+            )}`}</Text>
+            {/*<Text*/}
+            {/*  style={[*/}
+            {/*    text,*/}
+            {/*    styles.timeText,*/}
+            {/*    styles.dueText,*/}
+            {/*  ]}>{`${result?.duetime} Left`}</Text>*/}
+            <CountDown
+              activityTimeInfo={{
+                remainingTime: time - new Date(),
+              }}
+            />
+            <View style={styles.lines} />
+            <Text style={[styles.priceText, {marginTop: 6}]}>Price</Text>
+            <View style={styles.priceView}>
+              <Image
+                source={
+                  result?.token === '0x0000000000000000000000000000000000000000'
+                    ? smt
+                    : contractsConstant.spectrum[result?.token?.toLowerCase()]
+                        .symbol === 'Mesh'
+                    ? mesh
+                    : mlt
+                }
+              />
+              <Text style={[text, styles.timeText]}>{showPrice}</Text>
+            </View>
+          </View>
+        ) : null}
         <View style={styles.rowView}>
           <FastImage source={btn} style={styles.headImg} />
           <Text style={styles.create}>{'Created by'}</Text>
@@ -103,13 +356,19 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
             {nftreviationAccount(list?.create, 6, 4)}
           </Text>
         </View>
-        {/*<View style={styles.rowView}>*/}
-        {/*  <FastImage source={btn} style={styles.headImg} />*/}
-        {/*  <Text style={styles.create}>{'Owned by'}</Text>*/}
-        {/*  <Text style={[styles.textWork]}>*/}
-        {/*    {nftreviationAccount(list?.ownerOf, 6, 4)}*/}
-        {/*  </Text>*/}
-        {/*</View>*/}
+        <View style={styles.rowView}>
+          <FastImage source={btn} style={styles.headImg} />
+          <Text style={styles.create}>{'Owned by'}</Text>
+          <Text style={[styles.textWork]}>
+            {params?.ownerOf
+              ? nftreviationAccount(params?.ownerOf, 6, 4)
+              : nftreviationAccount(
+                  fixWalletAddress(getCurrentAccount(wallet).address),
+                  6,
+                  4,
+                )}
+          </Text>
+        </View>
       </View>
       <View style={[FG, styles.collectTop]}>
         <View style={styles.itemView}>
@@ -164,6 +423,53 @@ const MyItemDetailView = ({route: {params}, wallet, navigation, darkMode}) => {
         ) : null}
         <View style={styles.bottom} />
       </View>
+      {params?.onSale ? (
+        <RoundBtn
+          press={clickcancelBtn}
+          style={styles.buttonContainer}
+          title={'Cancel listing'}
+        />
+      ) : (
+        <RoundBtn
+          press={clickCreate}
+          style={styles.buttonContainer}
+          title={'Sell'}
+        />
+      )}
+
+      <PasswordModel
+        darkMode={darkMode}
+        pwdVisible={pwdVisible}
+        setPwdVisible={setPwdVisible}
+        toastVisible={toastVisible}
+        setToastVisible={setToastVisible}
+        toastContent={toastContent}
+        toastDuriation={6000000}
+        onConfirm={pwd => {
+          onConfirmTransaction(pwd);
+        }}
+      />
+      <SellModal
+        visible={visible}
+        darkMode={darkMode}
+        setVisible={setVisible}
+        setPrice={setPrice}
+        onListPress={onListPress}
+      />
+      <TransactionModal
+        showTrans={showTrans}
+        setShowTrans={setShowTrans}
+        darkMode={darkMode}
+        list={{
+          price: price + selectMap.type,
+          to: '0x4f47b5f2685d5d108d008577728242905ff9e5a8',
+          from: getCurrentAccount(wallet).address,
+          gasLimit: gasLimit,
+        }}
+        showLoading={showLoading}
+        confirmPress={confirmPress}
+        wallet={wallet}
+      />
     </ScrollView>
   );
 };
@@ -278,6 +584,41 @@ const styles = StyleSheet.create({
   bottom: {
     height: pxToDp(20),
   },
+  buttonContainer: {
+    width: screenWidth - 30,
+    height: 44,
+    borderRadius: 22,
+    alignSelf: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  saleView: {
+    width: screenWidth - 30,
+    height: 124,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#4E586E',
+    marginTop: 20,
+    paddingVertical: 10,
+    // justifyContent: 'center',
+  },
+  priceText: {
+    fontSize: 14,
+    color: '#8E8E92',
+    marginLeft: 10,
+  },
+  lines: {
+    width: screenWidth - 30,
+    height: 1,
+    backgroundColor: '#4E586E',
+  },
+  timeText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  priceView: {flexDirection: 'row', marginLeft: 10, marginTop: 6},
+  dueText: {marginVertical: 7},
 });
 
 const msp = s => {
@@ -291,7 +632,7 @@ const msp = s => {
 
 const mdp = d => {
   return {
-    data: {},
+    deleteNftItemList: payload => d({type: 'deleteNftItemList', payload}),
   };
 };
 

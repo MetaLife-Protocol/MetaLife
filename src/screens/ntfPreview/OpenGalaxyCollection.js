@@ -4,7 +4,13 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import ComCollectItem from './comp/ComCollectItem';
 import ListEmpty from './comp/ListEmpty';
@@ -12,62 +18,109 @@ import {
   getCollectionInfo,
   getNFTInfos,
   getOpenGalaxyNFTCollectionInfos,
+  getOpenGalaxyNFTCollectionListInfo,
 } from '../../remote/contractOP';
 import {getNftAssetsJson} from '../../remote/ipfsOP';
+import OnSaleItem from './comp/OnSaleItem';
+import {useNavigation} from '@react-navigation/native';
 
 const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
-  const [info, setInfo] = useState({});
-  useEffect(() => {
-    // getOpenGalaxyNFTCollectionInfos().then(result => {
-    //   console.log('rrrrrrr', result);
-    // });
-    getCollectionInfo(value => {
-      // console.log('ddddd', value);
-      addCollections(value);
-      setInfo(value);
-      getNFTInfos(undefined, nftCInfo => {
-        // console.log('collection got: ', nftCInfo);
-        if (
-          nftCInfo.id == 14 ||
-          nftCInfo.id == 19 ||
-          nftCInfo.id == 21 ||
-          nftCInfo.id == 22
-        ) {
-          return;
-        }
-        getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
-          // console.log('nft got: ', nftJInfo);
-          nftJInfo.headers['content-type'] === 'application/json' &&
-            addNft({
-              ...nftCInfo,
-              ...nftJInfo.data,
-            });
-        });
-      });
+  const [info, setInfo] = useState([]);
+  const {navigate} = useNavigation();
+  const [refreshing, setRefreshing] = useState(true);
+  const [page, setPage] = useState(0);
+  const getCollectionList = isMore => {
+    getOpenGalaxyNFTCollectionListInfo(null, page, 10).then(result => {
+      console.log('rrrrrrrllllll', result);
+      setRefreshing(false);
+      if (page !== 0 && isMore) {
+        let data = info;
+        data = data.concat(result);
+        setInfo(data);
+      } else {
+        setInfo(result);
+      }
     });
+  };
+  useEffect(() => {
+    getCollectionList(false);
+    // getCollectionInfo(value => {
+    //   // console.log('ddddd', value);
+    //   addCollections(value);
+    //   setInfo(value);
+    //   getNFTInfos(undefined, nftCInfo => {
+    //     // console.log('collection got: ', nftCInfo);
+    //     if (
+    //       nftCInfo.id == 14 ||
+    //       nftCInfo.id == 19 ||
+    //       nftCInfo.id == 21 ||
+    //       nftCInfo.id == 22
+    //     ) {
+    //       return;
+    //     }
+    //     getNftAssetsJson(nftCInfo.uri).then(nftJInfo => {
+    //       // console.log('nft got: ', nftJInfo);
+    //       nftJInfo.headers['content-type'] === 'application/json' &&
+    //         addNft({
+    //           ...nftCInfo,
+    //           ...nftJInfo.data,
+    //         });
+    //     });
+    //   });
+    // });
   }, []);
-  const renderItem = ({item}) => {
+  const renderItem = ({item, index}) => {
+    // return (
+    //   <TouchableOpacity
+    //     onPress={() => {
+    //       navigation.navigate('NftCollectionDetail', {item: item});
+    //     }}>
+    //     <ComCollectItem item={item} />
+    //   </TouchableOpacity>
+    // );
     return (
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('NftCollectionDetail', {item: item});
-        }}>
-        <ComCollectItem item={item} />
-      </TouchableOpacity>
+      <Pressable
+        onPress={() =>
+          navigate('MyNftDetailView', {
+            tokenId: item.token_id.toNumber(),
+            address: item.collection,
+            ownerOf: item.seller,
+            onSale: true,
+            callBack: () => {
+              getCollectionList();
+            },
+          })
+        }>
+        <OnSaleItem isImage={true} index={index} item={item} />
+      </Pressable>
     );
   };
   const emptyComponent = () => {
     return <ListEmpty />;
   };
+  const refreshPress = () => {
+    setRefreshing(true);
+    setInfo([]);
+    setPage(0);
+    getCollectionList(false);
+  };
+  const endReachedPress = () => {
+    setPage(page + 1);
+    getCollectionList(true);
+  };
   return (
     <View style={{flex: 1}}>
       <FlatList
-        data={[info]}
+        data={info}
         numColumns={2}
         renderItem={renderItem}
         style={styles.flatList}
         ListEmptyComponent={emptyComponent}
         keyExtractor={(item, index) => item + index}
+        refreshing={refreshing}
+        onRefresh={refreshPress}
+        onEndReachedThreshold={0.3}
+        onEndReached={endReachedPress}
       />
     </View>
   );

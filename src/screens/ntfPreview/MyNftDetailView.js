@@ -11,24 +11,52 @@ import {
 import Text from '../../shared/comps/ComText';
 import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux/lib/exports';
-import {nftreviationAccount, pxToDp, screenWidth} from '../../utils';
+import {
+  fixWalletAddress,
+  fromDateTime,
+  getCurrentAccount,
+  nftreviationAccount,
+  pxToDp,
+  screenWidth,
+} from '../../utils';
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
-import {ipfsBaseURL} from '../../remote/ipfsOP';
+import {getNftAssetsJson, ipfsBaseURL} from '../../remote/ipfsOP';
+import RoundBtn from '../../shared/comps/RoundBtn';
+import {
+  getCollectionInfo,
+  getNftItemInfo,
+  getSaleInfo,
+} from '../../remote/contractOP';
+import {bigNumberFormatUnits, createBigNumber} from 'react-native-web3-wallet';
+import {contractsConstant} from '../../remote/contractsConstant';
+import {financeConfig} from '../../remote/wallet/financeConfig';
+import CountDown from '../../shared/comps/CountDown';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
 const down = require('../../assets/image/nft/arrow_down.png');
 const uparr = require('../../assets/image/nft/up_arrow.png');
+const smt = require('../../assets/image/nft/SMT.png');
+const mesh = require('../../assets/image/nft/MESH.png');
+const mlt = require('../../assets/image/icons/lingtuan.png');
 
-const MyNftDetailView = ({route: {params}, data, nft}) => {
-  const {item, symbol} = params;
+const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
+  // const {item, symbol} = params;
+  const {tokenId, address} = params;
   // const nftKey = Object.keys(nft).length > 0 ? Object.keys(nft)[0] : '';
   // const data =
   //   nft[nftKey].nfts && nft[nftKey].nfts.length > 0
   //     ? nft[nftKey].nfts[index]
   //     : {};
-  console.log('ddddd', item);
+  // console.log('ddddd', item);
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   const [isShow, setIsShow] = useState([false]);
+  const [list, setList] = useState({});
+  const [earn, setEarn] = useState(0);
+  const [result, setResult] = useState({
+    price: createBigNumber(0).toString(),
+    token: '0x0000000000000000000000000000000000000000',
+  });
+  const [showPrice, setShowPrice] = useState(0);
   const downPress = useCallback(() => {
     setIsShow(!isShow);
   }, [isShow]);
@@ -47,11 +75,59 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
   //   );
   // }, []);
 
+  const buyNowHandler = () => {
+    navigation.navigate('CompleteCheckout', {
+      tokenId: tokenId,
+      address: address,
+      image: ipfsBaseURL + 'ipfs/' + list?.image,
+      name: list?.name,
+      price: showPrice,
+      fee: (earn * 1) / 100 + '%',
+      token: result?.token,
+    });
+  };
+
+  async function getSaleIn() {
+    const results = await getSaleInfo(tokenId.toString(), address);
+    try {
+      const p = bigNumberFormatUnits(
+        results?.price,
+        results?.token === '0x0000000000000000000000000000000000000000'
+          ? financeConfig.chains.spectrum.decmis
+          : contractsConstant.spectrum[results?.token?.toLowerCase()].decmis,
+      );
+      setShowPrice(p);
+    } catch (e) {}
+    setResult(results);
+    console.log('rrrrrr', results);
+  }
+
+  useEffect(() => {
+    getCollectionInfo(info => {
+      // console.log('rrrrrttt', info, address);
+      setEarn(info.royaltiesPercentageInBips);
+    }, address);
+    getSaleIn();
+    getNftItemInfo(address, tokenId).then(res => {
+      if (res) {
+        getNftAssetsJson(res).then(da => {
+          // console.log('dddddddd', da);
+          setList(da.data);
+        });
+      }
+    });
+    return () => {
+      params.callBack();
+    };
+  }, []);
+  const time = new Date(result?.duetime?.toNumber() * 1000);
+  // alert(result?.duetime?.toNumber());
+  const due = time - new Date();
   return (
     <ScrollView style={[flex1, BG]} showsVerticalScrollIndicator={false}>
       <FastImage
         source={{
-          uri: ipfsBaseURL + 'ipfs/' + item?.image?.split('ipfs://')[1],
+          uri: ipfsBaseURL + 'ipfs/' + list?.image,
         }}
         style={[styles.topImg]}
         resizeMode="contain"
@@ -60,21 +136,60 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
         <Text
           style={{
             color: colorsBasics.primary,
-          }}>{`${symbol}: ${item?.name}`}</Text>
+          }}>{`${list?.name}`}</Text>
         {/*<Text style={[text, styles.bend]}>{'julie pacino:Aroud the bend'}</Text>*/}
         {/*<Text style={[text, styles.under]}>*/}
         {/*  {'The underbelly of Web3.A shadow wague,formless, but eternal'}*/}
         {/*</Text>*/}
+        <View style={styles.saleView}>
+          <Text style={[styles.priceText]}>{`Sale ends ${fromDateTime(
+            time,
+          )}`}</Text>
+          {/*<Text*/}
+          {/*  style={[*/}
+          {/*    text,*/}
+          {/*    styles.timeText,*/}
+          {/*    styles.dueText,*/}
+          {/*  ]}>{`${result?.duetime} Left`}</Text>*/}
+          <CountDown
+            activityTimeInfo={{
+              remainingTime: time - new Date(),
+            }}
+          />
+          <View style={styles.lines} />
+          <Text style={[styles.priceText, {marginTop: 6}]}>Price</Text>
+          <View style={styles.priceView}>
+            <Image
+              source={
+                result?.token === '0x0000000000000000000000000000000000000000'
+                  ? smt
+                  : contractsConstant.spectrum[result?.token?.toLowerCase()]
+                      .symbol === 'Mesh'
+                  ? mesh
+                  : mlt
+              }
+            />
+            <Text style={[text, styles.timeText]}>{showPrice}</Text>
+          </View>
+        </View>
         <View style={styles.rowView}>
           <FastImage source={btn} style={styles.headImg} />
           <Text style={styles.create}>{'Created by'}</Text>
-          <Text style={[styles.textWork]}>{item['mint to']}</Text>
+          <Text style={[styles.textWork]}>
+            {nftreviationAccount(list?.create, 6, 4)}
+          </Text>
         </View>
         <View style={styles.rowView}>
           <FastImage source={btn} style={styles.headImg} />
           <Text style={styles.create}>{'Owned by'}</Text>
           <Text style={[styles.textWork]}>
-            {nftreviationAccount(item?.ownerOf, 6, 4)}
+            {params?.ownerOf
+              ? nftreviationAccount(params?.ownerOf, 6, 4)
+              : nftreviationAccount(
+                  fixWalletAddress(getCurrentAccount(wallet).address),
+                  6,
+                  4,
+                )}
           </Text>
         </View>
       </View>
@@ -90,9 +205,9 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
           <>
             <View style={styles.ghRow}>
               <Image source={btn} style={styles.ghImg} />
-              <Text style={styles.ghText}>{`${symbol}: ${item?.name}`}</Text>
+              <Text style={styles.ghText}>{`${list?.name}`}</Text>
             </View>
-            <Text style={styles.ghDetail}>{item?.description}</Text>
+            <Text style={styles.ghDetail}>{list?.description}</Text>
           </>
         ) : null}
         <View style={styles.line} />
@@ -108,12 +223,12 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Contract Address</Text>
               <Text style={styles.address}>
-                {nftreviationAccount(item?.collectionAddress, 6, 4)}
+                {nftreviationAccount(address, 6, 4)}
               </Text>
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Token ID</Text>
-              <Text style={styles.tokenText}>{item?.id}</Text>
+              <Text style={styles.tokenText}>{tokenId}</Text>
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Token Standard</Text>
@@ -125,12 +240,19 @@ const MyNftDetailView = ({route: {params}, data, nft}) => {
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Creator Fees</Text>
-              <Text style={styles.tokenText}>{'2.5%'}</Text>
+              <Text style={styles.tokenText}>{(earn * 1) / 100 + '%'}</Text>
             </View>
           </>
         ) : null}
         <View style={styles.bottom} />
       </View>
+      {due > 0 ? (
+        <RoundBtn
+          style={[styles.buyView]}
+          title={'Buy now'}
+          press={buyNowHandler}
+        />
+      ) : null}
     </ScrollView>
   );
 };
@@ -245,6 +367,38 @@ const styles = StyleSheet.create({
   bottom: {
     height: pxToDp(20),
   },
+  buyView: {
+    height: 44,
+    borderRadius: 22,
+    marginBottom: 20,
+  },
+  saleView: {
+    width: screenWidth - 30,
+    height: 124,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#4E586E',
+    marginTop: 20,
+    paddingVertical: 10,
+    // justifyContent: 'center',
+  },
+  priceText: {
+    fontSize: 14,
+    color: '#8E8E92',
+    marginLeft: 10,
+  },
+  lines: {
+    width: screenWidth - 30,
+    height: 1,
+    backgroundColor: '#4E586E',
+  },
+  timeText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  priceView: {flexDirection: 'row', marginLeft: 10, marginTop: 6},
+  dueText: {marginVertical: 7},
 });
 
 const msp = s => {

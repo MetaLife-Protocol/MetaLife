@@ -23,15 +23,28 @@ export const collectionReducer = (state = initState, {type, payload}) => {
         },
       };
     case 'deleteNftItemList':
+      console.log(
+        'ddddsssrrr',
+        state.nftItem[payload.type].filter(item => {
+          return !(
+            item.collectionAddress.toLowerCase() ===
+              payload.collectionAddress.toLowerCase() && item.id === payload.id
+          );
+          // return item;
+        }),
+        payload,
+      );
       return {
         ...state,
         nftItem: {
           ...state.nftItem,
-          [payload.type]: state.nftItem[payload.type].filter(
-            item =>
-              item.collectionAddress !== payload.collectionAddress &&
-              item.id * 1 !== payload.id * 1,
-          ),
+          [payload.type]: state.nftItem[payload.type].filter(item => {
+            return !(
+              item.collectionAddress.toLowerCase() ===
+                payload.collectionAddress.toLowerCase() &&
+              item.id === payload.id
+            );
+          }),
           // [payload.type]: state.address[payload.type].splice(
           //   state.address[payload.type].findIndex(
           //     item => item.key === payload.key,

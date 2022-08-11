@@ -17,6 +17,8 @@ const TabBar = props => {
           // borderBottomLeftRadius: 30,
           // borderBottomRightRadius: 30,
           height: 48,
+          justifyContent: 'center',
+          alignItems: 'center',
         },
         //是否可以滑动
         scrollEnabled: true,
@@ -28,7 +30,9 @@ const TabBar = props => {
         },
         tabStyle: {
           padding: 0,
-          width: props.width ? props.width : Dimensions.get('window').width / 2,
+          width: props.width
+            ? props.width
+            : Dimensions.get('window').width / 2 - 80,
           justifyContent: 'center',
           alignItems: 'center',
         },
@@ -36,7 +40,7 @@ const TabBar = props => {
         indicatorStyle: {
           height: 3,
           width: props.width ? props.width : 47.5,
-          marginLeft: props.width ? 36 : screenWidth * 0.19,
+          marginLeft: props.width ? 36 : screenWidth * 0.3,
           backgroundColor: bg,
           borderRadius: 2,
         },
