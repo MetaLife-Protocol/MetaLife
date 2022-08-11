@@ -45,11 +45,17 @@
 	<string>Offline Chat Usage</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Communication needs</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_metalife._tcp.</string>
+	</array>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Social needs</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Head icon &amp; post image usage</string>
 	<key>NSContactsUsageDescription</key>
+	<string>Social needs</string>
+	<key>NSLocalNetworkUsageDescription</key>
 	<string>Social needs</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Offline Chat Usage</string>
@@ -81,11 +87,5 @@
 	<false/>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>Social needs</string>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>Social needs</string>
-	<key>NSBonjourServices</key>
-	<array>
-		<string>_metalife._tcp.</string>
-	</array>
 </dict>
 </plist>
