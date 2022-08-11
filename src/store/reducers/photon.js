@@ -7,6 +7,7 @@ export const initValue = {
   logFile: '',
   channelRemark: [],
   photonLogined: false,
+  noInternet: false,
 };
 export const photonReducer = (state = initValue, {type, payload}) => {
   switch (type) {
@@ -32,6 +33,11 @@ export const photonReducer = (state = initValue, {type, payload}) => {
         isPhotonLogin: false,
         logFile: '',
         photonLogined: state?.photonLogined,
+      };
+    case 'switchNoInternet':
+      return {
+        ...state,
+        noInternet: !state.noInternet,
       };
     default:
       return state;

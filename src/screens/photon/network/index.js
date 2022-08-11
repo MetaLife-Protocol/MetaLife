@@ -22,15 +22,27 @@ import {useDialog, useStyle} from '../../../metalife-base';
 import PhotonAccountInfoCard from './comps/PhotonAccountInfoCard';
 import {useNavigation} from '@react-navigation/native';
 import PhotonListItemView from './comps/PhotonListItemView';
-import {getBalanceFromPhoton, loadChannelList} from 'react-native-photon';
+import {
+  getBalanceFromPhoton,
+  loadChannelList,
+  switchNetwork,
+  updateMeshNetworkNodes,
+} from 'react-native-photon';
 import {connect} from 'react-redux';
 import {fixWalletAddress, getCurrentAccount} from '../../../utils';
 import PhotonUrl from '../PhotonUrl';
 import {uploadPhotonLogDialog} from './hooks';
 import {PhotonEvent, TxStatus, TxType} from '../PhotonNotifyContants';
 import Toast from 'react-native-tiny-toast';
+import {ips, zeroconf} from '../../../listener/ip/ZeroConf';
 
-const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
+const PhotonNetwork = ({
+  channelRemark,
+  wallet,
+  showPullMenu,
+  noInternet,
+  switchNoInternet,
+}) => {
   const styles = useStyle(createSty);
   const [balances, setBalances] = useState([]),
     [channelList, setChannelList] = useState([]),
@@ -38,6 +50,7 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
   const dialog = useDialog();
   const [walletBalance, setWalletBalance] = useState({});
   const navigation = useNavigation();
+  const {address} = getCurrentAccount(wallet);
   function goScreen(name, params) {
     navigation.navigate(name, params);
   }
@@ -94,21 +107,79 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
       }),
     );
   }
+  useEffect(() => {
+    const name = '0x' + address;
+    if (noInternet) {
+      switchNetwork(true).then(() => {
+        zeroconf.publishService('metalife', 'tcp', '', name, 50001, {});
+        zeroconf.scan('metalife', 'tcp', '');
+        zeroconf.on('resolved', res => {
+          if (!ips.has(res.name)) {
+            if (name !== res.name) {
+              let ip;
+              for (let i = 0; i < res.addresses.length; i++) {
+                const item = res.addresses[i];
+                if (item.indexOf('.')) {
+                  ip = item;
+                  break;
+                }
+              }
+              ips.set(res.name, ip);
+              updateMeshNetworkNodes(
+                JSON.stringify([
+                  {
+                    address: res.name,
+                    ip_port: res.addresses[0] + ':' + 40001,
+                  },
+                ]),
+              );
+            }
+          }
+        });
+      });
+    } else {
+      switchNetwork(false).then(() => {
+        zeroconf.removeAllListeners();
+        zeroconf.stop();
+        zeroconf.unpublishService(name);
+        ips.clear();
+      });
+    }
+  }, [noInternet]);
 
   //set tabBar right more icon
   useLayoutEffect(() => {
     // navigationOptions;
     navigation.setOptions({
       headerRight: () => (
-        <Pressable onPress={menuHandler}>
-          <Image
-            source={require('../../../assets/image/photon/photon_more.png')}
-            style={styles.moreImg}
-          />
-        </Pressable>
+        <>
+          <Pressable
+            style={styles.dotContainer}
+            onPress={() => {
+              switchNoInternet(!noInternet);
+            }}>
+            <View
+              style={[
+                styles.dot,
+                {
+                  backgroundColor: noInternet ? '#4E586E' : '#64D39F',
+                },
+              ]}
+            />
+            <Text style={styles.lineText}>
+              {noInternet ? 'Offline' : 'Online'}
+            </Text>
+          </Pressable>
+          <Pressable onPress={menuHandler}>
+            <Image
+              source={require('../../../assets/image/photon/photon_more.png')}
+              style={styles.moreImg}
+            />
+          </Pressable>
+        </>
       ),
     });
-  }, [navigation, styles.moreImg, walletBalance]);
+  }, [navigation, styles.moreImg, walletBalance, noInternet, styles.lineText]);
 
   const getBalance = () => {
     const balanceSMT = getBalanceFromPhoton(PhotonUrl.PHOTON_SMT_TOKEN_ADDRESS);
@@ -253,6 +324,22 @@ const PhotonNetwork = ({channelRemark, wallet, showPullMenu}) => {
 };
 const createSty = theme =>
   StyleSheet.create({
+    dotContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    dot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      marginRight: 3,
+    },
+    lineText: {
+      fontSize: 18,
+      color: theme.c_000000_FFFFFF,
+      marginRight: 20,
+    },
     container: {
       flex: 1,
       backgroundColor: theme.c_F8F9FD_000000,
@@ -282,11 +369,13 @@ const msp = s => {
   return {
     channelRemark: s.photon.channelRemark,
     wallet: s.wallet,
+    noInternet: s.photon.noInternet,
   };
 };
 const mdp = d => {
   return {
     showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
+    switchNoInternet: () => d({type: 'switchNoInternet'}),
   };
 };
 export default connect(msp, mdp)(PhotonNetwork);

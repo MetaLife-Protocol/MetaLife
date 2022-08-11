@@ -81,5 +81,11 @@
 	<false/>
 	<key>kTCCServiceMediaLibrary</key>
 	<string>Social needs</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Social needs</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_metalife._tcp.</string>
+	</array>
 </dict>
 </plist>
