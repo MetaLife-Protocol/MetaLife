@@ -7,10 +7,11 @@ import {financeConfig} from '../../../../../../remote/wallet/financeConfig';
 import {getTransactionListenProvider} from '../../../../../../remote/wallet/WalletAPI';
 import {contractsConstant} from '../../../../../../remote/contractsConstant';
 import {Buffer} from 'buffer';
-import {getPhotonInfo} from './photonEventUtils';
-import {getErc20Info} from './erc20EventUtils';
-import {getNftInfo} from './nftEventUtils';
+import {getPhotonInfo} from './events/photonEventUtils';
+import {getErc20Info} from './events/erc20EventUtils';
+import {getNftInfo} from './events/nftEventUtils';
 import {getAmountPrefix} from './utils';
+import {getNftSale} from './events/salePlainEventUtils';
 
 export const useTransferDataHooks = (
   gasPrice,
@@ -44,6 +45,10 @@ export const useTransferDataHooks = (
     }
     if (abiName === 'metaMaster') {
       const nftInfo = await getNftInfo(logs, currentAddress);
+      return nftInfo;
+    }
+    if (abiName === 'salePlain') {
+      const nftInfo = await getNftSale(logs, currentAddress);
       return nftInfo;
     }
     return false;

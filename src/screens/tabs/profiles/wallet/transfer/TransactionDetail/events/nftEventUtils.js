@@ -1,12 +1,12 @@
 import {
   createBigNumber,
   getContract,
-  getEventNameID,
   hexString,
 } from 'react-native-web3-wallet';
-import {financeConfig} from '../../../../../../remote/wallet/financeConfig';
-import {abi as NFTCollectionAbi} from '../../../../../../remote/contractAbi/NFTCollection.json';
-import {getAmountPrefix} from './utils';
+import {financeConfig} from '../../../../../../../remote/wallet/financeConfig';
+import {abi as NFTCollectionAbi} from '../../../../../../../remote/contractAbi/NFTCollection.json';
+import {getAmountPrefix} from '../utils';
+import {NftEventNameID, SaleEventNameID} from './eventNameID';
 
 /**
    * //NFT Transfer
@@ -25,27 +25,24 @@ import {getAmountPrefix} from './utils';
     console.log('NewCollection', getEventNameID('NewCollection(address,address)'));
    * 
    */
-const NftEventNameID = {
-  transfer: getEventNameID('Transfer(address,address,uint256)'),
-  approval: getEventNameID('Approval(address,address,uint256)'),
-  mint: getEventNameID('Mint(uint256,address,address)'),
-  ownershipTransferred: getEventNameID('OwnershipTransferred(address,address)'),
-  newCollection: getEventNameID('NewCollection(address,address)'),
-};
 
 export const getNftInfo = async (logs, currentAddress) => {
+  const createSale = await isNftCreateSale(logs, currentAddress);
+  if (createSale) {
+    return createSale;
+  }
   // nft collection
   const createCollection = await isNftCreateCollection(logs, currentAddress);
   if (createCollection) {
     return createCollection;
   }
-  const nftTransfer = await isNftTransfer(logs, currentAddress);
-  if (nftTransfer) {
-    return nftTransfer;
-  }
   const nftMint = await isNftMint(logs, currentAddress);
   if (nftMint) {
     return nftMint;
+  }
+  const nftTransfer = await isNftTransfer(logs, currentAddress);
+  if (nftTransfer) {
+    return nftTransfer;
   }
 };
 
@@ -116,6 +113,34 @@ const isNftMint = async (logs, currentAddress) => {
       amount: tokenAmount,
       amountPrefix: getAmountPrefix(toAddress, currentAddress),
     };
+  }
+  return false;
+};
+
+const isNftCreateSale = async (logs, currentAddress) => {
+  let transferData;
+  for (let i = 0; i < logs.length; i++) {
+    const log = logs[i];
+    if (log.topics[0] === NftEventNameID.transfer) {
+      const toAddress = hexString(logs[0].topics[2]);
+      let collectAddress = await getNftName(log.address);
+      transferData = {
+        toAddress,
+        amount:
+          collectAddress + ' #' + createBigNumber(log.topics[3]).toNumber(),
+        // amountPrefix: getAmountPrefix(toAddress, currentAddress),
+      };
+      continue;
+    }
+  }
+  for (let i = 0; i < logs.length; i++) {
+    const log = logs[i];
+    if (log.topics[0] === SaleEventNameID.createSale) {
+      return {
+        ...transferData,
+        amountPrefix: 'Listing nft ',
+      };
+    }
   }
   return false;
 };

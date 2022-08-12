@@ -1,15 +1,10 @@
 import {
   bigNumberFormatUnits,
   createBigNumber,
-  getEventNameID,
   hexString,
 } from 'react-native-web3-wallet';
-import {getAmountPrefix} from './utils';
-
-export const Erc20NameID = {
-  transfer: getEventNameID('Transfer(address,address,uint256)'),
-  approval: getEventNameID('Approval(address,address,uint256)'),
-};
+import {Erc20NameID} from './eventNameID';
+import {getAmountPrefix} from '../utils';
 
 export const getErc20Info = (logs, currentAddress) => {
   const approval = isCoinApproval(logs, currentAddress);

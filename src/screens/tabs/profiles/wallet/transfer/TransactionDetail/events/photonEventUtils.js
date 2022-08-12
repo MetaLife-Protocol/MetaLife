@@ -1,11 +1,11 @@
 import {
   bigNumberFormatUnits,
   createBigNumber,
-  getEventNameID,
   hexString,
 } from 'react-native-web3-wallet';
-import {contractsConstant} from '../../../../../../remote/contractsConstant';
-import {getAmountPrefix} from './utils';
+import {contractsConstant} from '../../../../../../../remote/contractsConstant';
+import {PhotonEventNameID} from './eventNameID';
+import {getAmountPrefix} from '../utils';
 
 /**
  * //ChannelWithdraw  erc20先执行Transfer 公链只有ChannelWithdraw
@@ -48,23 +48,6 @@ console.log(
   getEventNameID('ChannelSettled(bytes32,uint256,uint256)'),
 );
  */
-export const PhotonEventNameID = {
-  transfer: getEventNameID('Transfer(address,address,uint256)'),
-  channelWithdraw: getEventNameID(
-    'ChannelWithdraw(bytes32,address,uint256,address,uint256)',
-  ),
-  channelCreate: getEventNameID(
-    'ChannelOpenedAndDeposit(address,address,address,uint64,uint256)',
-  ),
-  channelDeposit: getEventNameID('ChannelNewDeposit(bytes32,address,uint256)'),
-  cooperativeSettle: getEventNameID(
-    'ChannelCooperativeSettled(bytes32,uint256,uint256)',
-  ),
-  channelClose: getEventNameID(
-    'ChannelClosed(bytes32,address,bytes32,uint256)',
-  ),
-  channelSettle: getEventNameID('ChannelSettled(bytes32,uint256,uint256)'),
-};
 
 export const getPhotonInfo = (logs, abiName, from, currentAddress) => {
   if (abiName === 'erc20-photon' || abiName === 'PhotonLayer2') {
