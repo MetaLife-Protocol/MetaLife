@@ -43,48 +43,55 @@ const Payment = ({showPullMenu}) => {
 
   const transferFun = useCallback(
     (isDirect, filePath) => {
-      photonTransfer({
-        tokenAddress: getTokenAddress(type),
-        amount: numberToString(amountMulEth(amount)),
-        walletAddress: address,
-        isDirect: isDirect,
-        payData: '',
-        filePath: filePath ? filePath : '',
-      })
-        .then(res => {
-          // console.log('photonTransfer-res::', res);
-          const resJson = JSON.parse(res);
-          if (resJson.error_code === 0) {
-            Toast.show('payment success');
-            navigate('PhotonTransactionRecord');
-          }
-          // 1002 3002 need findPath
-          else if (resJson.error_code === 1002 || resJson.error_code === 3002) {
-            findPath({
-              walletAddress: address,
-              tokenAddress: getTokenAddress(type),
-              balance: numberToString(amountMulEth(amount)),
-            }).then(pathRes => {
-              // console.log('findPathRes', pathRes);
-              const pathResJson = JSON.parse(pathRes);
-              // transfer isDirect=false
-              if (pathResJson.error_code === 0) {
-                transferFun(false, JSON.stringify(pathResJson.data));
-              } else {
-                Toast.show(pathResJson.error_message, {
-                  position: Toast.position.CENTER,
-                });
-              }
-            });
-          } else {
-            Toast.show(resJson.error_message, {
-              position: Toast.position.CENTER,
-            });
-          }
+      try {
+        photonTransfer({
+          tokenAddress: getTokenAddress(type),
+          amount: numberToString(amountMulEth(amount)),
+          walletAddress: address,
+          isDirect: isDirect,
+          payData: '',
+          filePath: filePath ? filePath : '',
         })
-        .catch(e => {
-          console.log('photonTransfer-error', e);
-        });
+          .then(res => {
+            // console.log('photonTransfer-res::', res);
+            const resJson = JSON.parse(res);
+            if (resJson.error_code === 0) {
+              Toast.show('payment success');
+              navigate('PhotonTransactionRecord');
+            }
+            // 1002 3002 need findPath
+            else if (
+              resJson.error_code === 1002 ||
+              resJson.error_code === 3002
+            ) {
+              findPath({
+                walletAddress: address,
+                tokenAddress: getTokenAddress(type),
+                balance: numberToString(amountMulEth(amount)),
+              }).then(pathRes => {
+                // console.log('findPathRes', pathRes);
+                const pathResJson = JSON.parse(pathRes);
+                // transfer isDirect=false
+                if (pathResJson.error_code === 0) {
+                  transferFun(false, JSON.stringify(pathResJson.data));
+                } else {
+                  Toast.show(pathResJson.error_message, {
+                    position: Toast.position.CENTER,
+                  });
+                }
+              });
+            } else {
+              Toast.show(resJson.error_message, {
+                position: Toast.position.CENTER,
+              });
+            }
+          })
+          .catch(e => {
+            // console.log('photonTransfer-error', e);
+          });
+      } catch (e) {
+        // console.log(e);
+      }
     },
     [address, amount, navigate, type],
   );

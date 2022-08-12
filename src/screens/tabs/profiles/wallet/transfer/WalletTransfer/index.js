@@ -127,48 +127,50 @@ const WalletTransfer = props => {
     setToastContent('loading...');
     setToastDur(null);
     try {
-      getTransferGasPrice({type: currentAccount.type}).then(gasPriceRes => {
-        setGasPrice(gasPriceRes);
-        getTransferGasLimit({
-          type: currentAccount.type,
-          fromAddress: currentAccount.address,
-          toAddress: address,
-          amount: inputAmount ? inputAmount : '0',
-          remark: remark ? remark : '',
-          cType: tokenOption.cType,
-          pwd,
-        })
-          .then(gasLimitRes => {
-            setGasLimit(gasLimitRes);
-
-            const price = bigNumberFormatUnits(
-              gasPriceRes.toString(),
-              9,
-            ).toString();
-            const data = {
-              info: 'Transfer ' + tokenOption.cType,
-              from:
-                currentAccount.address.indexOf('0x') !== -1
-                  ? currentAccount.address
-                  : '0x' + currentAccount.address,
-              to: address,
-              gasPrice: gasPriceRes,
-              gasPriceNumber:
-                price.indexOf('.') !== -1 ? price.split('.')[0] : price,
-              gasLimit: gasLimitRes,
-              price: inputAmount + ' ' + tokenOption.cType,
-              pwd,
-            };
-            setPwdVisible(false);
-            setToastVisible(false);
-            setConfirmData(data);
-            setConfirmVisible(true);
+      getTransferGasPrice({type: currentAccount.type})
+        .then(gasPriceRes => {
+          setGasPrice(gasPriceRes);
+          getTransferGasLimit({
+            type: currentAccount.type,
+            fromAddress: currentAccount.address,
+            toAddress: address,
+            amount: inputAmount ? inputAmount : '0',
+            remark: remark ? remark : '',
+            cType: tokenOption.cType,
+            pwd,
           })
-          .catch(e => {
-            setToastVisible(true);
-            setToastContent(e.message);
-          });
-      });
+            .then(gasLimitRes => {
+              setGasLimit(gasLimitRes);
+
+              const price = bigNumberFormatUnits(
+                gasPriceRes.toString(),
+                9,
+              ).toString();
+              const data = {
+                info: 'Transfer ' + tokenOption.cType,
+                from:
+                  currentAccount.address.indexOf('0x') !== -1
+                    ? currentAccount.address
+                    : '0x' + currentAccount.address,
+                to: address,
+                gasPrice: gasPriceRes,
+                gasPriceNumber:
+                  price.indexOf('.') !== -1 ? price.split('.')[0] : price,
+                gasLimit: gasLimitRes,
+                price: inputAmount + ' ' + tokenOption.cType,
+                pwd,
+              };
+              setPwdVisible(false);
+              setToastVisible(false);
+              setConfirmData(data);
+              setConfirmVisible(true);
+            })
+            .catch(e => {
+              setToastVisible(true);
+              setToastContent(e.message);
+            });
+        })
+        .catch(console.warn);
     } catch (e) {
       setToastVisible(false);
       setToastVisible(false);
@@ -176,16 +178,20 @@ const WalletTransfer = props => {
   };
 
   const onInfoModalConfirm = pwd => {
-    if (tokenOption.type === 'spectrum') {
-      if (tokenOption.cType === 'SMT') {
-        onTransaction(pwd);
-      } else {
-        onContractTransaction(pwd, tokenOption.cType);
+    try {
+      if (tokenOption.type === 'spectrum') {
+        if (tokenOption.cType === 'SMT') {
+          onTransaction(pwd);
+        } else {
+          onContractTransaction(pwd, tokenOption.cType);
+        }
+      } else if (tokenOption.type === 'ethereum') {
+        if (tokenOption.cType === 'ETH') {
+          onTransaction(pwd);
+        }
       }
-    } else if (tokenOption.type === 'ethereum') {
-      if (tokenOption.cType === 'ETH') {
-        onTransaction(pwd);
-      }
+    } catch (e) {
+      console.log(e);
     }
   };
 

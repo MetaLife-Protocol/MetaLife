@@ -19,7 +19,7 @@ export const uploadPhotonLogDialog = ({dialog}) => {
           } else {
             showErrorDialog(dialog);
           }
-          console.log('uploadPhotonLog res::', resJson);
+          // console.log('uploadPhotonLog res::', resJson);
         });
       }}
     />,

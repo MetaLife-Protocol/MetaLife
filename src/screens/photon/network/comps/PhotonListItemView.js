@@ -144,7 +144,7 @@ const PhotonListItemView = ({
         console.log('error::::init::::');
         closeChannel(resJson.error_message);
       }
-      console.log('photonWithDraw res:', res);
+      // console.log('photonWithDraw res:', res);
     });
   }, [closeChannel, data?.balance, data.channel_identifier]);
 

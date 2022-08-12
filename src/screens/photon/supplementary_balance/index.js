@@ -27,7 +27,7 @@ import Toast from 'react-native-tiny-toast';
 const SupplementaryBalance = () => {
   const styles = useStyle(createSty);
   const route = useRoute();
-  const {channelData, walletBalance} = route.params ?? {};
+  const {channelData, walletBalance} = route.params;
   const navigation = useNavigation();
 
   const [amount, setAmount] = useState('');
@@ -56,37 +56,41 @@ const SupplementaryBalance = () => {
           disabled={btnDisabled}
           title={'Create'}
           press={() => {
-            const type = getPhotonTokenSymbol(channelData?.token_address);
-            let chainBalance = safeDecimal(
-              walletBalance[type].balance_on_chain,
-            );
-            const depositAmount = safeDecimal(amount).mul(ETHER);
-            if (depositAmount.comparedTo(chainBalance) === 1) {
-              Toast.show('Insufficient Balance', {
-                position: Toast.position.CENTER,
-              });
-              return;
-            }
-            depositChannelMethod({
-              photonTokenAddress: channelData?.token_address,
-              partnerAddress: channelData?.partner_address,
-              depositBalance: numberToString(depositAmount),
-            })
-              .then(res => {
-                const jsonRes = JSON.parse(res);
-                if (jsonRes.error_code === 0) {
-                  //   TODO 成功
-                  navigation.goBack();
-                } else {
-                  Toast.show(jsonRes.error_message, {
-                    position: Toast.position.CENTER,
-                  });
-                }
-                console.log('depositChannelMethod res::', res);
+            try {
+              const type = getPhotonTokenSymbol(channelData?.token_address);
+              let chainBalance = safeDecimal(
+                walletBalance[type].balance_on_chain,
+              );
+              const depositAmount = safeDecimal(amount).mul(ETHER);
+              if (depositAmount.comparedTo(chainBalance) === 1) {
+                Toast.show('Insufficient Balance', {
+                  position: Toast.position.CENTER,
+                });
+                return;
+              }
+              depositChannelMethod({
+                photonTokenAddress: channelData?.token_address,
+                partnerAddress: channelData?.partner_address,
+                depositBalance: numberToString(depositAmount),
               })
-              .catch(error => {
-                console.log('depositChannelMethod error::', error);
-              });
+                .then(res => {
+                  const jsonRes = JSON.parse(res);
+                  if (jsonRes.error_code === 0) {
+                    //   TODO 成功
+                    navigation.goBack();
+                  } else {
+                    Toast.show(jsonRes.error_message, {
+                      position: Toast.position.CENTER,
+                    });
+                  }
+                  // console.log('depositChannelMethod res::', res);
+                })
+                .catch(error => {
+                  // console.log('depositChannelMethod error::', error);
+                });
+            } catch (e) {
+              // console.log(e);
+            }
           }}
         />
       </View>
