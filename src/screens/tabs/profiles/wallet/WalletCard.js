@@ -43,6 +43,7 @@ const WalletCard = ({
   const dialog = useDialog();
 
   const [switchVisible, setSwitchVisible] = useState(false);
+  const currentAccount = getCurrentAccount(wallet);
 
   function goScreen(name, params) {
     navigate(name, params);
@@ -98,7 +99,7 @@ const WalletCard = ({
           <View style={[row, justifySpaceAround]}>
             <Text style={[title]}>Address</Text>
             <Text style={[{color: '#C0D7F4'}]}>
-              {abbreviationAccount(getCurrentAccount(wallet).address, 5, 8)}
+              {abbreviationAccount(currentAccount.address, 5, 8)}
             </Text>
             <Pressable
               hitSlop={10}
@@ -131,7 +132,6 @@ const WalletCard = ({
             <Pressable
               style={[alignItemsCenter, icons]}
               onPress={() => {
-                const currentAccount = getCurrentAccount(wallet);
                 goScreen('ReceivingCode', {
                   token: fixWalletAddress(currentAccount?.address),
                 });
@@ -141,14 +141,23 @@ const WalletCard = ({
             </Pressable>
             <Pressable
               style={[alignItemsCenter, icons]}
-              onPress={() => goScreen('WalletTransfer')}>
+              onPress={() => {
+                if (currentAccount.observer) {
+                  Toast.show('Observe account cannot start photon');
+                  return;
+                }
+                goScreen('WalletTransfer');
+              }}>
               <Image source={iconDic.transfer} />
               <Text style={[tag]}>Send</Text>
             </Pressable>
             <Pressable
               style={[alignItemsCenter, icons]}
               onPress={() => {
-                console.log('photon::', photon);
+                if (currentAccount.observer) {
+                  Toast.show('Observe account cannot start photon');
+                  return;
+                }
                 if (photon?.isPhotonLogin) {
                   navigate('PhotonNetwork');
                 } else {

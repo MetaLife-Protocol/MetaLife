@@ -213,11 +213,11 @@ export function stopCurrentPhoton() {
   // 取消光子订阅通知
   unsubscribePhoton()
     .then(() => {
-      photonStop();
+      photonStop().catch(e => console.log('stop', e));
       store.dispatch({type: 'resetPhoton'});
     })
     .catch(e => {
-      photonStop();
+      photonStop().catch(err => console.log('stop', err));
       store.dispatch({type: 'resetPhoton'});
     });
 }

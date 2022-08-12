@@ -18,7 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import {HeaderIcons} from '../shared/Icons';
 import {startPhoton} from './photon/PhotonUtils';
 import {useDialog} from '../metalife-base';
-import {stopAboutWalletAccount} from '../utils';
+import {getCurrentAccount, stopAboutWalletAccount} from '../utils';
 
 const iconDic = {
   Home_icon_Default: require('../assets/image/tabBtn/Home_icon_Default.png'),
@@ -51,20 +51,23 @@ const Tabs = ({showPullMenu, wallet, cfg: {darkMode}, photon}) => {
   function goScreen(name, params) {
     navigate(name, params);
   }
+  const {observer} = getCurrentAccount(wallet);
 
   useEffect(() => {
-    // if (!photon.isPhotonLogin) {
-    startPhoton({
-      dialog: dialog,
-      wallet: wallet,
-      directToNetworkPage: false,
-    });
-    // }
-    return () => {
-      stopAboutWalletAccount();
-    };
+    if (!observer) {
+      // if (!photon.isPhotonLogin) {
+      startPhoton({
+        dialog: dialog,
+        wallet: wallet,
+        directToNetworkPage: false,
+      });
+      // }
+      return () => {
+        stopAboutWalletAccount();
+      };
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [observer]);
 
   function menuHandler(e) {
     e.target.measure((x, y, width, height, pageX, pageY) =>
