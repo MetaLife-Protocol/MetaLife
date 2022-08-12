@@ -14,6 +14,7 @@ import TitleAndTips from './comp/TitleAndTips';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {
+  fixWalletAddress,
   formTimeUtil,
   getCurrentAccount,
   screenHeight,
@@ -226,10 +227,12 @@ const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
         setShowTrans={setShowTrans}
         darkMode={darkMode}
         list={{
-          price: price + type,
+          // price: price + type,
+          price: '0 MLT',
           to: '0x4f47b5f2685d5d108d008577728242905ff9e5a8',
-          from: getCurrentAccount(wallet).address,
+          from: fixWalletAddress(getCurrentAccount(wallet).address),
           gasLimit: gasLimit,
+          content: 'Buy NFT',
         }}
         showLoading={showLoading}
         confirmPress={buyPress}

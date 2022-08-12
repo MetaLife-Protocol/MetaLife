@@ -28,7 +28,7 @@ const TransactionModal = ({
 }) => {
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   const back = darkMode ? '#232929' : '#fff';
-  console.log('gggg', list.gasLimit);
+  // console.log('gggg', list.gasLimit);
   const gasLim = list?.gasLimit.div(createBigNumber(10000)).toNumber();
   const [gasLimit, setGasLimit] = useState(
     list?.gasLimit.div(createBigNumber(10000)).toNumber(),
@@ -48,7 +48,7 @@ const TransactionModal = ({
       // setGasPriceNumber(Number(bigNumberFormatUnits(res.toString(), 9)));
     });
   }, []);
-  console.log('rrrrr', (300 - gasLimit) * 0.3 + gasLimit, gasLimit);
+  // console.log('rrrrr', (300 - gasLimit) * 0.3 + gasLimit, gasLimit);
   return (
     <Modal
       animationType={'slide'}
@@ -65,7 +65,7 @@ const TransactionModal = ({
           </View>
           <Text style={[text, styles.mlt]}>{list?.price}</Text>
           <Text style={[styles.comText]}>Info</Text>
-          <Text style={[text, styles.content]}>Listing NFT</Text>
+          <Text style={[text, styles.content]}>{list?.content}</Text>
           <Text style={[styles.comText]}>To</Text>
           <Text style={[text, styles.content]}>{list?.to}</Text>
           <Text style={[styles.comText]}>From</Text>

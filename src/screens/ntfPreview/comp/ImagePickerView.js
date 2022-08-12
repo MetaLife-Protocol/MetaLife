@@ -12,14 +12,17 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import Toast from 'react-native-tiny-toast';
 import {uploadImageToIFPS, uploadNftAssetsJson} from '../../../remote/ipfsOP';
 import {uploadFileToIFPS} from '../../nft/nftUtils';
+import LoadingView from '../../../shared/comps/LoadingView';
 
 const ImagePickerView = ({style, onImagePicker}) => {
   const styles = useStyle(createSty);
 
   const [image, setImage] = useState();
+  const [showLoading, setShowLoading] = useState(false);
 
   const cameraHandler = useCallback(
     async ({didCancel, errorCode, errorMessage, assets}) => {
+      setShowLoading(true);
       // console.log('ddddddddddd', errorCode, errorMessage, assets);
       if (errorCode || didCancel) {
         return errorCode && Toast.show(errorMessage);
@@ -34,6 +37,7 @@ const ImagePickerView = ({style, onImagePicker}) => {
       // console.log('res::', res);
       onImagePicker && onImagePicker(res.IpfsHash);
       setImage(file);
+      setShowLoading(false);
     },
     [onImagePicker],
   );
@@ -63,6 +67,7 @@ const ImagePickerView = ({style, onImagePicker}) => {
         source={require('../../../assets/image/nft/nft_add_icon.png')}
         style={styles.addIcon}
       />
+      {showLoading && <LoadingView />}
     </TouchableOpacity>
   );
 };

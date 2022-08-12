@@ -17,8 +17,16 @@ import {fixWalletAddress, getCurrentAccount} from '../../../utils';
 import {getNftAssetsJson} from '../../../remote/ipfsOP';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import OnSaleItem from './OnSaleItem';
+import LoadingView from '../../../shared/comps/LoadingView';
 
-const MyNftItem = ({wallet, addNftItemList, nft, collection, darkMode}) => {
+const MyNftItem = ({
+  wallet,
+  addNftItemList,
+  nft,
+  collection,
+  darkMode,
+  emptyNftItemList,
+}) => {
   console.log('nnnnnnnnffff', collection);
   const {navigate} = useNavigation();
   const myaddress = getCurrentAccount(wallet).address;
@@ -32,8 +40,12 @@ const MyNftItem = ({wallet, addNftItemList, nft, collection, darkMode}) => {
         ? collection?.nftItem[myaddress]
         : []
       : [];
+  console.log('kkkkkkk', collectionItem);
   const [type, setType] = useState(0);
   const [onSaleItem, setOnSaleItem] = useState([]);
+  const [showLoading, setShowLoading] = useState(
+    collectionItem && collectionItem.length > 0 ? false : true,
+  );
   const renderItem = ({item, index}) => {
     return (
       <Pressable
@@ -76,8 +88,9 @@ const MyNftItem = ({wallet, addNftItemList, nft, collection, darkMode}) => {
   };
   async function fetchOnSaleData() {
     const arrData = await getMyNFTSellItemListInfo(null, myaddress, 0, 10);
-    console.log('rrrraaaaa', arrData);
+    // console.log('rrrraaaaa', arrData);
     setOnSaleItem(arrData);
+    setShowLoading(false);
   }
   async function fetchData() {
     const result = await getOpenGalaxyNFTCollectionInfos();
@@ -101,6 +114,7 @@ const MyNftItem = ({wallet, addNftItemList, nft, collection, darkMode}) => {
                 : -1;
             if (index == -1) {
               getNftAssetsJson(res.uri).then(collInfo => {
+                setShowLoading(false);
                 collInfo.headers['content-type'] === 'application/json' &&
                   addNftItemList({
                     ...res,
@@ -153,8 +167,14 @@ const MyNftItem = ({wallet, addNftItemList, nft, collection, darkMode}) => {
     if (type === 0) {
       fetchData();
     } else {
+      setShowLoading(true);
       fetchOnSaleData();
     }
+    return () => {
+      if (collectionItem && collectionItem.length == 0) {
+        emptyNftItemList({type: getCurrentAccount(wallet).address});
+      }
+    };
   }, []);
   const emptyComponent = () => {
     return <ListEmpty />;
@@ -226,6 +246,7 @@ const MyNftItem = ({wallet, addNftItemList, nft, collection, darkMode}) => {
           keyExtractor={(item, index) => item + index}
         />
       )}
+      {showLoading && <LoadingView />}
     </View>
   );
 };
@@ -258,6 +279,7 @@ const msp = s => {
 const mdp = d => {
   return {
     addNftItemList: payload => d({type: 'addNftItemList', payload}),
+    emptyNftItemList: payload => d({type: 'emptyNftItemList', payload}),
   };
 };
 

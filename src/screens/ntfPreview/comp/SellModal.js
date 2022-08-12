@@ -11,7 +11,7 @@ const arr = require('../../../assets/image/nft/arrow_down.png');
 const arrup = require('../../../assets/image/nft/up_arrow.png');
 const SellModal = ({setPrice, visible, setVisible, onListPress, darkMode}) => {
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
-  const [month, setMonth] = useState('1 day');
+  const [month, setMonth] = useState('1 month');
   const [showMonth, setShowMonth] = useState(false);
   const [showType, setShowType] = useState(false);
   const [type, setType] = useState('MLT');

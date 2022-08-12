@@ -59,6 +59,7 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
   const [showEdit, setShowEdit] = useState(false);
   const [showSubmit, setShowSubmit] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
+  const [adName, setAdname] = useState('');
 
   const showCollect = useCallback(() => {
     setCollect(!collect);
@@ -73,8 +74,9 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
   //   );
   // }, [dialog, properties]);
 
-  const clickItem = addressf => {
+  const clickItem = (addressf, name) => {
     setAddress(addressf);
+    setAdname(name);
   };
 
   // const PropertiesView = () => {
@@ -114,10 +116,12 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
           res.map(item => {
             if (item.address === params?.address) {
               setAddress(params?.address);
+              setAdname(item.name);
             }
           });
         } else {
           setAddress(res[0].address);
+          setAdname(res[0].name);
         }
       }
     });
@@ -299,13 +303,10 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
               <>
                 {!collect ? (
                   <View style={[styles.collection]}>
-                    <Pressable onPress={() => clickItem(date[0].address)}>
-                      <Image
-                        source={date[0].address == address ? select : unselect}
-                      />
+                    <Pressable>
+                      <Image source={select} />
                     </Pressable>
-                    <Text
-                      style={[text]}>{`  Collection #${date[0].name}`}</Text>
+                    <Text style={[text]}>{`  Collection #${adName}`}</Text>
                     <Pressable
                       style={[
                         styles.touchImg,
@@ -320,7 +321,8 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
                     {date.map((item, index) => {
                       return (
                         <View style={[styles.collection]} key={index}>
-                          <Pressable onPress={() => clickItem(item.address)}>
+                          <Pressable
+                            onPress={() => clickItem(item.address, item.name)}>
                             <Image
                               source={
                                 item.address == address ? select : unselect

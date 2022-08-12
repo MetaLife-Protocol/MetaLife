@@ -47,6 +47,7 @@ const MyCollectionDetail = ({
   const [date, setDate] = useState([]);
   const [headInfo, setHeadInfo] = useState({});
   const [showLoading, setShowLoading] = useState(true);
+  const [headLoading, setHeadLoading] = useState(true);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -69,7 +70,7 @@ const MyCollectionDetail = ({
         // alert(JSON.stringify(nftJInfo.data.logoImage));
         if (nftJInfo.data) {
           setHeadInfo(nftJInfo.data);
-          setShowLoading(false);
+          setHeadLoading(false);
         }
       });
     }, address);
@@ -123,6 +124,7 @@ const MyCollectionDetail = ({
         />
         <Text style={[text, styles.title]}>{`${headInfo?.name}`}</Text>
         <Text style={[styles.desc]}>{headInfo?.description}</Text>
+        {headLoading && <LoadingView />}
       </View>
     );
   };

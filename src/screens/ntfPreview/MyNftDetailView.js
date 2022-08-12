@@ -60,6 +60,7 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
     token: '0x0000000000000000000000000000000000000000',
   });
   const [showPrice, setShowPrice] = useState(0);
+  const [collectInfo, setCollectInfo] = useState({});
   const downPress = useCallback(() => {
     setIsShow(!isShow);
   }, [isShow]);
@@ -109,6 +110,9 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
     getCollectionInfo(info => {
       // console.log('rrrrrttt', info, address);
       setEarn(info.royaltiesPercentageInBips);
+      getNftAssetsJson(info.metaInfo).then(nftJInfo => {
+        setCollectInfo(nftJInfo.data);
+      });
     }, address);
     getSaleIn();
     getNftItemInfo(address, tokenId).then(res => {
@@ -143,11 +147,10 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
         <Text
           style={{
             color: colorsBasics.primary,
-          }}>{`${list?.name}`}</Text>
-        {/*<Text style={[text, styles.bend]}>{'julie pacino:Aroud the bend'}</Text>*/}
-        {/*<Text style={[text, styles.under]}>*/}
-        {/*  {'The underbelly of Web3.A shadow wague,formless, but eternal'}*/}
-        {/*</Text>*/}
+          }}>{`${collectInfo?.name || ''}`}</Text>
+        <Text style={[text, styles.bend]}>{list?.name || ''}</Text>
+        <Text style={[text, styles.under]}>{list?.description || ''}</Text>
+
         <View style={styles.saleView}>
           <Text style={[styles.priceText]}>{`Sale ends ${fromDateTime(
             time,
@@ -180,14 +183,14 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
           </View>
         </View>
         <View style={styles.rowView}>
-          <FastImage source={btn} style={styles.headImg} />
+          {/*<FastImage source={btn} style={styles.headImg} />*/}
           <Text style={styles.create}>{'Created by'}</Text>
           <Text style={[styles.textWork]}>
             {nftreviationAccount(list?.create, 6, 4)}
           </Text>
         </View>
         <View style={styles.rowView}>
-          <FastImage source={btn} style={styles.headImg} />
+          {/*<FastImage source={btn} style={styles.headImg} />*/}
           <Text style={styles.create}>{'Owned by'}</Text>
           <Text style={[styles.textWork]}>
             {params?.ownerOf
@@ -211,10 +214,17 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
         {isShow ? (
           <>
             <View style={styles.ghRow}>
-              <Image source={btn} style={styles.ghImg} />
-              <Text style={styles.ghText}>{`${list?.name}`}</Text>
+              <Image
+                source={{
+                  uri: ipfsBaseURL + 'ipfs/' + collectInfo?.logoImage,
+                }}
+                style={styles.ghImg}
+              />
+              <Text style={styles.ghText}>{`${collectInfo?.name || ''}`}</Text>
             </View>
-            <Text style={styles.ghDetail}>{list?.description}</Text>
+            <Text style={styles.ghDetail}>
+              {collectInfo?.description || ''}
+            </Text>
           </>
         ) : null}
         <View style={styles.line} />
@@ -258,12 +268,15 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
         ) : null}
         <View style={styles.bottom} />
       </View>
-      {due > 0 ? (
-        <RoundBtn
+      {due > 0 &&
+      fixWalletAddress(params?.ownerOf.toLowerCase()) !==
+        fixWalletAddress(getCurrentAccount(wallet).address.toLowerCase()) ? (
+        <Pressable
           style={[styles.buyView]}
           title={'Buy now'}
-          press={buyNowHandler}
-        />
+          onPress={buyNowHandler}>
+          <Text style={styles.buyText}>Buy now</Text>
+        </Pressable>
       ) : null}
     </ScrollView>
   );
@@ -289,7 +302,7 @@ const styles = StyleSheet.create({
   create: {
     color: '#8E8E92',
     fontSize: 14,
-    marginLeft: pxToDp(11),
+    // marginLeft: pxToDp(11),
   },
   headImg: {
     width: pxToDp(30),
@@ -383,7 +396,13 @@ const styles = StyleSheet.create({
     height: 44,
     borderRadius: 22,
     marginBottom: 20,
+    marginTop: 10,
+    backgroundColor: '#29DAD7',
+    marginHorizontal: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+  buyText: {fontSize: 15, color: '#000'},
   saleView: {
     width: screenWidth - 30,
     height: 124,

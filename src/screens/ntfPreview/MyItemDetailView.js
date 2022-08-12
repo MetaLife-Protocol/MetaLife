@@ -96,6 +96,7 @@ const MyItemDetailView = ({
     token: '0x0000000000000000000000000000000000000000',
   });
   const [showPrice, setShowPrice] = useState(0);
+  const [collectInfo, setCollectInfo] = useState({});
   async function getSaleIn() {
     const results = await getSaleInfo(tokenId.toString(), address);
     try {
@@ -136,6 +137,9 @@ const MyItemDetailView = ({
     getCollectionInfo(info => {
       // console.log('rrrrrttt', info, address);
       setEarn(info.royaltiesPercentageInBips);
+      getNftAssetsJson(info.metaInfo).then(nftJInfo => {
+        setCollectInfo(nftJInfo.data);
+      });
     }, address);
     getNftItemInfo(address, tokenId).then(res => {
       if (res) {
@@ -169,6 +173,7 @@ const MyItemDetailView = ({
         address,
         cb => {
           params.callback();
+          Toast.show('Cancel listing complete');
           navigation.goBack();
           setPwdVisible(false);
           setToastVisible(false);
@@ -318,11 +323,9 @@ const MyItemDetailView = ({
         <Text
           style={{
             color: colorsBasics.primary,
-          }}>{`${list?.name}`}</Text>
-        {/*<Text style={[text, styles.bend]}>{'julie pacino:Aroud the bend'}</Text>*/}
-        {/*<Text style={[text, styles.under]}>*/}
-        {/*  {'The underbelly of Web3.A shadow wague,formless, but eternal'}*/}
-        {/*</Text>*/}
+          }}>{`${collectInfo?.name || ''}`}</Text>
+        <Text style={[text, styles.bend]}>{list?.name || ''}</Text>
+        <Text style={[text, styles.under]}>{list?.description || ''}</Text>
         {params?.onSale ? (
           <View style={styles.saleView}>
             <Text style={[styles.priceText]}>{`Sale ends ${fromDateTime(
@@ -357,14 +360,14 @@ const MyItemDetailView = ({
           </View>
         ) : null}
         <View style={styles.rowView}>
-          <FastImage source={btn} style={styles.headImg} />
+          {/*<FastImage source={btn} style={styles.headImg} />*/}
           <Text style={styles.create}>{'Created by'}</Text>
           <Text style={[styles.textWork]}>
             {nftreviationAccount(list?.create, 6, 4)}
           </Text>
         </View>
         <View style={styles.rowView}>
-          <FastImage source={btn} style={styles.headImg} />
+          {/*<FastImage source={btn} style={styles.headImg} />*/}
           <Text style={styles.create}>{'Owned by'}</Text>
           <Text style={[styles.textWork]}>
             {params?.ownerOf
@@ -388,10 +391,17 @@ const MyItemDetailView = ({
         {isShow ? (
           <>
             <View style={styles.ghRow}>
-              <Image source={btn} style={styles.ghImg} />
-              <Text style={styles.ghText}>{`${list?.name}`}</Text>
+              <Image
+                source={{
+                  uri: ipfsBaseURL + 'ipfs/' + collectInfo?.logoImage,
+                }}
+                style={styles.ghImg}
+              />
+              <Text style={styles.ghText}>{`${collectInfo?.name || ''}`}</Text>
             </View>
-            <Text style={styles.ghDetail}>{list?.description}</Text>
+            <Text style={styles.ghDetail}>
+              {collectInfo?.description || ''}
+            </Text>
           </>
         ) : null}
         <View style={styles.line} />
@@ -473,10 +483,12 @@ const MyItemDetailView = ({
         setShowTrans={setShowTrans}
         darkMode={darkMode}
         list={{
-          price: price + selectMap.type,
+          // price: price + selectMap.type,
+          price: '0 MLT',
           to: '0x4f47b5f2685d5d108d008577728242905ff9e5a8',
-          from: getCurrentAccount(wallet).address,
+          from: fixWalletAddress(getCurrentAccount(wallet).address),
           gasLimit: gasLimit,
+          content: 'Listing NFT',
         }}
         showLoading={showLoading}
         confirmPress={confirmPress}
@@ -506,7 +518,7 @@ const styles = StyleSheet.create({
   create: {
     color: '#8E8E92',
     fontSize: 14,
-    marginLeft: pxToDp(11),
+    marginLeft: pxToDp(0),
   },
   headImg: {
     width: pxToDp(30),
