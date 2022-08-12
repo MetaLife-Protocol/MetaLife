@@ -70,7 +70,7 @@ const PhotonNetwork = ({
             handler: () => {
               const currentAccount = getCurrentAccount(wallet);
               goScreen('ReceivingCode', {
-                token: fixWalletAddress(currentAccount?.address),
+                token: fixWalletAddress(currentAccount.address),
               });
               showPullMenu({position: {}, buttons: []});
             },

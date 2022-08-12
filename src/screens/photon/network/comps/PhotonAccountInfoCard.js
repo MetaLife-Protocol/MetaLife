@@ -6,7 +6,7 @@
  * @desc:
  */
 
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Text from '../../../../shared/comps/ComText';
 import {ethNumberFixed, useStyle} from '../../../../metalife-base';
@@ -14,15 +14,6 @@ import {getPhotonTokenSymbol} from '../../PhotonUtils';
 
 const PhotonAccountInfoCard = ({style, balances, currentAccount}) => {
   const styles = useStyle(createSty);
-
-  // useEffect(() => {
-  //   console.log('balances::', balances);
-  //   // const {balance_in_photon, balance_on_chain, token_address} = balance;
-  //   // if (token_address === '0x6601F810eaF2fa749EEa10533Fd4CC23B8C791dc') {
-  //   //   if (!balance_in_photon) {
-  //   //   }
-  //   // }
-  // }, [balances]);
 
   const itemView = useCallback(
     (title, values, showUnit = true, token_address, style) => {

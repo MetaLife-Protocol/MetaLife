@@ -36,39 +36,35 @@ const Payment = ({showPullMenu}) => {
 
   const [address, setAddress] = useState(''),
     [amount, setAmount] = useState(''),
-    [remark, setRemark] = useState(''),
     [type, setType] = useState('SMT');
 
   const btnDisabled = useMemo(() => !(address && amount), [address, amount]);
 
-  const transferFun = useCallback(
-    (isDirect, filePath) => {
-      try {
-        photonTransfer({
-          tokenAddress: getTokenAddress(type),
-          amount: numberToString(amountMulEth(amount)),
-          walletAddress: address,
-          isDirect: isDirect,
-          payData: '',
-          filePath: filePath ? filePath : '',
-        })
-          .then(res => {
-            // console.log('photonTransfer-res::', res);
-            const resJson = JSON.parse(res);
-            if (resJson.error_code === 0) {
-              Toast.show('payment success');
-              navigate('PhotonTransactionRecord');
-            }
-            // 1002 3002 need findPath
-            else if (
-              resJson.error_code === 1002 ||
-              resJson.error_code === 3002
-            ) {
-              findPath({
-                walletAddress: address,
-                tokenAddress: getTokenAddress(type),
-                balance: numberToString(amountMulEth(amount)),
-              }).then(pathRes => {
+  const transferFun = (isDirect, filePath) => {
+    try {
+      photonTransfer({
+        tokenAddress: getTokenAddress(type),
+        amount: numberToString(amountMulEth(amount)),
+        walletAddress: address,
+        isDirect: isDirect,
+        payData: '',
+        filePath: filePath ? filePath : '',
+      })
+        .then(res => {
+          // console.log('photonTransfer-res::', res);
+          const resJson = JSON.parse(res);
+          if (resJson.error_code === 0) {
+            Toast.show('payment success');
+            navigate('PhotonTransactionRecord');
+          }
+          // 1002 3002 need findPath
+          else if (resJson.error_code === 1002 || resJson.error_code === 3002) {
+            findPath({
+              walletAddress: address,
+              tokenAddress: getTokenAddress(type),
+              balance: numberToString(amountMulEth(amount)),
+            })
+              .then(pathRes => {
                 // console.log('findPathRes', pathRes);
                 const pathResJson = JSON.parse(pathRes);
                 // transfer isDirect=false
@@ -79,22 +75,21 @@ const Payment = ({showPullMenu}) => {
                     position: Toast.position.CENTER,
                   });
                 }
-              });
-            } else {
-              Toast.show(resJson.error_message, {
-                position: Toast.position.CENTER,
-              });
-            }
-          })
-          .catch(e => {
-            // console.log('photonTransfer-error', e);
-          });
-      } catch (e) {
-        // console.log(e);
-      }
-    },
-    [address, amount, navigate, type],
-  );
+              })
+              .catch(e => {});
+          } else {
+            Toast.show(resJson.error_message, {
+              position: Toast.position.CENTER,
+            });
+          }
+        })
+        .catch(e => {
+          // console.log('photonTransfer-error', e);
+        });
+    } catch (e) {
+      // console.log(e);
+    }
+  };
 
   function menuHandler(e) {
     e.target.measure((x, y, width, height, pageX, pageY) =>

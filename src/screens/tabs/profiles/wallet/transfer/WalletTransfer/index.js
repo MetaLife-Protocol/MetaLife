@@ -79,6 +79,12 @@ const WalletTransfer = props => {
 
   const onConfirm = () => {
     // inputAmount + gas fee > tokenOption.amount  not success
+    if (!tokenOption.amount) {
+      Toast.show('Funds is null, select again!', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
     const gasFee = gasPrice.mul(gasLimit);
     if (tokenOption.type === 'spectrum') {
       if (tokenOption.cType === 'SMT') {

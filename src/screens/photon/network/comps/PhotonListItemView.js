@@ -58,12 +58,12 @@ const PhotonListItemView = ({
   const styles = useStyle(createSty);
   const {navigate} = useNavigation();
   const dialog = useDialog();
-  const replenishAction = useCallback(() => {
+  const replenishAction = () => {
     navigate('SupplementaryBalance', {
       channelData: data,
       walletBalance: walletBalance,
     });
-  }, [data, navigate, walletBalance]);
+  };
 
   const closeFun = useCallback(
     isForced => {
@@ -123,11 +123,11 @@ const PhotonListItemView = ({
     [closeFun, dialog, styles.contentText],
   );
 
-  const settleAction = useCallback(() => {
+  const settleAction = () => {
     settleChannelDialog(dialog, data.channel_identifier + '');
-  }, [data.channel_identifier, dialog]);
+  };
 
-  const withdrawAction = useCallback(() => {
+  const withdrawAction = () => {
     photonWithDraw({
       channelIdentifierHashStr: data.channel_identifier + '',
       amountStr: numberToString(data?.balance) ?? '0',
@@ -146,7 +146,7 @@ const PhotonListItemView = ({
       }
       // console.log('photonWithDraw res:', res);
     });
-  }, [closeChannel, data?.balance, data.channel_identifier]);
+  };
 
   const [tipsText, isShowForceClose] = useMemo(() => {
     // let tipsStr = 'Withdrawal, estimated 1~2 minutes';

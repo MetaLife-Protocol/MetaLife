@@ -6,35 +6,20 @@
  * @Project:MetaLife
  */
 
-import React, {useCallback, useMemo, useState} from 'react';
-import {
-  Image,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  // Text,
-  View,
-} from 'react-native';
+import React, {useMemo, useState} from 'react';
+import {Image, Pressable, SafeAreaView, StyleSheet, View} from 'react-native';
 import Text from '../../../shared/comps/ComText';
 import Constants from '../../../shared/Constants';
-import {
-  PureTextInput,
-  RoundBtn,
-  useStyle,
-  ETHER,
-  safeDecimal,
-  numberToString,
-} from '../../../metalife-base';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {PureTextInput, RoundBtn, useStyle} from '../../../metalife-base';
+import {useNavigation} from '@react-navigation/native';
 import {createChannel} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {connect} from 'react-redux';
 import {getTokenAddress} from '../PhotonUtils';
 import {bigNumberParseUnits} from 'react-native-web3-wallet';
 
-const CreateChannel = ({setChannelRemark, showPullMenu}) => {
-  const route = useRoute();
-  const {walletBalance} = route.params ?? {};
+const CreateChannel = ({setChannelRemark, showPullMenu, route: {params}}) => {
+  const {walletBalance} = params;
   const styles = useStyle(createSty);
   const {navigate, goBack} = useNavigation();
 
@@ -45,7 +30,7 @@ const CreateChannel = ({setChannelRemark, showPullMenu}) => {
 
   const btnDisabled = useMemo(() => !(address && amount), [address, amount]);
 
-  const onCreateChannel = useCallback(() => {
+  const onCreateChannel = () => {
     const chainBalance = bigNumberParseUnits(
       walletBalance[type].balance_on_chain + '',
       0,
@@ -58,15 +43,11 @@ const CreateChannel = ({setChannelRemark, showPullMenu}) => {
       return;
     }
     setChannelRemark({address, remark});
-    createChannel(
-      getTokenAddress(type),
-      address,
-      numberToString(safeDecimal(amount).mul(ETHER)),
-    )
+    createChannel(getTokenAddress(type), address, inputAmount.toString())
       .then(res => {
         const resJson = JSON.parse(res);
-        console.log('createChannel res::', resJson);
-        if (resJson.error_code == 0) {
+        // console.log('createChannel res::', resJson);
+        if (resJson.error_code === 0) {
           if (remark) {
             setChannelRemark({address, remark});
           }
@@ -83,7 +64,7 @@ const CreateChannel = ({setChannelRemark, showPullMenu}) => {
       .catch(e => {
         console.log('createChannel error', e);
       });
-  }, [setChannelRemark, address, remark, type, amount]);
+  };
 
   function menuHandler(e) {
     e.target.measure((x, y, width, height, pageX, pageY) =>
