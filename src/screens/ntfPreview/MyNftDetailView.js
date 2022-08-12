@@ -3,7 +3,7 @@ import {
   // Text,
   View,
   StyleSheet,
-  Dimensions,
+  Pressable,
   ScrollView,
   Image,
   TouchableOpacity,
@@ -31,6 +31,8 @@ import {bigNumberFormatUnits, createBigNumber} from 'react-native-web3-wallet';
 import {contractsConstant} from '../../remote/contractsConstant';
 import {financeConfig} from '../../remote/wallet/financeConfig';
 import CountDown from '../../shared/comps/CountDown';
+import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
+import Toast from 'react-native-tiny-toast';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
 const down = require('../../assets/image/nft/arrow_down.png');
@@ -38,6 +40,7 @@ const uparr = require('../../assets/image/nft/up_arrow.png');
 const smt = require('../../assets/image/nft/SMT.png');
 const mesh = require('../../assets/image/nft/MESH.png');
 const mlt = require('../../assets/image/icons/lingtuan.png');
+const copy = require('../../assets/image/nft/copy.png');
 
 const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
   // const {item, symbol} = params;
@@ -120,6 +123,10 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
       params.callBack();
     };
   }, []);
+  const clickCopy = () => {
+    nativeClipboard.setString(address);
+    Toast.show('Contract Address copied');
+  };
   const time = new Date(result?.duetime?.toNumber() * 1000);
   // alert(result?.duetime?.toNumber());
   const due = time - new Date();
@@ -222,9 +229,14 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
           <>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Contract Address</Text>
-              <Text style={styles.address}>
-                {nftreviationAccount(address, 6, 4)}
-              </Text>
+              <Pressable
+                style={{flexDirection: 'row', alignItems: 'center'}}
+                onPress={clickCopy}>
+                <Text style={styles.address}>
+                  {nftreviationAccount(address, 6, 4)}
+                </Text>
+                <Image source={copy} style={{marginLeft: 5}} />
+              </Pressable>
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Token ID</Text>

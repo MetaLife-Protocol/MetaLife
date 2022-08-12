@@ -31,7 +31,7 @@ const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
   const [page, setPage] = useState(0);
   const getCollectionList = isMore => {
     getOpenGalaxyNFTCollectionListInfo(null, page, 10).then(result => {
-      console.log('rrrrrrrllllll', result);
+      console.log('rrrrrrrllllll', page, result);
       setRefreshing(false);
       if (page !== 0 && isMore) {
         let data = info;
@@ -87,7 +87,7 @@ const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
             ownerOf: item.seller,
             onSale: true,
             callBack: () => {
-              getCollectionList();
+              refreshPress();
             },
           })
         }>
@@ -119,7 +119,7 @@ const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
         keyExtractor={(item, index) => item + index}
         refreshing={refreshing}
         onRefresh={refreshPress}
-        onEndReachedThreshold={0.3}
+        onEndReachedThreshold={0.1}
         onEndReached={endReachedPress}
       />
     </View>

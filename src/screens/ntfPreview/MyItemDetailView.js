@@ -3,7 +3,7 @@ import {
   // Text,
   View,
   StyleSheet,
-  Dimensions,
+  Pressable,
   ScrollView,
   Image,
   TouchableOpacity,
@@ -45,6 +45,8 @@ import {
 import {financeConfig} from '../../remote/wallet/financeConfig';
 import CountDown from '../../shared/comps/CountDown';
 import {contractsConstant} from '../../remote/contractsConstant';
+import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
+import Toast from 'react-native-tiny-toast';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
 const down = require('../../assets/image/nft/arrow_down.png');
@@ -54,6 +56,7 @@ const shareW = require('../../assets/image/nft/transfer_black.png');
 const smt = require('../../assets/image/nft/SMT.png');
 const mesh = require('../../assets/image/nft/MESH.png');
 const mlt = require('../../assets/image/icons/lingtuan.png');
+const copy = require('../../assets/image/nft/copy.png');
 
 const MyItemDetailView = ({
   route: {params},
@@ -293,6 +296,10 @@ const MyItemDetailView = ({
     );
     // });
   };
+  const clickCopy = () => {
+    nativeClipboard.setString(address);
+    Toast.show('Contract Address copied');
+  };
   const time = new Date(result?.duetime?.toNumber() * 1000);
   return (
     <ScrollView
@@ -399,9 +406,14 @@ const MyItemDetailView = ({
           <>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Contract Address</Text>
-              <Text style={styles.address}>
-                {nftreviationAccount(address, 6, 4)}
-              </Text>
+              <Pressable
+                style={{flexDirection: 'row', alignItems: 'center'}}
+                onPress={clickCopy}>
+                <Text style={styles.address}>
+                  {nftreviationAccount(address, 6, 4)}
+                </Text>
+                <Image source={copy} style={{marginLeft: 5}} />
+              </Pressable>
             </View>
             <View style={styles.detailItem}>
               <Text style={[text, styles.comText]}>Token ID</Text>
