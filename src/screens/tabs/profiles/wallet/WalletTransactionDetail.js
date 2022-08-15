@@ -13,6 +13,7 @@ import QRCode from 'react-native-qrcode-svg';
 import {financeConfig} from '../../../../remote/wallet/financeConfig';
 import NativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import Toast from 'react-native-tiny-toast';
+import {getMainCoinName} from '../../../../utils/chainUtils';
 
 const WalletTransactionDetail = ({
   cfg: {darkMode},
@@ -107,11 +108,7 @@ const WalletTransactionDetail = ({
           {transactData.amount}{' '}
           {transactData.contract
             ? transactData.cType
-            : transactData.type === 'spectrum'
-            ? 'SMT'
-            : transactData.type === 'ethereum'
-            ? 'ETH'
-            : ''}
+            : getMainCoinName(transactData.type)}
         </Text>
         <Text style={[{color: normal}, styles.sender]}>Sender</Text>
         <Text style={[text, styles.comText]}>{transactData.detail.from}</Text>

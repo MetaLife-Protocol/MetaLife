@@ -8,43 +8,43 @@ import {
 import useSchemaStyles, {
   colorsBasics,
 } from '../../../../../shared/UseSchemaStyles';
+import {getMainCoinName, isMainCoin} from '../../../../../utils/chainUtils';
 
 const CoinItem = ({type, address, cType, pressItem, setBalance}) => {
   const {BG, row, justifySpaceBetween, alignItemsCenter, text} =
     useSchemaStyles();
   const [total, setTotal] = useState('');
-
+  let request = true;
   useEffect(() => {
-    if (type === 'spectrum') {
-      if (cType === 'SMT') {
-        getWBalance(type, address, res => {
-          setTotal(res);
-          setBalance({
-            type,
-            cType: 'SMT',
-            balance: res,
-          });
-        });
-      } else {
-        getWBalanceByContract(type, cType, address, res => {
-          setTotal(res);
-          setBalance({
-            type,
-            cType,
-            balance: res,
-          });
-        });
-      }
-    } else if (type === 'ethereum') {
+    if (isMainCoin(type, cType)) {
       getWBalance(type, address, res => {
+        if (!request) {
+          return;
+        }
         setTotal(res);
         setBalance({
           type,
-          cType: 'ETH',
+          cType: getMainCoinName(type),
+          balance: res,
+        });
+      });
+    } else {
+      getWBalanceByContract(type, cType, address, res => {
+        if (!request) {
+          return;
+        }
+        setTotal(res);
+        setBalance({
+          type,
+          cType,
           balance: res,
         });
       });
     }
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      request = false;
+    };
   }, [type, address, cType]);
 
   return (

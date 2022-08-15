@@ -20,6 +20,7 @@ import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
 import {
+  fixAmountDot6,
   fixWalletAddress,
   getCurrentAccount,
   getCurrentBalance,
@@ -187,7 +188,9 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
                   : wallet.current.type === 'ethereum'
                   ? 'ETH'
                   : ''}{' '}
-                {volumeVisible ? getCurrentBalance(wallet) : '******'}
+                {volumeVisible
+                  ? fixAmountDot6(getCurrentBalance(wallet))
+                  : '******'}
               </Text>
             </Pressable>
           </View>
