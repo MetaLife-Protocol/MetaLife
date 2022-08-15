@@ -240,6 +240,7 @@ const MyItemDetailView = ({
 
   const onListPress = (type, month) => {
     if (price === 0) {
+      Toast.show('please set price');
       return;
     }
     setPwdVisible(true);

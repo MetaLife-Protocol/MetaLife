@@ -27,12 +27,13 @@ const TabBar = props => {
           fontSize: 15,
           fontWeight: 'bold',
           textTransform: 'none', // 不让字体默认大写
+          allowFontScaling: false,
         },
         tabStyle: {
           padding: 0,
           width: props.width
             ? props.width
-            : Dimensions.get('window').width / 2 - 80,
+            : Dimensions.get('window').width / 2 - 75,
           justifyContent: 'center',
           alignItems: 'center',
         },
@@ -40,7 +41,7 @@ const TabBar = props => {
         indicatorStyle: {
           height: 3,
           width: props.width ? props.width : 47.5,
-          marginLeft: props.width ? 36 : screenWidth * 0.3,
+          marginLeft: props.width ? 36 : screenWidth * 0.285,
           backgroundColor: bg,
           borderRadius: 2,
         },

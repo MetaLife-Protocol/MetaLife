@@ -368,15 +368,6 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
 
           {/*{properties.length > 0 && PropertiesView()}*/}
 
-          <TitleAndTips
-            title={'Supply'}
-            tips={'The number of items that can be minted. No gas cost to you!'}
-          />
-          <PureTextInput
-            placeholder={'1'}
-            style={[FG, styles.nameContainer]}
-            inputProps={{editable: false}}
-          />
           <TitleAndTips title={'Blockchain'} />
           <View style={[FG, styles.block]}>
             <Image source={require('../../assets/image/nft/spectrum.png')} />
