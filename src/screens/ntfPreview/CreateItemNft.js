@@ -279,7 +279,7 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
             }
           />
           <PureTextInput
-            placeholder={'Provide a detalied description of you item'}
+            placeholder={'Provide a detalied description of your item'}
             style={[FG, styles.nameContainer, {height: 75}]}
             onChangeText={setDescription}
             // inputProps={{
