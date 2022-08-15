@@ -81,7 +81,7 @@ const WalletCard = ({
           {
             title: 'Address contact',
             handler: () => {
-              goScreen('');
+              goScreen('AddressContact');
               showPullMenu({position: {}, buttons: []});
             },
           },
@@ -120,10 +120,19 @@ const WalletCard = ({
             <Pressable
               style={[alignItemsCenter, icons]}
               onPress={() => {
-                goScreen('Scan', {
-                  onCallbackData: res => {
-                    Toast.show('TODO res:' + res);
-                  },
+                if (currentAccount.observer) {
+                  Toast.show('Observe account cannot transfer');
+                  return;
+                }
+                new Promise((resolve, reject) => {
+                  goScreen('Scan', {
+                    onCallbackData: res => {
+                      console.log('TODO res:' + res);
+                      resolve(res);
+                    },
+                  });
+                }).then(res => {
+                  goScreen('WalletTransfer', {address: res});
                 });
               }}>
               <Image source={iconDic.scan} />
@@ -143,7 +152,7 @@ const WalletCard = ({
               style={[alignItemsCenter, icons]}
               onPress={() => {
                 if (currentAccount.observer) {
-                  Toast.show('Observe account cannot start photon');
+                  Toast.show('Observe account cannot transfer');
                   return;
                 }
                 goScreen('WalletTransfer');

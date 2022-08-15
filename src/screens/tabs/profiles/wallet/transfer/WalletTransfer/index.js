@@ -37,8 +37,14 @@ import TransactionInfoModal from './comp/TransactionInfoModal';
  */
 
 const WalletTransfer = props => {
-  const {darkMode, wallet, transfer, setTokenOption, addTransactionRecord} =
-    props;
+  const {
+    darkMode,
+    wallet,
+    transfer,
+    setTokenOption,
+    addTransactionRecord,
+    route: {params},
+  } = props;
   const {tokenOption} = transfer;
   const {navigate, replace} = useNavigation();
   const {flex1, FG, BG, row, justifySpaceBetween, text, marginTop10} =
@@ -47,7 +53,9 @@ const WalletTransfer = props => {
   const currentAccount = getCurrentAccount(wallet);
   const currentBalance =
     wallet.accounts[wallet.current.type][wallet.current.index].balance;
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(
+    params?.address ? params?.address : '',
+  );
   const [inputAmount, setInputAmount] = useState('');
   const [remark, setRemark] = useState('');
   const [gasPrice, setGasPrice] = useState(bigNumberParseUnits('18', 9));

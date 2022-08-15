@@ -19,7 +19,11 @@ import {useNavigation} from '@react-navigation/native';
 import Toast from 'react-native-tiny-toast';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
-import {getCurrentAccount, getCurrentBalance} from '../../../../utils';
+import {
+  fixWalletAddress,
+  getCurrentAccount,
+  getCurrentBalance,
+} from '../../../../utils';
 import {ComModal} from '../../../../shared/comps/ComModal';
 import {exportAccountMnemonic} from '../../../../remote/wallet/WalletAPI';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -115,10 +119,8 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
           {
             title: 'QR code',
             handler: () => {
-              goScreen('Scan', {
-                onCallbackData: res => {
-                  Toast.show('TODO res:' + res);
-                },
+              goScreen('ReceivingCode', {
+                token: fixWalletAddress(getCurrentAccount(wallet).address),
               });
               showPullMenu({position: {}, buttons: []});
             },
@@ -126,7 +128,7 @@ const WalletDetails = ({cfg: {darkMode}, showPullMenu, wallet, setCurrent}) => {
           {
             title: 'Address contact',
             handler: () => {
-              goScreen('');
+              goScreen('AddressContact');
               showPullMenu({position: {}, buttons: []});
             },
           },
