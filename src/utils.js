@@ -113,6 +113,9 @@ export function getCurrentAccount(wallet) {
 }
 
 export function fixAmountDot6(balance) {
+  if (!balance || balance.indexOf('.') === -1) {
+    return balance;
+  }
   const amounts = balance.split('.');
   if (amounts[1].length > 6) {
     return amounts[0] + '.' + amounts[1].substr(0, 6);

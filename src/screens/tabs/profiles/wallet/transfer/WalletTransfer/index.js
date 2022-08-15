@@ -28,7 +28,11 @@ import {
 import ComText from '../../../../../../shared/comps/ComText';
 import PasswordModel from '../../../../../../shared/comps/PasswordModal';
 import useSchemaStyles from '../../../../../../shared/UseSchemaStyles';
-import {fixWalletAddress, getCurrentAccount} from '../../../../../../utils';
+import {
+  fixAmountDot6,
+  fixWalletAddress,
+  getCurrentAccount,
+} from '../../../../../../utils';
 import {getMainCoinName, isMainCoin} from '../../../../../../utils/chainUtils';
 import TransactionInfoModal from './comp/TransactionInfoModal';
 
@@ -346,7 +350,7 @@ const WalletTransfer = props => {
           <View style={[marginTop10, justifySpaceBetween, row]}>
             <ComText style={[text, styles.title]}>Amount</ComText>
             <ComText style={[text, styles.number]}>
-              {tokenOption.amount + ' ' + tokenOption.cType}
+              {fixAmountDot6(tokenOption.amount) + ' ' + tokenOption.cType}
             </ComText>
           </View>
         </View>

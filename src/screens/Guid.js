@@ -24,7 +24,7 @@ const Guid = () => {
     channel.post('identity', 'CREATE');
     replace('WalletCreator', {
       type: 'spectrum',
-      name: 'SPE-1',
+      name: 'spe wallet',
       from: 'guid', // special implements
       target: 'Tabs',
     });

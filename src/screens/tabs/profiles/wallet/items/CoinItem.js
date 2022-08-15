@@ -9,6 +9,7 @@ import useSchemaStyles, {
   colorsBasics,
 } from '../../../../../shared/UseSchemaStyles';
 import {getMainCoinName, isMainCoin} from '../../../../../utils/chainUtils';
+import {fixAmountDot6} from '../../../../../utils';
 
 const CoinItem = ({type, address, cType, pressItem, setBalance}) => {
   const {BG, row, justifySpaceBetween, alignItemsCenter, text} =
@@ -53,7 +54,7 @@ const CoinItem = ({type, address, cType, pressItem, setBalance}) => {
         onPress={() => pressItem && pressItem(cType, total)}
         style={[row, justifySpaceBetween, alignItemsCenter, styles.container]}>
         <Text style={[text, styles.type]}>{cType}</Text>
-        <Text style={[text, styles.total]}>{total}</Text>
+        <Text style={[text, styles.total]}>{fixAmountDot6(total)}</Text>
       </Pressable>
       <View style={[styles.line, BG]} />
     </>
