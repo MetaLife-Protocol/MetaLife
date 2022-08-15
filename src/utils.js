@@ -117,6 +117,9 @@ export function fixAmountDot6(balance) {
     return balance;
   }
   const amounts = balance.split('.');
+  if (amounts[0].length > 5) {
+    return amounts[0] + '.' + amounts[1].substr(0, 3);
+  }
   if (amounts[1].length > 6) {
     return amounts[0] + '.' + amounts[1].substr(0, 6);
   }
