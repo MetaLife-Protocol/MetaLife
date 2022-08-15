@@ -226,20 +226,22 @@ const PostItem = ({
                       />
                     </Pressable>
                   )}
-                  <Text
-                    style={[
-                      {
-                        color: colorsBasics.primary,
-                        marginVertical: 4,
-                        alignSelf: i % 2 ? 'flex-end' : 'flex-start',
-                      },
-                    ]}
-                    onPress={() => {
-                      setString(link);
-                      Toast.show("Blob's id copied");
-                    }}>
-                    Copy the blob's id
-                  </Text>
+                  {verbose && (
+                    <Text
+                      style={[
+                        {
+                          color: colorsBasics.primary,
+                          marginVertical: 4,
+                          alignSelf: i % 2 ? 'flex-end' : 'flex-start',
+                        },
+                      ]}
+                      onPress={() => {
+                        setString(link);
+                        Toast.show("Blob's id copied");
+                      }}>
+                      Copy the blob's id
+                    </Text>
+                  )}
                 </View>
               )
             );
