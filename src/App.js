@@ -107,6 +107,7 @@ import {useDialog} from './metalife-base';
 import {NormalTipDialog} from './metalife-base/src/dialog/NormalTipDialog';
 import {PhotonEvent, PhotonNotify} from './screens/photon/PhotonNotifyContants';
 import CompleteCheckout from './screens/ntfPreview/CompleteCheckout';
+import {getMainCoinName} from './utils/chainUtils';
 
 const App = ({
   feedId,
@@ -321,7 +322,7 @@ const App = ({
                   },
                 ]}>
                 <Text style={[{color: colorsBasics.primary}]}>
-                  {wallet.current.type === 'spectrum' ? 'SPE' : 'ETH'}
+                  {getMainCoinName(wallet.current.type)}
                 </Text>
                 <HeaderRightBtn
                   btnIcon={

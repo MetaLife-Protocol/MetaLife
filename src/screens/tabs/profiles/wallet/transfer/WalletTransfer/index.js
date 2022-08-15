@@ -28,7 +28,8 @@ import {
 import ComText from '../../../../../../shared/comps/ComText';
 import PasswordModel from '../../../../../../shared/comps/PasswordModal';
 import useSchemaStyles from '../../../../../../shared/UseSchemaStyles';
-import {getCurrentAccount} from '../../../../../../utils';
+import {fixWalletAddress, getCurrentAccount} from '../../../../../../utils';
+import {getMainCoinName, isMainCoin} from '../../../../../../utils/chainUtils';
 import TransactionInfoModal from './comp/TransactionInfoModal';
 
 /**
@@ -74,12 +75,7 @@ const WalletTransfer = props => {
       setTokenOption({
         option: 'coin',
         type: currentAccount.type,
-        cType:
-          currentAccount.type === 'spectrum'
-            ? 'SMT'
-            : currentAccount.type === 'ethereum'
-            ? 'ETH'
-            : '',
+        cType: getMainCoinName(currentAccount.type),
         amount: res,
       });
     });
@@ -94,43 +90,28 @@ const WalletTransfer = props => {
       return;
     }
     const gasFee = gasPrice.mul(gasLimit);
-    if (tokenOption.type === 'spectrum') {
-      if (tokenOption.cType === 'SMT') {
-        if (
-          bigNumberParseUnits(inputAmount.toString())
-            .add(gasFee)
-            .gt(bigNumberParseUnits(tokenOption.amount))
-        ) {
-          Toast.show('Insufficient funds', {
-            position: Toast.position.CENTER,
-          });
-          return;
-        }
-      } else {
-        if (
-          bigNumberParseUnits(inputAmount.toString()).gt(
-            bigNumberParseUnits(tokenOption.amount),
-          ) ||
-          gasFee.gt(bigNumberParseUnits(currentBalance.SMT))
-        ) {
-          Toast.show('Insufficient funds', {
-            position: Toast.position.CENTER,
-          });
-          return;
-        }
+    if (isMainCoin(tokenOption.type, tokenOption.cType)) {
+      if (
+        bigNumberParseUnits(inputAmount.toString())
+          .add(gasFee)
+          .gt(bigNumberParseUnits(tokenOption.amount))
+      ) {
+        Toast.show('Insufficient funds', {
+          position: Toast.position.CENTER,
+        });
+        return;
       }
-    } else if (tokenOption.type === 'ethereum') {
-      if (tokenOption.cType === 'ETH') {
-        if (
-          bigNumberParseUnits(inputAmount.toString())
-            .add(gasFee)
-            .gt(bigNumberParseUnits(tokenOption.amount))
-        ) {
-          Toast.show('Insufficient funds', {
-            position: Toast.position.CENTER,
-          });
-          return;
-        }
+    } else {
+      if (
+        bigNumberParseUnits(inputAmount.toString()).gt(
+          bigNumberParseUnits(tokenOption.amount),
+        ) ||
+        gasFee.gt(bigNumberParseUnits(currentBalance.SMT))
+      ) {
+        Toast.show('Insufficient funds', {
+          position: Toast.position.CENTER,
+        });
+        return;
       }
     }
     setPwdVisible(true);
@@ -162,10 +143,7 @@ const WalletTransfer = props => {
               ).toString();
               const data = {
                 info: 'Transfer ' + tokenOption.cType,
-                from:
-                  currentAccount.address.indexOf('0x') !== -1
-                    ? currentAccount.address
-                    : '0x' + currentAccount.address,
+                from: fixWalletAddress(currentAccount.address),
                 to: address,
                 gasPrice: gasPriceRes,
                 gasPriceNumber:
@@ -182,6 +160,7 @@ const WalletTransfer = props => {
             .catch(e => {
               setToastVisible(true);
               setToastContent(e.message);
+              setToastDur(3000);
             });
         })
         .catch(console.warn);
@@ -193,16 +172,10 @@ const WalletTransfer = props => {
 
   const onInfoModalConfirm = pwd => {
     try {
-      if (tokenOption.type === 'spectrum') {
-        if (tokenOption.cType === 'SMT') {
-          onTransaction(pwd);
-        } else {
-          onContractTransaction(pwd, tokenOption.cType);
-        }
-      } else if (tokenOption.type === 'ethereum') {
-        if (tokenOption.cType === 'ETH') {
-          onTransaction(pwd);
-        }
+      if (isMainCoin(tokenOption.type, tokenOption.cType)) {
+        onTransaction(pwd);
+      } else {
+        onContractTransaction(pwd, tokenOption.cType);
       }
     } catch (e) {
       console.log(e);
@@ -231,12 +204,7 @@ const WalletTransfer = props => {
           amount: bigNumberFormatUnits(res.data.value),
           remark: remark,
           type: currentAccount.type,
-          cType:
-            tokenOption.type === 'spectrum'
-              ? 'SMT'
-              : tokenOption.type === 'ethereum'
-              ? 'ETH'
-              : '',
+          cType: getMainCoinName(tokenOption.type),
           contract: false,
           date: Date.now(),
           gasUsed: '',

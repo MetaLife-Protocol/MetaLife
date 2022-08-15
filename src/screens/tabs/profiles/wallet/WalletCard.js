@@ -14,6 +14,7 @@ import React, {useState} from 'react';
 import {WalletAccountSwitchModal} from './modal/WalletAccountSwitchModal';
 import {
   abbreviationAccount,
+  fixAmountDot6,
   fixWalletAddress,
   getCurrentAccount,
   getCurrentBalance,
@@ -114,7 +115,7 @@ const WalletCard = ({
               : wallet.current.type === 'ethereum'
               ? 'ETH'
               : ''}{' '}
-            {getCurrentBalance(wallet)}
+            {fixAmountDot6(getCurrentBalance(wallet))}
           </Text>
           <View style={[{width: '100%'}, row, justifySpaceAround]}>
             <Pressable

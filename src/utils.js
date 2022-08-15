@@ -112,6 +112,14 @@ export function getCurrentAccount(wallet) {
   );
 }
 
+export function fixAmountDot6(balance) {
+  const amounts = balance.split('.');
+  if (amounts[1].length > 6) {
+    return amounts[0] + '.' + amounts[1].substr(0, 6);
+  }
+  return balance;
+}
+
 export function fixWalletAddress(address) {
   if (!address.startsWith('0x')) {
     address = '0x' + address;
