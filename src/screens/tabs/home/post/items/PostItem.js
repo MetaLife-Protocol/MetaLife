@@ -2,14 +2,7 @@
  * Created on 17 Feb 2022 by lonmee
  */
 import React, {useCallback} from 'react';
-import {
-  PixelRatio,
-  Pressable,
-  StyleSheet,
-  // Text,
-  useWindowDimensions,
-  View,
-} from 'react-native';
+import {Pressable, StyleSheet, View} from 'react-native';
 import Text from '../../../../../shared/comps/ComText';
 import useSchemaStyles, {
   colorsBasics,
