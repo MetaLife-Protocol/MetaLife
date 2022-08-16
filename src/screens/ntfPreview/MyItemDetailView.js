@@ -199,6 +199,8 @@ const MyItemDetailView = ({
     const channel =
       selectMap.type === 'SMT'
         ? '0x0000000000000000000000000000000000000000'
+        : selectMap.type === 'MESH'
+        ? financeConfig.contracts[currentAccount?.type].Mesh.address
         : financeConfig.contracts[currentAccount?.type][selectMap?.type]
             .address;
     const surePrice =
@@ -206,6 +208,11 @@ const MyItemDetailView = ({
         ? bigNumberParseUnits(
             price,
             financeConfig.chains[currentAccount.type].decmis,
+          )
+        : selectMap.type === 'MESH'
+        ? bigNumberParseUnits(
+            price,
+            financeConfig.contracts[currentAccount.type].Mesh.decmis,
           )
         : bigNumberParseUnits(
             price,
@@ -253,12 +260,19 @@ const MyItemDetailView = ({
     const channel =
       selectMap.type === 'SMT'
         ? '0x0000000000000000000000000000000000000000'
+        : selectMap.type === 'MESH'
+        ? financeConfig.contracts[currentAccount?.type].Mesh.address
         : financeConfig.contracts[currentAccount?.type][selectMap.type].address;
     const surePrice =
       selectMap.type === 'SMT'
         ? bigNumberParseUnits(
             price + '',
             financeConfig.chains[currentAccount.type].decmis,
+          )
+        : selectMap.type === 'MESH'
+        ? bigNumberParseUnits(
+            price,
+            financeConfig.contracts[currentAccount.type].Mesh.decmis,
           )
         : bigNumberParseUnits(
             price + '',
