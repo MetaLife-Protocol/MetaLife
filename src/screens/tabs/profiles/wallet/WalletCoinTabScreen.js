@@ -1,5 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
+import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 import {connect} from 'react-redux';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import {getCurrentAccount, getCurrentBalance} from '../../../../utils';
@@ -18,7 +19,7 @@ const WalletCoinTabScreen = props => {
       type: type,
       option: 'coin',
       cType: cType,
-      amount: total,
+      amount: bigNumberFormatUnits(total),
     });
     navigation.goBack();
   };

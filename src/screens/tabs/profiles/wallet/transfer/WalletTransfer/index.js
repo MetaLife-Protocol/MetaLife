@@ -80,7 +80,7 @@ const WalletTransfer = props => {
         option: 'coin',
         type: currentAccount.type,
         cType: getMainCoinName(currentAccount.type),
-        amount: res,
+        amount: bigNumberFormatUnits(res),
       });
     });
   }, []);
