@@ -75,7 +75,8 @@ const isNftCreateCollection = async (logs, currentAddress) => {
     return {
       to: toAddress,
       amount: tokenAmount,
-      amountPrefix: getAmountPrefix(toAddress, currentAddress),
+      amountPrefix:
+        'nft collection create ' + getAmountPrefix(toAddress, currentAddress),
     };
   }
   return false;
@@ -93,7 +94,7 @@ const isNftTransfer = async (logs, currentAddress) => {
     return {
       to: toAddress,
       amount: tokenAmount,
-      amountPrefix: getAmountPrefix(toAddress, currentAddress),
+      amountPrefix: 'transfer ' + getAmountPrefix(toAddress, currentAddress),
     };
   }
   return false;
@@ -111,7 +112,7 @@ const isNftMint = async (logs, currentAddress) => {
     return {
       to: toAddress,
       amount: tokenAmount,
-      amountPrefix: getAmountPrefix(toAddress, currentAddress),
+      amountPrefix: 'mint ' + getAmountPrefix(toAddress, currentAddress),
     };
   }
   return false;

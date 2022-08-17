@@ -75,6 +75,7 @@ const WalletTransactionDetail = ({
               });
             }
           } else {
+            provider.removeAllListeners(transactData.detail.hash);
             // transaction fail
             updateTransactionRecord({
               ...transactData,
