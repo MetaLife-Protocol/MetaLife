@@ -10,6 +10,7 @@ import useSchemaStyles, {
 } from '../../../../../shared/UseSchemaStyles';
 import {getMainCoinName, isMainCoin} from '../../../../../utils/chainUtils';
 import {fixAmountDot6} from '../../../../../utils';
+import {bigNumberFormatUnits} from 'react-native-web3-wallet';
 
 const CoinItem = ({type, address, cType, pressItem, setBalance}) => {
   const {BG, row, justifySpaceBetween, alignItemsCenter, text} =
@@ -22,11 +23,11 @@ const CoinItem = ({type, address, cType, pressItem, setBalance}) => {
         if (!request) {
           return;
         }
-        setTotal(res);
+        setTotal(bigNumberFormatUnits(res));
         setBalance({
           type,
           cType: getMainCoinName(type),
-          balance: res,
+          balance: bigNumberFormatUnits(res),
         });
       });
     } else {
@@ -34,11 +35,11 @@ const CoinItem = ({type, address, cType, pressItem, setBalance}) => {
         if (!request) {
           return;
         }
-        setTotal(res);
+        setTotal(bigNumberFormatUnits(res));
         setBalance({
           type,
           cType,
-          balance: res,
+          balance: bigNumberFormatUnits(res),
         });
       });
     }

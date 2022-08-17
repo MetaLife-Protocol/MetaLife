@@ -105,7 +105,7 @@ export function importAccountByPrivateKey(privateKey, pw, cb) {
 export function getWBalance(type, wAddr, cb) {
   getBalance(financeConfig.chains[type].rpcURL, wAddr)
     .then(value => {
-      cb && cb(bigNumberFormatUnits(value));
+      cb && cb(value);
     })
     .catch(console.warn);
 }
@@ -124,13 +124,7 @@ export function getWBalanceByContract(type, cType, wAddr, cb) {
     wAddr,
   )
     .then(value => {
-      cb &&
-        cb(
-          bigNumberFormatUnits(
-            value,
-            financeConfig.contracts[type][cType].decmis,
-          ),
-        );
+      cb && cb(value);
     })
     .catch(console.warn);
 }

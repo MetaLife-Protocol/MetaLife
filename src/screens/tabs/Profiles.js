@@ -59,7 +59,7 @@ const Profiles = ({
       getWBalanceByContract(type, 'MLT', address, res => {
         setBalance({
           cType: 'MLT',
-          balance: res,
+          balance: bigNumberFormatUnits(res),
         });
         setRefreshing(false);
       });
@@ -67,7 +67,7 @@ const Profiles = ({
       getWBalance(type, address, res => {
         setBalance({
           cType: 'ETH',
-          balance: res,
+          balance: bigNumberFormatUnits(res),
         });
         setRefreshing(false);
       });
