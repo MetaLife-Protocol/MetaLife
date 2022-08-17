@@ -93,12 +93,11 @@ const WalletTransfer = props => {
       });
       return;
     }
-    const gasFee = gasPrice.mul(gasLimit);
     if (isMainCoin(tokenOption.type, tokenOption.cType)) {
       if (
-        bigNumberParseUnits(inputAmount.toString())
-          .add(gasFee)
-          .gt(bigNumberParseUnits(tokenOption.amount))
+        bigNumberParseUnits(inputAmount.toString()).gt(
+          bigNumberParseUnits(tokenOption.amount),
+        )
       ) {
         Toast.show('Insufficient funds', {
           position: Toast.position.CENTER,
@@ -109,8 +108,7 @@ const WalletTransfer = props => {
       if (
         bigNumberParseUnits(inputAmount.toString()).gt(
           bigNumberParseUnits(tokenOption.amount),
-        ) ||
-        gasFee.gt(bigNumberParseUnits(currentBalance.SMT))
+        )
       ) {
         Toast.show('Insufficient funds', {
           position: Toast.position.CENTER,
@@ -175,14 +173,35 @@ const WalletTransfer = props => {
   };
 
   const onInfoModalConfirm = pwd => {
-    try {
-      if (isMainCoin(tokenOption.type, tokenOption.cType)) {
-        onTransaction(pwd);
-      } else {
-        onContractTransaction(pwd, tokenOption.cType);
+    const gasFee = gasPrice.mul(gasLimit);
+    if (isMainCoin(tokenOption.type, tokenOption.cType)) {
+      if (
+        bigNumberParseUnits(inputAmount.toString())
+          .add(gasFee)
+          .gt(bigNumberParseUnits(tokenOption.amount))
+      ) {
+        setToastVisible(true);
+        setToastContent('Insufficient funds');
+        setToastDur(3000);
+        return;
       }
-    } catch (e) {
-      console.log(e);
+    } else {
+      if (
+        bigNumberParseUnits(inputAmount.toString()).gt(
+          bigNumberParseUnits(tokenOption.amount),
+        ) ||
+        gasFee.gt(bigNumberParseUnits(currentBalance.SMT))
+      ) {
+        setToastVisible(true);
+        setToastContent('Insufficient funds');
+        setToastDur(3000);
+        return;
+      }
+    }
+    if (isMainCoin(tokenOption.type, tokenOption.cType)) {
+      onTransaction(pwd);
+    } else {
+      onContractTransaction(pwd, tokenOption.cType);
     }
   };
 
