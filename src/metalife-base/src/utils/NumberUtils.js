@@ -17,5 +17,8 @@ export function amountMulEth(amount) {
 }
 
 export function numberToString(value) {
-  return Number(value).toLocaleString().replace(/,/g, '');
+  if (typeof value === 'number' && !isNaN(value)) {
+    return value.toLocaleString('zh').replace(/,/g, '');
+  }
+  return false;
 }

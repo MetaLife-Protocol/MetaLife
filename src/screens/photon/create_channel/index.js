@@ -7,7 +7,15 @@
  */
 
 import React, {useMemo, useState} from 'react';
-import {Image, Pressable, SafeAreaView, StyleSheet, View} from 'react-native';
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import Text from '../../../shared/comps/ComText';
 import Constants from '../../../shared/Constants';
 import {PureTextInput, RoundBtn, useStyle} from '../../../metalife-base';
@@ -17,8 +25,10 @@ import Toast from 'react-native-tiny-toast';
 import {connect} from 'react-redux';
 import {getTokenAddress} from '../PhotonUtils';
 import {bigNumberParseUnits} from 'react-native-web3-wallet';
+import NativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 
 const CreateChannel = ({setChannelRemark, showPullMenu, route: {params}}) => {
+  const {isIPhoneX_deprecated} = NativeDeviceInfo.getConstants();
   const {walletBalance} = params;
   const styles = useStyle(createSty);
   const {navigate, goBack} = useNavigation();
@@ -31,6 +41,12 @@ const CreateChannel = ({setChannelRemark, showPullMenu, route: {params}}) => {
   const btnDisabled = useMemo(() => !(address && amount), [address, amount]);
 
   const onCreateChannel = () => {
+    if (isNaN(amount)) {
+      Toast.show('incorrect number', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
     const chainBalance = bigNumberParseUnits(
       walletBalance[type].balance_on_chain + '',
       0,
@@ -95,20 +111,23 @@ const CreateChannel = ({setChannelRemark, showPullMenu, route: {params}}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.cardContainer}>
-        <View style={styles.row}>
-          <Text style={styles.title}>Receiving account</Text>
-          <Pressable
-            onPress={() => {
-              navigate('Scan', {onCallbackData: setAddress});
-            }}>
-            <Image
-              source={require('../../../assets/image/photon/icon_scan.png')}
-              style={styles.iconImg}
-            />
-          </Pressable>
-          {/*TODO*/}
-          {/*<Pressable
+      <KeyboardAvoidingView
+        keyboardVerticalOffset={isIPhoneX_deprecated ? 94 : 64}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={styles.cardContainer}>
+          <View style={styles.row}>
+            <Text style={styles.title}>Receiving account</Text>
+            <Pressable
+              onPress={() => {
+                navigate('Scan', {onCallbackData: setAddress});
+              }}>
+              <Image
+                source={require('../../../assets/image/photon/icon_scan.png')}
+                style={styles.iconImg}
+              />
+            </Pressable>
+            {/*TODO*/}
+            {/*<Pressable
             onPress={() => {
               //TODO select wallet others address
               navigate('PhotonAddressContact');
@@ -118,52 +137,53 @@ const CreateChannel = ({setChannelRemark, showPullMenu, route: {params}}) => {
               style={styles.iconImg}
             />
           </Pressable>*/}
+          </View>
+          <PureTextInput
+            defaultValue={address}
+            onChangeText={setAddress}
+            placeholder={'Type or paste address'}
+            style={styles.marginTop10}
+          />
         </View>
-        <PureTextInput
-          defaultValue={address}
-          onChangeText={setAddress}
-          placeholder={'Type or paste address'}
-          style={styles.marginTop10}
-        />
-      </View>
 
-      <View style={styles.cardContainer}>
-        <View style={styles.row}>
-          <Text style={styles.title}>Transfers number</Text>
-          <Text style={styles.coinText} onPress={menuHandler}>
-            {type}
-          </Text>
-        </View>
-        <PureTextInput
-          onChangeText={setAmount}
-          placeholder={'Enter transfer amount'}
-          style={styles.marginTop10}
-        />
-        {/*   <PhotonSeparator />
+        <View style={styles.cardContainer}>
+          <View style={styles.row}>
+            <Text style={styles.title}>Transfers number</Text>
+            <Text style={styles.coinText} onPress={menuHandler}>
+              {type}
+            </Text>
+          </View>
+          <PureTextInput
+            onChangeText={setAmount}
+            placeholder={'Enter transfer amount'}
+            style={styles.marginTop10}
+          />
+          {/*   <PhotonSeparator />
         <View style={styles.row}>
           <Text style={styles.title}>Amount</Text>
           TODO wallet number
           <Text style={styles.coinAmount}>32748 SMT</Text>
         </View>*/}
-      </View>
-
-      <View style={styles.cardContainer}>
-        <View style={styles.row}>
-          <Text style={styles.title}>Remark</Text>
         </View>
-        <PureTextInput
-          onChangeText={setRemark}
-          placeholder={'Enter comments'}
-          style={styles.marginTop10}
-        />
-      </View>
 
-      <RoundBtn
-        style={styles.button}
-        disabled={btnDisabled}
-        title={'Create'}
-        press={onCreateChannel}
-      />
+        <View style={styles.cardContainer}>
+          <View style={styles.row}>
+            <Text style={styles.title}>Remark</Text>
+          </View>
+          <PureTextInput
+            onChangeText={setRemark}
+            placeholder={'Enter comments'}
+            style={styles.marginTop10}
+          />
+        </View>
+
+        <RoundBtn
+          style={styles.button}
+          disabled={btnDisabled}
+          title={'Create'}
+          press={onCreateChannel}
+        />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -184,10 +204,11 @@ const createSty = theme =>
       alignItems: 'center',
     },
     button: {
-      position: 'absolute',
-      bottom: Constants.safeBottom,
-      left: 15,
-      right: 15,
+      marginTop: 10,
+      // position: 'absolute',
+      // bottom: Constants.safeBottom,
+      // left: 15,
+      // right: 15,
     },
     title: {
       fontSize: 14,

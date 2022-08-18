@@ -22,6 +22,7 @@ import {getCurrentAccount, screenWidth} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
 import {getMyNFTCollectionInfos} from '../../remote/contractOP';
 import Toast from 'react-native-tiny-toast';
+import {numberToString} from '../../metalife-base';
 
 const Profiles = ({
   feedId,
@@ -86,8 +87,8 @@ const Profiles = ({
         for (let i = 0; i < list.length; i++) {
           total = list[i].grant_token_amount_subtotals + total;
         }
-        const totalString = Number(total).toLocaleString().replace(/,/g, '');
-        setAmount(bigNumberFormatUnits(totalString, 18));
+        const totalString = numberToString(total);
+        setAmount(bigNumberFormatUnits(totalString ?? 0, 18));
         setRefreshing(false);
       })
       .catch(e => console.warn(e));

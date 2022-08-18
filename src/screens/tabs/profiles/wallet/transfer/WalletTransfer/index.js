@@ -304,6 +304,13 @@ const WalletTransfer = props => {
       setToastVisible(false);
     }
   };
+  const numberGt0 = () => {
+    return (
+      typeof inputAmount === 'number' &&
+      isNaN(inputAmount) &&
+      Number(inputAmount) > 0
+    );
+  };
   return (
     <SafeAreaView style={[flex1]}>
       <Pressable
@@ -361,7 +368,7 @@ const WalletTransfer = props => {
               style={[text, styles.inputText]}
               placeholder="Enter transfer amount"
               placeholderTextColor={'#A5ABB7'}
-              keyboardType={'numeric'}
+              // keyboardType={'numeric'}
               value={inputAmount}
               onChangeText={setInputAmount}
             />
@@ -386,7 +393,7 @@ const WalletTransfer = props => {
         </View>
         <RoundBtn
           style={[styles.btnContainer, marginTop10]}
-          disabled={address && Number(inputAmount) > 0 ? false : true}
+          disabled={address && numberGt0() ? false : true}
           title={'Confirm'}
           press={onConfirm}
         />

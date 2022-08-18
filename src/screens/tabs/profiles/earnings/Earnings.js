@@ -16,6 +16,7 @@ import {connect} from 'react-redux/lib/exports';
 import {formatDate} from '../../../../metalife-base/src/utils/DateUtils';
 import {getPubsRewardList, getPubsRewardTotal} from '../../../../remote/pubOP';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
+import {numberToString} from '../../../../metalife-base';
 
 const Item = ({title, pub, number, time}) => {
   const {text, row, justifySpaceBetween, FG, marginTop10} = useSchemaStyles();
@@ -76,8 +77,8 @@ const Earnings = ({feedId}) => {
         for (let i = 0; i < list.length; i++) {
           total = list[i].grant_token_amount_subtotals + total;
         }
-        const totalString = Number(total).toLocaleString().replace(/,/g, '');
-        setAmount(bigNumberFormatUnits(totalString, 18));
+        const totalString = numberToString(total);
+        setAmount(bigNumberFormatUnits(totalString ?? 0, 18));
       })
       .catch(e => console.warn(e));
   };
@@ -104,7 +105,7 @@ const Earnings = ({feedId}) => {
             keyExtractor={index}
             pub={item.pub}
             number={bigNumberFormatUnits(
-              item.grant_token_amount.toLocaleString().replace(/,/g, ''),
+              numberToString(item.grant_token_amount) ?? 0,
               18,
             )}
             time={formatDate({time: item.reward_time})}

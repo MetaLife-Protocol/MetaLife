@@ -128,11 +128,25 @@ const PhotonListItemView = ({
   };
 
   const withdrawAction = () => {
+    if (data.balance === 0) {
+      Toast.show('channel balance is 0', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
+    const withdrawBalance = numberToString(data.balance);
+    if (!withdrawBalance) {
+      Toast.show('incorrect number', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
     photonWithDraw({
       channelIdentifierHashStr: data.channel_identifier + '',
       amountStr: numberToString(data?.balance) ?? '0',
       op: '',
     }).then(res => {
+      console.log('photonWithDraw res:', res);
       const resJson = JSON.parse(res);
       if (resJson.error_code === 0) {
         //  TODO
@@ -141,10 +155,8 @@ const PhotonListItemView = ({
         //没有足够的余额支付gas
         Toast.show('Insufficient balance to pay for gas');
       } else {
-        console.log('error::::init::::');
         closeChannel(resJson.error_message);
       }
-      // console.log('photonWithDraw res:', res);
     });
   };
 

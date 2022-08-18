@@ -6,31 +6,30 @@
  * @Project:MetaLife
  */
 
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {
   Image,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   SafeAreaView,
   StyleSheet,
-  // Text,
   View,
 } from 'react-native';
 import Text from '../../../shared/comps/ComText';
-import {
-  amountMulEth,
-  numberToString,
-  PureTextInput,
-  RoundBtn,
-  useStyle,
-} from '../../../metalife-base';
+import {PureTextInput, RoundBtn, useStyle} from '../../../metalife-base';
 import Constants from '../../../shared/Constants';
 import {useNavigation} from '@react-navigation/native';
 import {findPath, photonTransfer} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {connect} from 'react-redux';
 import {getTokenAddress} from '../PhotonUtils';
+import {bigNumberParseUnits} from 'react-native-web3-wallet';
+import NativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 
 const Payment = ({showPullMenu}) => {
+  const {isIPhoneX_deprecated} = NativeDeviceInfo.getConstants();
+
   const styles = useStyle(createSty);
   const {navigate} = useNavigation();
 
@@ -41,10 +40,17 @@ const Payment = ({showPullMenu}) => {
   const btnDisabled = useMemo(() => !(address && amount), [address, amount]);
 
   const transferFun = (isDirect, filePath) => {
+    if (isNaN(amount)) {
+      Toast.show('incorrect number', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
+    const inputAmount = bigNumberParseUnits(amount.toString());
     try {
       photonTransfer({
         tokenAddress: getTokenAddress(type),
-        amount: numberToString(amountMulEth(amount)),
+        amount: inputAmount.toString(),
         walletAddress: address,
         isDirect: isDirect,
         payData: '',
@@ -62,7 +68,7 @@ const Payment = ({showPullMenu}) => {
             findPath({
               walletAddress: address,
               tokenAddress: getTokenAddress(type),
-              balance: numberToString(amountMulEth(amount)),
+              balance: inputAmount.toString(),
             })
               .then(pathRes => {
                 // console.log('findPathRes', pathRes);
@@ -120,20 +126,23 @@ const Payment = ({showPullMenu}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.cardContainer}>
-        <View style={styles.row}>
-          <Text style={styles.title}>To</Text>
-          <Pressable
-            onPress={() => {
-              navigate('Scan', {onCallbackData: setAddress});
-            }}>
-            <Image
-              source={require('../../../assets/image/photon/icon_scan.png')}
-              style={styles.iconImg}
-            />
-          </Pressable>
-          {/*TODO*/}
-          {/*<Pressable
+      <KeyboardAvoidingView
+        keyboardVerticalOffset={isIPhoneX_deprecated ? 94 : 64}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={styles.cardContainer}>
+          <View style={styles.row}>
+            <Text style={styles.title}>To</Text>
+            <Pressable
+              onPress={() => {
+                navigate('Scan', {onCallbackData: setAddress});
+              }}>
+              <Image
+                source={require('../../../assets/image/photon/icon_scan.png')}
+                style={styles.iconImg}
+              />
+            </Pressable>
+            {/*TODO*/}
+            {/*<Pressable
             onPress={() => {
               //TODO select wallet others address
               navigate('PhotonAddressContact');
@@ -143,36 +152,36 @@ const Payment = ({showPullMenu}) => {
               style={styles.iconImg}
             />
           </Pressable>*/}
+          </View>
+          <PureTextInput
+            defaultValue={address}
+            onChangeText={setAddress}
+            placeholder={'Type or paste address'}
+            style={styles.marginTop10}
+          />
         </View>
-        <PureTextInput
-          defaultValue={address}
-          onChangeText={setAddress}
-          placeholder={'Type or paste address'}
-          style={styles.marginTop10}
-        />
-      </View>
 
-      <View style={styles.cardContainer}>
-        <View style={styles.row}>
-          <Text style={styles.title}>payment number</Text>
-          <Text style={styles.coinText} onPress={menuHandler}>
-            {type}
-          </Text>
-        </View>
-        <PureTextInput
-          onChangeText={setAmount}
-          placeholder={'Enter transfer amount'}
-          style={styles.marginTop10}
-        />
-        {/* <PhotonSeparator />
+        <View style={styles.cardContainer}>
+          <View style={styles.row}>
+            <Text style={styles.title}>payment number</Text>
+            <Text style={styles.coinText} onPress={menuHandler}>
+              {type}
+            </Text>
+          </View>
+          <PureTextInput
+            onChangeText={setAmount}
+            placeholder={'Enter transfer amount'}
+            style={styles.marginTop10}
+          />
+          {/* <PhotonSeparator />
         <View style={styles.row}>
           <Text style={styles.title}>Amount</Text>
           TODO wallet number
           <Text style={styles.coinAmount}>32748 SMT</Text>
         </View>*/}
-      </View>
+        </View>
 
-      {/*<View style={styles.cardContainer}>
+        {/*<View style={styles.cardContainer}>
         <View style={styles.row}>
           <Text style={styles.title}>Remark</Text>
         </View>
@@ -183,12 +192,13 @@ const Payment = ({showPullMenu}) => {
         />
       </View>*/}
 
-      <RoundBtn
-        style={styles.button}
-        disabled={btnDisabled}
-        title={'Pay'}
-        press={() => transferFun(true)}
-      />
+        <RoundBtn
+          style={styles.button}
+          disabled={btnDisabled}
+          title={'Pay'}
+          press={() => transferFun(true)}
+        />
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -208,10 +218,11 @@ const createSty = theme =>
       alignItems: 'center',
     },
     button: {
-      position: 'absolute',
-      bottom: Constants.safeBottom,
-      left: 15,
-      right: 15,
+      marginTop: 10,
+      // position: 'absolute',
+      // bottom: Constants.safeBottom,
+      // left: 15,
+      // right: 15,
     },
     title: {
       fontSize: 14,
