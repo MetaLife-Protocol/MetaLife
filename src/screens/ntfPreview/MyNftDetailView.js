@@ -17,6 +17,7 @@ import {
   getCurrentAccount,
   nftreviationAccount,
   pxToDp,
+  screenHeight,
   screenWidth,
 } from '../../utils';
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
@@ -27,12 +28,22 @@ import {
   getNftItemInfo,
   getSaleInfo,
 } from '../../remote/contractOP';
-import {bigNumberFormatUnits, createBigNumber} from 'react-native-web3-wallet';
+import {
+  bigNumberFormatUnits,
+  bigNumberParseUnits,
+  createBigNumber,
+} from 'react-native-web3-wallet';
 import {contractsConstant} from '../../remote/contractsConstant';
 import {financeConfig} from '../../remote/wallet/financeConfig';
 import CountDown from '../../shared/comps/CountDown';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import Toast from 'react-native-tiny-toast';
+import {
+  getWBalance,
+  getWBalanceByContract,
+} from '../../remote/wallet/WalletAPI';
+import Video from 'react-native-video';
+import Slider from '@react-native-community/slider';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
 const down = require('../../assets/image/nft/arrow_down.png');
@@ -41,6 +52,8 @@ const smt = require('../../assets/image/nft/SMT.png');
 const mesh = require('../../assets/image/nft/MESH.png');
 const mlt = require('../../assets/image/icons/lingtuan.png');
 const copy = require('../../assets/image/nft/copy.png');
+const vidPlay = require('../../assets/image/nft/playVideo.png');
+const vidPause = require('../../assets/image/nft/video_pause.png');
 
 const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
   // const {item, symbol} = params;
@@ -65,9 +78,18 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
     setIsShow(!isShow);
   }, [isShow]);
   const [isDetail, setIsDetail] = useState([false]);
+  const [accountPrice, setAccountPrice] = useState(0);
+  const [originPrice, setOriginPrice] = useState(createBigNumber(0));
+  // const [meshPrice, setMeshPrice] = useState(0);
   const upPress = useCallback(() => {
     setIsDetail(!isDetail);
   }, [isDetail]);
+  const [playVideo, setPlayVideo] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [slideValue, setSlideValue] = useState(0);
+
   // const [height, setHeight] = useState();
   // useEffect(() => {
   //   Image.getSize(
@@ -78,8 +100,19 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
   //     },
   //   );
   // }, []);
-
+  const currentAccount = getCurrentAccount(wallet);
   const buyNowHandler = () => {
+    if (currentAccount.observer) {
+      Toast.show('Observe account cannot buy');
+      return;
+    }
+    const buyprice = originPrice;
+    const accountsPrice = accountPrice;
+    if (buyprice.gt(accountsPrice)) {
+      Toast.show('Insufficient funds');
+      return;
+    }
+
     navigation.navigate('CompleteCheckout', {
       tokenId: tokenId,
       address: address,
@@ -88,6 +121,7 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
       price: showPrice,
       fee: (earn * 1) / 100 + '%',
       token: result?.token,
+      // accountPrice: accountsPrice,
     });
   };
 
@@ -100,10 +134,41 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
           ? financeConfig.chains.spectrum.decmis
           : contractsConstant.spectrum[results?.token?.toLowerCase()].decmis,
       );
+      setOriginPrice(results?.price);
       setShowPrice(p);
-    } catch (e) {}
+      if (results?.token === '0x0000000000000000000000000000000000000000') {
+        getWBalance(currentAccount.type, currentAccount.address, res => {
+          console.log('smtrrrsss', res);
+          setAccountPrice(res);
+        });
+      } else if (
+        contractsConstant.spectrum[results?.token?.toLowerCase()].symbol ===
+        'Mesh'
+      ) {
+        getWBalanceByContract(
+          currentAccount.type,
+          'Mesh',
+          currentAccount.address,
+          res => {
+            console.log('Meshrrrsss', res);
+            setAccountPrice(res);
+          },
+        );
+      } else {
+        getWBalanceByContract(
+          currentAccount.type,
+          'MLT',
+          currentAccount.address,
+          res => {
+            console.log('mltrrrsss', res);
+            setAccountPrice(res);
+          },
+        );
+      }
+    } catch (e) {
+      Toast.show(e);
+    }
     setResult(results);
-    console.log('rrrrrr', results);
   }
 
   useEffect(() => {
@@ -123,6 +188,7 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
         });
       }
     });
+
     return () => {
       params.callBack();
     };
@@ -131,18 +197,99 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
     nativeClipboard.setString(address);
     Toast.show('Contract Address copied');
   };
+
+  const gotoDuration = duration => {
+    setDuration(duration.duration);
+  };
+  const setTime = data => {
+    let sliderValue = parseInt(currentTime);
+    setSlideValue(sliderValue);
+    setCurrentTime(data.currentTime);
+  };
+  const formatMediaTime = durations => {
+    let min = Math.floor(durations / 60);
+    let second = durations - min * 60;
+    min = min >= 10 ? min : '0' + min;
+    second = second >= 10 ? Math.floor(second) : '0' + Math.floor(second);
+    return min + ':' + second;
+  };
+  const clickVideo = () => {
+    setPlayVideo(!playVideo);
+    setPaused(!paused);
+  };
+
   const time = new Date(result?.duetime?.toNumber() * 1000);
   // alert(result?.duetime?.toNumber());
   const due = time - new Date();
   return (
     <ScrollView style={[flex1, BG]} showsVerticalScrollIndicator={false}>
-      <FastImage
-        source={{
-          uri: ipfsBaseURL + 'ipfs/' + list?.image,
-        }}
-        style={[styles.topImg]}
-        resizeMode="contain"
-      />
+      {(list && list?.type === 'Audio' && list.cid !== undefined) ||
+      (list && list?.type === 'Video' && list.cid !== undefined) ? (
+        <View style={styles.videoShow}>
+          <Video
+            source={{
+              uri: ipfsBaseURL + 'ipfs/' + list.cid,
+            }}
+            resizeMode={'contain'}
+            paused={paused}
+            onLoad={data => gotoDuration(data)}
+            volume={1.0}
+            onEnd={() => setPlayVideo(true)}
+            playWhenInactive={true}
+            onProgress={e => setTime(e)}
+            // controls={false}
+            style={[styles.topPlay]}
+          />
+          <View
+            style={{
+              position: 'absolute',
+              zIndex: 1000,
+              top: screenHeight * 0.3,
+            }}>
+            <Pressable style={styles.playView} onPress={clickVideo}>
+              <Image source={playVideo ? vidPause : vidPlay} />
+              <Text style={[text, styles.playTime]}>
+                {formatMediaTime(currentTime) + '/' + formatMediaTime(duration)}
+              </Text>
+            </Pressable>
+            <Slider
+              style={{
+                height: 40,
+                width: screenWidth,
+                alignSelf: 'center',
+                backgroundColor: 'transparent',
+              }}
+              value={slideValue}
+              maximumValue={duration}
+              step={1}
+              onValueChange={value => setCurrentTime(value)}
+              thumbTintColor="#29DAD7"
+              minimumTrackTintColor="#29DAD7"
+              maximumTrackTintColor="#DADADA"
+            />
+          </View>
+          <FastImage
+            source={
+              list && list?.type === 'Audio'
+                ? {
+                    uri: ipfsBaseURL + 'ipfs/' + list?.image,
+                  }
+                : null
+            }
+            style={[styles.topImg]}
+            resizeMode="contain"
+          />
+        </View>
+      ) : (
+        <FastImage
+          source={{
+            uri: ipfsBaseURL + 'ipfs/' + list?.image,
+          }}
+          style={[styles.topImg]}
+          resizeMode="contain"
+        />
+      )}
+
       <View style={[FG, styles.topView]}>
         <Text
           style={{
@@ -430,6 +577,21 @@ const styles = StyleSheet.create({
   },
   priceView: {flexDirection: 'row', marginLeft: 10, marginTop: 6},
   dueText: {marginVertical: 7},
+  topPlay: {
+    width: '90%',
+    // minHeight: 260,
+    height: 345,
+    alignSelf: 'center',
+    position: 'absolute',
+    // top: screenHeight * 0.3,
+    zIndex: 100,
+  },
+  playView: {
+    flexDirection: 'row',
+    marginLeft: 15,
+  },
+  playTime: {fontSize: 17, marginLeft: 17.5},
+  videoShow: {},
 });
 
 const msp = s => {

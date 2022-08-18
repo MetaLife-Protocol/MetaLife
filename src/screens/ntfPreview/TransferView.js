@@ -19,7 +19,11 @@ import {PureTextInput} from '../../metalife-base';
 import Slider from '@react-native-community/slider';
 import {fixWalletAddress, getCurrentAccount, screenHeight} from '../../utils';
 import PasswordModel from '../../shared/comps/PasswordModal';
-import {getAccount, getTransferGasPrice} from '../../remote/wallet/WalletAPI';
+import {
+  getAccount,
+  getTransferGasPrice,
+  getWBalance,
+} from '../../remote/wallet/WalletAPI';
 import {transformNftItem} from '../../remote/contractOP';
 import {
   bigNumberFormatUnits,
@@ -49,7 +53,8 @@ const TransferView = ({
   const [toastContent, setToastContent] = useState('');
   const [gasPrice, setGasPrice] = useState(18);
   const [gasLimit, setGasLimit] = useState(20);
-
+  const currentAccount = getCurrentAccount(wallet);
+  const [accountPrice, setAccountPrice] = useState(0);
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: props => (
@@ -64,16 +69,33 @@ const TransferView = ({
     });
   }, [navigation, address]);
   useEffect(() => {
-    const currentAccount = getCurrentAccount(wallet);
     getTransferGasPrice({type: currentAccount.type}).then(res => {
       const price = res.toString();
       setGasPrice(res);
       // setGasPriceNumber(Number(bigNumberFormatUnits(res.toString(), 9)));
     });
+    getWBalance(currentAccount.type, currentAccount.address, res => {
+      // console.log('smtrrrsss', res);
+      setAccountPrice(res);
+    });
   }, []);
   const nextClick = () => {
     if (address === '') {
       Toast.show('Please input address');
+      return;
+    }
+    if (currentAccount.observer) {
+      Toast.show('Observe account cannot transfer');
+      return;
+    }
+    if (
+      accountPrice.lt(
+        bigNumberParseUnits(gasLimit + '', 4).mul(
+          bigNumberParseUnits(gasPrice + '', 0),
+        ),
+      )
+    ) {
+      Toast.show('Insufficient funds');
       return;
     }
     setPwdVisible(true);

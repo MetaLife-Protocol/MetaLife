@@ -12,8 +12,13 @@ import {
   createBigNumber,
 } from 'react-native-web3-wallet';
 import LoadingView from '../../../shared/comps/LoadingView';
-import {getTransferGasPrice} from '../../../remote/wallet/WalletAPI';
+import {
+  getTransferGasPrice,
+  getWBalance,
+  getWBalanceByContract,
+} from '../../../remote/wallet/WalletAPI';
 import {getCurrentAccount} from '../../../utils';
+import Toast from 'react-native-tiny-toast';
 const darkclose = require('../../../assets/image/icons/icon_close_default_black.png');
 const whitecolse = require('../../../assets/image/wallet/icon_close_default_white.png');
 
@@ -34,12 +39,8 @@ const TransactionModal = ({
     list?.gasLimit.div(createBigNumber(10000)).toNumber(),
   );
   const [gasPrice, setGasPrice] = useState(createBigNumber(0));
-  // useMemo(() => {
-  //   setGasLimit(list?.gasLimit.div(createBigNumber(10000)).toNumber());
-  // }, [list?.gasLimit]);
-  // useEffect(() => {
-  //   setGasLimit(list?.gasLimit.div(createBigNumber(10000)).toNumber());
-  // }, [list?.gasLimit]);
+  const [accountPrice, setAccountPrice] = useState(0);
+
   useEffect(() => {
     const currentAccount = getCurrentAccount(wallet);
     getTransferGasPrice({type: currentAccount.type}).then(res => {
@@ -47,8 +48,37 @@ const TransactionModal = ({
       setGasPrice(res);
       // setGasPriceNumber(Number(bigNumberFormatUnits(res.toString(), 9)));
     });
+    if (list?.type === 'SMT') {
+      getWBalance(currentAccount.type, currentAccount.address, res => {
+        console.log('smtrrrsss', res);
+        setAccountPrice(res);
+      });
+    } else {
+      getWBalanceByContract(
+        currentAccount.type,
+        list?.type,
+        currentAccount.address,
+        res => {
+          console.log('Meshrrrsss', res);
+          setAccountPrice(res);
+        },
+      );
+    }
   }, []);
   // console.log('rrrrr', (300 - gasLimit) * 0.3 + gasLimit, gasLimit);
+  const clickConfirm = () => {
+    if (
+      accountPrice.lt(
+        bigNumberParseUnits(gasLimit + '', 4).mul(
+          bigNumberParseUnits(gasPrice + '', 0),
+        ),
+      )
+    ) {
+      Toast.show('Insufficient funds');
+      return;
+    }
+    confirmPress(gasLimit, gasPrice);
+  };
   return (
     <Modal
       animationType={'slide'}
@@ -95,9 +125,7 @@ const TransactionModal = ({
               setGasLimit(value);
             }}
           />
-          <Pressable
-            style={styles.confirmView}
-            onPress={() => confirmPress(gasLimit, gasPrice)}>
+          <Pressable style={styles.confirmView} onPress={clickConfirm}>
             <Text style={styles.conText}>Confirm</Text>
           </Pressable>
         </View>

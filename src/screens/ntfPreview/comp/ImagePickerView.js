@@ -22,11 +22,11 @@ const ImagePickerView = ({style, onImagePicker}) => {
 
   const cameraHandler = useCallback(
     async ({didCancel, errorCode, errorMessage, assets}) => {
-      setShowLoading(true);
       // console.log('ddddddddddd', errorCode, errorMessage, assets);
       if (errorCode || didCancel) {
         return errorCode && Toast.show(errorMessage);
       }
+      setShowLoading(true);
       const [file] = assets;
       // console.log('file::', file);
       const res = await uploadNftAssetsJson({

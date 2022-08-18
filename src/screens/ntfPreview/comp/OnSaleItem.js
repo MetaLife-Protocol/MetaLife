@@ -27,7 +27,7 @@ const OnSaleItem = ({item, index, symbol, isImage}) => {
   useEffect(() => {
     getNftItemInfo(item.collection, item.token_id).then(res => {
       getNftAssetsJson(res).then(collInfo => {
-        console.log('ccccsss', collInfo);
+        // console.log('ccccsss', collInfo);
         collInfo.headers['content-type'] === 'application/json' &&
           setInfo(collInfo.data);
       });

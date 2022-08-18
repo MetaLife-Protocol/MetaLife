@@ -19,6 +19,7 @@ import {
   nftreviationAccount,
   pxToDp,
   savePicture,
+  screenHeight,
   screenWidth,
 } from '../../utils';
 import useSchemaStyles, {colorsBasics} from '../../shared/UseSchemaStyles';
@@ -47,6 +48,8 @@ import CountDown from '../../shared/comps/CountDown';
 import {contractsConstant} from '../../remote/contractsConstant';
 import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeClipboard';
 import Toast from 'react-native-tiny-toast';
+import Video from 'react-native-video';
+import Slider from '@react-native-community/slider';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
 const down = require('../../assets/image/nft/arrow_down.png');
@@ -57,6 +60,8 @@ const smt = require('../../assets/image/nft/SMT.png');
 const mesh = require('../../assets/image/nft/MESH.png');
 const mlt = require('../../assets/image/icons/lingtuan.png');
 const copy = require('../../assets/image/nft/copy.png');
+const vidPlay = require('../../assets/image/nft/playVideo.png');
+const vidPause = require('../../assets/image/nft/video_pause.png');
 
 const MyItemDetailView = ({
   route: {params},
@@ -97,6 +102,8 @@ const MyItemDetailView = ({
   });
   const [showPrice, setShowPrice] = useState(0);
   const [collectInfo, setCollectInfo] = useState({});
+  const [playVideo, setPlayVideo] = useState(true);
+  const currentAccount = getCurrentAccount(wallet);
   async function getSaleIn() {
     const results = await getSaleInfo(tokenId.toString(), address);
     try {
@@ -109,24 +116,25 @@ const MyItemDetailView = ({
       setShowPrice(p);
     } catch (e) {}
     setResult(results);
-    console.log('rrrrrr', results);
+    // console.log('rrrrrr', results);
   }
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: props => (
-        <HeaderRightBtn
-          btnIcon={darkMode ? shareB : shareW}
-          btnHandler={() => {
-            // !searching && setTipVisible(true);
-            navigation.navigate('TransferView', {
-              tokenId: tokenId,
-              collectAddress: address,
-              image: ipfsBaseURL + 'ipfs/' + list?.image,
-              name: list?.name,
-            });
-          }}
-        />
-      ),
+      headerRight: props =>
+        params && params.onSale ? null : (
+          <HeaderRightBtn
+            btnIcon={darkMode ? shareB : shareW}
+            btnHandler={() => {
+              // !searching && setTipVisible(true);
+              navigation.navigate('TransferView', {
+                tokenId: tokenId,
+                collectAddress: address,
+                image: ipfsBaseURL + 'ipfs/' + list?.image,
+                name: list?.name,
+              });
+            }}
+          />
+        ),
     });
   }, [navigation, address, list]);
 
@@ -141,22 +149,38 @@ const MyItemDetailView = ({
         setCollectInfo(nftJInfo.data);
       });
     }, address);
-    getNftItemInfo(address, tokenId).then(res => {
-      if (res) {
-        getNftAssetsJson(res).then(da => {
-          console.log('dddddddd', da);
-          setList(da.data);
-        });
-      }
-    });
+    // getNftItemInfo(address, tokenId).then(res => {
+    //   if (res) {
+    //     getNftAssetsJson(res).then(da => {
+    //       console.log('dddddddd', da);
+    //       setList(da.data);
+    //     });
+    //   }
+    // });
+    getNftList();
   }, []);
-
+  let urL = '';
+  async function getNftList() {
+    const res = await getNftItemInfo(address, tokenId);
+    const assresult = await getNftAssetsJson(res);
+    setList(assresult.data);
+    urL = assresult.data?.cid;
+  }
+  console.log('rrrrrdddd', list.cid, urL);
   const clickCreate = () => {
+    if (currentAccount.observer) {
+      Toast.show('Observe account cannot create');
+      return;
+    }
     // setPwdVisible(true);
     setVisible(true);
   };
 
   const clickcancelBtn = () => {
+    if (currentAccount.observer) {
+      Toast.show('Observe account cannot cancel');
+      return;
+    }
     setPwdVisible(true);
   };
 
@@ -218,6 +242,7 @@ const MyItemDetailView = ({
             price,
             financeConfig.contracts[currentAccount.type][selectMap.type].decmis,
           );
+    // console.log('chchchch', channel);
     getAccount(currentAccount?.address, (isExit, keystore) => {
       getLimitSell(
         currentAccount.type,
@@ -320,20 +345,103 @@ const MyItemDetailView = ({
     nativeClipboard.setString(address);
     Toast.show('Contract Address copied');
   };
+  const [paused, setPaused] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [slideValue, setSlideValue] = useState(0);
   const time = new Date(result?.duetime?.toNumber() * 1000);
+  const gotoDuration = duration => {
+    setDuration(duration.duration);
+  };
+  const setTime = data => {
+    let sliderValue = parseInt(currentTime);
+    setSlideValue(sliderValue);
+    setCurrentTime(data.currentTime);
+  };
+  const formatMediaTime = durations => {
+    let min = Math.floor(durations / 60);
+    let second = durations - min * 60;
+    min = min >= 10 ? min : '0' + min;
+    second = second >= 10 ? Math.floor(second) : '0' + Math.floor(second);
+    return min + ':' + second;
+  };
+  const clickVideo = () => {
+    setPlayVideo(!playVideo);
+    setPaused(!paused);
+  };
+
   return (
     <ScrollView
       style={[flex1, BG]}
       showsVerticalScrollIndicator={false}
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="always">
-      <FastImage
-        source={{
-          uri: ipfsBaseURL + 'ipfs/' + list?.image,
-        }}
-        style={[styles.topImg]}
-        resizeMode="contain"
-      />
+      {(list && list?.type === 'Audio' && list.cid !== undefined) ||
+      (list && list?.type === 'Video' && list.cid !== undefined) ? (
+        <View style={styles.videoShow}>
+          <Video
+            source={{
+              uri: ipfsBaseURL + 'ipfs/' + list.cid,
+            }}
+            resizeMode={'contain'}
+            paused={paused}
+            onLoad={data => gotoDuration(data)}
+            volume={1.0}
+            onEnd={() => setPlayVideo(true)}
+            playWhenInactive={true}
+            onProgress={e => setTime(e)}
+            // controls={false}
+            style={[styles.topPlay]}
+          />
+          <View
+            style={{
+              position: 'absolute',
+              zIndex: 1000,
+              top: screenHeight * 0.3,
+            }}>
+            <Pressable style={styles.playView} onPress={clickVideo}>
+              <Image source={playVideo ? vidPause : vidPlay} />
+              <Text style={[text, styles.playTime]}>
+                {formatMediaTime(currentTime) + '/' + formatMediaTime(duration)}
+              </Text>
+            </Pressable>
+            <Slider
+              style={{
+                height: 40,
+                width: screenWidth,
+                alignSelf: 'center',
+                backgroundColor: 'transparent',
+              }}
+              value={slideValue}
+              maximumValue={duration}
+              step={1}
+              onValueChange={value => setCurrentTime(value)}
+              thumbTintColor="#29DAD7"
+              minimumTrackTintColor="#29DAD7"
+              maximumTrackTintColor="#DADADA"
+            />
+          </View>
+          <FastImage
+            source={
+              list && list?.type === 'Audio'
+                ? {
+                    uri: ipfsBaseURL + 'ipfs/' + list?.image,
+                  }
+                : null
+            }
+            style={[styles.topImg]}
+            resizeMode="contain"
+          />
+        </View>
+      ) : (
+        <FastImage
+          source={{
+            uri: ipfsBaseURL + 'ipfs/' + list?.image,
+          }}
+          style={[styles.topImg]}
+          resizeMode="contain"
+        />
+      )}
       <View style={[FG, styles.topView]}>
         <Text
           style={{
@@ -499,11 +607,12 @@ const MyItemDetailView = ({
         darkMode={darkMode}
         list={{
           // price: price + selectMap.type,
-          price: '0 MLT',
+          price: '0 ' + selectMap.type,
           to: '0x4f47b5f2685d5d108d008577728242905ff9e5a8',
           from: fixWalletAddress(getCurrentAccount(wallet).address),
           gasLimit: gasLimit,
           content: 'Listing NFT',
+          type: selectMap.type === 'MESH' ? 'Mesh' : selectMap.type,
         }}
         showLoading={showLoading}
         confirmPress={confirmPress}
@@ -520,6 +629,21 @@ const styles = StyleSheet.create({
     height: 345,
     alignSelf: 'center',
   },
+  topPlay: {
+    width: '90%',
+    // minHeight: 260,
+    height: 345,
+    alignSelf: 'center',
+    position: 'absolute',
+    // top: screenHeight * 0.3,
+    zIndex: 100,
+  },
+  playView: {
+    flexDirection: 'row',
+    marginLeft: 15,
+  },
+  playTime: {fontSize: 17, marginLeft: 17.5},
+  videoShow: {},
   topView: {
     paddingHorizontal: pxToDp(15),
     paddingVertical: pxToDp(10),

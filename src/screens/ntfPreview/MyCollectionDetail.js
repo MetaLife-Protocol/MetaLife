@@ -95,6 +95,7 @@ const MyCollectionDetail = ({
         setDate(newList);
         setShowLoading(false);
       }
+      setShowLoading(false);
     });
     return () => {
       setDate([]);

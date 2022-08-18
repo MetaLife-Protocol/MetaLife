@@ -23,7 +23,7 @@ const MyNftCollection = ({
   collection,
 }) => {
   const myaddress = getCurrentAccount(wallet).address;
-  console.log('nfttttttttcccccccccc', collection[myaddress]);
+  // console.log('nfttttttttcccccccccc', collection[myaddress]);
   const collectKey =
       Object.keys(collection).length > 0 ? Object.keys(collection)[0] : '',
     collections = collectKey

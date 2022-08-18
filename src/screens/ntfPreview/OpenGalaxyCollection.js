@@ -87,7 +87,7 @@ const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
             ownerOf: item.seller,
             onSale: true,
             callBack: () => {
-              refreshPress();
+              // refreshPress();
             },
           })
         }>

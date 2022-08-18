@@ -1,16 +1,21 @@
 'use strict';
 
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, View} from 'react-native';
 import Text from '../../../shared/comps/ComText';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
-
-const TitleAndTips = ({title = '', tips = '', rightView}) => {
+const star = require('../../../assets/image/nft/star.png');
+const TitleAndTips = ({title = '', tips = '', rightView, isStar = false}) => {
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   return (
     <View style={styles.container}>
       <View style={{flex: 1}}>
-        <Text style={[text, styles.title]}>{title}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={[text, styles.title]}>{title}</Text>
+
+          {isStar ? <Image source={star} style={styles.stars} /> : null}
+          {/*<View style={{height: 30}} />*/}
+        </View>
         {!!tips && <Text style={styles.tipsText}>{tips}</Text>}
       </View>
       <View>{rightView}</View>
@@ -33,6 +38,11 @@ const styles = StyleSheet.create({
     color: '#8E8E92',
     lineHeight: 17,
     marginTop: 10,
+  },
+  stars: {
+    // position: 'absolute',
+    marginTop: 20,
+    // marginBottom: 10,
   },
 });
 export default TitleAndTips;

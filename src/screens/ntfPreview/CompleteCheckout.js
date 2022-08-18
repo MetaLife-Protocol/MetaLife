@@ -40,7 +40,8 @@ import {
 const icon = require('../../assets/image/icons/lingtuan.png');
 
 const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
-  const {tokenId, address, image, name, price, fee, token} = params;
+  const {tokenId, address, image, name, price, fee, token, accountPrice} =
+    params;
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   const [pwdVisible, setPwdVisible] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
@@ -228,11 +229,13 @@ const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
         darkMode={darkMode}
         list={{
           // price: price + type,
-          price: '0 MLT',
+          price: price + ' ' + type,
           to: '0x4f47b5f2685d5d108d008577728242905ff9e5a8',
           from: fixWalletAddress(getCurrentAccount(wallet).address),
           gasLimit: gasLimit,
           content: 'Buy NFT',
+          type: type,
+          // accountPrice: accountPrice,
         }}
         showLoading={showLoading}
         confirmPress={buyPress}

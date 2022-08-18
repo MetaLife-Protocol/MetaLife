@@ -26,7 +26,7 @@ import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {uploadJSONToIFPS} from '../../remote/ipfsOP';
 import PasswordModel from '../../shared/comps/PasswordModal';
 import {fixWalletAddress, getCurrentAccount} from '../../utils';
-import {getAccount} from '../../remote/wallet/WalletAPI';
+import {getAccount, getWBalance} from '../../remote/wallet/WalletAPI';
 import {
   getCreatNftItem,
   getMyNFTCollectionInfos,
@@ -36,6 +36,13 @@ import {ComModal} from '../../shared/comps/ComModal';
 const select = require('../../assets/image/nft/nft_select.png');
 const unselect = require('../../assets/image/nft/nft_unselect.png');
 const arrow = require('../../assets/image/nft/arrow_down.png');
+const art = require('../../assets/image/nft/nft_add_category_type.png');
+const selects = require('../../assets/image/nft/select_icon.png');
+const article = require('../../assets/image/nft/Article.png');
+const audio = require('../../assets/image/nft/Audio.png');
+const avatar = require('../../assets/image/nft/Avatar.png');
+const video = require('../../assets/image/nft/Video.png');
+const three = require('../../assets/image/nft/three_D.png');
 
 const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
@@ -60,7 +67,10 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
   const [showSubmit, setShowSubmit] = useState(false);
   const [deleteVisible, setDeleteVisible] = useState(false);
   const [adName, setAdname] = useState('');
-
+  const [category, setCategory] = useState({text: 'Image'});
+  const [cid, setCID] = useState();
+  const currentAccount = getCurrentAccount(wallet);
+  const [accountPrice, setAccountPrice] = useState(0);
   const showCollect = useCallback(() => {
     setCollect(!collect);
   }, [collect]);
@@ -125,6 +135,10 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
         }
       }
     });
+    getWBalance(currentAccount.type, currentAccount.address, res => {
+      // console.log('smtrrrsss', res);
+      setAccountPrice(res);
+    });
   }, []);
 
   const onConfirmTransaction = pwd => {
@@ -142,6 +156,8 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
       tokenStandard: 'ERC-721',
       blockchain: 'Spectrum',
       create: fixWalletAddress(currentAccount?.address),
+      cid: cid,
+      type: category.text,
     };
     uploadJSONToIFPS(param).then(res => {
       getAccount(currentAccount?.address, (isExit, keystore) => {
@@ -184,6 +200,14 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
     }
     if (itemFile == null) {
       Toast.show('Please select image');
+      return;
+    }
+    if (currentAccount.observer) {
+      Toast.show('Observe account cannot create');
+      return;
+    }
+    if (accountPrice <= 0) {
+      Toast.show('Insufficient funds');
       return;
     }
     // setShowEdit(true);
@@ -237,10 +261,72 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
           keyboardShouldPersistTaps="always"
           showsVerticalScrollIndicator={false}>
           <TitleAndTips
-            title={'Image, Video, Audio, or 3D Model  *'}
-            tips={
-              'File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB, GLTF. Max size: 100 MB'
-            }
+            title={'Type'}
+            isStar={true}
+            tips={'Select the type of work'}
+          />
+          <View style={[styles.selectType]}>
+            {[
+              {
+                head: art,
+                text: 'Image',
+              },
+              {
+                head: video,
+                text: 'Video',
+              },
+              {
+                head: audio,
+                text: 'Audio',
+              },
+              {
+                head: three,
+                text: '3D',
+              },
+              {
+                head: article,
+                text: 'Others',
+              },
+            ].map((item, index) => {
+              return (
+                <Pressable
+                  style={styles.selectItem}
+                  key={index}
+                  onPress={() => {
+                    setCategory(item);
+                  }}>
+                  <Image source={item.head} style={styles.artImg} />
+                  <Text
+                    style={[
+                      styles.artText,
+                      text,
+                      {
+                        color:
+                          item.text === category.text ? '#29DAD7' : '#8E8E92',
+                      },
+                    ]}>
+                    {item.text}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+          <TitleAndTips title={'IPFS CID'} isStar={true} />
+          <PureTextInput
+            placeholder={'IPFS CID'}
+            style={[FG, styles.nameContainer]}
+            onChangeText={setCID}
+            // inputProps={{
+            //   editable:
+            //     showEdit === true && showSubmit === false ? false : true,
+            // }}
+          />
+          <TitleAndTips
+            title={'Upload image'}
+            isStar={true}
+            // tips={
+            //   'File types supported: JPG, PNG, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB, GLTF. Max size: 100 MB'
+            // }
           />
           {/*TODO 需要各种类型*/}
           <View>
@@ -262,7 +348,7 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
             {/*) : null}*/}
           </View>
 
-          <TitleAndTips title={'Name  *'} />
+          <TitleAndTips title={'Name'} isStar={true} />
           <PureTextInput
             placeholder={'Item name'}
             style={[FG, styles.nameContainer]}
@@ -581,6 +667,25 @@ const createSty = theme =>
     subText: {
       fontSize: 15,
       color: '#29DAD7',
+    },
+    artImg: {
+      width: 35,
+      height: 35,
+      marginLeft: 8.5,
+      marginRight: 10,
+    },
+    artText: {fontSize: 14, marginTop: 10},
+    selectItem: {
+      // height: 316 / 6,
+      alignItems: 'center',
+      marginLeft: 10,
+      marginRight: 10,
+      // paddingHorizontal: 15,
+      // paddingTop: 15,
+    },
+    selectType: {
+      flexDirection: 'row',
+      marginVertical: 20,
     },
   });
 

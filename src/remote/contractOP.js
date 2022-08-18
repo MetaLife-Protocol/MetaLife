@@ -186,11 +186,14 @@ export async function getNFTInfos(
       } else {
         nftInfo.ownerOf = wAddr;
       }
+      // console.log('rrst', nftInfo);
       cb && cb(nftInfo);
       nftInfos.push(nftInfo);
     }
     return nftInfos;
-  } catch (e) {}
+  } catch (e) {
+    console.log('rrrrsssrrrr', e);
+  }
 }
 
 export async function getMyNFTCollectionInfos(wAddr, cb, page = 0, limit = 0) {
@@ -425,50 +428,50 @@ export async function getOpenGalaxyNFTCollectionInfos(cb, page = 0, limit = 0) {
     metaMasterAbi,
   );
   var nftCount;
-  try {
-    nftCount = await contract.createdCollectionNum();
-    // const s = await contract.collectionOwner(collectionAddress);
-    // console.log('aaaaaaa', s);
+  // try {
+  nftCount = await contract.createdCollectionNum();
+  // const s = await contract.collectionOwner(collectionAddress);
+  // console.log('aaaaaaa', s);
 
-    console.log('nnnnnn', nftCount);
-    let token_idxs = [...Array(nftCount.toNumber()).keys()];
+  console.log('nnnnnn', nftCount);
+  let token_idxs = [...Array(nftCount.toNumber()).keys()];
 
-    if (limit === 0) {
-      limit = token_idxs.length;
-    }
-    let lastPage = Math.ceil(token_idxs / limit);
-    if (page >= 0 && page < lastPage) {
-      token_idxs = token_idxs.slice(page * limit, page * limit + limit);
-    }
-    let collectionInfos = [];
-
-    for await (const idx of token_idxs) {
-      var collection_address;
-
-      collection_address = await contract.createdCollections(idx);
-
-      const subcontract = getContract(
-        network,
-        collection_address,
-        NFTCollectionAbi,
-      );
-      const name = await subcontract.name();
-      const symbol = await subcontract.symbol();
-      const metaInfo = await subcontract.metaInfo();
-      let collectionInfo = {
-        name: name,
-        symbol: symbol,
-        uri: metaInfo,
-        address: collection_address,
-        type: 'Collection',
-      };
-      cb && cb(collectionInfo);
-      collectionInfos.push(collectionInfo);
-    }
-    return collectionInfos;
-  } catch (e) {
-    console.log('nnnnnwwwwwwwwwwn', e);
+  if (limit === 0) {
+    limit = token_idxs.length;
   }
+  let lastPage = Math.ceil(token_idxs / limit);
+  if (page >= 0 && page < lastPage) {
+    token_idxs = token_idxs.slice(page * limit, page * limit + limit);
+  }
+  let collectionInfos = [];
+
+  for await (const idx of token_idxs) {
+    var collection_address;
+
+    collection_address = await contract.createdCollections(idx);
+
+    const subcontract = getContract(
+      network,
+      collection_address,
+      NFTCollectionAbi,
+    );
+    const name = await subcontract.name();
+    const symbol = await subcontract.symbol();
+    const metaInfo = await subcontract.metaInfo();
+    let collectionInfo = {
+      name: name,
+      symbol: symbol,
+      uri: metaInfo,
+      address: collection_address,
+      type: 'Collection',
+    };
+    cb && cb(collectionInfo);
+    collectionInfos.push(collectionInfo);
+  }
+  return collectionInfos;
+  // } catch (e) {
+  //   console.log('nnnnnwwwwwwwwwwn', e);
+  // }
   // cb && cb(nftInfos);
 }
 
@@ -859,43 +862,43 @@ export async function getBuyNft(
   cb,
   er,
 ) {
-  try {
-    const contract = await getSignerContract(
-      financeConfig.chains[type].rpcURL,
-      salePlainAddress,
-      salePlainAbi,
-      JSON.stringify(keystore),
-      password,
-    );
-    const saleId = await contract.getSaleId(colAddress, id);
-    // console.log('ssssssff', createBigNumber(saleId));
-    const result = await contract.bidWithValue(createBigNumber(saleId), {
-      gasLimit: gasLim,
-      value: goodPrice,
-    });
-    console.log('fffffrrrrr', result);
-    const subcontract = getContract(network, colAddress, NFTCollectionAbi);
+  // try {
+  const contract = await getSignerContract(
+    financeConfig.chains[type].rpcURL,
+    salePlainAddress,
+    salePlainAbi,
+    JSON.stringify(keystore),
+    password,
+  );
+  const saleId = await contract.getSaleId(colAddress, id);
+  // console.log('ssssssff', createBigNumber(saleId));
+  const result = await contract.bidWithValue(createBigNumber(saleId), {
+    gasLimit: gasLim,
+    value: goodPrice,
+  });
+  console.log('fffffrrrrr', result);
+  const subcontract = getContract(network, colAddress, NFTCollectionAbi);
 
-    let data = await coinWaitTransaction(type, result.hash);
-    // if (data.status !== 1) {
-    //   er('request failed');
-    // }
-    console.log('uuuu', data);
-    cb && cb(result.hash);
-    let provider = getTransactionListenProvider(type);
-    provider.on(result.hash, resListen => {
-      console.log('hhhh', resListen);
-      if (resListen.status !== 1 && resListen.confirmations > 1) {
-        er('request failed');
-        provider.removeAllListeners(result.hash);
-      }
-      if (resListen.confirmations > 19) {
-        provider.removeAllListeners(result.hash);
-      }
-    });
-  } catch (e) {
-    er(e);
-  }
+  let data = await coinWaitTransaction(type, result.hash);
+  // if (data.status !== 1) {
+  //   er('request failed');
+  // }
+  console.log('uuuu', data);
+  cb && cb(result.hash);
+  let provider = getTransactionListenProvider(type);
+  provider.on(result.hash, resListen => {
+    console.log('hhhh', resListen);
+    if (resListen.status !== 1 && resListen.confirmations > 1) {
+      er('request failed');
+      provider.removeAllListeners(result.hash);
+    }
+    if (resListen.confirmations > 19) {
+      provider.removeAllListeners(result.hash);
+    }
+  });
+  // } catch (e) {
+  //   er(e);
+  // }
 }
 
 export async function getBuyNftByERC20(

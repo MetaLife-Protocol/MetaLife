@@ -96,8 +96,9 @@ const MyNftItem = ({
   }
   async function fetchData() {
     const result = await getOpenGalaxyNFTCollectionInfos();
-    // console.log('resulttt', result);
+    console.log('resulttt', result.length);
     if (result.length > 0) {
+      setShowLoading(false);
       if (isEnds) {
         let newList = [];
         for (let i = 0; i < result.length; i++) {
@@ -105,7 +106,7 @@ const MyNftItem = ({
             getNFTInfos(
               fixWalletAddress(getCurrentAccount(wallet).address),
               res => {
-                // console.log('rrrrr', res);
+                console.log('rrrrr', res);
                 let index =
                   collectionItem && collectionItem.length > 0
                     ? collectionItem.findIndex(item => {
@@ -118,18 +119,21 @@ const MyNftItem = ({
                     : -1;
                 if (isEnds) {
                   if (index == -1) {
-                    getNftAssetsJson(res.uri).then(collInfo => {
-                      if (isEnds) {
+                    getNftAssetsJson(res.uri)
+                      .then(collInfo => {
+                        if (isEnds) {
+                          collInfo.headers['content-type'] ===
+                            'application/json' &&
+                            addNftItemList({
+                              ...res,
+                              ...collInfo.data,
+                              type: getCurrentAccount(wallet).address,
+                            });
+                        }
+                      })
+                      .catch(() => {
                         setShowLoading(false);
-                        collInfo.headers['content-type'] ===
-                          'application/json' &&
-                          addNftItemList({
-                            ...res,
-                            ...collInfo.data,
-                            type: getCurrentAccount(wallet).address,
-                          });
-                      }
-                    });
+                      });
                   }
                 }
                 // for (var j = 0; j < list.length; j++) {
@@ -170,6 +174,7 @@ const MyNftItem = ({
     return <ListEmpty />;
   };
   const onclickSale = type => {
+    isEnds = true;
     setType(type);
     if (type === 1) {
       fetchOnSaleData();

@@ -29,6 +29,7 @@ import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo'
 import {
   getAccount,
   getTransactionListenProvider,
+  getWBalance,
 } from '../../remote/wallet/WalletAPI';
 import {getCreateCollection} from '../../remote/contractOP';
 import PasswordModel from '../../shared/comps/PasswordModal';
@@ -58,12 +59,20 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
   const [pwdVisible, setPwdVisible] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
   const [toastContent, setToastContent] = useState('');
+  const [maxInput, setMaxInput] = useState(1000);
   // console.log('imageimage', logoImage);
 
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
+  const currentAccount = getCurrentAccount(wallet);
+  const [accountPrice, setAccountPrice] = useState(0);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getWBalance(currentAccount.type, currentAccount.address, res => {
+      // console.log('smtrrrsss', res);
+      setAccountPrice(res);
+    });
+  }, []);
 
   const clickCreate = () => {
     if (logoImage == null) {
@@ -78,6 +87,18 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
       Toast.show('Creator earnings cannot be greater than 10%\n');
       return;
     }
+    if (currentAccount.observer) {
+      Toast.show('Observe account cannot create');
+      return;
+    }
+    if (accountPrice <= 0) {
+      Toast.show('Insufficient funds');
+      return;
+    }
+    // if (maxInput * 1 > 96) {
+    //   Toast.show('Supply between 0 and 96');
+    //   return;
+    // }
     setPwdVisible(true);
   };
 
@@ -110,7 +131,7 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
                 name,
                 '',
                 'https://gateway.pinata.cloud/ipfs/',
-                20,
+                maxInput,
                 resf.IpfsHash,
                 currentAccount.address,
                 // '0x9806e0471b05d63ff32F13E5344D0b1f424F28dC',
@@ -199,6 +220,16 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
             style={[styles.nameContainer, FG, {height: 75}]}
             onChangeText={setDescription}
             inputProps={{multiline: true}}
+          />
+          <TitleAndTips
+            title={'Supply'}
+            tips={'The number of items that can be minted. No gas cost to you!'}
+          />
+          <PureTextInput
+            placeholder={'1'}
+            style={[FG, styles.nameContainer]}
+            onChangeText={setMaxInput}
+            // inputProps={{editable: false}}
           />
           <TitleAndTips
             title={'Creator Earnings'}
