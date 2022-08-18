@@ -143,7 +143,7 @@ const PhotonListItemView = ({
     }
     photonWithDraw({
       channelIdentifierHashStr: data.channel_identifier + '',
-      amountStr: numberToString(data?.balance) ?? '0',
+      amountStr: withdrawBalance ?? '0',
       op: '',
     }).then(res => {
       console.log('photonWithDraw res:', res);

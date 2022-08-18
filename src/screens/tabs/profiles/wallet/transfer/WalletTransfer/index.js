@@ -86,6 +86,12 @@ const WalletTransfer = props => {
   }, []);
 
   const onConfirm = () => {
+    if (isNaN(inputAmount)) {
+      Toast.show('incorrect number', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
     // inputAmount + gas fee > tokenOption.amount  not success
     if (!tokenOption.amount) {
       Toast.show('Funds is null, select again!', {
@@ -304,13 +310,6 @@ const WalletTransfer = props => {
       setToastVisible(false);
     }
   };
-  const numberGt0 = () => {
-    return (
-      typeof inputAmount === 'number' &&
-      isNaN(inputAmount) &&
-      Number(inputAmount) > 0
-    );
-  };
   return (
     <SafeAreaView style={[flex1]}>
       <Pressable
@@ -393,7 +392,7 @@ const WalletTransfer = props => {
         </View>
         <RoundBtn
           style={[styles.btnContainer, marginTop10]}
-          disabled={address && numberGt0() ? false : true}
+          disabled={address && inputAmount ? false : true}
           title={'Confirm'}
           press={onConfirm}
         />
