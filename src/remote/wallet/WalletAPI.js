@@ -18,21 +18,18 @@ import {
   getBalance,
   getContract,
   getContractBalance,
-  getGasLimit,
   getGasPrice,
-  getNonce,
   getProvider,
-  getSignerContract,
+  getSignerContractWithWalletProvider,
   importKeystore,
   importMnemonic,
   importPrivateKey,
-  sendTransaction,
-  signTransaction,
-  waitForContractTransaction,
   waitForTransaction,
 } from 'react-native-web3-wallet';
 import {Buffer} from 'buffer';
 import {financeConfig} from './financeConfig';
+import {isMainCoin} from '../../utils/chainUtils';
+import {fixWalletAddress} from '../../utils';
 
 /**
  * 0 BTC 60  ETH
@@ -312,132 +309,6 @@ export const getTransferGasPrice = params => {
   const {type} = params;
   return getGasPrice(financeConfig.chains[type].rpcURL);
 };
-export const getTransferGasLimit = params => {
-  const {type, fromAddress, toAddress, amount, remark, cType, pwd} = params;
-  if (cType === 'SMT') {
-    const data = remark ? '0x' + Buffer.from(remark).toString('hex') : '';
-    return getGasLimit(
-      financeConfig.chains[type].rpcURL,
-      fromAddress,
-      toAddress,
-      amount,
-      data,
-    );
-  }
-  return new Promise((resolve, reject) => {
-    getAccount(fromAddress, (isSuccess, keystore) => {
-      if (isSuccess) {
-        getSignerContract(
-          financeConfig.chains[type].rpcURL,
-          financeConfig.chains[type].contracts.coin[cType].address,
-          financeConfig.contractABIs[
-            financeConfig.chains[type].contracts.coin[cType].abi
-          ],
-          JSON.stringify(keystore),
-          pwd,
-        )
-          .then(contract => {
-            let realAmount = bigNumberParseUnits(amount);
-
-            contract.estimateGas
-              .transfer(toAddress, realAmount)
-              .then(gasLimit => {
-                resolve(gasLimit);
-              });
-          })
-          .catch(err => {
-            reject(err);
-          });
-      }
-    });
-  });
-};
-
-export const cionTransact = params => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const {
-        type,
-        fromAddress,
-        toAddress,
-        amount,
-        remark,
-        password,
-        gasLimit,
-        gasPrice,
-      } = params;
-      const data = remark ? '0x' + Buffer.from(remark).toString('hex') : '';
-      const nonce = await getNonce(
-        financeConfig.chains[type].rpcURL,
-        fromAddress,
-      );
-      // get keystore from user address
-      getAccount(fromAddress, async (isSuccess, keystore) => {
-        if (isSuccess) {
-          try {
-            const signedTx = await signTransaction(
-              JSON.stringify(keystore),
-              // password is user input
-              password,
-              nonce,
-              gasLimit,
-              gasPrice,
-              toAddress,
-              financeConfig.chains[type].chainID,
-              amount,
-              data,
-            );
-            const resTx = await sendTransaction(
-              financeConfig.chains[type].rpcURL,
-              signedTx,
-            );
-            // get resTx , this transaction is success send
-            console.log('resTx', resTx);
-            resolve({
-              code: 'success',
-              data: resTx,
-            });
-          } catch (e) {
-            console.log('transaction error', e);
-            if (e.message === 'invalid password') {
-              resolve({
-                code: 'fail',
-                message: 'Wrong password',
-              });
-            } else {
-              if (
-                e.message.indexOf('(error=') !== -1 &&
-                e.message.indexOf(', method=') !== -1
-              ) {
-                const errorMessage = e.message
-                  .split('(error=')[1]
-                  .split(', method=')[0];
-                const body = JSON.parse(errorMessage).body;
-                const errorMsg = JSON.parse(body);
-                resolve({
-                  code: 'fail',
-                  message: errorMsg.error.message,
-                });
-              } else {
-                resolve({
-                  code: 'fail',
-                  message: 'transaction error',
-                });
-              }
-            }
-          }
-        } else {
-          resolve({
-            code: 'fail',
-            message: 'address not exist',
-          });
-        }
-      });
-    } catch (e) {
-      reject(e.message);
-    }
-  });
-};
 
 export const coinWaitTransaction = async (type, hash) => {
   try {
@@ -454,69 +325,6 @@ export const coinWaitTransaction = async (type, hash) => {
 export const getTransactionListenProvider = type => {
   return getProvider(financeConfig.chains[type].rpcURL);
 };
-export const coinContractTransfer = async params => {
-  return new Promise(async (resolve, reject) => {
-    const {
-      type,
-      cType,
-      fromAddress,
-      password,
-      toAddress,
-      amount,
-      gasLimit,
-      gasPrice,
-    } = params;
-    getAccount(fromAddress, async (isSuccess, keystore) => {
-      if (isSuccess) {
-        try {
-          const contract = await getSignerContract(
-            financeConfig.chains[type].rpcURL,
-            financeConfig.chains[type].contracts.coin[cType].address,
-            financeConfig.contractABIs[
-              financeConfig.chains[type].contracts.coin[cType].abi
-            ],
-            JSON.stringify(keystore),
-            password,
-          );
-          const nonce = await getNonce(
-            financeConfig.chains[type].rpcURL,
-            fromAddress,
-          );
-          const realAmount = bigNumberParseUnits(amount);
-          let tx = {
-            nonce: nonce,
-            gasLimit: gasLimit,
-            gasPrice: gasPrice,
-          };
-          const res = await contract.transfer(toAddress, realAmount, tx);
-          resolve({
-            code: 'success',
-            data: res,
-          });
-        } catch (e) {
-          console.warn(e);
-          if (e.message === 'invalid password') {
-            resolve({
-              code: 'fail',
-              message: 'Wrong password',
-            });
-          } else {
-            resolve({
-              code: 'fail',
-              message: 'something is wrong',
-            });
-          }
-        }
-      } else {
-        resolve({
-          code: 'fail',
-          message: 'account not exist',
-        });
-      }
-    });
-  });
-};
-
 export const getContractTransactionListenProvider = (type, cType) => {
   let contract = getContract(
     financeConfig.chains[type].rpcURL,
@@ -565,3 +373,115 @@ function toUtf8(str) {
   }
   return out;
 }
+
+export const getTransactionDetail = params => {
+  const {
+    walletSinger,
+    inputAmount,
+    tokenOption,
+    address,
+    remark,
+    currentAccount,
+  } = params;
+  const amount = bigNumberParseUnits(inputAmount);
+  const data = remark ? '0x' + Buffer.from(remark).toString('hex') : '';
+  return new Promise((resolve, reject) => {
+    walletSinger.provider
+      .getGasPrice()
+      .then(gasPriceRes => {
+        if (isMainCoin(tokenOption.type, tokenOption.cType)) {
+          let tx = {
+            to: fixWalletAddress(address),
+            data: data,
+            from: fixWalletAddress(currentAccount.address),
+            value: amount,
+          };
+          walletSinger.provider
+            .estimateGas(tx)
+            .then(gasLimitRes => {
+              resolve({gasPriceRes, gasLimitRes, walletSinger});
+            })
+            .catch(e => console.log('walletSinger.provider.estimateGas', e));
+        } else {
+          const contractSinger = getSignerContractWithWalletProvider(
+            financeConfig.chains[currentAccount.type].contracts.coin[
+              tokenOption.cType
+            ].address,
+            financeConfig.contractABIs[
+              financeConfig.chains[currentAccount.type].contracts.coin[
+                tokenOption.cType
+              ].abi
+            ],
+            walletSinger,
+          );
+          contractSinger.estimateGas
+            .transfer(fixWalletAddress(address), amount)
+            .then(gasLimitRes => {
+              resolve({gasPriceRes, gasLimitRes, walletSinger, contractSinger});
+            })
+            .catch(e => console.log('contractSinger.estimateGas.transfer', e));
+        }
+      })
+      .catch(console.warn);
+  });
+};
+
+export const confirmTransaction = params => {
+  const {
+    walletSinger,
+    inputAmount,
+    remark,
+    currentAccount,
+    tokenOption,
+    gasLimit,
+    gasPrice,
+    address,
+    contractSinger,
+  } = params;
+  const realAmount = bigNumberParseUnits(inputAmount);
+  const data = remark ? '0x' + Buffer.from(remark).toString('hex') : '';
+  return new Promise((resolve, reject) => {
+    walletSinger.provider
+      .getTransactionCount(currentAccount.address, 'pending')
+      .then(nonce => {
+        if (isMainCoin(tokenOption.type, tokenOption.cType)) {
+          let tx = {
+            nonce: nonce,
+            gasLimit: gasLimit,
+            gasPrice: gasPrice,
+            to: fixWalletAddress(address),
+            chainId: financeConfig.chains[currentAccount.type].chainID,
+            value: realAmount,
+            data: data,
+          };
+          walletSinger
+            .signTransaction(tx)
+            .then(res => {
+              walletSinger.provider
+                .sendTransaction(res)
+                .then(singTransRes => {
+                  resolve(singTransRes);
+                })
+                .catch(e =>
+                  console.log('walletSinger.provider.sendTransaction', e),
+                );
+            })
+            .catch(e => console.log('walletSinger.signTransaction', e));
+        } else {
+          let tx = {
+            nonce: nonce,
+            gasLimit: gasLimit,
+            gasPrice: gasPrice,
+          };
+
+          contractSinger
+            .transfer(fixWalletAddress(address), realAmount, tx)
+            .then(res => {
+              resolve(res);
+            })
+            .catch(e => console.log('contractSinger.transfer', e));
+        }
+      })
+      .catch(e => console.log('walletSinger.provider.getTransactionCount', e));
+  });
+};

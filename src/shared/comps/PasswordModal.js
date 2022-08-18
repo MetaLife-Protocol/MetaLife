@@ -1,12 +1,23 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {Image, StyleSheet, TextInput, View} from 'react-native';
+import {getWalletSigner} from 'react-native-web3-wallet';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
+import {useSelector} from 'react-redux';
+import {financeConfig} from '../../remote/wallet/financeConfig';
+import {getAccount} from '../../remote/wallet/WalletAPI';
+import {getCurrentAccount} from '../../utils';
 import useSchemaStyles from '../UseSchemaStyles';
 import {ComModal} from './ComModal';
 
+/**
+ *
+ * @param {{provider:{getGasPrice:()=>Promise<BigNumber>,getTransactionCount:()=>Promise<number>,sendTransaction:()=>Promise<TransactionResponse>,estimateGas:()=>Promise<BigNumber>,getTransaction:()=>Promise<TransactionResponse>,getTransactionReceipt:()=>Promise<TransactionReceipt>},signTransaction:(transaction: {nonce:number,gasLimit:BigNumber,gasPrice:BigNumber,to:string,chainId:number,value:BigNumber,data:BytesLike})=>Promise<string>}} params
+ */
+const onConfirmDefault = params => {};
+
 const PasswordModel = ({
   darkMode,
-  onConfirm,
+  onConfirm = onConfirmDefault,
   toastVisible = false,
   setToastVisible,
   toastContent,
@@ -16,6 +27,38 @@ const PasswordModel = ({
 }) => {
   const {row, text, alignItemsCenter, placeholderTextColor} = useSchemaStyles();
   const [pwd, setPwd] = useState('');
+  const [toastContentState, setToastContentState] = useState(toastContent);
+  const [toastDurationState, setToastDurationState] = useState(toastDuriation);
+  const wallet = useSelector(state => state.wallet);
+  const {address, type} = useMemo(() => {
+    return getCurrentAccount(wallet);
+  }, [wallet]);
+
+  const onFinish = () => {
+    setToastVisible(true);
+    setToastContentState('loading');
+    setToastDurationState(null);
+    getAccount(address, (isSuccess, keystore) => {
+      if (isSuccess) {
+        getWalletSigner(
+          financeConfig.chains[type].rpcURL,
+          JSON.stringify(keystore),
+          pwd,
+        )
+          .then(res => {
+            setToastVisible(false);
+            // console.log('getWalletSigner', JSON.stringify(res));
+            onConfirm(res);
+          })
+          .catch(err => {
+            setToastVisible(false);
+            console.log('getWalletSigner-error', err);
+          });
+      } else {
+        setToastVisible(false);
+      }
+    });
+  };
 
   return (
     <ComModal
@@ -23,7 +66,7 @@ const PasswordModel = ({
       setVisible={setPwdVisible}
       title={'Enter Password'}
       darkMode={darkMode}
-      toastDuriation={toastDuriation}
+      toastDuriation={toastDurationState}
       content={
         <View style={[alignItemsCenter, styles.inputContiner, row]}>
           <TextInput
@@ -49,12 +92,10 @@ const PasswordModel = ({
       }
       toastVisible={toastVisible}
       setToastVisible={setToastVisible}
-      toastContent={toastContent}
+      toastContent={toastContentState}
       submit={{
         text: 'Confirm',
-        press: () => {
-          onConfirm(pwd);
-        },
+        press: onFinish,
       }}
       cancel={{
         text: 'Cancel',

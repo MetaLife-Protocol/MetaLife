@@ -20,10 +20,8 @@ import {connect} from 'react-redux/lib/exports';
 import {RoundBtn} from '../../../../../../metalife-base';
 import {
   getWBalance,
-  cionTransact,
-  coinContractTransfer,
-  getTransferGasPrice,
-  getTransferGasLimit,
+  getTransactionDetail,
+  confirmTransaction,
 } from '../../../../../../remote/wallet/WalletAPI';
 import ComText from '../../../../../../shared/comps/ComText';
 import PasswordModel from '../../../../../../shared/comps/PasswordModal';
@@ -125,60 +123,47 @@ const WalletTransfer = props => {
     setPwdVisible(true);
   };
 
-  const onPwdModalConfirm = pwd => {
+  const onPwdModalConfirm2 = walletSinger => {
     setToastVisible(true);
     setToastContent('loading...');
     setToastDur(null);
-    try {
-      getTransferGasPrice({type: currentAccount.type})
-        .then(gasPriceRes => {
-          setGasPrice(gasPriceRes);
-          getTransferGasLimit({
-            type: currentAccount.type,
-            fromAddress: currentAccount.address,
-            toAddress: address,
-            amount: inputAmount ? inputAmount : '0',
-            remark: remark ? remark : '',
-            cType: tokenOption.cType,
-            pwd,
-          })
-            .then(gasLimitRes => {
-              setGasLimit(gasLimitRes);
-
-              const price = bigNumberFormatUnits(
-                gasPriceRes.toString(),
-                9,
-              ).toString();
-              const data = {
-                info: 'Transfer ' + tokenOption.cType,
-                from: fixWalletAddress(currentAccount.address),
-                to: address,
-                gasPrice: gasPriceRes,
-                gasPriceNumber:
-                  price.indexOf('.') !== -1 ? price.split('.')[0] : price,
-                gasLimit: gasLimitRes,
-                price: inputAmount + ' ' + tokenOption.cType,
-                pwd,
-              };
-              setPwdVisible(false);
-              setToastVisible(false);
-              setConfirmData(data);
-              setConfirmVisible(true);
-            })
-            .catch(e => {
-              setToastVisible(true);
-              setToastContent(e.message);
-              setToastDur(3000);
-            });
-        })
-        .catch(console.warn);
-    } catch (e) {
-      setToastVisible(false);
-      setToastVisible(false);
-    }
+    getTransactionDetail({
+      walletSinger,
+      inputAmount,
+      tokenOption,
+      address,
+      remark,
+      currentAccount,
+    })
+      .then(res => {
+        setGasPrice(res.gasPriceRes);
+        setGasLimit(res.gasLimitRes);
+        const price = bigNumberFormatUnits(
+          res.gasPriceRes.toString(),
+          9,
+        ).toString();
+        const data = {
+          info: 'Transfer ' + tokenOption.cType,
+          from: fixWalletAddress(currentAccount.address),
+          to: address,
+          gasPrice: res.gasPriceRes,
+          gasPriceNumber:
+            price.indexOf('.') !== -1 ? price.split('.')[0] : price,
+          gasLimit: res.gasLimitRes,
+          price: inputAmount + ' ' + tokenOption.cType,
+          walletSinger,
+          contractSinger: res.contractSinger,
+        };
+        setPwdVisible(false);
+        setToastVisible(false);
+        setConfirmData(data);
+        setConfirmVisible(true);
+      })
+      .catch(e => console.log('onPwdModalConfirm2', e));
   };
 
-  const onInfoModalConfirm = pwd => {
+  const onInfoModalConfirm = () => {
+    // 比较gasFee
     const gasFee = gasPrice.mul(gasLimit);
     if (isMainCoin(tokenOption.type, tokenOption.cType)) {
       if (
@@ -204,87 +189,29 @@ const WalletTransfer = props => {
         return;
       }
     }
-    if (isMainCoin(tokenOption.type, tokenOption.cType)) {
-      onTransaction(pwd);
-    } else {
-      onContractTransaction(pwd, tokenOption.cType);
-    }
-  };
-
-  const onTransaction = async pwd => {
     setToastVisible(true);
     setToastContent('loading...');
     setToastDur(null);
-    try {
-      const res = await cionTransact({
-        type: currentAccount.type,
-        fromAddress: currentAccount.address,
-        toAddress: address,
-        amount: inputAmount,
-        remark: remark,
-        password: pwd,
-        gasLimit: gasLimit,
-        gasPrice: gasPrice,
-      });
-      if (res.code === 'success') {
+    confirmTransaction({
+      walletSinger: confirmData.walletSinger,
+      inputAmount,
+      remark,
+      currentAccount,
+      tokenOption,
+      gasLimit,
+      gasPrice,
+      address,
+      contractSinger: confirmData.contractSinger,
+    })
+      .then(res => {
         const params = {
-          detail: res.data,
-          address: currentAccount.address,
-          amount: bigNumberFormatUnits(res.data.value),
-          remark: remark,
-          type: currentAccount.type,
-          cType: getMainCoinName(tokenOption.type),
-          contract: false,
-          date: Date.now(),
-          gasUsed: '',
-          blockNumber: '',
-          status: 'waiting package ...',
-          statusImg: icons.complete,
-          textColor: '#46C288',
-        };
-        addTransactionRecord(params);
-        setToastVisible(false);
-        setConfirmVisible(false);
-        replace('WalletTransactionDetail', {
-          address: currentAccount.address,
-          hash: res.data.hash,
-        });
-      }
-      if (res.code === 'fail') {
-        setToastVisible(true);
-        setToastContent(res.message);
-        setToastDur(3000);
-      }
-    } catch (e) {
-      console.log('confrirm', e);
-      setToastVisible(false);
-    }
-  };
-  const onContractTransaction = async (pwd, cType) => {
-    setToastVisible(true);
-    setToastContent('loading...');
-    setToastDur(null);
-    try {
-      const res = await coinContractTransfer({
-        type: currentAccount.type,
-        cType,
-        fromAddress: currentAccount.address,
-        toAddress: address,
-        amount: inputAmount,
-        remark: remark,
-        password: pwd,
-        gasLimit: gasLimit,
-        gasPrice: gasPrice,
-      });
-      if (res.code === 'success') {
-        const params = {
-          detail: res.data,
+          detail: res,
           address: currentAccount.address,
           amount: inputAmount,
           remark: remark,
           type: currentAccount.type,
           contract: true,
-          cType,
+          cType: tokenOption.cType,
           date: Date.now(),
           gasUsed: '',
           blockNumber: '',
@@ -297,18 +224,10 @@ const WalletTransfer = props => {
         setConfirmVisible(false);
         replace('WalletTransactionDetail', {
           address: currentAccount.address,
-          hash: res.data.hash,
+          hash: res.hash,
         });
-      }
-      if (res.code === 'fail') {
-        setToastVisible(true);
-        setToastContent(res.message);
-        setToastDur(3000);
-      }
-    } catch (e) {
-      console.log('confirm', e);
-      setToastVisible(false);
-    }
+      })
+      .catch(e => console.log('confirmTransaction', e));
   };
   return (
     <SafeAreaView style={[flex1]}>
@@ -405,7 +324,7 @@ const WalletTransfer = props => {
           setToastVisible={setToastVisible}
           toastContent={toastContent}
           toastDuriation={toastDur}
-          onConfirm={onPwdModalConfirm}
+          onConfirm={onPwdModalConfirm2}
         />
 
         <TransactionInfoModal
