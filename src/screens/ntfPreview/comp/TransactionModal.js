@@ -40,6 +40,9 @@ const TransactionModal = ({
   );
   const [gasPrice, setGasPrice] = useState(createBigNumber(0));
   const [accountPrice, setAccountPrice] = useState(0);
+  useEffect(() => {
+    setGasLimit(list?.gasLimit.div(createBigNumber(10000)).toNumber());
+  }, [list?.gasLimit]);
 
   useEffect(() => {
     const currentAccount = getCurrentAccount(wallet);

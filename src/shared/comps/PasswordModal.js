@@ -51,7 +51,9 @@ const PasswordModel = ({
             onConfirm(res);
           })
           .catch(err => {
-            setToastVisible(false);
+            setToastVisible(true);
+            setToastContentState(err.message);
+            setToastDurationState(3000);
             console.log('getWalletSigner-error', err);
           });
       } else {

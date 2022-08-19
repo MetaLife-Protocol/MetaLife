@@ -862,14 +862,6 @@ export async function getBuyGasLimitByErc20(
     salePlainAbi,
     password,
   );
-  console.log('pppp', contract);
-  // const newcontract = await getSignerContract(
-  //   financeConfig.chains[type].rpcURL,
-  //   token,
-  //   contractsConstant[type][token.toLowerCase()].abi,
-  //   JSON.stringify(keystore),
-  //   password,
-  // );
   const newcontract = getSignerContractWithWalletProvider(
     token,
     contractsConstant[type][token.toLowerCase()].abi,
@@ -877,17 +869,33 @@ export async function getBuyGasLimitByErc20(
   );
   const appro = await newcontract.approve(salePlainAddress, price);
   const saleId = await contract.getSaleId(colAddress, id);
-  console.log('sssddddttt', saleId, price);
-  try {
-    const result = await contract.estimateGas.bidWithToken(
-      createBigNumber(saleId),
-      price,
-    );
-    console.log('dddd', result);
-    cb && cb(result);
-  } catch (e) {
-    if (typeof e === 'function') {
+  console.log('sssddddttt', appro);
+  let provider = getTransactionListenProvider(type);
+  provider.on(appro.hash, resListen => {
+    console.log('hhhh', resListen);
+    if (resListen.status !== 1 && resListen.confirmations > 1) {
       er('request failed');
+      provider.removeAllListeners(appro.hash);
+    }
+    if (resListen.status === 1 && resListen.confirmations > 1) {
+      getConfirm();
+      provider.removeAllListeners(appro.hash);
+    }
+  });
+  async function getConfirm() {
+    try {
+      const result = await contract.estimateGas.bidWithToken(
+        createBigNumber(saleId),
+        price,
+      );
+      console.log('dddd', result);
+      cb && cb(result);
+    } catch (e) {
+      er(e);
+      console.log('erer', e);
+      if (typeof e === 'function') {
+        er('request failed');
+      }
     }
   }
 }

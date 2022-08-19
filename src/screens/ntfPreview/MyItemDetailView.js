@@ -275,6 +275,7 @@ const MyItemDetailView = ({
       Toast.show('please set price');
       return;
     }
+    setVisible(false);
     setPwdVisible(true);
     setSelectMap({type: type, month: month});
   };
@@ -317,13 +318,14 @@ const MyItemDetailView = ({
       formTimeUtil(selectMap.month),
       gasLimits * 10000,
       hash => {
-        setPwdVisible(false);
-        setToastVisible(false);
         setShowLoading(false);
+        setShowTrans(false);
+
         navigation.navigate('TransactionDetail', {
           gasPrice: bigNumberFormatUnits(gasPrices, 9),
           hash,
         });
+
         if (!delet) {
           deleteNftItemList({
             type: currentAccount?.address,
@@ -334,9 +336,8 @@ const MyItemDetailView = ({
         }
       },
       er => {
-        setPwdVisible(false);
-        setToastVisible(false);
         setShowLoading(false);
+        setShowTrans(false);
       },
     );
     // });
