@@ -6,7 +6,6 @@ import {
   Platform,
   Pressable,
   StyleSheet,
-  // Text,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -16,8 +15,7 @@ import HeadIcon from '../../../../shared/comps/HeadIcon';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
 import {PeerIcons} from '../../../../shared/Icons';
-import {pxToDp} from '../../../../utils';
-import {isIphoneX} from 'react-native-iphone-x-helper';
+import {isIphoneX_Up, pxToDp, setSpText} from '../../../../utils';
 
 const EarningsShare = ({feedId, infoDic, route: {params}}) => {
   const {text, row, flex1, alignItemsCenter, justifySpaceBetween, marginTop10} =
@@ -25,7 +23,7 @@ const EarningsShare = ({feedId, infoDic, route: {params}}) => {
   const {amount} = params;
 
   const {goBack} = useNavigation();
-  const {name, description, image, avatar} = infoDic[feedId] || {};
+  const {name, image, avatar} = infoDic[feedId] || {};
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
 
@@ -57,7 +55,6 @@ const EarningsShare = ({feedId, infoDic, route: {params}}) => {
             justifySpaceBetween,
             alignItemsCenter,
             row,
-            marginTop10,
           ]}>
           <Image source={icons.greenLeft} />
           <Text style={[styles.nickName]}>
@@ -90,31 +87,50 @@ const icons = {
 
 const styles = StyleSheet.create({
   back: {
-    marginTop: Platform.OS === 'ios' ? (isIphoneX ? 45 : 25) : 5,
+    marginTop:
+      Platform.OS === 'ios'
+        ? isIphoneX_Up()
+          ? pxToDp(45)
+          : pxToDp(25)
+        : pxToDp(10),
     marginLeft: 20,
     padding: 10,
   },
   title1: {
     color: '#000',
-    marginTop: pxToDp(150),
+    marginTop:
+      Platform.OS === 'ios'
+        ? isIphoneX_Up()
+          ? pxToDp(140)
+          : pxToDp(75)
+        : pxToDp(160),
     marginLeft: -10,
     fontSize: 17.5,
     fontWeight: 'bold',
   },
-  title2: {alignItems: 'flex-end', marginBottom: pxToDp(40)},
+  title2: {
+    alignItems: 'flex-end',
+    marginBottom:
+      Platform.OS === 'ios'
+        ? isIphoneX_Up()
+          ? pxToDp(40)
+          : pxToDp(12)
+        : pxToDp(40),
+  },
   number: {
-    fontSize: 65,
+    fontSize: setSpText(65),
     fontWeight: 'bold',
-    marginTop: 25,
+    marginTop: pxToDp(25),
     marginLeft: -20,
   },
   mlt: {
     fontSize: 15,
-    marginBottom: 15,
+    marginBottom: pxToDp(15),
     lineHeight: 18,
     marginLeft: 8,
   },
   nickNameContinar: {
+    marginTop: pxToDp(10),
     paddingHorizontal: 30,
     width: '100%',
   },
@@ -132,12 +148,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   qrcodeContainer: {
-    marginTop: 30,
+    marginTop: pxToDp(20),
     height: 102,
     width: 102,
     justifyContent: 'center',
     alignContent: 'center',
-    padding: 10,
+    padding: pxToDp(10),
     borderRadius: 12,
     borderColor: '#575BFE',
     borderWidth: 0.5,
