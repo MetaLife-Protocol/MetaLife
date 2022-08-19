@@ -45,7 +45,6 @@ const WalletTransfer = props => {
     wallet,
     transfer,
     setTokenOption,
-    addTransactionRecord,
     route: {params},
   } = props;
   const {tokenOption} = transfer;
@@ -210,27 +209,12 @@ const WalletTransfer = props => {
       contractSinger: confirmData.contractSinger,
     })
       .then(res => {
-        const params = {
-          detail: res,
-          address: currentAccount.address,
-          amount: inputAmount,
-          remark: remark,
-          type: currentAccount.type,
-          contract: true,
-          cType: tokenOption.cType,
-          date: Date.now(),
-          gasUsed: '',
-          blockNumber: '',
-          status: 'waiting package ...',
-          statusImg: icons.complete,
-          textColor: '#46C288',
-        };
-        addTransactionRecord(params);
         setToastVisible(false);
         setConfirmVisible(false);
-        replace('WalletTransactionDetail', {
-          address: currentAccount.address,
+        replace('TransactionDetail', {
+          gasPrice: bigNumberFormatUnits(res.gasPrice, 9),
           hash: res.hash,
+          waiting: true,
         });
       })
       .catch(e => console.log('confirmTransaction', e));
@@ -415,7 +399,6 @@ const msp = s => {
 const mdp = d => {
   return {
     setTokenOption: payload => d({type: 'setTokenOption', payload}),
-    addTransactionRecord: payload => d({type: 'addTransactionRecord', payload}),
   };
 };
 

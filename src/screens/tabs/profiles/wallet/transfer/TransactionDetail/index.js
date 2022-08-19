@@ -12,7 +12,7 @@ import {useTransferDataHooks} from './useTransferDataHooks';
 import {getCurrentAccount} from '../../../../../../utils';
 
 const TransactionDetail = ({cfg: {darkMode}, wallet, route: {params}}) => {
-  const {hash, gasPrice} = params;
+  const {hash, gasPrice, waiting = false} = params;
   const {flex1, FG, BG, text} = useSchemaStyles();
   const colors = !darkMode ? '#F0F0F0' : '#000';
   const normal = darkMode ? '#4E586E' : '#A5ABB7';
@@ -23,6 +23,7 @@ const TransactionDetail = ({cfg: {darkMode}, wallet, route: {params}}) => {
     hash,
     chainType,
     currentAccount.address,
+    waiting,
   );
 
   const getImg = () => {
@@ -37,7 +38,7 @@ const TransactionDetail = ({cfg: {darkMode}, wallet, route: {params}}) => {
 
   const getStatusText = () => {
     if (transactData.status === 0) {
-      return 'waiting ...';
+      return waiting ? 'waiting package ...' : 'waiting ...';
     } else if (transactData.status === 1) {
       return `Synchronizing(${transactData.syncNumber}/20)...`;
     } else if (transactData.status === 2) {

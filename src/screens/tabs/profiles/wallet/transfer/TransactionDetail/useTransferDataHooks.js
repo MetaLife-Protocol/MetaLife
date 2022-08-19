@@ -18,6 +18,7 @@ export const useTransferDataHooks = (
   hash,
   chainType,
   currentAddress,
+  waiting,
 ) => {
   const initData = {
     from: '',
@@ -161,6 +162,12 @@ export const useTransferDataHooks = (
         from: transRes.from.toLowerCase(),
         to: transRes.to.toLowerCase(),
         blockNumber: transRes.blockNumber,
+      };
+      if (waiting) {
+        setTransactData(resData);
+      }
+      resData = {
+        ...resData,
         amount: bigNumberFormatUnits(transRes.value),
         amountPrefix: getAmountPrefix(transRes.to, currentAddress),
       };
