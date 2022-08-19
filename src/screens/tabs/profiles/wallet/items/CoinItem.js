@@ -18,6 +18,7 @@ const CoinItem = ({type, address, cType, pressItem, setBalance}) => {
   const [total, setTotal] = useState('');
   let request = true;
   useEffect(() => {
+    setTotal('');
     if (isMainCoin(type, cType)) {
       getWBalance(type, address, res => {
         if (!request) {

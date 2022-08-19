@@ -23,6 +23,7 @@ import HeaderProfiles from './profiles/HeaderProfiles';
 import {getMyNFTCollectionInfos} from '../../remote/contractOP';
 import Toast from 'react-native-tiny-toast';
 import {numberToString} from '../../metalife-base';
+import {isEthChain, isSpeChain} from '../../utils/chainUtils';
 
 const Profiles = ({
   feedId,
@@ -50,13 +51,8 @@ const Profiles = ({
   const [visible, setVisible] = useState(false);
   const [isList, setIsList] = useState([]);
 
-  useFocusEffect(() => {
-    // callAuto();
-  });
-
-  // todo: refactor to wallet API
-  const getInfo = () => {
-    if (type === 'spectrum') {
+  const getBalance = () => {
+    if (isSpeChain(type)) {
       getWBalanceByContract(type, 'MLT', address, res => {
         setBalance({
           cType: 'MLT',
@@ -64,7 +60,7 @@ const Profiles = ({
         });
         setRefreshing(false);
       });
-    } else if (type === 'ethereum') {
+    } else if (isEthChain(type)) {
       getWBalance(type, address, res => {
         setBalance({
           cType: 'ETH',
@@ -73,7 +69,11 @@ const Profiles = ({
         setRefreshing(false);
       });
     }
+  };
 
+  // todo: refactor to wallet API
+  const getInfo = () => {
+    getBalance();
     const hour24 = new Date();
     hour24.setHours(hour24.getHours() - 24);
     getPubsRewardTotal({
@@ -103,6 +103,10 @@ const Profiles = ({
     getNftInfo();
   }, []);
   // todo: refactor end
+
+  useEffect(() => {
+    getBalance();
+  }, [type, address]);
 
   const closeModal = () => {
     setVisible(false);

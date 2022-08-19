@@ -55,6 +55,7 @@ const WalletCoinTabScreen = props => {
       ) : type === 'ethereum' ? (
         <>
           <CoinItem
+            pressItem={params.select ? pressItem : null}
             type={type}
             address={address}
             cType={'ETH'}

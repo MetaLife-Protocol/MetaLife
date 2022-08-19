@@ -72,6 +72,12 @@ const WalletTransfer = props => {
   const [confirmData, setConfirmData] = useState({});
 
   useEffect(() => {
+    setTokenOption({
+      option: 'coin',
+      type: currentAccount.type,
+      cType: getMainCoinName(currentAccount.type),
+      amount: '',
+    });
     // 先获取当前转账余额
     getWBalance(currentAccount.type, currentAccount.address, res => {
       setTokenOption({
