@@ -40,8 +40,7 @@ import {
 const icon = require('../../assets/image/icons/lingtuan.png');
 
 const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
-  const {tokenId, address, image, name, price, fee, token, accountPrice} =
-    params;
+  const {tokenId, address, image, name, price, fee, token, iconImg} = params;
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
   const [pwdVisible, setPwdVisible] = useState(false);
   const [toastVisible, setToastVisible] = useState(false);
@@ -144,6 +143,7 @@ const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
         gasLimits * 10000,
         surePrice,
         hash => {
+          setShowTrans(false);
           setShowLoading(false);
           navigation.navigate('TransactionDetail', {
             gasPrice: gasPrices,
@@ -151,6 +151,7 @@ const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
           });
         },
         er => {
+          setShowTrans(false);
           setShowLoading(false);
           setPwdVisible(false);
           setToastVisible(false);
@@ -193,7 +194,7 @@ const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
           <Text style={styles.permissText}>Permissionless Gallery</Text>
           <Text style={[text, styles.content]}>{name}</Text>
           <View style={styles.priceView}>
-            <Image source={icon} />
+            <Image source={iconImg} />
             <Text style={[text, styles.gallPrice]}>{price}</Text>
           </View>
         </View>

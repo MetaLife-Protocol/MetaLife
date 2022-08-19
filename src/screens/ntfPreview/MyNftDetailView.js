@@ -121,6 +121,13 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
       price: showPrice,
       fee: (earn * 1) / 100 + '%',
       token: result?.token,
+      iconImg:
+        result?.token === '0x0000000000000000000000000000000000000000'
+          ? smt
+          : contractsConstant.spectrum[result?.token?.toLowerCase()].symbol ===
+            'Mesh'
+          ? mesh
+          : mlt,
       // accountPrice: accountsPrice,
     });
   };
