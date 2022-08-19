@@ -35,46 +35,52 @@ const TransactionModal = ({
   const back = darkMode ? '#232929' : '#fff';
   // console.log('gggg', list.gasLimit);
   const gasLim = list?.gasLimit.div(createBigNumber(10000)).toNumber();
-  const [gasLimit, setGasLimit] = useState(
-    list?.gasLimit.div(createBigNumber(10000)).toNumber(),
-  );
+  const [gasLimit, setGasLimit] = useState(0);
   const [gasPrice, setGasPrice] = useState(createBigNumber(0));
   const [accountPrice, setAccountPrice] = useState(0);
   useEffect(() => {
-    setGasLimit(list?.gasLimit.div(createBigNumber(10000)).toNumber());
+    setGasLimit(
+      Math.ceil(list?.gasLimit.div(createBigNumber(10000)).toNumber() * 1.6),
+    );
   }, [list?.gasLimit]);
 
   useEffect(() => {
     const currentAccount = getCurrentAccount(wallet);
     getTransferGasPrice({type: currentAccount.type}).then(res => {
-      const price = res.toString();
       setGasPrice(res);
       // setGasPriceNumber(Number(bigNumberFormatUnits(res.toString(), 9)));
     });
-    if (list?.type === 'SMT') {
-      getWBalance(currentAccount.type, currentAccount.address, res => {
-        console.log('smtrrrsss', res);
-        setAccountPrice(res);
-      });
-    } else {
-      getWBalanceByContract(
-        currentAccount.type,
-        list?.type,
-        currentAccount.address,
-        res => {
-          console.log('Meshrrrsss', res);
-          setAccountPrice(res);
-        },
-      );
-    }
+    getWBalance(currentAccount.type, currentAccount.address, res => {
+      console.log('smtrrrsss', res);
+      setAccountPrice(res);
+    });
   }, []);
   // console.log('rrrrr', (300 - gasLimit) * 0.3 + gasLimit, gasLimit);
 
   const clickConfirm = () => {
-    if (accountPrice.lt(bigNumberParseUnits(gasLimit + '', 4).mul(gasPrice))) {
-      Toast.show('Insufficient funds');
-      return;
+    if (accountPrice.toString() === '0') {
+      const currentAccount = getCurrentAccount(wallet);
+      getWBalance(currentAccount.type, currentAccount.address, res => {
+        setAccountPrice(res);
+        if (showErrorAlert()) {
+          return;
+        }
+      });
+    } else {
+      if (showErrorAlert()) {
+        return;
+      }
     }
+    function showErrorAlert() {
+      if (
+        accountPrice.lt(bigNumberParseUnits(gasLimit + '', 4).mul(gasPrice))
+      ) {
+        Toast.show('Insufficient funds');
+        return true;
+      }
+      return false;
+    }
+
     confirmPress(gasLimit, gasPrice);
   };
   return (
@@ -112,13 +118,13 @@ const TransactionModal = ({
           </View>
           <Slider
             style={[styles.slider]}
-            minimumValue={Math.floor(0.7 * gasLim)}
-            maximumValue={Math.ceil(gasLim * 2)}
-            value={gasLim * 1.2}
+            minimumValue={Math.ceil(gasLim)}
+            maximumValue={Math.ceil(gasLim * 3)}
+            value={gasLimit}
             thumbTintColor="#29DAD7"
             minimumTrackTintColor="#29DAD7"
             maximumTrackTintColor="#DADADA"
-            step={10}
+            step={1}
             onValueChange={value => {
               setGasLimit(value);
             }}
