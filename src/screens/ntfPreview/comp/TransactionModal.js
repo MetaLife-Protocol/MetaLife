@@ -104,7 +104,7 @@ const TransactionModal = ({
               {`${
                 bigNumberFormatUnits(
                   bigNumberParseUnits(gasLimit + '', 4)
-                    .mul(bigNumberParseUnits(gasPrice + '', 0))
+                    .mul(gasPrice)
                     .toString(),
                 ) + ''
               } SMT`}
