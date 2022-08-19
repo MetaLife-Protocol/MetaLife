@@ -190,7 +190,7 @@ export function settleChannelDialog(dialog, channelIdentifier) {
         '*Settle channel consumes Gas：approximately 0.002 SMT,Because it is on chain transaction, it takes a certain amount of time.'
       }
       onConfirm={() => {
-        photonSettleChannel(channelIdentifier)
+        photonSettleChannel({channelIdentifierHashStr: channelIdentifier})
           .then(res => {
             const resJson = JSON.parse(res);
             if (resJson.error_code === 0) {
