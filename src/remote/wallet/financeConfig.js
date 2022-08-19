@@ -12,6 +12,7 @@ export const financeConfig = {
       explorerURL: 'https://spectrum.pub/',
       decmis: 18,
       symbol: 'SMT',
+      nsAddress: '',
       contracts: {
         coin: {
           Mesh: {
@@ -78,6 +79,7 @@ export const financeConfig = {
       explorerURL: 'https://etherscan.io',
       decmis: 18,
       symbol: 'ETH',
+      nsAddress: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
     },
   },
   contracts: {
