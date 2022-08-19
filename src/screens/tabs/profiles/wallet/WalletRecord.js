@@ -13,8 +13,8 @@ import {
 import {fromDate} from '../../../../utils';
 import {useNavigation} from '@react-navigation/native';
 import {bigNumberFormatUnits} from 'react-native-web3-wallet';
-const toggle = require('../../../../assets/image/icons/icon_toggle_default.png');
-const send = require('../../../../assets/image/icons/send.png');
+const toggle = require('../../../../assets/image/wallet/transfer_in.png');
+const send = require('../../../../assets/image/wallet/transfer_out.png');
 
 const WalletRecord = ({wallet}) => {
   const {text, flex1, BG, FG} = useSchemaStyles();
@@ -73,11 +73,16 @@ const WalletRecord = ({wallet}) => {
             <Text style={styles.time}>{fromDate(item.timestamp)}</Text>
           </View>
         </View>
-        <Text
-          style={[
-            styles.addText,
-            {color: mineWall === item.to ? '#29DAD7' : '#6989EA'},
-          ]}>{`${mineWall === item.to ? '+' : '-'} ${item.value} SMT`}</Text>
+        <View style={styles.rightMargin}>
+          <Text
+            style={[
+              styles.addText,
+              {color: mineWall === item.to ? '#29DAD7' : '#6989EA'},
+            ]}>{`${mineWall === item.to ? '+' : '-'} ${item.value} SMT`}</Text>
+          {item.status !== 1 ? (
+            <Text style={styles.failed}>transaction failed</Text>
+          ) : null}
+        </View>
       </Pressable>
     );
   };
@@ -138,6 +143,9 @@ const styles = StyleSheet.create({
   leftMargin: {
     marginLeft: 10,
   },
+  rightMargin: {
+    marginRight: 10,
+  },
   icon: {
     fontSize: 16,
   },
@@ -146,8 +154,14 @@ const styles = StyleSheet.create({
     color: '#4E586E',
     marginTop: 10,
   },
+  failed: {
+    fontSize: 14,
+    color: '#E73553',
+    marginTop: 10,
+  },
   addText: {
     fontSize: 16,
+    textAlign: 'right',
   },
   listView: {
     marginTop: 10,
