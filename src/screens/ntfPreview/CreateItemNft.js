@@ -160,33 +160,33 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
       type: category.text,
     };
     uploadJSONToIFPS(param).then(res => {
-      getAccount(currentAccount?.address, (isExit, keystore) => {
-        if (isExit) {
-          getCreatNftItem(
-            currentAccount.type,
-            keystore,
-            pwd,
-            address,
-            currentAccount?.address,
-            res.IpfsHash,
-            cb => {
-              setToastVisible(false);
-              setPwdVisible(false);
-              navigation.navigate('MyItemDetailView', {
-                tokenId: cb,
-                address: address,
-                transfer: true,
-              });
-            },
-            er => {
-              setPwdVisible(false);
-              setToastVisible(false);
-              Toast.show(er?.error?.message || er);
-            },
-          );
-        }
-      });
+      // getAccount(currentAccount?.address, (isExit, keystore) => {
+      // if (isExit) {
+      getCreatNftItem(
+        currentAccount.type,
+        '',
+        pwd,
+        address,
+        currentAccount?.address,
+        res.IpfsHash,
+        cb => {
+          setToastVisible(false);
+          setPwdVisible(false);
+          navigation.navigate('MyItemDetailView', {
+            tokenId: cb,
+            address: address,
+            transfer: true,
+          });
+        },
+        er => {
+          setPwdVisible(false);
+          setToastVisible(false);
+          Toast.show(er?.error?.message || er);
+        },
+      );
+      // }
     });
+    // });
   };
 
   const NextClick = () => {

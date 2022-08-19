@@ -69,56 +69,56 @@ const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
             price,
             financeConfig.contracts[currentAccount.type][type].decmis,
           );
-    getAccount(currentAccount?.address, (isExit, keystore) => {
-      if (type === 'SMT') {
-        getBuyGasLimit(
-          currentAccount.type,
-          keystore,
-          pwd,
-          tokenId,
-          address,
-          surePrice,
-          // channel,
-          // surePrice,
-          // formTimeUtil(selectMap.month),
-          cb => {
-            // console.log('ccccc', cb.toNumber());
-            setGasLimit(cb);
-            setPwdVisible(false);
-            setToastVisible(false);
-            setShowTrans(true);
-          },
-          er => {
-            setPwdVisible(false);
-            setToastVisible(false);
-          },
-        );
-      } else {
-        getBuyGasLimitByErc20(
-          currentAccount.type,
-          keystore,
-          pwd,
-          tokenId,
-          address,
-          surePrice,
-          token,
-          // channel,
-          // surePrice,
-          // formTimeUtil(selectMap.month),
-          cb => {
-            // console.log('ccccc', cb.toNumber());
-            setGasLimit(cb);
-            setPwdVisible(false);
-            setToastVisible(false);
-            setShowTrans(true);
-          },
-          er => {
-            setPwdVisible(false);
-            setToastVisible(false);
-          },
-        );
-      }
-    });
+    // getAccount(currentAccount?.address, (isExit, keystore) => {
+    if (type === 'SMT') {
+      getBuyGasLimit(
+        currentAccount.type,
+        '',
+        pwd,
+        tokenId,
+        address,
+        surePrice,
+        // channel,
+        // surePrice,
+        // formTimeUtil(selectMap.month),
+        cb => {
+          // console.log('ccccc', cb.toNumber());
+          setGasLimit(cb);
+          setPwdVisible(false);
+          setToastVisible(false);
+          setShowTrans(true);
+        },
+        er => {
+          setPwdVisible(false);
+          setToastVisible(false);
+        },
+      );
+    } else {
+      getBuyGasLimitByErc20(
+        currentAccount.type,
+        '',
+        pwd,
+        tokenId,
+        address,
+        surePrice,
+        token,
+        // channel,
+        // surePrice,
+        // formTimeUtil(selectMap.month),
+        cb => {
+          // console.log('ccccc', cb.toNumber());
+          setGasLimit(cb);
+          setPwdVisible(false);
+          setToastVisible(false);
+          setShowTrans(true);
+        },
+        er => {
+          setPwdVisible(false);
+          setToastVisible(false);
+        },
+      );
+    }
+    // });
   };
   const buyPress = (gasLimits, gasPrices) => {
     setShowLoading(true);
@@ -133,53 +133,53 @@ const CompleteCheckout = ({route: {params}, darkMode, wallet, navigation}) => {
             price,
             financeConfig.contracts[currentAccount.type][type].decmis,
           );
-    getAccount(currentAccount?.address, (isExit, keystore) => {
-      if (type === 'SMT') {
-        getBuyNft(
-          currentAccount.type,
-          keystore,
-          pwd,
-          tokenId,
-          address,
-          gasLimits * 10000,
-          surePrice,
-          hash => {
-            setShowLoading(false);
-            navigation.navigate('TransactionDetail', {
-              gasPrice: gasPrices,
-              hash,
-            });
-          },
-          er => {
-            setShowLoading(false);
-            setPwdVisible(false);
-            setToastVisible(false);
-          },
-        );
-      } else {
-        getBuyNftByERC20(
-          currentAccount.type,
-          keystore,
-          pwd,
-          tokenId,
-          address,
-          surePrice,
-          token,
-          hash => {
-            setShowLoading(false);
-            navigation.navigate('TransactionDetail', {
-              gasPrice: bigNumberFormatUnits(gasPrices, 9),
-              hash,
-            });
-          },
-          er => {
-            setShowLoading(false);
-            setPwdVisible(false);
-            setToastVisible(false);
-          },
-        );
-      }
-    });
+    // getAccount(currentAccount?.address, (isExit, keystore) => {
+    if (type === 'SMT') {
+      getBuyNft(
+        currentAccount.type,
+        '',
+        pwd,
+        tokenId,
+        address,
+        gasLimits * 10000,
+        surePrice,
+        hash => {
+          setShowLoading(false);
+          navigation.navigate('TransactionDetail', {
+            gasPrice: gasPrices,
+            hash,
+          });
+        },
+        er => {
+          setShowLoading(false);
+          setPwdVisible(false);
+          setToastVisible(false);
+        },
+      );
+    } else {
+      getBuyNftByERC20(
+        currentAccount.type,
+        '',
+        pwd,
+        tokenId,
+        address,
+        surePrice,
+        token,
+        hash => {
+          setShowLoading(false);
+          navigation.navigate('TransactionDetail', {
+            gasPrice: bigNumberFormatUnits(gasPrices, 9),
+            hash,
+          });
+        },
+        er => {
+          setShowLoading(false);
+          setPwdVisible(false);
+          setToastVisible(false);
+        },
+      );
+    }
+    // });
   };
   const clickCheckOut = () => {
     setPwdVisible(true);

@@ -121,35 +121,35 @@ const CreateItemCollection = ({navigation, wallet, darkMode, transfer}) => {
       uploadJSONToIFPS(params)
         .then(resf => {
           // console.log('rrrrrr', resf);
-          getAccount(currentAccount?.address, (isExit, keystore) => {
-            if (isExit) {
-              // console.log('keystore::', keystore);
-              getCreateCollection(
-                currentAccount.type,
-                keystore,
-                pwd,
-                name,
-                '',
-                'https://gateway.pinata.cloud/ipfs/',
-                maxInput,
-                resf.IpfsHash,
-                currentAccount.address,
-                // '0x9806e0471b05d63ff32F13E5344D0b1f424F28dC',
-                creatorEarnings * 100,
-                address => {
-                  setPwdVisible(false);
-                  setToastVisible(false);
-                  navigation.navigate('MyCollectionDetail', {address: address});
-                },
-                e => {
-                  setPwdVisible(false);
-                  setToastVisible(false);
-                  Toast.show(e?.error?.message || e);
-                  // alert(JSON.stringify(e));
-                },
-              );
-            }
-          });
+          // getAccount(currentAccount?.address, (isExit, keystore) => {
+          //   if (isExit) {
+          // console.log('keystore::', keystore);
+          getCreateCollection(
+            currentAccount.type,
+            '',
+            pwd,
+            name,
+            '',
+            'https://gateway.pinata.cloud/ipfs/',
+            maxInput,
+            resf.IpfsHash,
+            currentAccount.address,
+            // '0x9806e0471b05d63ff32F13E5344D0b1f424F28dC',
+            creatorEarnings * 100,
+            address => {
+              setPwdVisible(false);
+              setToastVisible(false);
+              navigation.navigate('MyCollectionDetail', {address: address});
+            },
+            e => {
+              setPwdVisible(false);
+              setToastVisible(false);
+              Toast.show(e?.error?.message || e);
+              // alert(JSON.stringify(e));
+            },
+          );
+          //   }
+          // });
         })
         .catch(err => {
           console.log('eeeee', err);

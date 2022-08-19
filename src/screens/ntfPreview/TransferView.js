@@ -104,42 +104,42 @@ const TransferView = ({
     setToastVisible(true);
     setToastContent('loading...');
     const currentAccount = getCurrentAccount(wallet);
-    getAccount(currentAccount?.address, (isExit, keystore) => {
-      if (isExit) {
-        transformNftItem(
-          currentAccount.type,
-          keystore,
-          pwd,
-          address,
-          fixWalletAddress(currentAccount.address),
-          collectAddress,
-          tokenId,
-          gasLimit * 10000,
-          hash => {
-            setToastVisible(false);
-            setPwdVisible(false);
-            Toast.show('success');
-            navigation.navigate('TransactionDetail', {
-              gasPrice: bigNumberFormatUnits(gasPrice, 9),
-              hash,
-            });
-            deleteNftItemList({
-              type: currentAccount?.address,
-              collectionAddress: collectAddress,
-              id: tokenId,
-            });
-          },
-          er => {
-            setPwdVisible(false);
-            setToastVisible(false);
-            Toast.show(er?.error?.message || er);
-          },
-          (cbAdd, id) => {
-            console.log('delecttttttt', cbAdd, id);
-          },
-        );
-      }
-    });
+    // getAccount(currentAccount?.address, (isExit, keystore) => {
+    //   if (isExit) {
+    transformNftItem(
+      currentAccount.type,
+      '',
+      pwd,
+      address,
+      fixWalletAddress(currentAccount.address),
+      collectAddress,
+      tokenId,
+      gasLimit * 10000,
+      hash => {
+        setToastVisible(false);
+        setPwdVisible(false);
+        Toast.show('success');
+        navigation.navigate('TransactionDetail', {
+          gasPrice: bigNumberFormatUnits(gasPrice, 9),
+          hash,
+        });
+        deleteNftItemList({
+          type: currentAccount?.address,
+          collectionAddress: collectAddress,
+          id: tokenId,
+        });
+      },
+      er => {
+        setPwdVisible(false);
+        setToastVisible(false);
+        Toast.show(er?.error?.message || er);
+      },
+      (cbAdd, id) => {
+        console.log('delecttttttt', cbAdd, id);
+      },
+    );
+    //   }
+    // });
   };
   const contactClick = () => {
     navigate('AddressContact', {onCallbackData: setAddress});

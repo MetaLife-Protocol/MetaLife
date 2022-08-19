@@ -14,7 +14,7 @@ import MyNftCollection from './comp/MyNftCollection';
 import {useNavigation} from '@react-navigation/native';
 import {getNFTInfos} from '../../remote/contractOP';
 import {getCurrentAccount} from '../../utils';
-const NftCollection = ({route: {params}, wallet}) => {
+const NftCollection = ({route: {params}, wallet, darkMode}) => {
   const {tab, title} = params;
   const navigation = useNavigation();
   const {text, flex1, BG, FG} = useSchemaStyles();
@@ -57,11 +57,17 @@ const NftCollection = ({route: {params}, wallet}) => {
         style={{
           padding: 8,
           position: 'absolute',
-          top: Platform.OS === 'android' ? 10 : 30,
+          top: Platform.OS === 'android' ? 10 : 50,
           left: 15,
           zIndex: 100,
         }}>
-        <Image source={require('../../assets/image/profiles/ArrowLeft.png')} />
+        <Image
+          source={
+            darkMode
+              ? require('../../assets/image/profiles/ArrowLeft.png')
+              : require('../../assets/image/icons/ArrowLeft.png')
+          }
+        />
       </Pressable>
       <TabBar config={LIST_CONFIG} indexName={tab} bg={primary} fg={text} />
       {/*</View>*/}
@@ -74,6 +80,7 @@ const msp = s => {
     cfg: s.cfg,
     feedId: s.user.feedId,
     wallet: s.wallet,
+    darkMode: s.cfg.darkMode,
   };
 };
 

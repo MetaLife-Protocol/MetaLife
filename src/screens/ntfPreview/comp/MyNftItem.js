@@ -196,8 +196,8 @@ const MyNftItem = ({
                     ? '#fff'
                     : '#8E8E92'
                   : type === 0
-                  ? '#8E8E92'
-                  : '#fff',
+                  ? '#000'
+                  : '#8E8E92',
               },
             ]}>
             My items
@@ -214,8 +214,8 @@ const MyNftItem = ({
                     ? '#fff'
                     : '#8E8E92'
                   : type === 1
-                  ? '#8E8E92'
-                  : '#fff',
+                  ? '#000'
+                  : '#8E8E92',
               },
             ]}>
             My listings

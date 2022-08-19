@@ -12,6 +12,7 @@ import {
   getContract,
   getProvider,
   getSignerContract,
+  getSignerContractWithWalletProvider,
   waitForTransaction,
 } from 'react-native-web3-wallet';
 import {
@@ -289,12 +290,17 @@ export async function getCreateCollection(
   er,
 ) {
   try {
-    const contract = await getSignerContract(
-      financeConfig.chains[type].rpcURL,
-      // network,
+    // const contract = await getSignerContract(
+    //   financeConfig.chains[type].rpcURL,
+    //   // network,
+    //   metaMasterAddress,
+    //   metaMasterAbi,
+    //   JSON.stringify(keystore),
+    //   password,
+    // );
+    const contract = getSignerContractWithWalletProvider(
       metaMasterAddress,
       metaMasterAbi,
-      JSON.stringify(keystore),
       password,
     );
     // console.log('cccccccc', contract);
@@ -349,12 +355,17 @@ export async function getCreatNftItem(
   cb,
   er,
 ) {
-  const contract = await getSignerContract(
-    financeConfig.chains[type].rpcURL,
-    // network,
+  // const contract = await getSignerContract(
+  //   financeConfig.chains[type].rpcURL,
+  //   // network,
+  //   metaMasterAddress,
+  //   metaMasterAbi,
+  //   JSON.stringify(keystore),
+  //   password,
+  // );
+  const contract = getSignerContractWithWalletProvider(
     metaMasterAddress,
     metaMasterAbi,
-    JSON.stringify(keystore),
     password,
   );
   // console.log('ccccccccc', contract);
@@ -488,13 +499,18 @@ export async function transformNftItem(
   er,
   cbAdd,
 ) {
-  const contract = await getSignerContract(
-    financeConfig.chains[type].rpcURL,
-    // network,
+  // const contract = await getSignerContract(
+  //   financeConfig.chains[type].rpcURL,
+  //   // network,
+  //   metaMasterAddress,
+  //   // ERC721EnumerableAbi,
+  //   metaMasterAbi,
+  //   JSON.stringify(keystore),
+  //   password,
+  // );
+  const contract = getSignerContractWithWalletProvider(
     metaMasterAddress,
-    // ERC721EnumerableAbi,
     metaMasterAbi,
-    JSON.stringify(keystore),
     password,
   );
   // console.log('ccccccccc', contract);
@@ -601,16 +617,21 @@ export async function getLimitSell(
   er,
 ) {
   //  .estimateGas
-  const contract = await getSignerContract(
-    financeConfig.chains[type].rpcURL,
-    // network,
+  // const contract = await getSignerContract(
+  //   financeConfig.chains[type].rpcURL,
+  //   // network,
+  //   metaMasterAddress,
+  //   // ERC721EnumerableAbi,
+  //   metaMasterAbi,
+  //   JSON.stringify(keystore),
+  //   password,
+  // );
+  const contract = getSignerContractWithWalletProvider(
     metaMasterAddress,
-    // ERC721EnumerableAbi,
     metaMasterAbi,
-    JSON.stringify(keystore),
     password,
   );
-  console.log('aaaaaa', address, price.toString(), time);
+  // console.log('aaaaaa', contract, time);
   try {
     const result = await contract.estimateGas.sell(
       colAddress,
@@ -724,11 +745,16 @@ export async function cancelListingNFT(
   er,
 ) {
   try {
-    const contract = await getSignerContract(
-      financeConfig.chains[type].rpcURL,
+    // const contract = await getSignerContract(
+    //   financeConfig.chains[type].rpcURL,
+    //   salePlainAddress,
+    //   salePlainAbi,
+    //   JSON.stringify(keystore),
+    //   password,
+    // );
+    const contract = getSignerContractWithWalletProvider(
       salePlainAddress,
       salePlainAbi,
-      JSON.stringify(keystore),
       password,
     );
 
@@ -786,11 +812,16 @@ export async function getBuyGasLimit(
   er,
 ) {
   try {
-    const contract = await getSignerContract(
-      financeConfig.chains[type].rpcURL,
+    // const contract = await getSignerContract(
+    //   financeConfig.chains[type].rpcURL,
+    //   salePlainAddress,
+    //   salePlainAbi,
+    //   JSON.stringify(keystore),
+    //   password,
+    // );
+    const contract = getSignerContractWithWalletProvider(
       salePlainAddress,
       salePlainAbi,
-      JSON.stringify(keystore),
       password,
     );
     const saleId = await contract.getSaleId(colAddress, id);
@@ -819,19 +850,29 @@ export async function getBuyGasLimitByErc20(
   cb,
   er,
 ) {
-  const contract = await getSignerContract(
-    financeConfig.chains[type].rpcURL,
+  // const contract = await getSignerContract(
+  //   financeConfig.chains[type].rpcURL,
+  //   salePlainAddress,
+  //   salePlainAbi,
+  //   JSON.stringify(keystore),
+  //   password,
+  // );
+  const contract = getSignerContractWithWalletProvider(
     salePlainAddress,
     salePlainAbi,
-    JSON.stringify(keystore),
     password,
   );
-  console.log('pppp', price);
-  const newcontract = await getSignerContract(
-    financeConfig.chains[type].rpcURL,
+  console.log('pppp', contract);
+  // const newcontract = await getSignerContract(
+  //   financeConfig.chains[type].rpcURL,
+  //   token,
+  //   contractsConstant[type][token.toLowerCase()].abi,
+  //   JSON.stringify(keystore),
+  //   password,
+  // );
+  const newcontract = getSignerContractWithWalletProvider(
     token,
     contractsConstant[type][token.toLowerCase()].abi,
-    JSON.stringify(keystore),
     password,
   );
   const appro = await newcontract.approve(salePlainAddress, price);
@@ -863,11 +904,16 @@ export async function getBuyNft(
   er,
 ) {
   // try {
-  const contract = await getSignerContract(
-    financeConfig.chains[type].rpcURL,
+  // const contract = await getSignerContract(
+  //   financeConfig.chains[type].rpcURL,
+  //   salePlainAddress,
+  //   salePlainAbi,
+  //   JSON.stringify(keystore),
+  //   password,
+  // );
+  const contract = getSignerContractWithWalletProvider(
     salePlainAddress,
     salePlainAbi,
-    JSON.stringify(keystore),
     password,
   );
   const saleId = await contract.getSaleId(colAddress, id);
@@ -913,19 +959,28 @@ export async function getBuyNftByERC20(
   er,
 ) {
   // try {
-  const contract = await getSignerContract(
-    financeConfig.chains[type].rpcURL,
+  // const contract = await getSignerContract(
+  //   financeConfig.chains[type].rpcURL,
+  //   salePlainAddress,
+  //   salePlainAbi,
+  //   JSON.stringify(keystore),
+  //   password,
+  // );
+  const contract = getSignerContractWithWalletProvider(
     salePlainAddress,
     salePlainAbi,
-    JSON.stringify(keystore),
     password,
   );
-
-  const newcontract = await getSignerContract(
-    financeConfig.chains[type].rpcURL,
+  // const newcontract = await getSignerContract(
+  //   financeConfig.chains[type].rpcURL,
+  //   token,
+  //   contractsConstant[type][token.toLowerCase()].abi,
+  //   JSON.stringify(keystore),
+  //   password,
+  // );
+  const newcontract = getSignerContractWithWalletProvider(
     token,
     contractsConstant[type][token.toLowerCase()].abi,
-    JSON.stringify(keystore),
     password,
   );
   const appro = await newcontract.approve(salePlainAddress, goodPrice);

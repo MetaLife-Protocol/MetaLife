@@ -166,7 +166,7 @@ const MyItemDetailView = ({
     setList(assresult.data);
     urL = assresult.data?.cid;
   }
-  console.log('rrrrrdddd', list.cid, urL);
+  // console.log('rrrrrdddd', list.cid, urL);
   const clickCreate = () => {
     if (currentAccount.observer) {
       Toast.show('Observe account cannot create');
@@ -188,26 +188,26 @@ const MyItemDetailView = ({
     setToastVisible(true);
     setToastContent('loading...');
     const currentAccount = getCurrentAccount(wallet);
-    getAccount(currentAccount?.address, (isExit, keystore) => {
-      cancelListingNFT(
-        currentAccount.type,
-        keystore,
-        pwd,
-        tokenId,
-        address,
-        cb => {
-          params.callback();
-          Toast.show('Cancel listing complete');
-          navigation.goBack();
-          setPwdVisible(false);
-          setToastVisible(false);
-        },
-        er => {
-          setPwdVisible(false);
-          setToastVisible(false);
-        },
-      );
-    });
+    // getAccount(currentAccount?.address, (isExit, keystore) => {
+    cancelListingNFT(
+      currentAccount.type,
+      '',
+      pwd,
+      tokenId,
+      address,
+      cb => {
+        params.callback();
+        Toast.show('Cancel listing complete');
+        navigation.goBack();
+        setPwdVisible(false);
+        setToastVisible(false);
+      },
+      er => {
+        setPwdVisible(false);
+        setToastVisible(false);
+      },
+    );
+    // });
   };
 
   const onConfirmTransaction = pwd => {
@@ -243,31 +243,31 @@ const MyItemDetailView = ({
             financeConfig.contracts[currentAccount.type][selectMap.type].decmis,
           );
     // console.log('chchchch', channel);
-    getAccount(currentAccount?.address, (isExit, keystore) => {
-      getLimitSell(
-        currentAccount.type,
-        keystore,
-        pwd,
-        address,
-        tokenId,
-        '0',
-        channel,
-        surePrice,
-        formTimeUtil(selectMap.month),
-        (cb, contract) => {
-          // console.log('ccccc', cb.toNumber());
-          setGasLimit(cb);
-          setContract(contract);
-          setPwdVisible(false);
-          setToastVisible(false);
-          setShowTrans(true);
-        },
-        er => {
-          setPwdVisible(false);
-          setToastVisible(false);
-        },
-      );
-    });
+    // getAccount(currentAccount?.address, (isExit, keystore) => {
+    getLimitSell(
+      currentAccount.type,
+      '',
+      pwd,
+      address,
+      tokenId,
+      '0',
+      channel,
+      surePrice,
+      formTimeUtil(selectMap.month),
+      (cb, contract) => {
+        // console.log('ccccc', cb.toNumber());
+        setGasLimit(cb);
+        setContract(contract);
+        setPwdVisible(false);
+        setToastVisible(false);
+        setShowTrans(true);
+      },
+      er => {
+        setPwdVisible(false);
+        setToastVisible(false);
+      },
+    );
+    // });
   };
 
   const onListPress = (type, month) => {
@@ -369,6 +369,11 @@ const MyItemDetailView = ({
     setPlayVideo(!playVideo);
     setPaused(!paused);
   };
+  const onEndClick = e => {
+    // console.log('rrrreeeebbb', e);
+    setPlayVideo(!playVideo);
+    setPaused(!paused);
+  };
 
   return (
     <ScrollView
@@ -387,7 +392,7 @@ const MyItemDetailView = ({
             paused={paused}
             onLoad={data => gotoDuration(data)}
             volume={1.0}
-            onEnd={() => setPlayVideo(true)}
+            onEnd={onEndClick}
             playWhenInactive={true}
             onProgress={e => setTime(e)}
             // controls={false}
@@ -590,8 +595,8 @@ const MyItemDetailView = ({
         setToastVisible={setToastVisible}
         toastContent={toastContent}
         toastDuriation={6000000}
-        onConfirm={pwd => {
-          onConfirmTransaction(pwd);
+        onConfirm={wallet => {
+          onConfirmTransaction(wallet);
         }}
       />
       <SellModal
