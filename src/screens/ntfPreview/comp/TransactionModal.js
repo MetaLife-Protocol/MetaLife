@@ -69,14 +69,9 @@ const TransactionModal = ({
     }
   }, []);
   // console.log('rrrrr', (300 - gasLimit) * 0.3 + gasLimit, gasLimit);
+
   const clickConfirm = () => {
-    if (
-      accountPrice.lt(
-        bigNumberParseUnits(gasLimit + '', 4).mul(
-          bigNumberParseUnits(gasPrice + '', 0),
-        ),
-      )
-    ) {
+    if (accountPrice.lt(bigNumberParseUnits(gasLimit + '', 4).mul(gasPrice))) {
       Toast.show('Insufficient funds');
       return;
     }

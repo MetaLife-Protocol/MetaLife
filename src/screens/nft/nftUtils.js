@@ -10,7 +10,7 @@ import axios from 'axios';
 import FormData from 'form-data';
 import Toast from 'react-native-tiny-toast';
 import {getSignerContract} from 'react-native-web3-wallet';
-import {erc20ABI} from '../../remote/wallet/App';
+// import {erc20ABI} from '../../remote/wallet/App';
 
 export function initNFT({privateKey, address}) {
   // const web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
@@ -84,30 +84,30 @@ export async function uploadFileToIFPS({
 //     console.log(err);
 //   });
 let contractSingle;
-export function initNFTContract(keystore) {
-  getSignerContract(
-    'https://jsonapi1.smartmesh.io/',
-    '0xa27f8f580c01db0682ce185209ffb84121a2f711',
-    erc20ABI,
-    JSON.stringify(keystore),
-    '123456',
-  )
-    .then(contract => {
-      console.log('contract:::', contract);
-      contractSingle = contract;
-      // contract
-      //   .balanceOf('0x6025B091C6AB619F8e2F75170EB69dc57040dc6e')
-      //   .then(res => {
-      //     console.log(bigNumberFormatUnits(res));
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   });
-    })
-    .catch(e => {
-      console.warn('err:::', e);
-    });
-}
+// export function initNFTContract(keystore) {
+//   getSignerContract(
+//     'https://jsonapi1.smartmesh.io/',
+//     '0xa27f8f580c01db0682ce185209ffb84121a2f711',
+//     erc20ABI,
+//     JSON.stringify(keystore),
+//     '123456',
+//   )
+//     .then(contract => {
+//       console.log('contract:::', contract);
+//       contractSingle = contract;
+//       // contract
+//       //   .balanceOf('0x6025B091C6AB619F8e2F75170EB69dc57040dc6e')
+//       //   .then(res => {
+//       //     console.log(bigNumberFormatUnits(res));
+//       //   })
+//       //   .catch(err => {
+//       //     console.log(err);
+//       //   });
+//     })
+//     .catch(e => {
+//       console.warn('err:::', e);
+//     });
+// }
 
 // 创建集合
 // 接口：` metaMaster -> createCollection(string, string, string, uint, string, address, uint)`
