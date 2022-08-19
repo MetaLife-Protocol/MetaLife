@@ -73,7 +73,6 @@ const Profiles = ({
 
   // todo: refactor to wallet API
   const getInfo = () => {
-    getBalance();
     const hour24 = new Date();
     hour24.setHours(hour24.getHours() - 24);
     getPubsRewardTotal({
@@ -124,6 +123,7 @@ const Profiles = ({
           onRefresh={() => {
             setRefreshing(true);
             getInfo();
+            getBalance();
             getNftInfo();
           }}
         />
