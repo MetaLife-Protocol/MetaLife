@@ -12,7 +12,7 @@
     "clean script": "~~~~~~~~~~~~~~ cleaners ~~~~~~~~~~~~~~~~~",
     "clean-install": "npm clean-install",
     "clean-bundler": "watchman watch-del-all && rm -rf $TMPDIR/react-*",
-    "clean-android": "cd android && ./gradlew clean",
+    "clean-android": "cd android && ./gradlew clean && cd ..",
     "clean-ios": "cd ios && xcodebuild -workspace MetaLife.xcworkspace -scheme MetaLife clean && cd ..",
     "clean-lib": "rm -rf lib",
     "full-clean": "npm run clean-android && npm run clean-bundler && rm -rf node_modules && rm -rf lib",
