@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Image, StyleSheet, TextInput, View} from 'react-native';
 import {getWalletSigner} from 'react-native-web3-wallet';
 import Pressable from 'react-native/Libraries/Components/Pressable/Pressable';
@@ -33,6 +33,14 @@ const PasswordModel = ({
   const {address, type} = useMemo(() => {
     return getCurrentAccount(wallet);
   }, [wallet]);
+
+  useEffect(() => {
+    setToastContentState(toastContent);
+  }, [toastContent]);
+
+  useEffect(() => {
+    setToastDurationState(toastDuriation);
+  }, [toastDuriation]);
 
   const onFinish = () => {
     setToastVisible(true);

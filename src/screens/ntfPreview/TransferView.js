@@ -55,6 +55,12 @@ const TransferView = ({
   const [gasLimit, setGasLimit] = useState(20);
   const currentAccount = getCurrentAccount(wallet);
   const [accountPrice, setAccountPrice] = useState(0);
+  useEffect(() => {
+    if (params?.address) {
+      setAddress(params.address);
+    }
+  }, [params?.address]);
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: props => (
@@ -142,7 +148,7 @@ const TransferView = ({
     // });
   };
   const contactClick = () => {
-    navigate('AddressContact', {onCallbackData: setAddress});
+    navigate('AddressContact', {back: 'TransferView'});
   };
   return (
     <View style={[flex1, BG, styles.con]}>

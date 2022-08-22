@@ -29,13 +29,10 @@ const AddressContact = ({
   );
 
   useLayoutEffect(() => {
-    navigation.setOptions(
-      {
-        title: 'Address Contact',
-        headerRight,
-      },
-      [navigation],
-    );
+    navigation.setOptions({
+      title: 'Address Contact',
+      headerRight,
+    });
   }, [navigation]);
   const listData = wallet?.address?.address || [];
 
@@ -44,9 +41,12 @@ const AddressContact = ({
       <Pressable
         style={[BG, styles.listItem]}
         onPress={() => {
-          if (params.onCallbackData) {
-            params.onCallbackData(data.item.addressCon);
-            navigation.goBack();
+          if (params?.back) {
+            navigation.navigate({
+              name: params.back,
+              params: {address: data.item.addressCon},
+              merge: true,
+            });
           }
         }}>
         <Text style={[text, styles.name]}>{data.item.name}</Text>

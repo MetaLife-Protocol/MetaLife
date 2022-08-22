@@ -15,6 +15,7 @@ import Toast from 'react-native-tiny-toast';
 import {
   bigNumberFormatUnits,
   bigNumberParseUnits,
+  getProvider,
 } from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
 import {RoundBtn} from '../../../../../../metalife-base';
@@ -88,7 +89,28 @@ const WalletTransfer = props => {
     });
   }, []);
 
-  const onConfirm = () => {
+  useEffect(() => {
+    setAddress(params?.address);
+  }, [params?.address]);
+
+  const onConfirm = async () => {
+    // check address
+    try {
+      const correctAddress = await getProvider('').resolveName(address);
+      if (!correctAddress) {
+        Toast.show('invalid address!', {
+          position: Toast.position.CENTER,
+        });
+        return;
+      }
+    } catch (e) {
+      Toast.show('invalid address!', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
+
+    // check number
     if (isNaN(inputAmount)) {
       Toast.show('incorrect number', {
         position: Toast.position.CENTER,
@@ -239,7 +261,7 @@ const WalletTransfer = props => {
               </Pressable>
               <Pressable
                 onPress={() => {
-                  navigate('AddressContact', {onCallbackData: setAddress});
+                  navigate('AddressContact', {back: 'WalletTransfer'});
                 }}>
                 <Image
                   source={darkMode ? icons.contactBlack : icons.contactWhite}

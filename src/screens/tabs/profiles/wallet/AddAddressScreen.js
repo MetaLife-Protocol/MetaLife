@@ -4,6 +4,7 @@ import {connect} from 'react-redux/lib/exports';
 import Text from '../../../../shared/comps/ComText';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
 import Toast from 'react-native-tiny-toast';
+import {getProvider} from 'react-native-web3-wallet';
 const scanW = require('../../../../assets/image/wallet/icon_scan_default_white.png');
 const scanB = require('../../../../assets/image/wallet/icon_scan_default_black.png');
 
@@ -14,11 +15,10 @@ const AddAddressScreen = ({
   route: {params},
   updateAddressContact,
 }) => {
-  // const {data} = params;
   const [name, setName] = useState(params?.data?.name);
   const [addressCon, setAddress] = useState(params?.data?.addressCon);
   const [remark, setRemark] = useState(params?.data?.remark);
-  const {text, primary, marginTop10, flex1, BG, FG} = useSchemaStyles();
+  const {text, marginTop10, flex1, BG, FG} = useSchemaStyles();
 
   const headerRight = () => {
     return (
@@ -27,12 +27,27 @@ const AddAddressScreen = ({
       </Pressable>
     );
   };
-  const rightPress = e => {
-    // alert(addressCon);
-    if (addressCon === '' || name === '') {
+  const rightPress = async () => {
+    if (!addressCon || !name) {
       Toast.show('Please set name or wallet address');
       return;
     }
+    // check address
+    try {
+      const correctAddress = await getProvider('').resolveName(addressCon);
+      if (!correctAddress) {
+        Toast.show('invalid address!', {
+          position: Toast.position.CENTER,
+        });
+        return;
+      }
+    } catch (e) {
+      Toast.show('invalid address!', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
+
     const address = {
       type: 'address',
       name: name,
@@ -40,8 +55,7 @@ const AddAddressScreen = ({
       remark: remark,
       key: Math.random(),
     };
-    console.log('dddd=======', address);
-    if (params == undefined) {
+    if (!params) {
       addAddressContact(address);
     } else {
       updateAddressContact({
@@ -64,7 +78,7 @@ const AddAddressScreen = ({
       [navigation],
     );
   }, [navigation, name, addressCon, remark]);
-  // alert(name);
+
   return (
     <View style={[flex1, BG]}>
       <View style={[FG, styles.nameView, marginTop10]}>
@@ -126,12 +140,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15.5,
   },
   comText: {
-    fontSize: 16,
-    // color: '#8E8E92',
+    fontSize: 14,
   },
   line: {
     height: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#8E8E92',
     marginHorizontal: 15,
   },
   inputText: {
