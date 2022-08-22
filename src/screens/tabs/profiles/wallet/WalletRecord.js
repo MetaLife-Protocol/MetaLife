@@ -22,25 +22,27 @@ const WalletRecord = ({wallet}) => {
   const [refreshing, setRefreshing] = useState(true);
   const [page, setPage] = useState(1);
   const {navigate} = useNavigation();
+  const {address} = getCurrentAccount(wallet);
+  const fixedAddress = fixWalletAddress(address);
 
   useEffect(() => {
-    getRecordList(false);
+    getRecordList(1);
   }, []);
 
-  const getRecordList = isMore => {
+  const getRecordList = currentPage => {
     const body = {
       service: 'transaction',
       method: 'transaction_list',
       sn: 'metalife_' + Math.random(),
       params: {
-        address: fixWalletAddress(getCurrentAccount(wallet).address),
-        pageLimit: '50',
-        page: page,
+        address: fixedAddress,
+        pageLimit: '20',
+        page: currentPage,
       },
     };
     getWalletRecord(body, res => {
       setRefreshing(false);
-      if (page !== 1 && isMore) {
+      if (currentPage !== 1) {
         let data = list;
         data = data.concat(res.data);
         setList(data);
@@ -51,7 +53,6 @@ const WalletRecord = ({wallet}) => {
   };
 
   const renderItem = ({item, index}) => {
-    const mineWall = '0x' + getCurrentAccount(wallet).address;
     return (
       <Pressable
         style={[styles.item]}
@@ -63,7 +64,7 @@ const WalletRecord = ({wallet}) => {
         }}>
         <View style={styles.left}>
           <Image
-            source={mineWall === item.to ? toggle : send}
+            source={fixedAddress === item.to ? toggle : send}
             style={styles.togImg}
           />
           <View style={styles.leftMargin}>
@@ -77,8 +78,10 @@ const WalletRecord = ({wallet}) => {
           <Text
             style={[
               styles.addText,
-              {color: mineWall === item.to ? '#29DAD7' : '#6989EA'},
-            ]}>{`${mineWall === item.to ? '+' : '-'} ${item.value} SMT`}</Text>
+              {color: fixedAddress === item.to ? '#29DAD7' : '#6989EA'},
+            ]}>{`${fixedAddress === item.to ? '+' : '-'} ${
+            item.value
+          } SMT`}</Text>
           {item.status !== 1 ? (
             <Text style={styles.failed}>transaction failed</Text>
           ) : null}
@@ -94,13 +97,12 @@ const WalletRecord = ({wallet}) => {
   const refreshPress = () => {
     setRefreshing(true);
     setPage(1);
-    setList([]);
-    getRecordList(false);
+    getRecordList(1);
   };
 
   const endReachedPress = () => {
     setPage(page + 1);
-    getRecordList(true);
+    getRecordList(page + 1);
   };
 
   return (
@@ -116,14 +118,6 @@ const WalletRecord = ({wallet}) => {
         onEndReachedThreshold={0.1}
         onEndReached={endReachedPress}
       />
-      {/*<View style={styles.bottomView}>*/}
-      {/*  <View style={[styles.btnView, styles.bgColor]}>*/}
-      {/*    <Text style={styles.tranText}>Transfer</Text>*/}
-      {/*  </View>*/}
-      {/*  <View style={[styles.btnView, styles.sgColor]}>*/}
-      {/*    <Text style={styles.tranText}>Collection</Text>*/}
-      {/*  </View>*/}
-      {/*</View>*/}
     </View>
   );
 };
