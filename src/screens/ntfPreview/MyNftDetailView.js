@@ -145,7 +145,7 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
       setShowPrice(p);
       if (results?.token === '0x0000000000000000000000000000000000000000') {
         getWBalance(currentAccount.type, currentAccount.address, res => {
-          console.log('smtrrrsss', res);
+          // console.log('smtrrrsss', res);
           setAccountPrice(res);
         });
       } else if (
@@ -157,7 +157,7 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
           'Mesh',
           currentAccount.address,
           res => {
-            console.log('Meshrrrsss', res);
+            // console.log('Meshrrrsss', res);
             setAccountPrice(res);
           },
         );
@@ -167,7 +167,7 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
           'MLT',
           currentAccount.address,
           res => {
-            console.log('mltrrrsss', res);
+            // console.log('mltrrrsss', res);
             setAccountPrice(res);
           },
         );
