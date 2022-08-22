@@ -29,21 +29,28 @@ const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
   const {navigate} = useNavigation();
   const [refreshing, setRefreshing] = useState(true);
   const [page, setPage] = useState(0);
-  const getCollectionList = isMore => {
-    getOpenGalaxyNFTCollectionListInfo(null, page, 10).then(result => {
-      console.log('rrrrrrrllllll', page, result);
-      setRefreshing(false);
-      if (page !== 0 && isMore) {
-        let data = info;
-        data = data.concat(result);
-        setInfo(data);
+  const getCollectionList = (isMore, pa) => {
+    getOpenGalaxyNFTCollectionListInfo(null, pa, 10).then(result => {
+      // console.log('rrrrrrrllllll', pa, result);
+
+      if (result) {
+        const DATA = isMore === false ? [...result] : [...info, ...result];
+        setInfo(DATA);
+        setRefreshing(false);
       } else {
-        setInfo(result);
+        setRefreshing(false);
       }
+      // if (page !== 0 && isMore) {
+      //   let data = info;
+      //   data = data.concat(result);
+      //   setInfo(data);
+      // } else {
+      //   setInfo(result);
+      // }
     });
   };
   useEffect(() => {
-    getCollectionList(false);
+    getCollectionList(false, 0);
     // getCollectionInfo(value => {
     //   // console.log('ddddd', value);
     //   addCollections(value);
@@ -102,11 +109,11 @@ const OpenGalaxyCollection = ({navigation, addCollections, addNft}) => {
     setRefreshing(true);
     setInfo([]);
     setPage(0);
-    getCollectionList(false);
+    getCollectionList(false, 0);
   };
   const endReachedPress = () => {
     setPage(page + 1);
-    getCollectionList(true);
+    getCollectionList(true, page + 1);
   };
   return (
     <View style={{flex: 1}}>

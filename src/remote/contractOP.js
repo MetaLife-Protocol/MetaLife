@@ -311,7 +311,7 @@ export async function getCreateCollection(
     const result = contract
       .createCollection(name, symbol, baseURI, maxNum, logo, address, ratio)
       .then(async res => {
-        console.log('aaaaaa', res);
+        // console.log('aaaaaa', res);
         let filterTo = contract.filters.NewCollection('0x' + address);
         contract.once(filterTo, (sender, address, event) => {
           // console.log('contract', address);
@@ -376,12 +376,12 @@ export async function getCreatNftItem(
   const result = contract
     .mint(collecAddress, fixWalletAddress(wAddress), baseURI)
     .then(async res => {
-      console.log('aaaaaa', res);
+      // console.log('aaaaaa', res);
       const subcontract = getContract(network, collecAddress, NFTCollectionAbi);
 
       let filterTo = subcontract.filters.Mint(null, fixWalletAddress(wAddress));
 
-      console.log('adadad', filterTo, subcontract);
+      // console.log('adadad', filterTo, subcontract);
       subcontract.once(filterTo, (sender, address, event) => {
         // console.log('contracttttt', sender.toNumber());
         cb && cb(sender.toNumber());
@@ -393,13 +393,13 @@ export async function getCreatNftItem(
       // }
       let provider = getTransactionListenProvider(type);
       provider.on(res.hash, resListen => {
-        console.log('fffaillll', resListen);
+        // console.log('fffaillll', resListen);
         if (resListen.status !== 1 && resListen.confirmations > 1) {
-          console.log(
-            'fffaillllsssss',
-            resListen.status,
-            resListen.confirmations,
-          );
+          // console.log(
+          //   'fffaillllsssss',
+          //   resListen.status,
+          //   resListen.confirmations,
+          // );
           er('request failed');
           provider.removeAllListeners(res.hash);
         }
@@ -444,7 +444,7 @@ export async function getOpenGalaxyNFTCollectionInfos(cb, page = 0, limit = 0) {
   // const s = await contract.collectionOwner(collectionAddress);
   // console.log('aaaaaaa', s);
 
-  console.log('nnnnnn', nftCount);
+  // console.log('nnnnnn', nftCount);
   let token_idxs = [...Array(nftCount.toNumber()).keys()];
 
   if (limit === 0) {
@@ -532,7 +532,7 @@ export async function transformNftItem(
         {gasLimit: gasLimit},
       )
       .then(async res => {
-        console.log('aaaaaa', res, collecAddress, toAddress, tokenId);
+        // console.log('aaaaaa', res, collecAddress, toAddress, tokenId);
         const subcontract = getContract(
           network,
           collecAddress,
@@ -543,11 +543,11 @@ export async function transformNftItem(
         // if (data.status !== 1) {
         //   er('request failed');
         // }
-        console.log('uuuu', data);
+        // console.log('uuuu', data);
         cb && cb(res.hash);
         let provider = getTransactionListenProvider(type);
         provider.on(res.hash, resListen => {
-          console.log('hhhh', resListen);
+          // console.log('hhhh', resListen);
           if (resListen.status !== 1 && resListen.confirmations > 1) {
             er('request failed');
             provider.removeAllListeners(res.hash);
@@ -595,7 +595,7 @@ export async function getOpenGalaxyNFTCollectionListInfo(
         return;
       }
     }
-    console.log('aaaa', listlength);
+    // console.log('aaaa', listlength);
 
     let salesInfo = await contract.getSales(limit, offset);
     return salesInfo;
@@ -641,7 +641,7 @@ export async function getLimitSell(
       price.toString(),
       time,
     );
-    console.log('rrrrrrrs', result);
+    // console.log('rrrrrrrs', result);
     cb && cb(result, contract);
   } catch (e) {
     // er(e);
@@ -680,18 +680,18 @@ export async function pushSell(
       time,
       {gasLimit: gasLimit},
     );
-    console.log('ddddd', result);
+    // console.log('ddddd', result);
     const subcontract = getContract(network, colAddress, NFTCollectionAbi);
 
     let data = await coinWaitTransaction(type, result.hash);
     // if (data.status !== 1) {
     //   er('request failed');
     // }
-    console.log('uuuu', data);
+    // console.log('uuuu', data);
     cb && cb(result.hash);
     let provider = getTransactionListenProvider(type);
     provider.on(result.hash, resListen => {
-      console.log('hhhh', resListen);
+      // console.log('hhhh', resListen);
       if (resListen.status !== 1 && resListen.confirmations > 1) {
         er('request failed');
         provider.removeAllListeners(result.hash);
@@ -727,7 +727,7 @@ export async function getMyNFTSellItemListInfo(
         return;
       }
     }
-    console.log('aaaa', listlength);
+    // console.log('aaaa', listlength);
 
     let salesInfo = await contract.getSalesByUser(myaddress, limit, offset);
     return salesInfo;
@@ -759,20 +759,20 @@ export async function cancelListingNFT(
     );
 
     const saleId = await contract.getSaleId(colAddress, id);
-    console.log('ssssssff', createBigNumber(saleId));
+    // console.log('ssssssff', createBigNumber(saleId));
     const result = await contract.cancel(createBigNumber(saleId));
-    console.log('fffffrrrrr', result);
+    // console.log('fffffrrrrr', result);
     const subcontract = getContract(network, colAddress, NFTCollectionAbi);
 
     let data = await coinWaitTransaction(type, result.hash);
     // if (data.status !== 1) {
     //   er('request failed');
     // }
-    console.log('uuuu', data);
+    // console.log('uuuu', data);
     cb && cb(result.hash);
     let provider = getTransactionListenProvider(type);
     provider.on(result.hash, resListen => {
-      console.log('hhhh', resListen);
+      // console.log('hhhh', resListen);
       if (resListen.status !== 1 && resListen.confirmations > 1) {
         er('request failed');
         provider.removeAllListeners(result.hash);
@@ -825,14 +825,14 @@ export async function getBuyGasLimit(
       password,
     );
     const saleId = await contract.getSaleId(colAddress, id);
-    console.log('ssssssff', createBigNumber(saleId));
+    // console.log('ssssssff', createBigNumber(saleId));
     const result = await contract.estimateGas.bidWithValue(
       createBigNumber(saleId),
       {
         value: price,
       },
     );
-    console.log('dddd', result);
+    // console.log('dddd', result);
     cb && cb(result);
   } catch (e) {
     er(e);
@@ -869,10 +869,10 @@ export async function getBuyGasLimitByErc20(
   );
   const appro = await newcontract.approve(salePlainAddress, price);
   const saleId = await contract.getSaleId(colAddress, id);
-  console.log('sssddddttt', appro);
+  // console.log('sssddddttt', appro);
   let provider = getTransactionListenProvider(type);
   provider.on(appro.hash, resListen => {
-    console.log('hhhh', resListen);
+    // console.log('hhhh', resListen);
     if (resListen.status !== 1 && resListen.confirmations > 1) {
       er('request failed');
       provider.removeAllListeners(appro.hash);
@@ -888,7 +888,7 @@ export async function getBuyGasLimitByErc20(
         createBigNumber(saleId),
         price,
       );
-      console.log('dddd', result);
+      // console.log('dddd', result);
       cb && cb(result);
     } catch (e) {
       er(e);
@@ -930,18 +930,18 @@ export async function getBuyNft(
     gasLimit: gasLim,
     value: goodPrice,
   });
-  console.log('fffffrrrrr', result);
+  // console.log('fffffrrrrr', result);
   const subcontract = getContract(network, colAddress, NFTCollectionAbi);
 
   let data = await coinWaitTransaction(type, result.hash);
   // if (data.status !== 1) {
   //   er('request failed');
   // }
-  console.log('uuuu', data);
+  // console.log('uuuu', data);
   cb && cb(result.hash);
   let provider = getTransactionListenProvider(type);
   provider.on(result.hash, resListen => {
-    console.log('hhhh', resListen);
+    // console.log('hhhh', resListen);
     if (resListen.status !== 1 && resListen.confirmations > 1) {
       er('request failed');
       provider.removeAllListeners(result.hash);
@@ -998,18 +998,18 @@ export async function getBuyNftByERC20(
     createBigNumber(saleId),
     goodPrice,
   );
-  console.log('fffffrrrrr', result);
+  // console.log('fffffrrrrr', result);
   const subcontract = getContract(network, colAddress, NFTCollectionAbi);
 
   let data = await coinWaitTransaction(type, result.hash);
   // if (data.status !== 1) {
   //   er('request failed');
   // }
-  console.log('uuuu', data);
+  // console.log('uuuu', data);
   cb && cb(result.hash);
   let provider = getTransactionListenProvider(type);
   provider.on(result.hash, resListen => {
-    console.log('hhhh', resListen);
+    // console.log('hhhh', resListen);
     if (resListen.status !== 1 && resListen.confirmations > 1) {
       er('request failed');
       provider.removeAllListeners(result.hash);
