@@ -81,7 +81,7 @@ const MyCollectionDetail = ({
       0,
       address,
     ).then(async result => {
-      console.log('sdsdsd', result);
+      // console.log('sdsdsd', result);
       if (result.length > 0) {
         let newList = [];
         for (let i = 0; i < result.length; i++) {

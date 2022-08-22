@@ -31,7 +31,7 @@ const MyNftCollection = ({
         ? collection[myaddress]
         : []
       : [];
-  console.log('cccc', collections);
+  // console.log('cccc', collections);
   useEffect(() => {
     const address = getCurrentAccount(wallet).address;
     getMyNFTCollectionInfos(address, res => {
