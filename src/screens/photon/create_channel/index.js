@@ -47,6 +47,12 @@ const CreateChannel = ({setChannelRemark, showPullMenu, route: {params}}) => {
       });
       return;
     }
+    if (!walletBalance[type] || !walletBalance[type]?.balance_on_chain) {
+      Toast.show('Insufficient Funds', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
     const chainBalance = bigNumberParseUnits(
       walletBalance[type].balance_on_chain + '',
       0,

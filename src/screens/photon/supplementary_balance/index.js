@@ -77,6 +77,15 @@ const SupplementaryBalance = () => {
                 });
                 return;
               }
+              if (
+                !walletBalance[type] ||
+                !walletBalance[type]?.balance_on_chain
+              ) {
+                Toast.show('Insufficient Funds', {
+                  position: Toast.position.CENTER,
+                });
+                return;
+              }
               try {
                 const type = getPhotonTokenSymbol(channelData?.token_address);
                 let chainBalance = bigNumberParseUnits(
