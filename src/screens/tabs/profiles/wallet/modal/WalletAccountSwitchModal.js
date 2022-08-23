@@ -68,11 +68,13 @@ export const WalletAccountSwitchModal = ({
                   key={i}
                   onPress={() => {
                     if (i !== index) {
+                      if (!accounts[type][index].observer) {
+                        stopAboutWalletAccount();
+                      }
                       submitHandler({
                         type,
                         index: i,
                       });
-                      stopAboutWalletAccount();
                     }
                   }}>
                   <AccountItem

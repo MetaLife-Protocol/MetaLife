@@ -29,7 +29,7 @@ import {
 } from '../../../../remote/wallet/WalletAPI';
 import Toast from 'react-native-tiny-toast';
 import {useNavigation} from '@react-navigation/native';
-import {stopAboutWalletAccount} from '../../../../utils';
+import {getCurrentAccount, stopAboutWalletAccount} from '../../../../utils';
 
 /**
  * Created on 17 Jun 2022 by lonmee
@@ -96,11 +96,14 @@ const WalletImporter = ({
       prompt,
       backup: true,
     });
+    const previewAccount = getCurrentAccount(wallet);
+    if (!previewAccount.observer) {
+      stopAboutWalletAccount();
+    }
     setCurrent({
       type: targetChain,
       index: wallet.accounts[targetChain].length,
     });
-    stopAboutWalletAccount();
     goBack();
     Toast.show('Import success');
   };

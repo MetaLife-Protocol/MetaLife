@@ -133,8 +133,10 @@ const WalletCore = ({
                   if (manageHandle) {
                     goScreen('WalletAccountDetails', accounts[tIndex][i]);
                   } else {
+                    if (!accounts[current.type][current.index].observer) {
+                      stopAboutWalletAccount();
+                    }
                     setCurrent({type: tIndex, index: i});
-                    stopAboutWalletAccount();
                   }
                 }}>
                 <AccountItem

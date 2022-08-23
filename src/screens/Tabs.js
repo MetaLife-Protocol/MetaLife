@@ -11,7 +11,6 @@ import Contacts from './tabs/Contacts';
 import Discover from './tabs/Discover';
 import {Image} from 'react-native';
 import I18n from '../i18n/I18n';
-import HeaderProfiles from './tabs/profiles/HeaderProfiles';
 import HeaderRightBtn from './tabs/HeaderRightBtn';
 import {connect} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -54,20 +53,19 @@ const Tabs = ({showPullMenu, wallet, cfg: {darkMode}, photon}) => {
   const {observer} = getCurrentAccount(wallet);
 
   useEffect(() => {
-    if (!observer) {
-      // if (!photon.isPhotonLogin) {
-      startPhoton({
-        dialog: dialog,
-        wallet: wallet,
-        directToNetworkPage: false,
-      });
-      // }
-      return () => {
+    startPhoton({
+      dialog: dialog,
+      wallet: wallet,
+      directToNetworkPage: false,
+    });
+    return () => {
+      console.log('stopAboutWalletAccount');
+      if (!observer) {
         stopAboutWalletAccount();
-      };
-    }
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [observer]);
+  }, []);
 
   function menuHandler(e) {
     e.target.measure((x, y, width, height, pageX, pageY) =>

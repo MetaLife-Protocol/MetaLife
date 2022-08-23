@@ -66,8 +66,7 @@ const createSty = theme =>
     row: {
       display: 'flex',
       flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'space-between',
       marginTop: 20,
       height: 44,
     },

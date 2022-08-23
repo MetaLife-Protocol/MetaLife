@@ -30,6 +30,7 @@ export function startPhoton({
   directToNetworkPage = true,
 }) {
   const currentAccount = getCurrentAccount(wallet);
+  if (currentAccount?.observer) return;
   const toastOption = {
     position: Toast.position.TOP,
   };
@@ -135,6 +136,7 @@ export function initPhoton({
             )
             .catch(console.warn);
         }
+        console.log('startPhotonServer', res);
         store.dispatch({type: 'setPhotonLogin', payload: res.logFile});
         if (directToNetworkPage && navigate) {
           navigate('PhotonNetwork');
@@ -210,6 +212,8 @@ export function settleChannelDialog(dialog, channelIdentifier) {
 }
 
 export function stopCurrentPhoton() {
+  const {photon} = store.getState();
+  if (!photon.isPhotonLogin) return;
   // 取消光子订阅通知
   unsubscribePhoton()
     .then(() => {
@@ -217,6 +221,7 @@ export function stopCurrentPhoton() {
       store.dispatch({type: 'resetPhoton'});
     })
     .catch(e => {
+      console.log('unsubscribePhoton-error', e);
       photonStop().catch(err => console.log('stop', err));
       store.dispatch({type: 'resetPhoton'});
     });

@@ -128,7 +128,7 @@ const WalletAccountDetails = ({
     }
     if (addressIndex === wallet.current.index) {
       setCurrent({type, index: 0});
-      stopAboutWalletAccount();
+      if (!observer) stopAboutWalletAccount();
     }
     walletDeleteAccount({type, address});
     Toast.show('Deleted');

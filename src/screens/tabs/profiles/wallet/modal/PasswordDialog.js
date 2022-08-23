@@ -25,7 +25,7 @@ const PasswordDialog = ({onConfirm}) => {
 
   return (
     <NormalDialog
-      title={'Enter Password'}
+      title={'Enter Password to start Photon'}
       confirmDismiss={false}
       content={
         <View style={[alignItemsCenter, styles.inputContainer, row]}>
@@ -72,7 +72,7 @@ const createSty = theme =>
       borderRadius: 12,
       height: 46,
       paddingHorizontal: 15,
-      marginVertical: 15,
+      marginTop: 20,
       borderWidth: 0.5,
     },
     input: {
