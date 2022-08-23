@@ -184,7 +184,7 @@ export default class CountDown extends Component {
                     numberOfLines={1}>
                     {this._addNumber(this.state.day) == '00'
                       ? ''
-                      : `${this._addNumber(this.state.day)}天`}
+                      : `${this._addNumber(this.state.day)}day`}
                     {this._addNumber(this.state.hour)}:
                     {this._addNumber(this.state.minute)}:
                     {this._addNumber(this.state.second)}

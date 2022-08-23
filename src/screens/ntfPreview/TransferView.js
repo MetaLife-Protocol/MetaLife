@@ -28,6 +28,7 @@ import {transformNftItem} from '../../remote/contractOP';
 import {
   bigNumberFormatUnits,
   bigNumberParseUnits,
+  getProvider,
 } from 'react-native-web3-wallet';
 import Toast from 'react-native-tiny-toast';
 
@@ -85,7 +86,7 @@ const TransferView = ({
       setAccountPrice(res);
     });
   }, []);
-  const nextClick = () => {
+  const nextClick = async () => {
     if (address === '') {
       Toast.show('Please input address');
       return;
@@ -104,6 +105,22 @@ const TransferView = ({
       Toast.show('Insufficient funds');
       return;
     }
+    // check address
+    try {
+      const correctAddress = await getProvider('').resolveName(address);
+      if (!correctAddress) {
+        Toast.show('invalid address!', {
+          position: Toast.position.CENTER,
+        });
+        return;
+      }
+    } catch (e) {
+      Toast.show('invalid address!', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
+
     setPwdVisible(true);
   };
   const onConfirmTransaction = pwd => {

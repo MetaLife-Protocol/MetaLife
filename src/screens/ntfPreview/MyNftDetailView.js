@@ -287,6 +287,14 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
             resizeMode="contain"
           />
         </View>
+      ) : list && list.cid !== undefined ? (
+        <FastImage
+          source={{
+            uri: ipfsBaseURL + 'ipfs/' + list?.cid,
+          }}
+          style={[styles.topImg]}
+          resizeMode="contain"
+        />
       ) : (
         <FastImage
           source={{
