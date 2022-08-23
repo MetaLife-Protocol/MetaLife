@@ -519,7 +519,7 @@ export async function transformNftItem(
     info[1] &&
     info[3] !== '0x0000000000000000000000000000000000000000'
   ) {
-    er('nft was already selled');
+    er('NFT was already selled');
     return;
   }
   // console.log('iiiiiii', info[0] && info[1] && info[3], info);
