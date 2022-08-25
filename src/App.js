@@ -152,6 +152,14 @@ const App = ({
 
   // todo: loading bar testing
   useEffect(() => {
+    const unsubscribe = navigationRef.addListener('state', e => {
+      // You can get the raw navigation state (partial state object of the root navigator)
+      console.log(e.data.state);
+
+      // Or get the full state object with `getRootState()`
+      console.log(navigationRef.getRootState());
+    });
+
     SplashScreen.hide();
     window.ssb ||
       startSSB().then(ssb => {
