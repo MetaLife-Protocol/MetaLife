@@ -27,7 +27,7 @@ const MyNftItem = ({
   darkMode,
   emptyNftItemList,
 }) => {
-  console.log('nnnnnnnnffff', collection);
+  // console.log('nnnnnnnnffff', collection);
   const {navigate} = useNavigation();
   const myaddress = getCurrentAccount(wallet).address;
   const collectKey =
@@ -40,7 +40,7 @@ const MyNftItem = ({
         ? collection?.nftItem[myaddress]
         : []
       : [];
-  // console.log('kkkkkkk', collectionItem);
+  console.log('kkkkkkk', collectionItem);
   const [type, setType] = useState(0);
   const [onSaleItem, setOnSaleItem] = useState([]);
   const [showLoading, setShowLoading] = useState(
@@ -103,6 +103,13 @@ const MyNftItem = ({
         let newList = [];
         for (let i = 0; i < result.length; i++) {
           if (isEnds) {
+            // const infos = getNFTInfos(
+            //   fixWalletAddress(getCurrentAccount(wallet).address),
+            //   null,
+            //   0,
+            //   0,
+            //   result[i].address,
+            // );
             getNFTInfos(
               fixWalletAddress(getCurrentAccount(wallet).address),
               res => {
@@ -110,15 +117,19 @@ const MyNftItem = ({
                 let index =
                   collectionItem && collectionItem.length > 0
                     ? collectionItem.findIndex(item => {
-                        if (item.uri === res.uri) {
-                          return true;
-                        } else {
-                          return false;
+                        console.log('iiiiiiiiitttt', item.uri, res.uri);
+                        if (isEnds) {
+                          if (item.uri === res.uri) {
+                            return true;
+                          } else {
+                            return false;
+                          }
                         }
                       })
                     : -1;
+                console.log('indexindex', index);
                 if (isEnds) {
-                  if (index == -1) {
+                  if (index === -1) {
                     getNftAssetsJson(res.uri)
                       .then(collInfo => {
                         if (isEnds) {
@@ -174,7 +185,7 @@ const MyNftItem = ({
     return <ListEmpty />;
   };
   const onclickSale = type => {
-    isEnds = true;
+    // isEnds = true;
     setType(type);
     if (type === 1) {
       fetchOnSaleData();

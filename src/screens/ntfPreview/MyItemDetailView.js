@@ -50,6 +50,7 @@ import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeC
 import Toast from 'react-native-tiny-toast';
 import Video from 'react-native-video';
 import Slider from '@react-native-community/slider';
+import ZoomImage from './comp/ZoomImage';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
 const down = require('../../assets/image/nft/arrow_down.png');
@@ -103,6 +104,7 @@ const MyItemDetailView = ({
   const [showPrice, setShowPrice] = useState(0);
   const [collectInfo, setCollectInfo] = useState({});
   const [playVideo, setPlayVideo] = useState(true);
+  const [bigImg, setBigImg] = useState(false);
   const currentAccount = getCurrentAccount(wallet);
   async function getSaleIn() {
     const results = await getSaleInfo(tokenId.toString(), address);
@@ -376,6 +378,10 @@ const MyItemDetailView = ({
     setPaused(!paused);
   };
 
+  const showBigImg = () => {
+    setBigImg(true);
+  };
+
   return (
     <ScrollView
       style={[flex1, BG]}
@@ -384,7 +390,7 @@ const MyItemDetailView = ({
       keyboardShouldPersistTaps="always">
       {(list && list?.type === 'Audio' && list.cid !== undefined) ||
       (list && list?.type === 'Video' && list.cid !== undefined) ? (
-        <View style={styles.videoShow}>
+        <Pressable style={styles.videoShow} onPress={showBigImg}>
           <Video
             source={{
               uri: ipfsBaseURL + 'ipfs/' + list.cid,
@@ -438,23 +444,27 @@ const MyItemDetailView = ({
             style={[styles.topImg]}
             resizeMode="contain"
           />
-        </View>
+        </Pressable>
       ) : list && list.cid !== undefined ? (
-        <FastImage
-          source={{
-            uri: ipfsBaseURL + 'ipfs/' + list?.cid,
-          }}
-          style={[styles.topImg]}
-          resizeMode="contain"
-        />
+        <Pressable onPress={showBigImg}>
+          <FastImage
+            source={{
+              uri: ipfsBaseURL + 'ipfs/' + list?.cid,
+            }}
+            style={[styles.topImg]}
+            resizeMode="contain"
+          />
+        </Pressable>
       ) : (
-        <FastImage
-          source={{
-            uri: ipfsBaseURL + 'ipfs/' + list?.image,
-          }}
-          style={[styles.topImg]}
-          resizeMode="contain"
-        />
+        <Pressable onPress={showBigImg}>
+          <FastImage
+            source={{
+              uri: ipfsBaseURL + 'ipfs/' + list?.image,
+            }}
+            style={[styles.topImg]}
+            resizeMode="contain"
+          />
+        </Pressable>
       )}
       <View style={[FG, styles.topView]}>
         <Text
@@ -631,6 +641,11 @@ const MyItemDetailView = ({
         showLoading={showLoading}
         confirmPress={confirmPress}
         wallet={wallet}
+      />
+      <ZoomImage
+        image={ipfsBaseURL + 'ipfs/' + list?.image}
+        visible={bigImg}
+        setIsVisible={e => setBigImg(e)}
       />
     </ScrollView>
   );

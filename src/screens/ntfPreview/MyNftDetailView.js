@@ -44,6 +44,7 @@ import {
 } from '../../remote/wallet/WalletAPI';
 import Video from 'react-native-video';
 import Slider from '@react-native-community/slider';
+import ZoomImage from './comp/ZoomImage';
 const bg = require('../../assets/image/profiles/Profiles_backgroud.png');
 const btn = require('../../assets/image/profiles/photo.png');
 const down = require('../../assets/image/nft/arrow_down.png');
@@ -89,6 +90,7 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [slideValue, setSlideValue] = useState(0);
+  const [bigImg, setBigImg] = useState(false);
 
   // const [height, setHeight] = useState();
   // useEffect(() => {
@@ -225,6 +227,10 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
     setPaused(!paused);
   };
 
+  const showBigImg = () => {
+    setBigImg(true);
+  };
+
   const time = new Date(result?.duetime?.toNumber() * 1000);
   // alert(result?.duetime?.toNumber());
   const due = time - new Date();
@@ -232,7 +238,7 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
     <ScrollView style={[flex1, BG]} showsVerticalScrollIndicator={false}>
       {(list && list?.type === 'Audio' && list.cid !== undefined) ||
       (list && list?.type === 'Video' && list.cid !== undefined) ? (
-        <View style={styles.videoShow}>
+        <Pressable style={styles.videoShow} onPress={showBigImg}>
           <Video
             source={{
               uri: ipfsBaseURL + 'ipfs/' + list.cid,
@@ -286,23 +292,27 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
             style={[styles.topImg]}
             resizeMode="contain"
           />
-        </View>
+        </Pressable>
       ) : list && list.cid !== undefined ? (
-        <FastImage
-          source={{
-            uri: ipfsBaseURL + 'ipfs/' + list?.cid,
-          }}
-          style={[styles.topImg]}
-          resizeMode="contain"
-        />
+        <Pressable onPress={showBigImg}>
+          <FastImage
+            source={{
+              uri: ipfsBaseURL + 'ipfs/' + list?.cid,
+            }}
+            style={[styles.topImg]}
+            resizeMode="contain"
+          />
+        </Pressable>
       ) : (
-        <FastImage
-          source={{
-            uri: ipfsBaseURL + 'ipfs/' + list?.image,
-          }}
-          style={[styles.topImg]}
-          resizeMode="contain"
-        />
+        <Pressable onPress={showBigImg}>
+          <FastImage
+            source={{
+              uri: ipfsBaseURL + 'ipfs/' + list?.image,
+            }}
+            style={[styles.topImg]}
+            resizeMode="contain"
+          />
+        </Pressable>
       )}
 
       <View style={[FG, styles.topView]}>
@@ -440,6 +450,11 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
           <Text style={styles.buyText}>Buy now</Text>
         </Pressable>
       ) : null}
+      <ZoomImage
+        image={ipfsBaseURL + 'ipfs/' + list?.image}
+        visible={bigImg}
+        setIsVisible={e => setBigImg(e)}
+      />
     </ScrollView>
   );
 };
