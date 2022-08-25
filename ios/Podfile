@@ -11,7 +11,7 @@ target 'MetaLife' do
   config = use_native_modules!
   # Comment the next line if you don't want to use dynamic frameworks
   # use_frameworks!
-
+#  use_frameworks! :linkage => :static
   # Flags change depending on the env values.
   flags = get_default_flags()
 
@@ -46,7 +46,11 @@ target 'MetaLife' do
   # pod 'Permission-Siri', :path => "#{permissions_path}/Siri"
   pod 'Permission-SpeechRecognition', :path => "#{permissions_path}/SpeechRecognition"
   pod 'Permission-StoreKit', :path => "#{permissions_path}/StoreKit"
-  
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+
+  $RNFirebaseAsStaticFramework = true
 
   target 'MetaLifeTests' do
     inherit! :complete

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   NavigationContainer,
   useNavigationContainerRef,
@@ -108,6 +108,7 @@ import {NormalTipDialog} from './metalife-base/src/dialog/NormalTipDialog';
 import {PhotonEvent, PhotonNotify} from './screens/photon/PhotonNotifyContants';
 import CompleteCheckout from './screens/ntfPreview/CompleteCheckout';
 import {getMainCoinName} from './utils/chainUtils';
+import analytics from '@react-native-firebase/analytics';
 
 const App = ({
   feedId,
@@ -129,6 +130,7 @@ const App = ({
   const {Navigator, Screen, Group} = createNativeStackNavigator();
   const {channel} = nodejs;
 
+  const routeNameRef = useRef();
   const navigationRef = useNavigationContainerRef();
 
   const [switchVisible, setSwitchVisible] = useState(false);
@@ -149,16 +151,26 @@ const App = ({
           ),
         );
   }
-
+  async function getId() {
+    const appInstanceId = await analytics().getAppInstanceId();
+    const appStart = await analytics().logSelectContent({
+      content_type: 'appStart',
+      item_id: 'start',
+    });
+  }
   // todo: loading bar testing
   useEffect(() => {
-    const unsubscribe = navigationRef.addListener('state', e => {
-      // You can get the raw navigation state (partial state object of the root navigator)
-      console.log(e.data.state);
-
-      // Or get the full state object with `getRootState()`
-      console.log(navigationRef.getRootState());
-    });
+    getId();
+    // const unsubscribe = navigationRef.addListener('state', async e => {
+    //   // You can get the raw navigation state (partial state object of the root navigator)
+    //   console.log(e.data.state);
+    //   // await analytics().logEvent({
+    //   //   // content_type: 'navigate',
+    //   //   // item_id: e.data.state,
+    //   // });
+    //   // Or get the full state object with `getRootState()`
+    //   console.log(navigationRef.getRootState());
+    // });
 
     SplashScreen.hide();
     window.ssb ||
@@ -271,7 +283,24 @@ const App = ({
   }, []);
 
   return (
-    <NavigationContainer ref={navigationRef} theme={theme}>
+    <NavigationContainer
+      ref={navigationRef}
+      theme={theme}
+      onReady={() => {
+        routeNameRef.current = navigationRef.current.getCurrentRoute().name;
+      }}
+      onStateChange={async () => {
+        const previousRouteName = routeNameRef.current;
+        const currentRouteName = navigationRef.current.getCurrentRoute().name;
+
+        if (previousRouteName !== currentRouteName) {
+          await analytics().logScreenView({
+            screen_name: currentRouteName,
+            screen_class: currentRouteName,
+          });
+        }
+        routeNameRef.current = currentRouteName;
+      }}>
       <StatusBar barStyle={barStyle} />
       <Navigator
         initialRouteName={

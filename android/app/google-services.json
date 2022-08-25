@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "203612530494",
+    "project_id": "metalife-4ab20",
+    "storage_bucket": "metalife-4ab20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:203612530494:android:b934235c26f26e42d66e6f",
+        "android_client_info": {
+          "package_name": "com.metalife"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "203612530494-0rvn1nsbeuj33ngkocmqg5p6b55bh0hj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2WH_sMsMZqtUwWAf31qzWeyu_l9ipViA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "203612530494-0rvn1nsbeuj33ngkocmqg5p6b55bh0hj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

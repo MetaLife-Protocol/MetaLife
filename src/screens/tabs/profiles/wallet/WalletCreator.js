@@ -67,7 +67,7 @@ const WalletCreator = ({
 
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
 
-  const targetChain = params.type;
+  const targetChain = params?.type;
 
   function clearInputs() {
     setAName('');
