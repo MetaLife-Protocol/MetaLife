@@ -26,10 +26,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {depositChannelMethod} from 'react-native-photon';
 import {getPhotonTokenSymbol} from '../PhotonUtils';
 import Toast from 'react-native-tiny-toast';
-import {
-  bigNumberFormatUnits,
-  bigNumberParseUnits,
-} from 'react-native-web3-wallet';
+import {bigNumberParseUnits} from 'react-native-web3-wallet';
 import NativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 
 const SupplementaryBalance = () => {
@@ -77,6 +74,7 @@ const SupplementaryBalance = () => {
                 });
                 return;
               }
+              const type = getPhotonTokenSymbol(channelData?.token_address);
               if (
                 !walletBalance[type] ||
                 !walletBalance[type]?.balance_on_chain
@@ -87,7 +85,6 @@ const SupplementaryBalance = () => {
                 return;
               }
               try {
-                const type = getPhotonTokenSymbol(channelData?.token_address);
                 let chainBalance = bigNumberParseUnits(
                   numberToString(walletBalance[type].balance_on_chain),
                   0,
