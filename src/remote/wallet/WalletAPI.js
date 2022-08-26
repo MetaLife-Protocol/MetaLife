@@ -270,6 +270,8 @@ export function exportAccountPrivateKey(address, pw, cb) {
           console.warn(error);
           cb && cb(false);
         });
+    } else {
+      cb && cb(false);
     }
   });
 }
@@ -401,7 +403,10 @@ export const getTransactionDetail = params => {
             .then(gasLimitRes => {
               resolve({gasPriceRes, gasLimitRes, walletSinger});
             })
-            .catch(e => console.log('walletSinger.provider.estimateGas', e));
+            .catch(e => {
+              console.log('walletSinger.provider.estimateGas', e);
+              reject('error: estimateGas');
+            });
         } else {
           const contractSinger = getSignerContractWithWalletProvider(
             financeConfig.chains[currentAccount.type].contracts.coin[
@@ -419,10 +424,16 @@ export const getTransactionDetail = params => {
             .then(gasLimitRes => {
               resolve({gasPriceRes, gasLimitRes, walletSinger, contractSinger});
             })
-            .catch(e => console.log('contractSinger.estimateGas.transfer', e));
+            .catch(e => {
+              console.log('contractSinger.estimateGas.transfer', e);
+              reject('error: transfer');
+            });
         }
       })
-      .catch(console.warn);
+      .catch(e => {
+        console.log('walletSinger.provider.getGasPrice', e);
+        reject('error: getGasPrice');
+      });
   });
 };
 
@@ -437,12 +448,13 @@ export const confirmTransaction = params => {
     gasPrice,
     address,
     contractSinger,
+    nonceType = 'pending',
   } = params;
   const realAmount = bigNumberParseUnits(inputAmount);
   const data = remark ? '0x' + Buffer.from(remark).toString('hex') : '';
   return new Promise((resolve, reject) => {
     walletSinger.provider
-      .getTransactionCount(currentAccount.address, 'pending')
+      .getTransactionCount(currentAccount.address, nonceType)
       .then(nonce => {
         if (isMainCoin(tokenOption.type, tokenOption.cType)) {
           let tx = {
@@ -462,11 +474,15 @@ export const confirmTransaction = params => {
                 .then(singTransRes => {
                   resolve(singTransRes);
                 })
-                .catch(e =>
-                  console.log('walletSinger.provider.sendTransaction', e),
-                );
+                .catch(e => {
+                  console.log('walletSinger.provider.sendTransaction', e);
+                  reject(e);
+                });
             })
-            .catch(e => console.log('walletSinger.signTransaction', e));
+            .catch(e => {
+              console.log('walletSinger.signTransaction', e);
+              reject('error: signTransaction');
+            });
         } else {
           let tx = {
             nonce: nonce,
@@ -479,9 +495,15 @@ export const confirmTransaction = params => {
             .then(res => {
               resolve(res);
             })
-            .catch(e => console.log('contractSinger.transfer', e));
+            .catch(e => {
+              console.log('contractSinger.transfer', e);
+              reject('error: transfer');
+            });
         }
       })
-      .catch(e => console.log('walletSinger.provider.getTransactionCount', e));
+      .catch(e => {
+        console.log('walletSinger.provider.getTransactionCount', e);
+        reject('error: getTransactionCount');
+      });
   });
 };

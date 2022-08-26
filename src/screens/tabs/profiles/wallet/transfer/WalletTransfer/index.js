@@ -33,6 +33,7 @@ import {
   getCurrentAccount,
 } from '../../../../../../utils';
 import {getMainCoinName, isMainCoin} from '../../../../../../utils/chainUtils';
+import NonceTypeModal from './comp/NonceTypeModal';
 import TransactionInfoModal from './comp/TransactionInfoModal';
 
 /**
@@ -70,6 +71,8 @@ const WalletTransfer = props => {
 
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [confirmData, setConfirmData] = useState({});
+  const [nonceType, setNonceType] = useState('pending');
+  const [nonceVisible, setNonceVisible] = useState(false);
 
   useEffect(() => {
     setTokenOption({
@@ -186,7 +189,11 @@ const WalletTransfer = props => {
         setConfirmData(data);
         setConfirmVisible(true);
       })
-      .catch(e => console.log('onPwdModalConfirm2', e));
+      .catch(e => {
+        setToastVisible(true);
+        setToastContent(e);
+        setToastDur(3000);
+      });
   };
 
   const onInfoModalConfirm = () => {
@@ -229,6 +236,7 @@ const WalletTransfer = props => {
       gasPrice,
       address,
       contractSinger: confirmData.contractSinger,
+      nonceType,
     })
       .then(res => {
         setToastVisible(false);
@@ -239,7 +247,11 @@ const WalletTransfer = props => {
           waiting: true,
         });
       })
-      .catch(e => console.log('confirmTransaction', e));
+      .catch(e => {
+        setToastVisible(true);
+        setToastContent(e);
+        setToastDur(3000);
+      });
   };
   return (
     <SafeAreaView style={[flex1]}>
@@ -298,7 +310,6 @@ const WalletTransfer = props => {
               style={[text, styles.inputText]}
               placeholder="Enter transfer amount"
               placeholderTextColor={'#A5ABB7'}
-              // keyboardType={'numeric'}
               value={inputAmount}
               onChangeText={setInputAmount}
             />
@@ -321,8 +332,13 @@ const WalletTransfer = props => {
             onChangeText={setRemark}
           />
         </View>
+        <View style={[styles.doctorCon]}>
+          <Pressable onPress={() => setNonceVisible(true)}>
+            <ComText style={[text, styles.doctor]}>doctor</ComText>
+          </Pressable>
+        </View>
         <RoundBtn
-          style={[styles.btnContainer, marginTop10]}
+          style={[styles.btnContainer]}
           disabled={address && inputAmount ? false : true}
           title={'Confirm'}
           press={onConfirm}
@@ -349,6 +365,14 @@ const WalletTransfer = props => {
           setToastVisible={setToastVisible}
           toastContent={toastContent}
           toastDuriation={toastDur}
+        />
+
+        <NonceTypeModal
+          nonceType={nonceType}
+          nonceVisible={nonceVisible}
+          setNonceVisible={setNonceVisible}
+          darkMode={darkMode}
+          onConfirm={setNonceType}
         />
       </Pressable>
     </SafeAreaView>
@@ -407,6 +431,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginRight: 10,
     color: '#0ff',
+  },
+  btnContainer: {
+    marginTop: 15,
+  },
+  doctorCon: {
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+  },
+  doctor: {
+    textAlign: 'right',
   },
 });
 
