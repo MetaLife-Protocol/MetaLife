@@ -2,6 +2,8 @@ import {useEffect, useState} from 'react';
 import {
   bigNumberFormatUnits,
   bigNumberParseUnits,
+  getContract,
+  hexZeroPad,
 } from 'react-native-web3-wallet';
 import {financeConfig} from '../../../../../../remote/wallet/financeConfig';
 import {getTransactionListenProvider} from '../../../../../../remote/wallet/WalletAPI';
@@ -12,6 +14,8 @@ import {getErc20Info} from './events/erc20EventUtils';
 import {getNftInfo} from './events/nftEventUtils';
 import {getAmountPrefix} from './utils';
 import {getNftSale} from './events/salePlainEventUtils';
+import {abi as NFTCollectionAbi} from '../../../../../../remote/contractAbi/NFTCollection.json';
+import {fixWalletAddress} from '../../../../../../utils';
 
 export const useTransferDataHooks = (
   gasPrice,
@@ -91,7 +95,6 @@ export const useTransferDataHooks = (
       } else {
         resData = {
           ...resData,
-          remark: '',
         };
         // contract
         // 得到是哪个合约
@@ -99,12 +102,9 @@ export const useTransferDataHooks = (
         const spectrumContracts = contractsConstant.spectrum;
         let coinType; // 合约名字
         let abiName;
-        for (const item in spectrumContracts) {
-          if (item.toLowerCase() === contractAddress) {
-            coinType = spectrumContracts[item].symbol;
-            abiName = spectrumContracts[item].abiName;
-            break;
-          }
+        if (spectrumContracts[contractAddress]) {
+          coinType = spectrumContracts[contractAddress].symbol;
+          abiName = spectrumContracts[contractAddress].abiName;
         }
 
         console.log('coinType', coinType, abiName);
@@ -171,14 +171,86 @@ export const useTransferDataHooks = (
         amount: bigNumberFormatUnits(transRes.value),
         amountPrefix: getAmountPrefix(transRes.to, currentAddress),
       };
-      if (transRes.data) {
-        resData = {
-          ...resData,
-          remark: Buffer.from(
-            transRes.data.replace('0x', ''),
-            'hex',
-          ).toString(),
-        };
+      // 判断是否是自己的账号
+      const isFrom =
+        transRes.from.toLowerCase() ===
+        fixWalletAddress(currentAddress).toLowerCase();
+      // 判断 from,to 都不是合约才能显示remark
+      const contractAddress = isFrom
+        ? transRes.to.toLowerCase()
+        : transRes.from.toLowerCase();
+      const addressCode = await provider.getCode(contractAddress);
+      // 主链 SMT
+      const isMain = addressCode === '0x';
+      if (isMain) {
+        if (transRes.data) {
+          resData = {
+            ...resData,
+            remark: Buffer.from(
+              transRes.data.replace('0x', ''),
+              'hex',
+            ).toString(),
+          };
+        }
+      } else {
+        let parsedTrans;
+        // from is a contract
+        const spectrumContracts = contractsConstant.spectrum;
+        if (spectrumContracts[contractAddress]) {
+          if (
+            contractAddress !== '0x242e0de2b118279d1479545a131a90a8f67a2512' // photon 跳过
+          ) {
+            // 本地合约中存在
+            try {
+              parsedTrans = getContract(
+                financeConfig.chains.spectrum.rpcURL,
+                contractAddress,
+                spectrumContracts[contractAddress].abi,
+              ).interface.parseTransaction(transRes);
+            } catch (e) {
+              console.log(contractAddress + ' contract: error', e);
+            }
+          }
+        } else if (addressCode.startsWith('0x6080604052348015')) {
+          // from is a nft collection contract
+          try {
+            parsedTrans = getContract(
+              financeConfig.chains.spectrum.rpcURL,
+              contractAddress,
+              NFTCollectionAbi,
+            ).interface.parseTransaction(transRes);
+          } catch (e) {
+            console.log('nft collection contract error', e);
+          }
+        }
+        console.log('parsedTrans', parsedTrans);
+        if (parsedTrans) {
+          let str =
+            'Function: ' +
+            parsedTrans.signature +
+            '\n' +
+            'MethodID: ' +
+            parsedTrans.sighash;
+          parsedTrans.args.forEach((element, index) => {
+            let ele;
+            try {
+              ele = hexZeroPad(element, 32);
+            } catch (e) {
+              console.log('ssss', e);
+              ele = '0x' + Buffer.from(element).toString('hex');
+            }
+            str = str + `\n[${index}]: ` + ele;
+          });
+          resData = {
+            ...resData,
+            remark: str,
+          };
+        } else {
+          resData = {
+            ...resData,
+            remark: '',
+          };
+        }
       }
       if (transRes.confirmations > 0) {
         isGetReceipt = true;

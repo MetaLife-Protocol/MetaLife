@@ -1,4 +1,4 @@
-import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {Image, Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import React from 'react';
 import Text from '../../../../../../shared/comps/ComText';
 import {connect} from 'react-redux/lib/exports';
@@ -65,7 +65,7 @@ const TransactionDetail = ({cfg: {darkMode}, wallet, route: {params}}) => {
   };
 
   return (
-    <View style={[flex1, BG]}>
+    <ScrollView style={[flex1, BG]}>
       <View style={[FG, styles.con]}>
         <Image source={getImg()} style={styles.img} />
         <Text style={[styles.synText, {color: getStatusTextColor()}]}>
@@ -81,10 +81,7 @@ const TransactionDetail = ({cfg: {darkMode}, wallet, route: {params}}) => {
         <Text style={[text, styles.comText]}>{transactData.to}</Text>
 
         <Text style={[styles.benText, {color: normal}]}>Remark</Text>
-        <Text style={[text, styles.comText]}>
-          {transactData.remark}
-          {/* {Buffer.from(transactData?.data.replace('0x', ''), 'hex').toString()} */}
-        </Text>
+        <Text style={[text, styles.comText]}>{transactData.remark}</Text>
         <Text style={[styles.benText, {color: normal}]}>Gas Fee</Text>
         <Text style={[text, styles.comText]}>
           {transactData.gasUsed
@@ -121,7 +118,7 @@ const TransactionDetail = ({cfg: {darkMode}, wallet, route: {params}}) => {
           </Pressable>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
