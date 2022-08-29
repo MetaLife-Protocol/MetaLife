@@ -109,6 +109,7 @@ import {PhotonEvent, PhotonNotify} from './screens/photon/PhotonNotifyContants';
 import CompleteCheckout from './screens/ntfPreview/CompleteCheckout';
 import {getMainCoinName} from './utils/chainUtils';
 import analytics from '@react-native-firebase/analytics';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const App = ({
   feedId,
