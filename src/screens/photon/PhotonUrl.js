@@ -1,6 +1,7 @@
 const GLOBAL_SWITCH_OPEN = true;
 
 export default class PhotonUrl {
+  static RPC_URL = 'https://jsonapi1.smartmesh.io/';
   /**
    * 光子部署的 Mesh token
    * 跟链上MESH 币的token一样

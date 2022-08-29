@@ -32,21 +32,6 @@ const AddAddressScreen = ({
       Toast.show('Please set name or wallet address');
       return;
     }
-    // check address
-    try {
-      const correctAddress = await getProvider('').resolveName(addressCon);
-      if (!correctAddress) {
-        Toast.show('invalid address!', {
-          position: Toast.position.CENTER,
-        });
-        return;
-      }
-    } catch (e) {
-      Toast.show('invalid address!', {
-        position: Toast.position.CENTER,
-      });
-      return;
-    }
 
     const address = {
       type: 'address',

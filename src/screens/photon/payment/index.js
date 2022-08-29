@@ -24,8 +24,9 @@ import {findPath, photonTransfer} from 'react-native-photon';
 import Toast from 'react-native-tiny-toast';
 import {connect} from 'react-redux';
 import {getTokenAddress} from '../PhotonUtils';
-import {bigNumberParseUnits} from 'react-native-web3-wallet';
+import {bigNumberParseUnits, getProvider} from 'react-native-web3-wallet';
 import NativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
+import PhotonUrl from '../PhotonUrl';
 
 const Payment = ({showPullMenu}) => {
   const {isIPhoneX_deprecated} = NativeDeviceInfo.getConstants();
@@ -39,7 +40,24 @@ const Payment = ({showPullMenu}) => {
 
   const btnDisabled = useMemo(() => !(address && amount), [address, amount]);
 
-  const transferFun = (isDirect, filePath) => {
+  const transferFun = async (isDirect, filePath) => {
+    // check address
+    try {
+      const correctAddress = await getProvider(PhotonUrl.RPC_URL).resolveName(
+        address,
+      );
+      if (!correctAddress) {
+        Toast.show('invalid address!', {
+          position: Toast.position.CENTER,
+        });
+        return;
+      }
+    } catch (e) {
+      Toast.show('invalid address!', {
+        position: Toast.position.CENTER,
+      });
+      return;
+    }
     if (isNaN(amount)) {
       Toast.show('incorrect number', {
         position: Toast.position.CENTER,

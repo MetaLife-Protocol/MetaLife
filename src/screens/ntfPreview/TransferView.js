@@ -31,6 +31,7 @@ import {
   getProvider,
 } from 'react-native-web3-wallet';
 import Toast from 'react-native-tiny-toast';
+import {financeConfig} from '../../remote/wallet/financeConfig';
 
 const scan = require('../../assets/image/wallet/icon_scan_default_white.png');
 const scanB = require('../../assets/image/wallet/icon_scan_default_black.png');
@@ -107,7 +108,9 @@ const TransferView = ({
     }
     // check address
     try {
-      const correctAddress = await getProvider('').resolveName(address);
+      const correctAddress = await getProvider(
+        financeConfig.chains[currentAccount.type].rpcURL,
+      ).resolveName(address);
       if (!correctAddress) {
         Toast.show('invalid address!', {
           position: Toast.position.CENTER,

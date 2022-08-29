@@ -19,6 +19,7 @@ import {
 } from 'react-native-web3-wallet';
 import {connect} from 'react-redux/lib/exports';
 import {RoundBtn} from '../../../../../../metalife-base';
+import {financeConfig} from '../../../../../../remote/wallet/financeConfig';
 import {
   getWBalance,
   getTransactionDetail,
@@ -99,7 +100,9 @@ const WalletTransfer = props => {
   const onConfirm = async () => {
     // check address
     try {
-      const correctAddress = await getProvider('').resolveName(address);
+      const correctAddress = await getProvider(
+        financeConfig.chains[currentAccount.type].rpcURL,
+      ).resolveName(address);
       if (!correctAddress) {
         Toast.show('invalid address!', {
           position: Toast.position.CENTER,
