@@ -139,7 +139,7 @@ const WalletImporter = ({
                   value={pw}
                   textAlignVertical={'top'}
                   secureTextEntry={pwdSecure}
-                  placeholder={'Set Password'}
+                  placeholder={selected === 1 ? 'Password' : 'Set Password'}
                   placeholderTextColor={textHolder}
                   onChangeText={setPW}
                 />
