@@ -6,7 +6,8 @@ import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../UseSchemaStyles';
 import {screenHeight, screenWidth} from '../../utils';
 const load = require('../../assets/image/icons/loading.gif');
-const LoadingView = () => {
+const w = 125;
+const LoadingView = ({width = w, height = 132}) => {
   const {flex1, text, BG} = useSchemaStyles();
   return (
     <View
@@ -29,8 +30,8 @@ const LoadingView = () => {
         style={[
           BG,
           {
-            width: 125,
-            height: 132,
+            width: width,
+            height: height,
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 12.5,

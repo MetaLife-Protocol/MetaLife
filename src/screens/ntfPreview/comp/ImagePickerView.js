@@ -67,7 +67,7 @@ const ImagePickerView = ({style, onImagePicker}) => {
         source={require('../../../assets/image/nft/nft_add_icon.png')}
         style={styles.addIcon}
       />
-      {showLoading && <LoadingView />}
+      {showLoading && <LoadingView width={style.width} height={style.height} />}
     </TouchableOpacity>
   );
 };

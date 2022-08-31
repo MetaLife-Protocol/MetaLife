@@ -347,13 +347,13 @@ const createSty = theme =>
       borderRadius: 12,
     },
     bannerContainer: {
-      width: 345,
+      width: screenWidth - 50,
       height: 175,
       borderRadius: 12,
     },
     nameContainer: {
       borderRadius: 12,
-      width: 345,
+      width: screenWidth - 50,
       height: 44,
       paddingHorizontal: 10,
       marginTop: 10,

@@ -25,7 +25,7 @@ import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
 import {uploadJSONToIFPS} from '../../remote/ipfsOP';
 import PasswordModel from '../../shared/comps/PasswordModal';
-import {fixWalletAddress, getCurrentAccount} from '../../utils';
+import {fixWalletAddress, getCurrentAccount, screenWidth} from '../../utils';
 import {getAccount, getWBalance} from '../../remote/wallet/WalletAPI';
 import {
   getCreatNftItem,
@@ -564,6 +564,7 @@ const createSty = theme =>
     },
     itemViewContainer: {
       // width: 345,
+      width: screenWidth - 30,
       height: 250,
       borderRadius: 12,
     },

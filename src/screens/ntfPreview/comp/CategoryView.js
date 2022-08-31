@@ -9,6 +9,7 @@ import React from 'react';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
 import Text from '../../../shared/comps/ComText';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
+import {screenWidth} from '../../../utils';
 
 const CategoryView = ({onClickItem, name, headImg}) => {
   const {text, primary, row, flex1, BG, FG} = useSchemaStyles();
@@ -37,7 +38,7 @@ const CategoryView = ({onClickItem, name, headImg}) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    width: 345,
+    width: screenWidth - 50,
     height: 65,
     alignItems: 'center',
     borderRadius: 12,
