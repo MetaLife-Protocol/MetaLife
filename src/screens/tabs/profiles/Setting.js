@@ -143,6 +143,11 @@ const Setting = ({
               onValueChange={() => setVerbose(!verbose)}
             />
           </ControllerItem>
+          <Pressable onPress={() => navigate('Feedback')} hitSlop={10}>
+            <ControllerItem title={'Feedback'}>
+              <Image source={ArrowImage} />
+            </ControllerItem>
+          </Pressable>
         </Section>
         {/*<Section*/}
         {/*  style={[marginTop10]}*/}

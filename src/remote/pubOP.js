@@ -137,3 +137,32 @@ export async function getPubsRewardTotal(params) {
 
   return result;
 }
+
+export async function submitFeedback(
+  user_ssbid,
+  submit_type,
+  content,
+  user_email,
+) {
+  const params = {
+    user_ssbid,
+    submit_type,
+    content,
+    user_email,
+  };
+  const config = {
+    timeout: 3000,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  try {
+    const feedbackRes = await axios.post(url + 'user/feedback', params, config);
+    if (feedbackRes.status === 200 && feedbackRes.data.error_code === 0) {
+      return true;
+    }
+    return false;
+  } catch (e) {
+    return false;
+  }
+}

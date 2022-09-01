@@ -110,6 +110,7 @@ import CompleteCheckout from './screens/ntfPreview/CompleteCheckout';
 import {getMainCoinName} from './utils/chainUtils';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
+import Feedback from './screens/tabs/profiles/setting/Feedback';
 
 const App = ({
   feedId,
@@ -470,6 +471,13 @@ const App = ({
           component={Setting}
           options={{
             title: 'Setting',
+          }}
+        />
+        <Screen
+          name="Feedback"
+          component={Feedback}
+          options={{
+            title: 'Feedback',
           }}
         />
         <Screen
