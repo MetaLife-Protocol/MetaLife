@@ -241,7 +241,7 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
         <Pressable style={styles.videoShow} onPress={showBigImg}>
           <Video
             source={{
-              uri: ipfsBaseURL + 'ipfs/' + list.cid,
+              uri: 'http://106.52.171.12:11111/' + 'ipfs/' + list.cid,
             }}
             resizeMode={'contain'}
             paused={paused}
@@ -297,7 +297,7 @@ const MyNftDetailView = ({route: {params}, data, nft, wallet, navigation}) => {
         <Pressable onPress={showBigImg}>
           <FastImage
             source={{
-              uri: ipfsBaseURL + 'ipfs/' + list?.cid,
+              uri: 'http://106.52.171.12:11111/' + 'ipfs/' + list?.cid,
             }}
             style={[styles.topImg]}
             resizeMode="contain"

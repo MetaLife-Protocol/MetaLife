@@ -311,9 +311,9 @@ const CreateItemNft = ({route: {params}, darkMode, navigation, wallet}) => {
               );
             })}
           </View>
-          <TitleAndTips title={'IPFS CID'} isStar={true} />
+          <TitleAndTips title={'IPFS CID'} />
           <PureTextInput
-            placeholder={'IPFS CID'}
+            placeholder={'IPFS CID for video and audio only'}
             style={[FG, styles.nameContainer]}
             onChangeText={setCID}
             // inputProps={{

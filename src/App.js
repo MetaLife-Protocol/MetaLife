@@ -111,6 +111,7 @@ import {getMainCoinName} from './utils/chainUtils';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import Feedback from './screens/tabs/profiles/setting/Feedback';
+import deviceInfo from 'react-native-device-info';
 
 const App = ({
   feedId,
@@ -159,6 +160,8 @@ const App = ({
       content_type: 'appStart',
       item_id: 'start',
     });
+    const uniqueId = await deviceInfo.getUniqueId();
+    const appId = await analytics().setUserId(uniqueId);
   }
   // todo: loading bar testing
   useEffect(() => {
