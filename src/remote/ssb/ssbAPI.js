@@ -34,7 +34,7 @@ const trainProfileFeed = (fId, existSequence, cb) => {
       'color: #8E14CBFF;',
       'color: #CD1E1E;',
     );
-    if (sequence <= existSequence) {
+    if (sequence <= existSequence /* || msgs.length > 2000*/) {
       return cb({fId, msgs});
     } else {
       msgs.push(msg);

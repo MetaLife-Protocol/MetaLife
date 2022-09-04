@@ -1,0 +1,26 @@
+diff --git a/node_modules/async-append-only-log/index.js b/node_modules/async-append-only-log/index.js
+index 55f1ec8..712d923 100644
+--- a/node_modules/async-append-only-log/index.js
++++ b/node_modules/async-append-only-log/index.js
+@@ -37,7 +37,7 @@ const EOB = {
+   asNumber: 0,
+ }
+ 
+-const DEFAULT_BLOCK_SIZE = 65536
++const DEFAULT_BLOCK_SIZE = 4294967296
+ const DEFAULT_CODEC = { encode: (x) => x, decode: (x) => x }
+ const DEFAULT_WRITE_TIMEOUT = 250
+ const DEFAULT_VALIDATE = () => true
+diff --git a/node_modules/async-append-only-log/record.js b/node_modules/async-append-only-log/record.js
+index 5e1da89..5fdef9f 100644
+--- a/node_modules/async-append-only-log/record.js
++++ b/node_modules/async-append-only-log/record.js
+@@ -13,7 +13,7 @@ Binary format for a Record:
+ The "Header" is the first two bytes for the dataLength.
+ */
+ 
+-const HEADER_SIZE = 2 // uint16
++const HEADER_SIZE = 4 // uint16
+ 
+ function size(dataBuf) {
+   return HEADER_SIZE + dataBuf.length
