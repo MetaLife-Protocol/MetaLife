@@ -422,7 +422,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Remove some files we know that won't be used at all\nNODEJS_ASSETS_DIR=\"$( cd \"$PROJECT_DIR\" && cd ../nodejs-assets/ && pwd )\"\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/sodium-native-nodejs-mobile/libsodium/android-toolchain*\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/leveldown\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/ssb-keys-neon/prebuilds\n";
+			shellScript = "# Remove some files we know that won't be used at all\nNODEJS_ASSETS_DIR=\"$( cd \"$PROJECT_DIR\" && cd ../nodejs-assets/ && pwd )\"\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/sodium-native-nodejs-mobile/libsodium/android-toolchain*\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/leveldown\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/ssb-keys-neon/prebuilds\nrm -rf $NODEJS_ASSETS_DIR/nodejs-project/node_modules/blake3/dist\n";
 		};
 		B0BCD6F5282E303E007C1746 /* Post-minify Node.js Mobile project */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -590,7 +590,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 220904;
+				CURRENT_PROJECT_VERSION = 220905;
 				DEVELOPMENT_TEAM = UW32LPCQU3;
 				ENABLE_BITCODE = "$(inherited)";
 				INFOPLIST_FILE = MetaLife/Info.plist;
@@ -621,7 +621,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 220904;
+				CURRENT_PROJECT_VERSION = 220905;
 				DEVELOPMENT_TEAM = UW32LPCQU3;
 				ENABLE_BITCODE = "$(inherited)";
 				INFOPLIST_FILE = MetaLife/Info.plist;

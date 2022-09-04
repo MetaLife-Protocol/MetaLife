@@ -119,7 +119,11 @@ export = async function startSSB(isNewIdentity: boolean) {
     // Blobs
     .use(require('ssb-blobs'))
     .use(require('ssb-serve-blobs')) // needs: blobs
+    .use(require('ssb-blobs-blurhash')) // needs: blobs
     .use(require('ssb-blobs-purge')) // needs: blobs, db2/full-mentions
+    // Storage
+    .use(require('ssb-storage-used')) // needs: db2
+    .use(require('ssb-friends-purge')) // needs: db2, friends
     // Customizations
     .use(require('./plugins/blobsUtils')) // needs: blobs
     .use(require('./plugins/connUtils')) // needs: conn, aboutSelf
@@ -127,9 +131,10 @@ export = async function startSSB(isNewIdentity: boolean) {
     .use(require('./plugins/resyncUtils')) // needs: db2, connFirewall
     .use(require('./plugins/publishUtilsBack')) // needs: db, blobs, blobsUtils
     .use(require('./plugins/searchUtils')) // needs: db2
+    .use(require('./plugins/gatheringsUtils')) // needs: db2
     .use(require('./plugins/keysUtils'))
     .use(settingsUtils) // needs: blobs-purge, conn-firewall
-    .use(require('./plugins/dbUtils')) // needs: db2, syncing
+    .use(require('./plugins/dbUtils')) // needs: db2, syncing, friends
     .use(require('./plugins/votes')) // needs: db2
     .call(null, config);
 };

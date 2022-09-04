@@ -72,7 +72,7 @@ async function exec(command, opts) {
       '--out=_index.js',
       'index.js',
     ]
-      .filter((x) => x !== null)
+      .filter(x => x !== null)
       .join(' '),
     {
       cwd: folder,
