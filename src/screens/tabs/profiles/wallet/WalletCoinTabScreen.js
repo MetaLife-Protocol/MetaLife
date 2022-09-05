@@ -28,7 +28,11 @@ const WalletCoinTabScreen = props => {
       {type === 'spectrum' ? (
         <>
           <CoinItem
-            pressItem={params.select ? pressItem : null}
+            pressItem={
+              params.select
+                ? pressItem
+                : () => navigation.navigate('WalletLocalRecord')
+            }
             type={type}
             address={address}
             cType={'SMT'}
@@ -36,7 +40,14 @@ const WalletCoinTabScreen = props => {
             setBalance={setBalance}
           />
           <CoinItem
-            pressItem={params.select ? pressItem : null}
+            pressItem={
+              params.select
+                ? pressItem
+                : () =>
+                    navigation.navigate('WalletLocalRecord', {
+                      cType: 'Mesh',
+                    })
+            }
             type={type}
             address={address}
             cType={'Mesh'}
@@ -44,7 +55,14 @@ const WalletCoinTabScreen = props => {
             setBalance={setBalance}
           />
           <CoinItem
-            pressItem={params.select ? pressItem : null}
+            pressItem={
+              params.select
+                ? pressItem
+                : () =>
+                    navigation.navigate('WalletLocalRecord', {
+                      cType: 'MLT',
+                    })
+            }
             type={type}
             address={address}
             cType={'MLT'}

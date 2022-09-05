@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {
   bigNumberFormatUnits,
   bigNumberParseUnits,
+  createBigNumber,
   getContract,
   hexZeroPad,
 } from 'react-native-web3-wallet';
@@ -16,6 +17,7 @@ import {getAmountPrefix} from './utils';
 import {getNftSale} from './events/salePlainEventUtils';
 import {abi as NFTCollectionAbi} from '../../../../../../remote/contractAbi/NFTCollection.json';
 import {fixWalletAddress} from '../../../../../../utils';
+import {DeviceEventEmitter} from 'react-native';
 
 export const useTransferDataHooks = (
   gasPrice,
@@ -30,6 +32,7 @@ export const useTransferDataHooks = (
     amount: '',
     coinType: '',
     gasPrice: bigNumberParseUnits(gasPrice.toString(), 9),
+    gasLimit: bigNumberParseUnits('0', 0),
     gasUsed: '',
     isContract: false,
     hash: hash,
@@ -42,6 +45,7 @@ export const useTransferDataHooks = (
     amountPrefix: '',
   };
   const [transactData, setTransactData] = useState(initData);
+  const [transactionTx, setTransactionTx] = useState();
 
   const getToAddressAmount = async (logs, abiName) => {
     if (abiName === 'erc20') {
@@ -157,19 +161,14 @@ export const useTransferDataHooks = (
     let provider = getTransactionListenProvider('spectrum');
     provider.getTransaction(hash).then(async transRes => {
       // console.log('transferData', transRes);
+      setTransactionTx(transRes);
       resData = {
         ...transactData,
+        gasPrice: transRes.gasPrice,
+        gasLimit: transRes.gasLimit,
         from: transRes.from.toLowerCase(),
         to: transRes.to.toLowerCase(),
         blockNumber: transRes.blockNumber,
-      };
-      if (waiting) {
-        setTransactData(resData);
-      }
-      resData = {
-        ...resData,
-        amount: bigNumberFormatUnits(transRes.value),
-        amountPrefix: getAmountPrefix(transRes.to, currentAddress),
       };
       // 判断是否是自己的账号
       const isFrom =
@@ -223,7 +222,6 @@ export const useTransferDataHooks = (
             console.log('nft collection contract error', e);
           }
         }
-        console.log('parsedTrans', parsedTrans);
         if (parsedTrans) {
           let str =
             'Function: ' +
@@ -236,7 +234,6 @@ export const useTransferDataHooks = (
             try {
               ele = hexZeroPad(element, 32);
             } catch (e) {
-              console.log('ssss', e);
               ele = '0x' + Buffer.from(element).toString('hex');
             }
             str = str + `\n[${index}]: ` + ele;
@@ -252,12 +249,26 @@ export const useTransferDataHooks = (
           };
         }
       }
+      setTransactData(resData);
+      resData = {
+        ...resData,
+        amount: bigNumberFormatUnits(transRes.value),
+        amountPrefix: getAmountPrefix(transRes.to, currentAddress),
+      };
       if (transRes.confirmations > 0) {
         isGetReceipt = true;
         resData = await getTransactionReceipt(resData, provider);
       }
       if (transRes.confirmations < 20) {
         provider.on(hash, async resListen => {
+          DeviceEventEmitter.emit('transactionDB', {
+            hash: resListen.transactionHash,
+            blockHash: resListen.blockHash,
+            blockNumber: resListen.blockNumber,
+            confirmations: resListen.confirmations,
+            status: resListen.status,
+            gasUsed: resListen.gasUsed,
+          });
           if (resListen.status === 1) {
             if (!isGetReceipt && resListen.confirmations > 0) {
               isGetReceipt = true;
@@ -295,5 +306,5 @@ export const useTransferDataHooks = (
       }
     });
   }, []);
-  return transactData;
+  return {transactData, transactionTx};
 };

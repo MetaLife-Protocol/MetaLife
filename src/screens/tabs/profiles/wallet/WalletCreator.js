@@ -67,7 +67,7 @@ const WalletCreator = ({
 
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
 
-  const targetChain = params?.type;
+  const targetChain = params?.type ?? 'spectrum';
 
   function clearInputs() {
     setAName('');
@@ -183,7 +183,7 @@ const WalletCreator = ({
           title={'Create account'}
           disabled={!(aName && pw && cPw && pw === cPw)}
           press={() =>
-            params.from === 'guid'
+            params?.from === 'guid'
               ? getMnemonic(mnemonic => {
                   clearInputs();
                   importAccountByMnemonic(

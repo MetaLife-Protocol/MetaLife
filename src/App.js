@@ -19,7 +19,7 @@ import PostMsgEditor from './screens/tabs/home/post/PostMsgEditor';
 import PeersListScreen from './screens/tabs/contacts/PeersListScreen';
 import FriendList from './screens/tabs/messages/FriendList';
 import TextEditor from './shared/screens/TextEditor';
-import Pubs, {reconnect2pub} from './screens/tabs/profiles/Pubs';
+import Pubs from './screens/tabs/profiles/Pubs';
 import {
   DeviceEventEmitter,
   Image,
@@ -109,9 +109,8 @@ import {PhotonEvent, PhotonNotify} from './screens/photon/PhotonNotifyContants';
 import CompleteCheckout from './screens/ntfPreview/CompleteCheckout';
 import {getMainCoinName} from './utils/chainUtils';
 import analytics from '@react-native-firebase/analytics';
-import crashlytics from '@react-native-firebase/crashlytics';
 import Feedback from './screens/tabs/profiles/setting/Feedback';
-// import deviceInfo from 'react-native-device-info';
+import WalletLocalRecord from './screens/tabs/profiles/wallet/WalletLocalRecord';
 
 const App = ({
   feedId,
@@ -657,6 +656,11 @@ const App = ({
           name="WalletRecord"
           component={WalletRecord}
           options={{headerTitle: 'Token Transaction Record'}}
+        />
+        <Screen
+          name="WalletLocalRecord"
+          component={WalletLocalRecord}
+          options={{headerTitle: 'Action Transaction Record'}}
         />
         <Screen
           name="CreateItemCollection"

@@ -142,6 +142,12 @@ const WalletTransfer = props => {
         return;
       }
     } else {
+      if (Number(inputAmount) === 0) {
+        Toast.show('incorrect number', {
+          position: Toast.position.CENTER,
+        });
+        return;
+      }
       if (
         bigNumberParseUnits(inputAmount.toString()).gt(
           bigNumberParseUnits(tokenOption.amount),
@@ -342,7 +348,7 @@ const WalletTransfer = props => {
         </View>
         <RoundBtn
           style={[styles.btnContainer]}
-          disabled={address && inputAmount ? false : true}
+          disabled={address ? false : true}
           title={'Confirm'}
           press={onConfirm}
         />

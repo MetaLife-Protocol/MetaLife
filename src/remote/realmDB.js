@@ -10,39 +10,50 @@ import {
   createBigNumber,
 } from 'react-native-web3-wallet';
 import {financeConfig} from './wallet/financeConfig';
+import {store} from '../store/configureStore';
 
 export const TransactionRecordSchema = {
   name: 'TransactionRecord',
   primaryKey: 'transactionHash', // 定义主键后，无法创建同一主键的数据
   properties: {
     transactionHash: 'string',
+    chainType: {type: 'string', default: 'eth'},
+    chainId: 'int?',
     to: 'string?', // {type: 'string', default: 'xxxxx'} 的简写
-    from: 'string?',
-    contractAddress: 'string?',
+    from: 'string?', // wallet address
+    contractAddress: 'string?', // 合约地址
     contractName: 'string?',
     contractSymbol: 'string?',
-    value: 'string?',
+    value: 'decimal128?', // 交易数量（金额）
     data: 'string?',
     gasUsed: 'decimal128?',
     gasLimit: 'decimal128?',
     gasPrice: 'decimal128?',
     method: 'string?',
-    confirmations: 'decimal128?',
+    confirmations: {
+      type: 'decimal128',
+      default: Realm.BSON.Decimal128.fromString('0'),
+    },
     blockHash: 'string?',
     blockNumber: 'decimal128?',
     timestamp: 'date',
-    status: 'int',
+    status: {type: 'int', default: 99}, // 状态 99:waiting 0:failed 1:success 其他走失败
   },
 };
 
 export const dbConfig = {
   schema: [TransactionRecordSchema],
   path: 'metalife.realm',
+  schemaVersion: 1,
+  deleteRealmIfMigrationNeeded: true,
 };
 
 export function generateEncrptionKey() {
-  Aes.sha512(window.ssb.id).then(aesKey => {
-    const aesBuffer = Buffer.from(aesKey, 'hex');
+  const {user} = store.getState();
+  Aes.sha512(user.feedId).then(aesKey => {
+    console.log('aesKey', aesKey);
+    const key = aesKey;
+    const aesBuffer = Buffer.from(key, 'hex');
     dbConfig.encryptionKey = aesBuffer;
   });
 }
@@ -70,6 +81,12 @@ export function createUpdateDBEmitter() {
       if (command.transactionHash) {
         tx.transactionHash = command.transactionHash;
       }
+      if (command.chainType) {
+        tx.chainType = command.chainType;
+      }
+      if (command.chainId) {
+        tx.chainId = command.chainId;
+      }
       if (command.status) {
         tx.status = command.status;
       }
@@ -89,10 +106,10 @@ export function createUpdateDBEmitter() {
         );
       }
       if (command.from) {
-        tx.from = command.from;
+        tx.from = command.from.toLowerCase();
       }
       if (command.to) {
-        tx.to = command.to;
+        tx.to = command.to.toLowerCase();
       }
       // if (command.log && command.log.length > 0) {
       //   if (command.log.length < 2) {
@@ -139,7 +156,7 @@ export function createUpdateDBEmitter() {
       //   }
       // }
       if (command.contractAddress) {
-        tx.contractAddress = command.contractAddress;
+        tx.contractAddress = command.contractAddress.toLowerCase();
       }
       if (command.contractName) {
         tx.contractName = command.contractName;
@@ -151,7 +168,7 @@ export function createUpdateDBEmitter() {
         tx.method = command.method;
       }
       if (command.value) {
-        tx.value = command.value;
+        tx.value = Realm.BSON.Decimal128.fromString(command.value.toString());
       }
       if (command.blockHash) {
         tx.blockHash = command.blockHash;
@@ -197,6 +214,8 @@ export function updateDB(schemaName, params) {
           fulfill(true);
         });
         res.close();
+        // 通知列表更新
+        DeviceEventEmitter.emit('localRecord:update');
       })
       .catch(reject);
   });

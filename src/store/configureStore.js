@@ -18,10 +18,23 @@ const persistConfig = {
   storage: AsyncStorage,
   blacklist: ['runtime'],
 };
-
-export const store = configureStore({
-  reducer: persistReducer(persistConfig, reducer),
-  middleware: getDefaultMiddleware =>
+let middleware = getDefaultMiddleware =>
+  getDefaultMiddleware({
+    serializableCheck: false,
+    // serializableCheck: {
+    //   // Ignore these action types
+    //   ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    //   // Ignore these field paths in all actions
+    //   ignoredActionPaths: [],
+    //   // Ignore these paths in the state
+    //   ignoredPaths: [],
+    // },
+    thunk: false,
+    immutableCheck: false,
+  });
+if (__DEV__) {
+  const createDebugger = require('redux-flipper').default;
+  middleware = getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,
       // serializableCheck: {
@@ -34,7 +47,12 @@ export const store = configureStore({
       // },
       thunk: false,
       immutableCheck: false,
-    }),
+    }).concat(createDebugger());
+}
+
+export const store = configureStore({
+  reducer: persistReducer(persistConfig, reducer),
+  middleware: middleware,
 });
 
 export const persistor = persistStore(

@@ -30,6 +30,10 @@ import {Buffer} from 'buffer';
 import {financeConfig} from './financeConfig';
 import {isMainCoin} from '../../utils/chainUtils';
 import {fixWalletAddress} from '../../utils';
+import {DeviceEventEmitter} from 'react-native';
+import TransactionDBUtil, {
+  saveMainCoinTrans,
+} from '../../screens/tabs/profiles/wallet/transfer/TransactionDBUtil';
 
 /**
  * 0 BTC 60  ETH
@@ -387,6 +391,12 @@ export const getTransactionDetail = params => {
   } = params;
   const amount = bigNumberParseUnits(inputAmount);
   const data = remark ? '0x' + Buffer.from(remark).toString('hex') : '';
+  // walletSinger.provider
+  //   .getTransactionCount(currentAccount.address, 'pending')
+  //   .then(res => console.log('pending', res));
+  // walletSinger.provider
+  //   .getTransactionCount(currentAccount.address, 'latest')
+  //   .then(res => console.log('latest', res));
   return new Promise((resolve, reject) => {
     walletSinger.provider
       .getGasPrice()
@@ -405,7 +415,7 @@ export const getTransactionDetail = params => {
             })
             .catch(e => {
               console.log('walletSinger.provider.estimateGas', e);
-              reject('error: estimateGas');
+              reject(e.reason);
             });
         } else {
           const contractSinger = getSignerContractWithWalletProvider(
@@ -426,13 +436,13 @@ export const getTransactionDetail = params => {
             })
             .catch(e => {
               console.log('contractSinger.estimateGas.transfer', e);
-              reject('error: transfer');
+              reject(e.reason);
             });
         }
       })
       .catch(e => {
         console.log('walletSinger.provider.getGasPrice', e);
-        reject('error: getGasPrice');
+        reject(e.reason);
       });
   });
 };
@@ -472,16 +482,21 @@ export const confirmTransaction = params => {
               walletSinger.provider
                 .sendTransaction(res)
                 .then(singTransRes => {
+                  TransactionDBUtil.saveMainCoinTrans(
+                    singTransRes,
+                    gasLimit,
+                    gasPrice,
+                  );
                   resolve(singTransRes);
                 })
                 .catch(e => {
-                  console.log('walletSinger.provider.sendTransaction', e);
-                  reject(e);
+                  console.log('walletSinger.provider.sendTransaction-error', e);
+                  reject(e.reason);
                 });
             })
             .catch(e => {
-              console.log('walletSinger.signTransaction', e);
-              reject('error: signTransaction');
+              console.log('walletSinger.signTransaction-error', e);
+              reject(e.reason);
             });
         } else {
           let tx = {
@@ -493,17 +508,31 @@ export const confirmTransaction = params => {
           contractSinger
             .transfer(fixWalletAddress(address), realAmount, tx)
             .then(res => {
-              resolve(res);
+              TransactionDBUtil.saveContractTrans(
+                tokenOption.type,
+                tokenOption.cType,
+                res,
+                gasLimit,
+                gasPrice,
+                realAmount,
+              )
+                .then(() => {
+                  resolve(res);
+                })
+                .catch(e => {
+                  console.log('TransactionDBUtil.saveContractTrans-error', e);
+                  reject(e.reason);
+                });
             })
             .catch(e => {
-              console.log('contractSinger.transfer', e);
-              reject('error: transfer');
+              console.log('contractSinger.transfer-error', e);
+              reject(e.reason);
             });
         }
       })
       .catch(e => {
-        console.log('walletSinger.provider.getTransactionCount', e);
-        reject('error: getTransactionCount');
+        console.log('walletSinger.provider.getTransactionCount-error', e);
+        reject(e.reason);
       });
   });
 };

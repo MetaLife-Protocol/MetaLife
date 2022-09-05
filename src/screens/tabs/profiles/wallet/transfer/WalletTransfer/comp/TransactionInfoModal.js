@@ -49,7 +49,7 @@ const TransactionConfirmModal = ({
           <Slider
             style={[styles.slider, marginTop10]}
             minimumValue={Number(data?.gasPriceNumber)}
-            maximumValue={Number(data?.gasPriceNumber) + 10}
+            maximumValue={Number(data?.gasPriceNumber) + 20}
             value={Number(bigNumberFormatUnits(gasPrice, 9))}
             thumbTintColor="#29DAD7"
             minimumTrackTintColor="#29DAD7"

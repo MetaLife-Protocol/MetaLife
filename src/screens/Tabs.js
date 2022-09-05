@@ -18,6 +18,11 @@ import {HeaderIcons} from '../shared/Icons';
 import {startPhoton} from './photon/PhotonUtils';
 import {useDialog} from '../metalife-base';
 import {getCurrentAccount, stopAboutWalletAccount} from '../utils';
+import {
+  createUpdateDBEmitter,
+  generateEncrptionKey,
+  removeUpdateDBEmitter,
+} from '../remote/realmDB';
 
 const iconDic = {
   Home_icon_Default: require('../assets/image/tabBtn/Home_icon_Default.png'),
@@ -65,6 +70,15 @@ const Tabs = ({showPullMenu, wallet, cfg: {darkMode}, photon}) => {
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // reamDB start listener
+  useEffect(() => {
+    generateEncrptionKey();
+    createUpdateDBEmitter();
+    return () => {
+      removeUpdateDBEmitter();
+    };
   }, []);
 
   function menuHandler(e) {
