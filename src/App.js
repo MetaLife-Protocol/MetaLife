@@ -111,7 +111,7 @@ import {getMainCoinName} from './utils/chainUtils';
 import analytics from '@react-native-firebase/analytics';
 import crashlytics from '@react-native-firebase/crashlytics';
 import Feedback from './screens/tabs/profiles/setting/Feedback';
-import deviceInfo from 'react-native-device-info';
+// import deviceInfo from 'react-native-device-info';
 
 const App = ({
   feedId,
@@ -154,18 +154,17 @@ const App = ({
           ),
         );
   }
-  async function getId() {
+  async function getId(id) {
     const appInstanceId = await analytics().getAppInstanceId();
     const appStart = await analytics().logSelectContent({
       content_type: 'appStart',
       item_id: 'start',
     });
-    const uniqueId = await deviceInfo.getUniqueId();
-    const appId = await analytics().setUserId(uniqueId);
+    // const uniqueId = await deviceInfo.getUniqueId();
+    const appId = await analytics().setUserId(id);
   }
   // todo: loading bar testing
   useEffect(() => {
-    getId();
     // const unsubscribe = navigationRef.addListener('state', async e => {
     //   // You can get the raw navigation state (partial state object of the root navigator)
     //   console.log(e.data.state);
@@ -180,6 +179,7 @@ const App = ({
     SplashScreen.hide();
     window.ssb ||
       startSSB().then(ssb => {
+        getId(ssb.id);
         window.ssb = ssb;
         if (!feedId) {
           setFeedId(ssb.id);

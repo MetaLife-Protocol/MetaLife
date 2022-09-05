@@ -63,7 +63,6 @@
     "react-native-ble-peripheral": "git+ssh://git@github.com:heroims/react-native-ble-peripheral.git",
     "react-native-ble-wormhole": "git+ssh://git@github.com:heroims/WormholeProtocol-RN.git",
     "react-native-camera": "^4.2.1",
-    "react-native-device-info": "^10.0.2",
     "react-native-document-picker": "^8.1.0",
     "react-native-encrypted-storage": "^4.0.2",
     "react-native-fast-image": "^8.5.11",
