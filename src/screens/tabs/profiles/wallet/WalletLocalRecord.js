@@ -77,6 +77,20 @@ const WalletLocalRecord = ({wallet, route: {params}}) => {
       updateListener.remove();
     };
   }, []);
+
+  const getNumber = item => {
+    if (
+      contractsConstant.spectrum[item.contractAddress]?.symbol === 'OpenGalaxy'
+    ) {
+      return 'OpenGalaxy';
+    } else {
+      let prefix = fixedAddress === item.to ? '+' : '-';
+      let amount = bigNumberFormatUnits(item.value + '');
+      const symbol =
+        contractsConstant.spectrum[item.contractAddress]?.symbol ?? 'SMT';
+      return prefix + ' ' + amount + ' ' + symbol;
+    }
+  };
   const renderItem = ({item, index}) => {
     return (
       <Pressable
@@ -105,11 +119,9 @@ const WalletLocalRecord = ({wallet, route: {params}}) => {
             style={[
               styles.addText,
               {color: fixedAddress === item.to ? '#29DAD7' : '#6989EA'},
-            ]}>{`${fixedAddress === item.to ? '+' : '-'} ${bigNumberFormatUnits(
-            item.value + '',
-          )} ${
-            contractsConstant.spectrum[item.contractAddress]?.symbol ?? 'SMT'
-          }`}</Text>
+            ]}>
+            {getNumber(item)}
+          </Text>
           {item.status === 99 ? (
             <Text style={styles.failed}>transaction package...</Text>
           ) : item.status !== 1 ? (

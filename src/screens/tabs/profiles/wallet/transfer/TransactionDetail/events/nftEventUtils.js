@@ -2,6 +2,7 @@ import {
   createBigNumber,
   getContract,
   hexString,
+  hexZeroPad,
 } from 'react-native-web3-wallet';
 import {financeConfig} from '../../../../../../../remote/wallet/financeConfig';
 import {abi as NFTCollectionAbi} from '../../../../../../../remote/contractAbi/NFTCollection.json';
@@ -47,18 +48,21 @@ export const getNftInfo = async (logs, currentAddress) => {
 };
 
 const getNftName = async address => {
-  // console.log('nftName', address);
-  const subcontract = getContract(
-    financeConfig.chains.spectrum.rpcURL,
-    address,
-    NFTCollectionAbi,
-  );
-  const name = await subcontract.name();
-  const symbol = await subcontract.symbol();
-  if (symbol && name) {
-    return address + '(' + symbol + ':' + name + ')';
-  } else {
-    return address + '(' + symbol + name + ')';
+  try {
+    const subcontract = getContract(
+      financeConfig.chains.spectrum.rpcURL,
+      address,
+      NFTCollectionAbi,
+    );
+    const name = await subcontract.name();
+    const symbol = await subcontract.symbol();
+    if (symbol && name) {
+      return address + '(' + symbol + ':' + name + ')';
+    } else {
+      return address + '(' + symbol + name + ')';
+    }
+  } catch (e) {
+    return address;
   }
 };
 
@@ -66,11 +70,12 @@ const isNftCreateCollection = async (logs, currentAddress) => {
   const ownershipTransferred =
     NftEventNameID.ownershipTransferred === logs[0].topics[0];
   const newCollection = NftEventNameID.newCollection === logs[1].topics[0];
-
   if (ownershipTransferred && newCollection) {
     // 对方地址
     const toAddress = hexString(logs[1].topics[1]);
-    const collectAddress = await getNftName(hexString(logs[1].data));
+    const collectAddress = await getNftName(
+      hexZeroPad(hexString(logs[1].data), 20),
+    );
     const tokenAmount = collectAddress;
     return {
       to: toAddress,

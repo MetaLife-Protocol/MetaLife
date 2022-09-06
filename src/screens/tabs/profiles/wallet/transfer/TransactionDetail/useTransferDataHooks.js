@@ -66,7 +66,7 @@ export const useTransferDataHooks = (
   const getTransactionReceipt = async (resData, provider) => {
     try {
       const transferRes = await provider.getTransactionReceipt(hash);
-      // console.log('getTransactionReceipt', JSON.stringify(transferRes));
+      // console.log('getTransactionReceipt', transferRes);
       const blockRes = await provider.getBlock(transferRes.blockNumber);
       // console.log('getBlock', blockRes);
       resData = {

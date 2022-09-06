@@ -13,15 +13,14 @@ import {
   getProvider,
   getSignerContract,
   getSignerContractWithWalletProvider,
-  waitForTransaction,
 } from 'react-native-web3-wallet';
 import {
   coinWaitTransaction,
   getTransactionListenProvider,
 } from './wallet/WalletAPI';
-import {re} from '@babel/core/lib/vendor/import-meta-resolve';
 import {fixWalletAddress} from '../utils';
 import {contractsConstant} from './contractsConstant';
+import TransactionDBUtil from '../screens/tabs/profiles/wallet/transfer/TransactionDBUtil';
 
 const network = financeConfig.chains.spectrum.rpcURL,
   // metaMaster contract
@@ -311,6 +310,7 @@ export async function getCreateCollection(
     const result = contract
       .createCollection(name, symbol, baseURI, maxNum, logo, address, ratio)
       .then(async res => {
+        TransactionDBUtil.saveNftTransaction(res);
         // console.log('aaaaaa', res);
         let filterTo = contract.filters.NewCollection('0x' + address);
         let waitResult = true;
@@ -350,6 +350,7 @@ export async function getCreateCollection(
         }
         let provider = getTransactionListenProvider(type);
         provider.on(res.hash, resListen => {
+          TransactionDBUtil.updateNftTransaction(res);
           if (resListen.status !== 1 && resListen.confirmations > 1) {
             er('request failed');
             provider.removeAllListeners(res.hash);
@@ -404,7 +405,8 @@ export async function getCreatNftItem(
   const result = contract
     .mint(collecAddress, fixWalletAddress(wAddress), baseURI)
     .then(async res => {
-      console.log('aaaaaa', res);
+      TransactionDBUtil.saveNftTransaction(res);
+      // console.log('aaaaaa', res);
       const subcontract = getContract(network, collecAddress, NFTCollectionAbi);
 
       let filterTo = subcontract.filters.Mint(null, fixWalletAddress(wAddress));
@@ -454,6 +456,7 @@ export async function getCreatNftItem(
         });
       }
       provider.on(res.hash, resListen => {
+        TransactionDBUtil.updateNftTransaction(res);
         // console.log('fffaillll', resListen);
         if (resListen.status !== 1 && resListen.confirmations > 1) {
           // console.log(
@@ -604,6 +607,7 @@ export async function transformNftItem(
         {gasLimit: gasLimit},
       )
       .then(async res => {
+        TransactionDBUtil.saveNftTransaction(res);
         // console.log('aaaaaa', res, collecAddress, toAddress, tokenId);
         const subcontract = getContract(
           network,
@@ -634,6 +638,7 @@ export async function transformNftItem(
         }
         let provider = getTransactionListenProvider(type);
         provider.on(res.hash, resListen => {
+          TransactionDBUtil.updateNftTransaction(resListen);
           // console.log('hhhh', resListen);
           if (resListen.status !== 1 && resListen.confirmations > 1) {
             er('request failed');
@@ -767,6 +772,10 @@ export async function pushSell(
       time,
       {gasLimit: gasLimit},
     );
+    TransactionDBUtil.saveNftTransaction({
+      ...result,
+      gasLimit,
+    });
     // console.log('ddddd', result);
     const subcontract = getContract(network, colAddress, NFTCollectionAbi);
 
@@ -793,6 +802,7 @@ export async function pushSell(
 
     let provider = getTransactionListenProvider(type);
     provider.on(result.hash, resListen => {
+      TransactionDBUtil.updateNftTransaction(resListen);
       // console.log('hhhh', resListen);
       if (resListen.status !== 1 && resListen.confirmations > 1) {
         er('request failed');
@@ -863,6 +873,7 @@ export async function cancelListingNFT(
     const saleId = await contract.getSaleId(colAddress, id);
     // console.log('ssssssff', createBigNumber(saleId));
     const result = await contract.cancel(createBigNumber(saleId));
+    TransactionDBUtil.saveNftTransaction(result);
     // console.log('fffffrrrrr', result);
     const subcontract = getContract(network, colAddress, NFTCollectionAbi);
 
@@ -888,6 +899,7 @@ export async function cancelListingNFT(
     }
     let provider = getTransactionListenProvider(type);
     provider.on(result.hash, resListen => {
+      TransactionDBUtil.updateNftTransaction(resListen);
       // console.log('hhhh', resListen);
       if (resListen.status !== 1 && resListen.confirmations > 1) {
         er('request failed');
@@ -1046,6 +1058,11 @@ export async function getBuyNft(
     gasLimit: gasLim,
     value: goodPrice,
   });
+  TransactionDBUtil.saveNftTransaction({
+    ...result,
+    gasLimit: gasLim,
+    value: goodPrice,
+  });
   // console.log('fffffrrrrr', result);
   const subcontract = getContract(network, colAddress, NFTCollectionAbi);
 
@@ -1072,6 +1089,7 @@ export async function getBuyNft(
   // cb && cb(result.hash);
   let provider = getTransactionListenProvider(type);
   provider.on(result.hash, resListen => {
+    TransactionDBUtil.updateNftTransaction(resListen);
     // console.log('hhhh', resListen);
     if (resListen.status !== 1 && resListen.confirmations > 1) {
       er('request failed');
@@ -1129,6 +1147,7 @@ export async function getBuyNftByERC20(
     createBigNumber(saleId),
     goodPrice,
   );
+  TransactionDBUtil.saveNftTransaction(result);
   // console.log('fffffrrrrr', result);
   const subcontract = getContract(network, colAddress, NFTCollectionAbi);
 
@@ -1155,6 +1174,7 @@ export async function getBuyNftByERC20(
   // cb && cb(result.hash);
   let provider = getTransactionListenProvider(type);
   provider.on(result.hash, resListen => {
+    TransactionDBUtil.updateNftTransaction(resListen);
     // console.log('hhhh', resListen);
     if (resListen.status !== 1 && resListen.confirmations > 1) {
       er('request failed');
