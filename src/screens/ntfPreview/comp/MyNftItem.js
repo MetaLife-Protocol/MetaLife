@@ -14,10 +14,11 @@ import {
 } from '../../../remote/contractOP';
 import Text from '../../../shared/comps/ComText';
 import {fixWalletAddress, getCurrentAccount} from '../../../utils';
-import {getNftAssetsJson} from '../../../remote/ipfsOP';
+import {getMyNftItemList, getNftAssetsJson} from '../../../remote/ipfsOP';
 import useSchemaStyles from '../../../shared/UseSchemaStyles';
 import OnSaleItem from './OnSaleItem';
 import LoadingView from '../../../shared/comps/LoadingView';
+import MyNftMinItem from './MyNftMinItem';
 
 const MyNftItem = ({
   wallet,
@@ -40,12 +41,11 @@ const MyNftItem = ({
         ? collection?.nftItem[myaddress]
         : []
       : [];
-  console.log('kkkkkkk', collectionItem);
+  // console.log('kkkkkkk', collectionItem);
   const [type, setType] = useState(0);
   const [onSaleItem, setOnSaleItem] = useState([]);
-  const [showLoading, setShowLoading] = useState(
-    collectionItem && collectionItem.length > 0 ? false : true,
-  );
+  const [showLoading, setShowLoading] = useState(true);
+  const [nftList, setNftList] = useState([]);
   let isEnds = true;
   // const [isEnd, setIsEnd] = useState(false);
   const renderItem = ({item, index}) => {
@@ -53,22 +53,12 @@ const MyNftItem = ({
       <Pressable
         onPress={() =>
           navigate('MyItemDetailView', {
-            tokenId: item.id,
-            address: item.collectionAddress,
-            ownerOf: item.ownerOf,
+            tokenId: item.nft_token_address,
+            address: item.collection_address,
+            ownerOf: item.user_address,
           })
         }>
-        <NftItem
-          isImage={true}
-          index={index}
-          item={{
-            // symbol: item.name,
-            image: item.image,
-            name: item.name,
-            id: item.id,
-          }}
-          symbol={' '}
-        />
+        <MyNftMinItem isImage={true} index={index} item={item} symbol={' '} />
       </Pressable>
     );
   };
@@ -95,87 +85,97 @@ const MyNftItem = ({
     setShowLoading(false);
   }
   async function fetchData() {
-    const result = await getOpenGalaxyNFTCollectionInfos();
-    console.log('resulttt', result.length);
-    if (result.length > 0) {
-      setShowLoading(false);
-      if (isEnds) {
-        let newList = [];
-        for (let i = 0; i < result.length; i++) {
-          if (isEnds) {
-            // const infos = getNFTInfos(
-            //   fixWalletAddress(getCurrentAccount(wallet).address),
-            //   null,
-            //   0,
-            //   0,
-            //   result[i].address,
-            // );
-            getNFTInfos(
-              fixWalletAddress(getCurrentAccount(wallet).address),
-              res => {
-                console.log('rrrrr', res);
-                let index =
-                  collectionItem && collectionItem.length > 0
-                    ? collectionItem.findIndex(item => {
-                        console.log('iiiiiiiiitttt', item.uri, res.uri);
-                        if (isEnds) {
-                          if (item.uri === res.uri) {
-                            return true;
-                          } else {
-                            return false;
-                          }
-                        }
-                      })
-                    : -1;
-                console.log('indexindex', index);
-                if (isEnds) {
-                  if (index === -1) {
-                    getNftAssetsJson(res.uri)
-                      .then(collInfo => {
-                        if (isEnds) {
-                          collInfo.headers['content-type'] ===
-                            'application/json' &&
-                            addNftItemList({
-                              ...res,
-                              ...collInfo.data,
-                              type: getCurrentAccount(wallet).address,
-                            });
-                        }
-                      })
-                      .catch(() => {
-                        setShowLoading(false);
-                      });
-                  }
-                }
-                // for (var j = 0; j < list.length; j++) {
-                //   if (list[j].uri === res.uri) {
-                //     return;
-                //   }
-                // }
-              },
-              0,
-              0,
-              result[i].address,
-            );
-          }
-          // newList.push(infos);
-        }
-      }
-    }
+    getMyNftItemList(fixWalletAddress(getCurrentAccount(wallet).address))
+      .then(res => {
+        // alert(JSON.stringify(res));
+        setNftList(res.data);
+        setShowLoading(false);
+        // console.log('adddddddddd', res);
+      })
+      .catch(err => {
+        setShowLoading(false);
+      });
+    // const result = await getOpenGalaxyNFTCollectionInfos();
+    // console.log('resulttt', result.length);
+    // if (result.length > 0) {
+    //   setShowLoading(false);
+    //   if (isEnds) {
+    //     let newList = [];
+    //     for (let i = 0; i < result.length; i++) {
+    //       if (isEnds) {
+    //         // const infos = getNFTInfos(
+    //         //   fixWalletAddress(getCurrentAccount(wallet).address),
+    //         //   null,
+    //         //   0,
+    //         //   0,
+    //         //   result[i].address,
+    //         // );
+    //         getNFTInfos(
+    //           fixWalletAddress(getCurrentAccount(wallet).address),
+    //           res => {
+    //             console.log('rrrrr', res);
+    //             let index =
+    //               collectionItem && collectionItem.length > 0
+    //                 ? collectionItem.findIndex(item => {
+    //                     console.log('iiiiiiiiitttt', item.uri, res.uri);
+    //                     if (isEnds) {
+    //                       if (item.uri === res.uri) {
+    //                         return true;
+    //                       } else {
+    //                         return false;
+    //                       }
+    //                     }
+    //                   })
+    //                 : -1;
+    //             console.log('indexindex', index);
+    //             if (isEnds) {
+    //               if (index === -1) {
+    //                 getNftAssetsJson(res.uri)
+    //                   .then(collInfo => {
+    //                     if (isEnds) {
+    //                       collInfo.headers['content-type'] ===
+    //                         'application/json' &&
+    //                         addNftItemList({
+    //                           ...res,
+    //                           ...collInfo.data,
+    //                           type: getCurrentAccount(wallet).address,
+    //                         });
+    //                     }
+    //                   })
+    //                   .catch(() => {
+    //                     setShowLoading(false);
+    //                   });
+    //               }
+    //             }
+    //             // for (var j = 0; j < list.length; j++) {
+    //             //   if (list[j].uri === res.uri) {
+    //             //     return;
+    //             //   }
+    //             // }
+    //           },
+    //           0,
+    //           0,
+    //           result[i].address,
+    //         );
+    //       }
+    //       // newList.push(infos);
+    //     }
+    //   }
+    // }
   }
 
   useEffect(() => {
-    if (isEnds) {
-      if (type === 0) {
-        fetchData();
-      } else {
-        setShowLoading(true);
-        fetchOnSaleData();
-      }
+    // if (isEnds) {
+    if (type === 0) {
+      fetchData();
+    } else {
+      setShowLoading(true);
+      fetchOnSaleData();
     }
+    // }
 
     return () => {
-      isEnds = false;
+      // isEnds = false;
       // if (collectionItem && collectionItem.length == 0) {
       //   // emptyNftItemList({type: getCurrentAccount(wallet).address});
       // }
@@ -235,7 +235,7 @@ const MyNftItem = ({
       </View>
       {type === 0 ? (
         <FlatList
-          data={collectionItem}
+          data={nftList}
           numColumns={2}
           renderItem={renderItem}
           style={styles.flatList}

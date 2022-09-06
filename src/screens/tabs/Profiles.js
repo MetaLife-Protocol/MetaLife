@@ -18,12 +18,13 @@ import {
   getWBalanceByContract,
 } from '../../remote/wallet/WalletAPI';
 import useSchemaStyles from '../../shared/UseSchemaStyles';
-import {getCurrentAccount, screenWidth} from '../../utils';
+import {fixWalletAddress, getCurrentAccount, screenWidth} from '../../utils';
 import HeaderProfiles from './profiles/HeaderProfiles';
 import {getMyNFTCollectionInfos} from '../../remote/contractOP';
 import Toast from 'react-native-tiny-toast';
 import {numberToString} from '../../metalife-base';
 import {isEthChain, isSpeChain} from '../../utils/chainUtils';
+import {getMyNftItemList} from '../../remote/ipfsOP';
 
 const Profiles = ({
   feedId,
@@ -50,6 +51,7 @@ const Profiles = ({
   const [amount, setAmount] = useState(0);
   const [visible, setVisible] = useState(false);
   const [isList, setIsList] = useState([]);
+  const [nftSize, setNftSize] = useState(0);
 
   const getBalance = () => {
     if (isSpeChain(type)) {
@@ -96,6 +98,11 @@ const Profiles = ({
     getMyNFTCollectionInfos(getCurrentAccount(wallet).address).then(res => {
       setIsList(res);
     });
+    getMyNftItemList(fixWalletAddress(getCurrentAccount(wallet).address)).then(
+      res => {
+        setNftSize(res.data.length);
+      },
+    );
   };
   useEffect(() => {
     getInfo();
@@ -184,14 +191,7 @@ const Profiles = ({
               styles.nftContent,
             ]}>
             <Text style={[text, styles.mltText]}>Item</Text>
-            <Text style={[text, styles.mlt]}>
-              {Object.keys(collection).length > 0
-                ? (collection &&
-                    collection?.nftItem &&
-                    collection?.nftItem[address]?.length) ||
-                  0
-                : 0}
-            </Text>
+            <Text style={[text, styles.mlt]}>{nftSize}</Text>
           </Pressable>
           <Pressable
             onPress={() => {

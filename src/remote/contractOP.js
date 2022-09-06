@@ -313,13 +313,41 @@ export async function getCreateCollection(
       .then(async res => {
         // console.log('aaaaaa', res);
         let filterTo = contract.filters.NewCollection('0x' + address);
+        let waitResult = true;
+        let senderRes;
         contract.once(filterTo, (sender, address, event) => {
           // console.log('contract', address);
-          cb && cb(address);
+          // cb && cb(address);
+          senderRes = address;
+          waitResult = false;
         });
 
         let data = await coinWaitTransaction(type, res.hash);
 
+        let timeOutStart = Date.now();
+        while (waitResult) {
+          if (Date.now() - timeOutStart > 3 * 1000 * 60) {
+            break;
+          }
+        }
+
+        if (data.status === 1) {
+          cb && cb(senderRes);
+        } else {
+          let providerSuccess = getTransactionListenProvider(type);
+          providerSuccess.on(res.hash, resListen => {
+            // console.log('rrrrrr', resListen);
+            if (resListen.status === 1 && resListen.confirmations > 1) {
+              if (senderRes !== undefined) {
+                providerSuccess.removeAllListeners(res.hash);
+                cb && cb(senderRes);
+              }
+            }
+            if (resListen.confirmations > 19) {
+              providerSuccess.removeAllListeners(res.hash);
+            }
+          });
+        }
         let provider = getTransactionListenProvider(type);
         provider.on(res.hash, resListen => {
           if (resListen.status !== 1 && resListen.confirmations > 1) {
@@ -376,22 +404,55 @@ export async function getCreatNftItem(
   const result = contract
     .mint(collecAddress, fixWalletAddress(wAddress), baseURI)
     .then(async res => {
-      // console.log('aaaaaa', res);
+      console.log('aaaaaa', res);
       const subcontract = getContract(network, collecAddress, NFTCollectionAbi);
 
       let filterTo = subcontract.filters.Mint(null, fixWalletAddress(wAddress));
 
       // console.log('adadad', filterTo, subcontract);
+      // let quest = new Promise((resolve, reject) => {
+      //
+      // });
+      let waitResult = true;
+      // Promise.all(new Promise(() => {})).then(res => {});
+      let senderRes;
       subcontract.once(filterTo, (sender, address, event) => {
         // console.log('contracttttt', sender.toNumber());
-        cb && cb(sender.toNumber());
+        // resolve(sender.toNumber());
+        // cb && cb(sender.toNumber());
+        senderRes = sender.toNumber();
+        waitResult = false;
+        console.log('ddddd', senderRes, waitResult, sender.toNumber());
       });
 
       let data = await coinWaitTransaction(type, res.hash);
-      // if (data.status !== 1) {
-      //   er('request failed');
-      // }
+
+      let timeOutStart = Date.now();
+      while (waitResult) {
+        if (Date.now() - timeOutStart > 3 * 1000 * 60) {
+          break;
+        }
+      }
+
       let provider = getTransactionListenProvider(type);
+
+      if (data.status === 1) {
+        cb && cb(senderRes);
+      } else {
+        let providerSuccess = getTransactionListenProvider(type);
+        providerSuccess.on(res.hash, resListen => {
+          console.log('rrrrrr', resListen);
+          if (resListen.status === 1 && resListen.confirmations > 1) {
+            if (senderRes !== undefined) {
+              providerSuccess.removeAllListeners(res.hash);
+              cb && cb(senderRes);
+            }
+          }
+          if (resListen.confirmations > 19) {
+            providerSuccess.removeAllListeners(res.hash);
+          }
+        });
+      }
       provider.on(res.hash, resListen => {
         // console.log('fffaillll', resListen);
         if (resListen.status !== 1 && resListen.confirmations > 1) {
@@ -400,6 +461,7 @@ export async function getCreatNftItem(
           //   resListen.status,
           //   resListen.confirmations,
           // );
+
           er('request failed');
           provider.removeAllListeners(res.hash);
         }
@@ -554,7 +616,22 @@ export async function transformNftItem(
         //   er('request failed');
         // }
         // console.log('uuuu', data);
-        cb && cb(res.hash);
+
+        if (data.status === 1) {
+          cb && cb(res.hash);
+        } else {
+          let providerSuccess = getTransactionListenProvider(type);
+          providerSuccess.on(res.hash, resListen => {
+            // console.log('rrrrrr', resListen);
+            if (resListen.status === 1 && resListen.confirmations > 1) {
+              providerSuccess.removeAllListeners(res.hash);
+              cb && cb(res.hash);
+            }
+            if (resListen.confirmations > 19) {
+              providerSuccess.removeAllListeners(res.hash);
+            }
+          });
+        }
         let provider = getTransactionListenProvider(type);
         provider.on(res.hash, resListen => {
           // console.log('hhhh', resListen);
@@ -698,7 +775,22 @@ export async function pushSell(
     //   er('request failed');
     // }
     // console.log('uuuu', data);
-    cb && cb(result.hash);
+    if (data.status === 1) {
+      cb && cb(result.hash);
+    } else {
+      let providerSuccess = getTransactionListenProvider(type);
+      providerSuccess.on(result.hash, resListen => {
+        // console.log('rrrrrr', resListen);
+        if (resListen.status === 1 && resListen.confirmations > 1) {
+          providerSuccess.removeAllListeners(result.hash);
+          cb && cb(result.hash);
+        }
+        if (resListen.confirmations > 19) {
+          providerSuccess.removeAllListeners(result.hash);
+        }
+      });
+    }
+
     let provider = getTransactionListenProvider(type);
     provider.on(result.hash, resListen => {
       // console.log('hhhh', resListen);
@@ -779,7 +871,21 @@ export async function cancelListingNFT(
     //   er('request failed');
     // }
     // console.log('uuuu', data);
-    cb && cb(result.hash);
+    if (data.status === 1) {
+      cb && cb(result.hash);
+    } else {
+      let providerSuccess = getTransactionListenProvider(type);
+      providerSuccess.on(result.hash, resListen => {
+        // console.log('rrrrrr', resListen);
+        if (resListen.status === 1 && resListen.confirmations > 1) {
+          providerSuccess.removeAllListeners(result.hash);
+          cb && cb(result.hash);
+        }
+        if (resListen.confirmations > 19) {
+          providerSuccess.removeAllListeners(result.hash);
+        }
+      });
+    }
     let provider = getTransactionListenProvider(type);
     provider.on(result.hash, resListen => {
       // console.log('hhhh', resListen);
@@ -948,7 +1054,22 @@ export async function getBuyNft(
   //   er('request failed');
   // }
   // console.log('uuuu', data);
-  cb && cb(result.hash);
+  if (data.status === 1) {
+    cb && cb(result.hash);
+  } else {
+    let providerSuccess = getTransactionListenProvider(type);
+    providerSuccess.on(result.hash, resListen => {
+      // console.log('rrrrrr', resListen);
+      if (resListen.status === 1 && resListen.confirmations > 1) {
+        providerSuccess.removeAllListeners(result.hash);
+        cb && cb(result.hash);
+      }
+      if (resListen.confirmations > 19) {
+        providerSuccess.removeAllListeners(result.hash);
+      }
+    });
+  }
+  // cb && cb(result.hash);
   let provider = getTransactionListenProvider(type);
   provider.on(result.hash, resListen => {
     // console.log('hhhh', resListen);
@@ -1016,7 +1137,22 @@ export async function getBuyNftByERC20(
   //   er('request failed');
   // }
   // console.log('uuuu', data);
-  cb && cb(result.hash);
+  if (data.status === 1) {
+    cb && cb(result.hash);
+  } else {
+    let providerSuccess = getTransactionListenProvider(type);
+    providerSuccess.on(result.hash, resListen => {
+      // console.log('rrrrrr', resListen);
+      if (resListen.status === 1 && resListen.confirmations > 1) {
+        providerSuccess.removeAllListeners(result.hash);
+        cb && cb(result.hash);
+      }
+      if (resListen.confirmations > 19) {
+        providerSuccess.removeAllListeners(result.hash);
+      }
+    });
+  }
+  // cb && cb(result.hash);
   let provider = getTransactionListenProvider(type);
   provider.on(result.hash, resListen => {
     // console.log('hhhh', resListen);

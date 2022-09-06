@@ -30,7 +30,7 @@ const bearer =
   '3JldCI6ImVmYjYyYTIzMjYwNjAxOTE2YmFjMjQyYjc5NDAzMWE4NTJkZmU0ZjAzMjRlMjc4MDk' +
   'zM2M3NTRmYjdjYjk3ZTciLCJpYXQiOjE2NTY1NjU0MzF9.5fm8vAbpsLF4-eNpCZW_gRV42eAN' +
   'UykBACF-p9PkYUU';
-
+const {getAddress} = require('@ethersproject/address');
 export function getNftAssetsJson(uri) {
   const cid = uri.split('/').pop();
   return axios.get(`${ipfsBaseURL}${routes[0]}${cid}`, {
@@ -118,4 +118,21 @@ export async function uploadJSONToIFPS(parmas) {
   //   console.log('SERVER ERROR:', error);
   //   //handle error here
   // });
+}
+
+export async function getMyNftItemList(address) {
+  const response = await axios.post(
+    'http://39.107.236.158:10086/nft/api/user/nft-info',
+    {hex_address: getAddress(address)},
+    {
+      maxBodyLength: 'Infinity',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+  // console.log('adadasss', response, response.data.data.length);
+  if (response.status === 200) {
+    return response.data;
+  }
 }

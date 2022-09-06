@@ -82,9 +82,6 @@ export function checkPubExist(pub, which) {
 }
 
 /*************************** wallet ***************************/
-export function checkSum(add) {
-  return Buffer.from(add, 'hex');
-}
 
 export function shuffle(mnemonic) {
   let cMne = mnemonic.split(' '),
