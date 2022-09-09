@@ -1,13 +1,13 @@
 /**
  * Created on 17 Feb 2022 by lonmee
  */
-import React, {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import Text from '../../../../../shared/comps/ComText';
 import useSchemaStyles, {
   colorsBasics,
 } from '../../../../../shared/UseSchemaStyles';
-import {localDate} from '../../../../../utils';
+import {localDate, screenWidth} from '../../../../../utils';
 import PostMsgPanel from './PostMsgPannel';
 import HeadIcon from '../../../../../shared/comps/HeadIcon';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
@@ -24,7 +24,9 @@ import nativeClipboard from 'react-native/Libraries/Components/Clipboard/NativeC
 import AudioElement from './AudioElement';
 import ImageElement from './ImageElement';
 import {connect} from 'react-redux';
+import FastImage from 'react-native-fast-image';
 import {report} from '../../../../../remote/pubOP';
+import ReadMore from '../../../../../shared/comps/ReadMore';
 
 const PostItem = ({
   cfg: {verbose},
@@ -166,23 +168,27 @@ const PostItem = ({
         }
       }),
     });
+  const [showMore, setShowMore] = useState(false);
+  const onTextLayout = useCallback(e => {
+    setShowMore(e.nativeEvent.lines.length > 6);
+  }, []);
 
   return (
     <View style={[row, container]}>
-      <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
-        <HeadIcon
-          avatar={avatar}
-          image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
-        />
-      </Pressable>
       <View style={[textContainer]}>
-        <Text>
-          <Text style={[text]}>{name}</Text>
-          <Text style={[placeholderTextColor]}>
-            {'\n' + localDate(timestamp)}
-          </Text>
-        </Text>
-        <Text style={[text, contentContainer]}>
+        <View style={{flexDirection: 'row'}}>
+          <Pressable onPress={() => navigate('PeerDetailsScreen', author)}>
+            <HeadIcon
+              avatar={avatar}
+              image={image ? {uri: blobIdToUrl(image)} : PeerIcons.peerGirlIcon}
+            />
+          </Pressable>
+
+          <Text style={[text, {marginLeft: 5}]}>{name}</Text>
+          <View style={{flex: 1}} />
+          <Text style={[placeholderTextColor]}>{localDate(timestamp)}</Text>
+        </View>
+        <ReadMore style={[text, contentContainer]} numberOfLines={6}>
           {textArr.length > 0 &&
             textArr.map(
               (phase, i) =>
@@ -196,49 +202,64 @@ const PostItem = ({
                   </Text>
                 ),
             )}
-        </Text>
-        {mentions &&
-          mentions.length > 0 &&
-          mentions.map(({link, name}, i) => {
-            const url = blobIdToUrl(link);
-            return (
-              url &&
-              link.charAt(0) === '&' && (
-                <View key={i}>
-                  {/*<Text style={[text]}>{name}</Text>*/}
-                  {name === 'audio:recording.mp3' ||
-                  name === 'audio:recording.mp4' ? (
-                    <AudioElement link={link} url={url} verbose={verbose} />
-                  ) : (
-                    <Pressable onPress={() => viewImagesHandler(i)}>
-                      <ImageElement
-                        index={i}
-                        link={link}
-                        url={url}
-                        verbose={verbose}
-                      />
-                    </Pressable>
-                  )}
-                  {verbose && (
-                    <Text
-                      style={[
-                        {
-                          color: colorsBasics.primary,
-                          marginVertical: 4,
-                          alignSelf: i % 2 ? 'flex-end' : 'flex-start',
-                        },
-                      ]}
-                      onPress={() => {
-                        setString(link);
-                        Toast.show("Blob's id copied");
-                      }}>
-                      Copy the blob's id
-                    </Text>
-                  )}
-                </View>
-              )
-            );
-          })}
+        </ReadMore>
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            marginTop: 10,
+            width: mentions.length === 4 ? screenWidth - 120 : screenWidth,
+          }}>
+          {mentions &&
+            mentions.length > 0 &&
+            mentions.map(({link, name}, i) => {
+              const url = blobIdToUrl(link);
+              return (
+                url &&
+                link.charAt(0) === '&' && (
+                  <View key={i}>
+                    {/*<Text style={[text]}>{name}</Text>*/}
+                    {name === 'audio:recording.mp3' ||
+                    name === 'audio:recording.mp4' ? (
+                      <AudioElement link={link} url={url} verbose={verbose} />
+                    ) : (
+                      <Pressable onPress={() => viewImagesHandler(i)}>
+                        {mentions.length === 1 ? (
+                          <FastImage
+                            source={{uri: url}}
+                            style={{width: 200, height: 200, borderRadius: 8}}
+                          />
+                        ) : (
+                          <ImageElement
+                            index={i}
+                            link={link}
+                            url={url}
+                            verbose={verbose}
+                          />
+                        )}
+                      </Pressable>
+                    )}
+                    {verbose && (
+                      <Text
+                        style={[
+                          {
+                            color: colorsBasics.primary,
+                            marginVertical: 4,
+                            alignSelf: i % 2 ? 'flex-end' : 'flex-start',
+                          },
+                        ]}
+                        onPress={() => {
+                          setString(link);
+                          Toast.show("Blob's id copied");
+                        }}>
+                        Copy the blob's id
+                      </Text>
+                    )}
+                  </View>
+                )
+              );
+            })}
+        </View>
         {showPanel && (
           <PostMsgPanel
             style={[row, flex1, justifySpaceBetween, panel]}

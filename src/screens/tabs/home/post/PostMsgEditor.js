@@ -2,15 +2,25 @@
  * Created on 18 Feb 2022 by lonmee
  */
 
-import React, {useCallback, useEffect, useReducer, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from 'react';
 import {
   Image,
+  Modal,
   PixelRatio,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
   TextInput,
   useWindowDimensions,
+  View,
+  StyleSheet,
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
@@ -19,8 +29,19 @@ import {useNavigation} from '@react-navigation/native';
 import MultimediaPanel from './MultimediaPanel';
 import nativeDeviceInfo from 'react-native/Libraries/Utilities/NativeDeviceInfo';
 import Section from '../../../../shared/comps/Section';
+import Text from '../../../../shared/comps/ComText';
 import blobIdToUrl from 'ssb-serve-blobs/id-to-url';
-import {cameraHandler, photoHandler} from '../../../../utils';
+import {
+  cameraHandler,
+  getRandomPathName,
+  photoHandler,
+  savePicture,
+  screenWidth,
+} from '../../../../utils';
+import Toast from 'react-native-tiny-toast';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import RNFS from 'react-native-fs';
+const deleteImg = require('../../../../assets/image/icons/Login_icon_delete.png');
 
 const reducer = (state, {type, payload}) => {
   switch (type) {
@@ -46,9 +67,24 @@ const PostMsgEditor = ({
     [offset, setOffset] = useState(0),
     [photo, dispatch] = useReducer(reducer, cachedContent.photo);
   const {isIPhoneX_deprecated} = nativeDeviceInfo.getConstants();
+  const [visible, setVisible] = useState(false);
+  const [bigPhoto, setBigPhoto] = useState([]);
+  const [isDelete, setIsDelete] = useState(false);
+  const [imgIndex, setImgIndex] = useState(0);
+  const [imgTotal, setImgTotal] = useState(0);
+  const [defIndex, setDefIndex] = useState(0);
+  const imgRef = useRef();
 
   useEffect(() => {
     cachePostContent({content, photo});
+    // let bigPhoto = [];
+    let ph = [];
+    photo.length > 0 &&
+      photo.map(({path, id}) => {
+        ph.push({url: blobIdToUrl(id)});
+      });
+    setBigPhoto(ph);
+    // console.log('ppppppppppbbbbbbbb', photo);
   }, [content, photo]);
 
   function clearHandler() {
@@ -83,11 +119,25 @@ const PostMsgEditor = ({
     );
   }
 
-  function submit({path}) {
-    blobsSetter(path.replace('file://', ''), id => {
-      dispatch({type: 'add', payload: {path, id}}),
-        setContent(content + `!['image'](${id})`);
-    });
+  function submit(res) {
+    // console.log('pppppp', photo.length, res.length);
+    if (res.length + photo.length > 9) {
+      Toast.show('please select max 9');
+      resetPostContent();
+      dispatch({type: 'set', payload: []});
+    }
+    for (var i = 0; i < res.length; i++) {
+      // console.log('rrrrr', res[i]);
+      let result = res[i]?.path;
+      blobsSetter(res[i]?.path.replace('file://', ''), id => {
+        // console.log('fffff', result);
+        dispatch({
+          type: 'add',
+          payload: {path: result, id, url: blobIdToUrl(id)},
+        });
+        // setContent(content + `!['image'](${id})`);
+      });
+    }
   }
 
   function voiceHandler() {}
@@ -115,6 +165,80 @@ const PostMsgEditor = ({
     [photo, content],
   );
 
+  function saveHandler(url) {
+    let path;
+    Platform.OS === 'ios'
+      ? savePicture(url, 'photo', 'MetaLife', r => {
+          console.log('photo saved in: ', r);
+        })
+      : RNFS.downloadFile({
+          fromUrl: url,
+          background: false,
+          toFile: (path = getRandomPathName()),
+        }).promise.then(_ =>
+          savePicture(path, 'photo', 'MetaLife', r =>
+            console.log('photo saved in: ', r),
+          ),
+        );
+  }
+
+  const saveChange = res => {};
+
+  const currentIndicate = (current, total) => {
+    console.log('rsssssss', current, total);
+    // if (current > total) {
+    //   // setDefIndex(total);
+    //   setImgIndex(total);
+    //   setImgTotal(total);
+    // } else {
+    if (current > total) {
+      setImgIndex(total);
+      setImgTotal(total);
+      setDefIndex(total - 1);
+    } else {
+      setImgIndex(current);
+      setImgTotal(total);
+    }
+
+    // }
+  };
+
+  const onDelete = () => {
+    setIsDelete(true);
+  };
+
+  const canDelete = () => {
+    setIsDelete(false);
+  };
+
+  // console.log('ttttttt', photo);
+
+  const onDeleteImg = useCallback(() => {
+    if (photo.length > 0) {
+      let path;
+      path = photo[imgIndex - 1]?.path;
+      // const id = photo.filter(p => p.path === path)[0].id;
+      // setContent(content.replace(`!['image'](${id})`, ''));
+      dispatch({type: 'remove', payload: path});
+      // setDefIndex(imgIndex - 1);
+      // setIsDelete(false);
+    } else {
+      setVisible(false);
+      setIsDelete(false);
+    }
+    // showPullMenu({position: {}, buttons: []});
+  }, [photo, visible, isDelete]);
+
+  const closeBigImg = () => {
+    setVisible(false);
+    setIsDelete(false);
+  };
+
+  const setPhotoClick = index => {
+    setVisible(true);
+    setDefIndex(index);
+  };
+  console.log('bigbigbig', bigPhoto, bigPhoto.length);
   return (
     <SafeAreaView style={[flex1, FG]}>
       <ScrollView style={[flex1]} overScrollMode={'auto'}>
@@ -129,20 +253,90 @@ const PostMsgEditor = ({
           onChangeText={setContent}
           value={content}
         />
-        {photo && photo.length > 0 && (
-          <Section>
-            {photo.map(({path, id}) => (
-              <Pressable
-                key={id}
-                onLongPress={event => deleteHandler(path, event)}>
-                <Image
-                  style={{width: 100, height: 100}}
-                  source={{uri: blobIdToUrl(id)}}
-                />
-              </Pressable>
+        {photo && photo.length > 0 && photo.length <= 9 && (
+          <Pressable
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              marginHorizontal: 10,
+            }}>
+            {photo.map(({path, id}, index) => (
+              <>
+                <Pressable
+                  onPress={() => setPhotoClick(index)}
+                  key={id}
+                  style={{margin: 4}}
+                  // onLongPress={event => deleteHandler(path, event)}
+                >
+                  <Image
+                    style={{
+                      width: screenWidth / 3 - 15,
+                      height: screenWidth / 3 - 15,
+                      borderRadius: 4,
+                    }}
+                    source={{uri: blobIdToUrl(id)}}
+                  />
+                </Pressable>
+              </>
             ))}
-          </Section>
+          </Pressable>
         )}
+        <Modal visible={visible} transparent={true}>
+          <Pressable
+            style={{position: 'absolute', zIndex: 1000, left: 20, top: 40}}
+            onPress={() => setVisible(false)}>
+            <Image
+              source={require('../../../../assets/image/icons/ArrowLeft.png')}
+            />
+          </Pressable>
+          <Text
+            style={{
+              position: 'absolute',
+              zIndex: 1000,
+              top: 40,
+              // left: '50%',
+              // right: '50%',
+              left: screenWidth / 2 - 10,
+              fontSize: 16,
+              color: '#fff',
+              fontWeight: 'bold',
+            }}>
+            {imgIndex + '/' + imgTotal}
+          </Text>
+          <Pressable style={styles.delImg} onPress={onDelete}>
+            <Image
+              source={require('../../../../assets/image/icons/del.png')}
+              style={{width: 14, height: 14}}
+            />
+          </Pressable>
+          <ImageViewer
+            ref={imgRef}
+            index={defIndex}
+            enableSwipeDown={true}
+            useNativeDriver={true}
+            onSwipeDown={closeBigImg}
+            onClick={closeBigImg}
+            onSave={saveHandler}
+            onChange={saveChange}
+            renderIndicator={currentIndicate}
+            imageUrls={photo}
+          />
+          {isDelete && (
+            <View style={styles.bottom}>
+              <View style={styles.photo}>
+                <Text style={styles.phText}>Delete this photo?</Text>
+              </View>
+              <Pressable style={styles.delView} onPress={onDeleteImg}>
+                <Text style={styles.delText}>Delete</Text>
+              </Pressable>
+              <Pressable
+                style={[styles.delView, {marginTop: 8}]}
+                onPress={canDelete}>
+                <Text style={styles.canText}>Cancel</Text>
+              </Pressable>
+            </View>
+          )}
+        </Modal>
       </ScrollView>
       <MultimediaPanel
         offset={offset}
@@ -155,6 +349,47 @@ const PostMsgEditor = ({
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  delImg: {
+    position: 'absolute',
+    zIndex: 1000,
+    right: 0,
+    top: 43,
+    width: 40,
+    height: 40,
+    // backgroundColor: 'red',
+  },
+  bottom: {position: 'absolute', zIndex: 1000, bottom: 0},
+  photo: {
+    height: 45,
+    width: screenWidth,
+    backgroundColor: '#5B5B5B',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+  },
+  phText: {
+    fontSize: 14,
+    color: '#8E8E92',
+  },
+  delView: {
+    height: 45,
+    width: screenWidth,
+    backgroundColor: '#232929',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  delText: {
+    fontSize: 14,
+    color: '#E73553',
+  },
+  canText: {
+    fontSize: 14,
+    color: '#fff',
+  },
+});
 
 const msp = s => {
   return {cachedContent: s.runtime.postContent};

@@ -170,8 +170,13 @@ export function cameraHandler(submit) {
 export function photoHandler(submit) {
   Keyboard.dismiss();
   ImagePicker.openPicker({
+    multiple: true,
+    waitAnimationEnd: false,
+    sortOrder: 'desc',
+    includeExif: true,
+    forceJpg: true,
     cropping: false,
-    multiple: false,
+    // multiple: false,
     compressImageMaxWidth: 1080,
     compressImageMaxHeight: 1920,
     compressImageQuality: 0.88,

@@ -52,7 +52,7 @@ const MultimediaPanel = ({
           </Pressable>
         </View>
         <View style={[row]}>
-          <RoundBtn style={[reviewBtn]} title={'Clear'} press={clearHandler} />
+          {/*<RoundBtn style={[reviewBtn]} title={'Clear'} press={clearHandler} />*/}
           <RoundBtn style={[reviewBtn]} title={'Send'} press={sendHandler} />
         </View>
       </View>

@@ -3,6 +3,7 @@ import Text from '../../../../../shared/comps/ComText';
 import useSchemaStyles from '../../../../../shared/UseSchemaStyles';
 import React from 'react';
 import FastImage from 'react-native-fast-image';
+import {screenWidth} from '../../../../../utils';
 
 /**
  * Created on 29 Apr 2022 by lonmee
@@ -16,10 +17,12 @@ export default ({index, link, url, verbose = false}) => {
       <FastImage
         style={[
           {
-            width: 200,
-            height: 200,
-            borderRadius: 10,
-            alignSelf: index % 2 ? 'flex-end' : 'flex-start',
+            width: screenWidth / 3 - 18,
+            height: screenWidth / 3 - 18,
+            borderRadius: 4,
+            marginRight: 8,
+            marginBottom: 8,
+            // alignSelf: index % 2 ? 'flex-end' : 'flex-start',
           },
         ]}
         source={{uri: url}}
