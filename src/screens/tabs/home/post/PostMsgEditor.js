@@ -21,6 +21,10 @@ import {
   useWindowDimensions,
   View,
   StyleSheet,
+  ImageBackground,
+  Animated,
+  PanResponder,
+  Easing,
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
@@ -36,12 +40,13 @@ import {
   getRandomPathName,
   photoHandler,
   savePicture,
+  screenHeight,
   screenWidth,
 } from '../../../../utils';
 import Toast from 'react-native-tiny-toast';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import RNFS from 'react-native-fs';
-const deleteImg = require('../../../../assets/image/icons/Login_icon_delete.png');
+const deleteImg = require('../../../../assets/image/icons/con_del.png');
 
 const reducer = (state, {type, payload}) => {
   switch (type) {
@@ -238,7 +243,10 @@ const PostMsgEditor = ({
     setVisible(true);
     setDefIndex(index);
   };
-  console.log('bigbigbig', bigPhoto, bigPhoto.length);
+  // console.log('bigbigbig', bigPhoto, bigPhoto.length);
+  const deleteImgPress = path => {
+    dispatch({type: 'remove', payload: path});
+  };
   return (
     <SafeAreaView style={[flex1, FG]}>
       <ScrollView style={[flex1]} overScrollMode={'auto'}>
@@ -338,6 +346,11 @@ const PostMsgEditor = ({
           )}
         </Modal>
       </ScrollView>
+      <Animated.View style={[styles.delWraper, {bottom: slideAniValue}]}>
+        <Text style={{color: '#fff'}}>{delText}</Text>
+      </Animated.View>
+
+      {showDelModal && <View style={styles.shadowModal} />}
       <MultimediaPanel
         offset={offset}
         voiceHandler={voiceHandler}
@@ -388,6 +401,27 @@ const styles = StyleSheet.create({
   canText: {
     fontSize: 14,
     color: '#fff',
+  },
+  delWraper: {
+    width: screenWidth,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'red',
+    position: 'absolute',
+    // bottom: 0,
+    left: 0,
+    zIndex: 998,
+  },
+  shadowModal: {
+    width: screenWidth,
+    height: screenHeight,
+    position: 'absolute',
+    backgroundColor: '#000',
+    opacity: 0.4,
+    zIndex: 888,
+    bottom: 0,
+    left: 0,
   },
 });
 
