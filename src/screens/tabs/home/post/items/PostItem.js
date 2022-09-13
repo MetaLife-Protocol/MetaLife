@@ -208,7 +208,10 @@ const PostItem = ({
             flexDirection: 'row',
             flexWrap: 'wrap',
             marginTop: 10,
-            width: mentions.length === 4 ? screenWidth - 120 : screenWidth,
+            width:
+              mentions && mentions.length > 0 && mentions.length === 4
+                ? screenWidth - 120
+                : screenWidth,
           }}>
           {mentions &&
             mentions.length > 0 &&
@@ -224,7 +227,7 @@ const PostItem = ({
                       <AudioElement link={link} url={url} verbose={verbose} />
                     ) : (
                       <Pressable onPress={() => viewImagesHandler(i)}>
-                        {mentions.length === 1 ? (
+                        {mentions?.length === 1 ? (
                           <FastImage
                             source={{uri: url}}
                             style={{width: 200, height: 200, borderRadius: 8}}
