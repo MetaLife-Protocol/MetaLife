@@ -276,14 +276,27 @@ const PostMsgEditor = ({
                   style={{margin: 4}}
                   // onLongPress={event => deleteHandler(path, event)}
                 >
-                  <Image
+                  <ImageBackground
                     style={{
                       width: screenWidth / 3 - 15,
                       height: screenWidth / 3 - 15,
-                      borderRadius: 4,
                     }}
-                    source={{uri: blobIdToUrl(id)}}
-                  />
+                    imageStyle={{borderRadius: 6}}
+                    source={{uri: blobIdToUrl(id)}}>
+                    <Pressable
+                      style={{
+                        position: 'absolute',
+                        right: -25,
+                        width: 40,
+                        height: 30,
+                      }}
+                      onPress={() => deleteImgPress(path)}>
+                      <Image
+                        source={deleteImg}
+                        style={{width: 15, height: 15}}
+                      />
+                    </Pressable>
+                  </ImageBackground>
                 </Pressable>
               </>
             ))}
@@ -346,11 +359,11 @@ const PostMsgEditor = ({
           )}
         </Modal>
       </ScrollView>
-      <Animated.View style={[styles.delWraper, {bottom: slideAniValue}]}>
-        <Text style={{color: '#fff'}}>{delText}</Text>
-      </Animated.View>
+      {/*<Animated.View style={[styles.delWraper, {bottom: slideAniValue}]}>*/}
+      {/*  <Text style={{color: '#fff'}}>{delText}</Text>*/}
+      {/*</Animated.View>*/}
 
-      {showDelModal && <View style={styles.shadowModal} />}
+      {/*{showDelModal && <View style={styles.shadowModal} />}*/}
       <MultimediaPanel
         offset={offset}
         voiceHandler={voiceHandler}
