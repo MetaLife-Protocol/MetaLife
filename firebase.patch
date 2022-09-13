@@ -1,0 +1,94 @@
+diff --git a/android/app/google-services.json b/android/app/google-services.json
+index cb8ee6e..cdda684 100644
+--- a/android/app/google-services.json
++++ b/android/app/google-services.json
+@@ -1,34 +1,41 @@
+ {
+   "project_info": {
+-    "project_number": "203612530494",
+-    "project_id": "metalife-4ab20",
+-    "storage_bucket": "metalife-4ab20.appspot.com"
++    "project_number": "907266979412",
++    "project_id": "metalife-762ec",
++    "storage_bucket": "metalife-762ec.appspot.com"
+   },
+   "client": [
+     {
+       "client_info": {
+-        "mobilesdk_app_id": "1:203612530494:android:b934235c26f26e42d66e6f",
++        "mobilesdk_app_id": "1:907266979412:android:2a0fb3bad2be48b9d19fc1",
+         "android_client_info": {
+           "package_name": "com.metalife"
+         }
+       },
+       "oauth_client": [
+         {
+-          "client_id": "203612530494-0rvn1nsbeuj33ngkocmqg5p6b55bh0hj.apps.googleusercontent.com",
++          "client_id": "907266979412-f83edajol5l9e0t50h16df6bbrs3c7sf.apps.googleusercontent.com",
+           "client_type": 3
+         }
+       ],
+       "api_key": [
+         {
+-          "current_key": "AIzaSyC2WH_sMsMZqtUwWAf31qzWeyu_l9ipViA"
++          "current_key": "AIzaSyDJvU--_YagYD2FgXiNdyuKOazvBDBDn7s"
+         }
+       ],
+       "services": {
+         "appinvite_service": {
+           "other_platform_oauth_client": [
+             {
+-              "client_id": "203612530494-0rvn1nsbeuj33ngkocmqg5p6b55bh0hj.apps.googleusercontent.com",
++              "client_id": "907266979412-f83edajol5l9e0t50h16df6bbrs3c7sf.apps.googleusercontent.com",
+               "client_type": 3
++            },
++            {
++              "client_id": "907266979412-6hb2eevf02gj9k3og46gr0skp0rqp8du.apps.googleusercontent.com",
++              "client_type": 2,
++              "ios_info": {
++                "bundle_id": "social.metalife.iOS"
++              }
+             }
+           ]
+         }
+diff --git a/ios/GoogleService-Info.plist b/ios/GoogleService-Info.plist
+index ab35d5c..cf62caa 100644
+--- a/ios/GoogleService-Info.plist
++++ b/ios/GoogleService-Info.plist
+@@ -3,21 +3,21 @@
+ <plist version="1.0">
+ <dict>
+ 	<key>CLIENT_ID</key>
+-	<string>203612530494-gim1o6mqg0vcm5mgpmr7ugt2vc1i6va9.apps.googleusercontent.com</string>
++	<string>907266979412-6hb2eevf02gj9k3og46gr0skp0rqp8du.apps.googleusercontent.com</string>
+ 	<key>REVERSED_CLIENT_ID</key>
+-	<string>com.googleusercontent.apps.203612530494-gim1o6mqg0vcm5mgpmr7ugt2vc1i6va9</string>
++	<string>com.googleusercontent.apps.907266979412-6hb2eevf02gj9k3og46gr0skp0rqp8du</string>
+ 	<key>API_KEY</key>
+-	<string>AIzaSyBcd7fJG4oI9wACoRQZi_gy1105Inil5gQ</string>
++	<string>AIzaSyDC7YIDZBcMzs61QU3bUCcIlypncjKTdSE</string>
+ 	<key>GCM_SENDER_ID</key>
+-	<string>203612530494</string>
++	<string>907266979412</string>
+ 	<key>PLIST_VERSION</key>
+ 	<string>1</string>
+ 	<key>BUNDLE_ID</key>
+ 	<string>social.metalife.iOS</string>
+ 	<key>PROJECT_ID</key>
+-	<string>metalife-4ab20</string>
++	<string>metalife-762ec</string>
+ 	<key>STORAGE_BUCKET</key>
+-	<string>metalife-4ab20.appspot.com</string>
++	<string>metalife-762ec.appspot.com</string>
+ 	<key>IS_ADS_ENABLED</key>
+ 	<false></false>
+ 	<key>IS_ANALYTICS_ENABLED</key>
+@@ -29,6 +29,6 @@
+ 	<key>IS_SIGNIN_ENABLED</key>
+ 	<true></true>
+ 	<key>GOOGLE_APP_ID</key>
+-	<string>1:203612530494:ios:0607be5bfc12763dd66e6f</string>
++	<string>1:907266979412:ios:41f59fd09773bea3d19fc1</string>
+ </dict>
+ </plist>
+\ No newline at end of file
