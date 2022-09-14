@@ -356,7 +356,7 @@ const PostMsgEditor = ({
           </Pressable>
         )}
         <Modal visible={visible} transparent={true}>
-          <View
+          <SafeAreaView
             style={[
               {
                 position: 'absolute',
@@ -404,7 +404,7 @@ const PostMsgEditor = ({
                 style={{width: 14, height: 14}}
               />
             </Pressable>
-          </View>
+          </SafeAreaView>
           <ImageViewer
             ref={imgRef}
             index={defIndex}
