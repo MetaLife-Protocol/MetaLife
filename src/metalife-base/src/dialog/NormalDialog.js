@@ -19,6 +19,8 @@ export const NormalDialog = ({
   content,
   onConfirm,
   confirmDismiss = true,
+  cancleStr = 'cancel',
+  cancelPress,
 }) => {
   const styles = useStyle(createSty);
   const dialog = useDialog();
@@ -33,8 +35,11 @@ export const NormalDialog = ({
       <View style={styles.row}>
         <View style={{flex: 1}}>
           <RoundBtn
-            title={'cancel'}
+            title={cancleStr}
             press={() => {
+              if (cancelPress) {
+                cancelPress && cancelPress();
+              }
               dialog.dismiss();
             }}
           />

@@ -5,6 +5,7 @@
 import React, {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useReducer,
   useRef,
   useState,
@@ -46,6 +47,7 @@ import {
 import Toast from 'react-native-tiny-toast';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import RNFS from 'react-native-fs';
+import {NormalDialog, useDialog} from '../../../../metalife-base';
 const deleteImg = require('../../../../assets/image/icons/con_del.png');
 
 const reducer = (state, {type, payload}) => {
@@ -61,6 +63,7 @@ const reducer = (state, {type, payload}) => {
 
 const PostMsgEditor = ({
   cachedContent,
+  darkMode,
   cachePostContent,
   resetPostContent,
   showPullMenu,
@@ -79,7 +82,8 @@ const PostMsgEditor = ({
   const [imgTotal, setImgTotal] = useState(0);
   const [defIndex, setDefIndex] = useState(0);
   const imgRef = useRef();
-
+  const navigation = useNavigation();
+  const dialog = useDialog();
   useEffect(() => {
     cachePostContent({content, photo});
     // let bigPhoto = [];
@@ -91,6 +95,49 @@ const PostMsgEditor = ({
     setBigPhoto(ph);
     // console.log('ppppppppppbbbbbbbb', photo);
   }, [content, photo]);
+
+  const clickPress = () => {
+    goBack();
+  };
+
+  const cancelPress = () => {
+    clearHandler();
+    goBack();
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: 'Post',
+      headerLeft: () => (
+        <Pressable
+          onPress={() => {
+            if ((photo && photo.length > 0) || content !== '') {
+              dialog.show(
+                <NormalDialog
+                  title={'Info'}
+                  content={'Save a draft of your post?'}
+                  onConfirm={clickPress}
+                  cancleStr={'Discard'}
+                  confirmStr={'Save'}
+                  cancelPress={cancelPress}
+                />,
+              );
+            } else {
+              goBack();
+            }
+          }}
+          style={{paddingRight: 40, paddingLeft: 8}}>
+          <Image
+            source={
+              darkMode
+                ? require('../../../../assets/image/profiles/ArrowLeft.png')
+                : require('../../../../assets/image/icons/ArrowLeft.png')
+            }
+          />
+        </Pressable>
+      ),
+    });
+  }, [navigation, photo, content]);
 
   function clearHandler() {
     resetPostContent();
@@ -125,7 +172,7 @@ const PostMsgEditor = ({
   }
 
   function submit(res) {
-    // console.log('pppppp', photo.length, res.length);
+    // console.log('pppppp', res);
     if (res.length + photo.length > 9) {
       Toast.show('please select max 9');
       resetPostContent();
@@ -143,6 +190,12 @@ const PostMsgEditor = ({
         // setContent(content + `!['image'](${id})`);
       });
     }
+  }
+
+  function photoSubmit({path}) {
+    blobsSetter(path.replace('file://', ''), id => {
+      dispatch({type: 'add', payload: {path, id}});
+    });
   }
 
   function voiceHandler() {}
@@ -303,33 +356,55 @@ const PostMsgEditor = ({
           </Pressable>
         )}
         <Modal visible={visible} transparent={true}>
-          <Pressable
-            style={{position: 'absolute', zIndex: 1000, left: 20, top: 40}}
-            onPress={() => setVisible(false)}>
-            <Image
-              source={require('../../../../assets/image/icons/ArrowLeft.png')}
-            />
-          </Pressable>
-          <Text
-            style={{
-              position: 'absolute',
-              zIndex: 1000,
-              top: 40,
-              // left: '50%',
-              // right: '50%',
-              left: screenWidth / 2 - 10,
-              fontSize: 16,
-              color: '#fff',
-              fontWeight: 'bold',
-            }}>
-            {imgIndex + '/' + imgTotal}
-          </Text>
-          <Pressable style={styles.delImg} onPress={onDelete}>
-            <Image
-              source={require('../../../../assets/image/icons/del.png')}
-              style={{width: 14, height: 14}}
-            />
-          </Pressable>
+          <View
+            style={[
+              {
+                position: 'absolute',
+                zIndex: 1000,
+                top: 0,
+                width: screenWidth,
+                height: 60,
+              },
+              FG,
+            ]}>
+            <Pressable
+              style={{left: 20, top: 20}}
+              onPress={() => setVisible(false)}>
+              <Image
+                source={
+                  darkMode
+                    ? require('../../../../assets/image/profiles/ArrowLeft.png')
+                    : require('../../../../assets/image/icons/ArrowLeft.png')
+                }
+              />
+            </Pressable>
+            <Text
+              style={[
+                {
+                  position: 'absolute',
+                  zIndex: 1000,
+                  top: 20,
+                  // left: '50%',
+                  // right: '50%',
+                  left: screenWidth / 2 - 10,
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                },
+                text,
+              ]}>
+              {imgIndex + '/' + imgTotal}
+            </Text>
+            <Pressable style={styles.delImg} onPress={onDelete}>
+              <Image
+                source={
+                  darkMode
+                    ? require('../../../../assets/image/icons/del.png')
+                    : require('../../../../assets/image/icons/wh_del.png')
+                }
+                style={{width: 14, height: 14}}
+              />
+            </Pressable>
+          </View>
           <ImageViewer
             ref={imgRef}
             index={defIndex}
@@ -367,7 +442,7 @@ const PostMsgEditor = ({
       <MultimediaPanel
         offset={offset}
         voiceHandler={voiceHandler}
-        cameraHandler={() => cameraHandler(submit)}
+        cameraHandler={() => cameraHandler(photoSubmit)}
         photoHandler={() => photoHandler(submit)}
         clearHandler={clearHandler}
         sendHandler={sendHandler}
@@ -381,7 +456,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 1000,
     right: 0,
-    top: 43,
+    top: 23,
     width: 40,
     height: 40,
     // backgroundColor: 'red',
@@ -439,7 +514,7 @@ const styles = StyleSheet.create({
 });
 
 const msp = s => {
-  return {cachedContent: s.runtime.postContent};
+  return {cachedContent: s.runtime.postContent, darkMode: s.cfg.darkMode};
 };
 
 const mdp = d => {
