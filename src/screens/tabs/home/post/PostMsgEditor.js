@@ -25,7 +25,6 @@ import {
   ImageBackground,
   Animated,
   PanResponder,
-  Easing,
 } from 'react-native';
 import {connect} from 'react-redux/lib/exports';
 import useSchemaStyles from '../../../../shared/UseSchemaStyles';
@@ -356,12 +355,12 @@ const PostMsgEditor = ({
           </Pressable>
         )}
         <Modal visible={visible} transparent={true}>
-          <SafeAreaView
+          <View
             style={[
               {
                 position: 'absolute',
                 zIndex: 1000,
-                top: 0,
+                top: Platform.OS === 'android' ? 0 : 30,
                 width: screenWidth,
                 height: 60,
               },
@@ -404,7 +403,7 @@ const PostMsgEditor = ({
                 style={{width: 14, height: 14}}
               />
             </Pressable>
-          </SafeAreaView>
+          </View>
           <ImageViewer
             ref={imgRef}
             index={defIndex}
