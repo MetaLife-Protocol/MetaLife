@@ -28,6 +28,7 @@ import {
 import Toast from 'react-native-tiny-toast';
 import {getMnemonic} from '../../../../remote/ssb/ssbOP';
 import {shuffle} from '../../../../utils';
+import {downloadPhotonDB} from '../../../photon/PhotonUtils';
 
 const icons = {
   deleteW: require('../../../../assets/image/wallet/Login_icon_delete_white.png'),
@@ -44,6 +45,7 @@ const icons = {
  */
 
 const WalletCreator = ({
+  user: {feedId},
   cfg: {darkMode},
   route: {params},
   navigation: {replace},
@@ -51,6 +53,7 @@ const WalletCreator = ({
   walletCreateAccount,
   setCurrent,
   suggestPubs,
+  setDefaultAddress,
 }) => {
   const {flex1, FG, text, marginTop10} = useSchemaStyles(),
     {textHolder} = colorsSchema,
@@ -204,6 +207,8 @@ const WalletCreator = ({
                       };
                       walletCreateAccount(account);
                       setCurrent({type: 'spectrum', index: 0});
+                      setDefaultAddress({address: address.slice(0, 8)});
+                      downloadPhotonDB(address.slice(0, 8), feedId);
                       Toast.hide();
                       replace('WalletBackup', {
                         ...params,
@@ -263,6 +268,7 @@ const styles = StyleSheet.create({
 
 const msp = s => {
   return {
+    user: s.user,
     cfg: s.cfg,
     wallet: s.wallet,
   };
@@ -272,6 +278,7 @@ const mdp = d => {
   return {
     walletCreateAccount: payload => d({type: 'walletCreateAccount', payload}),
     setCurrent: payload => d({type: 'setCurrent', payload}),
+    setDefaultAddress: payload => d({type: 'setDefaultAddress', payload}),
   };
 };
 

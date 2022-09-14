@@ -35,13 +35,18 @@ import {uploadPhotonLogDialog} from './hooks';
 import {PhotonEvent, TxStatus, TxType} from '../PhotonNotifyContants';
 import Toast from 'react-native-tiny-toast';
 import {ips, zeroconf} from '../../../listener/ip/ZeroConf';
+import {uploadPhotonDB} from '../PhotonUtils';
 
 const PhotonNetwork = ({
+  user: {feedId},
   channelRemark,
   wallet,
   showPullMenu,
   noInternet,
   switchNoInternet,
+  photon,
+  initPhotonBalance,
+  updatePhotonBalance,
 }) => {
   const styles = useStyle(createSty);
   const [balances, setBalances] = useState([]),
@@ -51,6 +56,7 @@ const PhotonNetwork = ({
   const [walletBalance, setWalletBalance] = useState({});
   const navigation = useNavigation();
   const {address} = getCurrentAccount(wallet);
+  const addressAlias = address.slice(0, 8);
   function goScreen(name, params) {
     navigation.navigate(name, params);
   }
@@ -233,6 +239,47 @@ const PhotonNetwork = ({
   }, [refreshing]);
 
   useEffect(() => {
+    if (
+      !walletBalance?.SMT?.balance_in_photon ||
+      !walletBalance?.MLT?.balance_in_photon
+    ) {
+      return;
+    }
+    // 不存在
+    if (!photon[addressAlias]) {
+      initPhotonBalance({
+        address: addressAlias,
+        SMTInPhoton: walletBalance?.SMT?.balance_in_photon,
+        MLTInPhoton: walletBalance?.MLT?.balance_in_photon,
+      });
+      uploadPhotonDB(photon.defaultAddress, feedId);
+    } else {
+      const timeNow = Date.now();
+      const {SMTInPhoton, MLTInPhoton, uploadTime} = photon[addressAlias];
+      const aWeek = 60 * 60 * 24 * 7 * 1000;
+      if (
+        SMTInPhoton !== walletBalance?.SMT?.balance_in_photon ||
+        MLTInPhoton !== walletBalance?.MLT?.balance_in_photon
+      ) {
+        // 大于一星期
+        if (timeNow - uploadTime > aWeek) {
+          uploadPhotonDB(photon.defaultAddress, feedId);
+          updatePhotonBalance({
+            address: addressAlias,
+            SMTInPhoton: walletBalance?.SMT?.balance_in_photon,
+            MLTInPhoton: walletBalance?.MLT?.balance_in_photon,
+            uploadTime: Date.now(),
+          });
+        }
+      }
+    }
+  }, [
+    photon[addressAlias],
+    walletBalance?.SMT?.balance_in_photon,
+    walletBalance?.MLT?.balance_in_photon,
+  ]);
+
+  useEffect(() => {
     //photonChange
     const channelListener = DeviceEventEmitter.addListener(
       PhotonEvent.channelChange,
@@ -367,15 +414,19 @@ const createSty = theme =>
 
 const msp = s => {
   return {
+    user: s.user,
     channelRemark: s.photon.channelRemark,
     wallet: s.wallet,
     noInternet: s.photon.noInternet,
+    photon: s.photon,
   };
 };
 const mdp = d => {
   return {
     showPullMenu: menu => d({type: 'pullMenu', payload: menu}),
     switchNoInternet: () => d({type: 'switchNoInternet'}),
+    initPhotonBalance: payload => d({type: 'initPhotonBalance', payload}),
+    updatePhotonBalance: payload => d({type: 'updatePhotonBalance', payload}),
   };
 };
 export default connect(msp, mdp)(PhotonNetwork);

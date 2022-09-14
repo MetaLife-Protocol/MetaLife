@@ -22,6 +22,16 @@ import PasswordDialog from '../tabs/profiles/wallet/modal/PasswordDialog';
 import {exportAccountPrivateKey} from '../../remote/wallet/WalletAPI';
 import {bindIDAndWallet, pubHostByIp} from '../../remote/pubOP';
 import {sddsafsadf, yjggfjgjghfg} from '../../store/Foo';
+import RNFS from 'react-native-fs';
+import {
+  zip,
+  unzip,
+  zipWithPassword,
+  unzipWithPassword,
+} from 'react-native-zip-archive';
+import {Platform} from 'react-native';
+import axios from 'axios';
+import FormData from 'form-data';
 
 export function startPhoton({
   dialog,
@@ -226,3 +236,116 @@ export function stopCurrentPhoton() {
       store.dispatch({type: 'resetPhoton'});
     });
 }
+
+export const uploadPhotonDB = (address, feedId) => {
+  const iosPath = RNFS.DocumentDirectoryPath + '/raiden/data/';
+  const androidPath = RNFS.DocumentDirectoryPath + '/ethereum/photonData/';
+  const dbPath = Platform.OS === 'ios' ? iosPath : androidPath;
+  const zipPath =
+    RNFS.DocumentDirectoryPath +
+    (Platform.OS === 'ios' ? '/raiden/' : '/ethereum/') +
+    address +
+    '.zip';
+  zip(dbPath, zipPath)
+    // zipWithPassword(dbPath, zipPath, feedId)
+    .then(path => {
+      console.log('zipWithPassword completed at', path);
+      RNFS.stat(path)
+        .then(stat => {
+          console.log('info', stat);
+          const filePath =
+            Platform.OS === 'ios' ? stat.path : 'file://' + stat.path;
+          const uploadUrl =
+            'http://39.107.236.158:10087/cloud-server/api/upload';
+          const form = new FormData();
+
+          form.append(
+            'uploadfile',
+            {uri: filePath, name: address + '.zip', type: 'application/zip'},
+            {
+              filepath: encodeURIComponent(filePath),
+            },
+          );
+          axios
+            .post(uploadUrl, form, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            })
+            .then(res => {
+              console.log('sssss', res.data);
+              if (res.data.indexOf('success') !== -1) {
+                // 上传成功
+                RNFS.unlink(zipPath)
+                  .then(() => {
+                    console.log('delete success');
+                  })
+                  .catch(e => {
+                    console.log('unlink-error', e);
+                  });
+              }
+            })
+            .catch(e => {
+              console.log('axios-error', e);
+            });
+        })
+        .catch(e => {
+          console.log('RNFS.stat-error', e);
+        });
+    })
+    .catch(e => {
+      console.log('zip-error', e);
+    });
+};
+
+export const downloadPhotonDB = (address, feedId) => {
+  const iosPath = RNFS.DocumentDirectoryPath + '/raiden/data/';
+  const androidPath = RNFS.DocumentDirectoryPath + '/ethereum/photonData/';
+  const path = Platform.OS === 'ios' ? iosPath : androidPath;
+  const dbPath =
+    RNFS.DocumentDirectoryPath +
+    (Platform.OS === 'ios' ? '/raiden/' : '/ethereum/') +
+    address +
+    '.zip';
+  const upzipPath = path + address + '/';
+  axios
+    .post('http://39.107.236.158:10087/cloud-server/api/download/' + address)
+    .then(res => {
+      console.log('res', JSON.stringify(res));
+      const data = res.data;
+      if (!data) return;
+      // 重新导入账号时没有文件夹目录的，要先创建
+      console.log('path', path);
+      RNFS.mkdir(path)
+        .then(() => {
+          RNFS.writeFile(dbPath, data, 'base64')
+            .then(() => {
+              unzip(dbPath, upzipPath)
+                // unzipWithPassword(dbPath, upzipPath, feedId)
+                .then(unzipedPath => {
+                  console.log('unzip completed at ', unzipedPath);
+                  // 解压成功，删除压缩包
+                  RNFS.unlink(dbPath)
+                    .then(() => {
+                      console.log('delete success');
+                    })
+                    .catch(e => {
+                      console.log('unlink-error', e);
+                    });
+                })
+                .catch(e => {
+                  console.log('unzip-error', e);
+                });
+            })
+            .catch(e => {
+              console.log('RNFS.writeFile-error', e);
+            });
+        })
+        .catch(e => {
+          console.log('RNFS.mkdir-err', e);
+        });
+    })
+    .catch(e => {
+      console.log('get db error', e);
+    });
+};

@@ -39,6 +39,30 @@ export const photonReducer = (state = initValue, {type, payload}) => {
         ...state,
         noInternet: !state.noInternet,
       };
+    case 'setDefaultAddress':
+      return {
+        ...state,
+        defaultAddress: payload.address,
+      };
+    case 'initPhotonBalance':
+      return {
+        ...state,
+        [payload.address]: {
+          SMTInPhoton: payload.SMTInPhoton,
+          MLTInPhoton: payload.MLTInPhoton,
+          uploadTime: Date.now(),
+        },
+      };
+    case 'updatePhotonBalance':
+      return {
+        ...state,
+        [payload.address]: {
+          ...state[payload.address],
+          SMTInPhoton: payload.SMTInPhoton,
+          MLTInPhoton: payload.MLTInPhoton,
+          uploadTime: payload.uploadTime ?? state[payload.address].uploadTime,
+        },
+      };
     default:
       return state;
   }
