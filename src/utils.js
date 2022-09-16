@@ -173,6 +173,7 @@ export function photoHandler(submit) {
     multiple: true,
     waitAnimationEnd: false,
     sortOrder: 'desc',
+    maxFiles: 9,
     includeExif: true,
     forceJpg: true,
     cropping: false,
